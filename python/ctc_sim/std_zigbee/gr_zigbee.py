@@ -6,7 +6,6 @@
 # Title: ZigBee OQPSK Receiver (native C++ blocks)
 # GNU Radio version: 3.10.9.2
 
-import os
 from gnuradio import analog
 from gnuradio import blocks
 from gnuradio import digital
@@ -39,7 +38,7 @@ class gr_zigbee(gr.top_block):
         self.squelch_threshold = squelch_threshold = -25
         self.rf_gain = rf_gain = 50
         self.lowpass_filter = lowpass_filter = firdes.low_pass(1, sample_rate, cutoff_freq, transition_width)
-        self.iq_output = iq_output = os.devnull
+        self.iq_output = iq_output = "/dev/null"
         self.freq_offset = freq_offset = 0
         self.freq = freq = zigbee_base_freq + (zigbee_channel_spacing * (zigbee_channel - 11))
         self.demod_sps = demod_sps = int(sample_rate / chip_rate)
@@ -239,6 +238,16 @@ class gr_zigbee(gr.top_block):
             self.q_keep.set_n(self.demod_sps)
         if hasattr(self, 'phase_keep'):
             self.phase_keep.set_n(self.demod_sps)
+
+    def get_demod_keep_offset(self):
+        return self.demod_keep_offset
+
+    def set_demod_keep_offset(self, demod_keep_offset):
+        self.demod_keep_offset = int(demod_keep_offset) % self.demod_sps
+        if hasattr(self, 'i_keep'):
+            self.i_keep.set_offset(self.demod_keep_offset)
+        if hasattr(self, 'q_keep'):
+            self.q_keep.set_offset(self.demod_keep_offset)
 
     def get_phase_keep_offset(self):
         return self.phase_keep_offset

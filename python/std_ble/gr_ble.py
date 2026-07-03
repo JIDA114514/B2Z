@@ -9,7 +9,6 @@
 # Author: Jan Wagner
 # GNU Radio version: 3.10.9.2
 
-import os
 from gnuradio import analog
 from gnuradio import blocks
 from gnuradio import digital
@@ -50,7 +49,7 @@ class gr_ble(gr.top_block):
         self.rf_gain = rf_gain = 10
         self.num_samples = num_samples = duration_seconds*sample_rate
         self.lowpass_filter = lowpass_filter = firdes.low_pass(1, sample_rate, cutoff_freq, transition_width)
-        self.iq_output = iq_output = os.devnull
+        self.iq_output = iq_output = "/dev/null"
         self.gmsk_sps = gmsk_sps = int(sample_rate/data_rate)
         self.gmsk_omega_limit = gmsk_omega_limit = 0.035
         self.gmsk_mu = gmsk_mu = 0.5

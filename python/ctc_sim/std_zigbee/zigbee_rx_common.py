@@ -37,7 +37,7 @@ BYTE_TO_CHIPS = tuple(
 class ZMQSubscriber:
     """High-water-mark ZMQ SUB socket that drains available messages."""
 
-    def __init__(self, addr="tcp://127.0.0.1:55556", hwm=20):
+    def __init__(self, addr="tcp://127.0.0.1:55556", hwm=2000):
         ctx = zmq.Context()
         self.socket = ctx.socket(zmq.SUB)
         self.socket.setsockopt(zmq.RCVHWM, hwm)

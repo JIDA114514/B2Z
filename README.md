@@ -1,5 +1,10 @@
-# antsdr-no-OS
-Standalone application based on ADI hdl and no_OS for ANTSDR.
+# B2Z
+
+主要开发基于BLE的跨技术通信（cross technology communication,CTC），具体原理基于[BlueBee](https://doi.org/10.1145/3131672.3131678)
+
+使用的硬件为microphase的e310，上面搭载了zynq7020和ad9363.
+
+代码来自于[microphase官方](https://github.com/MicroPhase/antsdr_standalone)的裸机代码程序，需要注意hdl中用于e310开发板的vivado项目为“antsdre310"而非"e310v2"。"e310v2"的代码生成后在下板执行时可能会报错
 
 ## Windows下复原vivado工程
 

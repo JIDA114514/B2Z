@@ -1,52 +1,18 @@
 # python脚本说明
 
-python脚本用于生成、分析和接收 BLE/ZigBee/BlueBee 相关波形。当前主线不是完整实现 BLE extended advertising 的手机跟随流程，而是借助 BLE extended advertising 的 primary/secondary 双包调度外壳，将 BlueBee 映射后的完整 ZigBee PHY frame 放入 secondary 包中，在 `ch39 / 2480 MHz` 上进行同频调试和接收验证。
+python脚本用于验证相关算法的正确性，具体内容简介如下：
 
-当前推荐的主线命令：
-
-```bash
-python3 python/std_ble/generate_ble_exadv_iq_30_72M.py \
-    --timing-debug-same-channel \
-    --channel 39 \
-    --primary-channels 39 \
-    --append-bluebee-zigbee \
-    --aux-offset-us 600 \
-    --post-pad-us 10
-
-python3 python/ctc_sim/std_zigbee/zigbee_rx.py --channel 26 --duration 20
-
-python3 python/ctc_sim/bluebee/bluebee_rx.py --channel 26 --duration 20
-```
-
-具体内容简介如下：
-
-- `std_ble/`：标准 BLE 物理层、BLE extended advertising 波形生成和 BLE 包接收验证工具。
-  - `generate_ble_exadv_iq_30_72M.py`：生成 BLE extended advertising 的 primary `ADV_EXT_IND` 和 secondary `AUX_ADV_IND` IQ 头文件。当前主线使用 `--append-bluebee-zigbee` 将 ZigBee PHY frame 经 BlueBee 映射后嵌入 secondary AdvData；调试时常配合 `--timing-debug-same-channel --channel 39 --primary-channels 39 --aux-offset-us 600 --post-pad-us 10`。
-  - `ble_exadv_hackrf_sniffer.py`：HackRF BLE extended advertising 抓包脚本，用于观测 primary/secondary、AuxPtr timing、CRC 和事件匹配。
-  - `ble_packet_detector.py`：基于 `gr_ble` 的 BLE 包检测脚本，可从实时 ZMQ 或已保存的解调字节流中检测 BLE 包，也可用于 primary/secondary 同频 timing 估计。
-  - `generate_ble_iq_30_72M.py`：legacy BLE 广播包 IQ 生成脚本，生成适配 30.72 MHz TX 链路的 C 数组。
-  - `ble_rx.py`、`gr_ble.py` 及 `bsp_*`：BLE 接收 flowgraph、基础算法和工具函数。
-
-- `ctc_sim/std_zigbee/`：标准 ZigBee PHY 生成、离线分析和实时接收验证工具。
-  - `zigbee_rx.py`：当前标准 ZigBee OQPSK 实时接收脚本，控制 GNU Radio/HackRF 接收并通过 ZMQ 获取 chip 流。当前版本按 PHR 动态帧长解包，输出完整 `Frame bytes`，并保留 14 字节固定长度 fallback。
-  - `generate_zigbee_iq_30_72M.py`：生成标准 ZigBee PHY IQ/DMA 数据，用于 e310/AD9363 30.72 MHz TX 链路发射。
-  - `zigbee_analyze.py`：离线分析 ZigBee IQ，尝试 DSSS 解码并验证 frame/FCS。
-  - `zigbee_mod.py`：ZigBee 基础调制、chip map、CRC 和 PHY frame 构造工具。
-  - `gr_zigbee.py`、`zigbee_rx_common.py`、`app_frame.py`：ZigBee 接收 flowgraph、公共解码工具和帧处理辅助。
-
-- `ctc_sim/bluebee/`：BlueBee 论文复现和当前跨协议主线相关工具，论文原文为 `BlueBee.pdf`。
-  - `generate_bluebee_iq_30_72M.py`：生成 BLE GFSK 波形，使 BLE 负载在相位差投影上近似 ZigBee chip/symbol；同时保留 legacy 单包和 extended advertising 相关生成路径。
-  - `generate_bluebee_zigbee_frame_iq_30_72M.py`：生成纯 BlueBee 构造的完整 ZigBee PHY frame IQ，用于隔离验证 BlueBee 映射本身是否能被 ZigBee/BlueBee 接收链路检测。
-  - `bluebee_rx.py`：当前 BlueBee phase-difference 接收验证脚本，主要用于检测 BlueBee 构造的 ZigBee frame，输出 `Frame bytes`、FCS 状态和性能统计。
-  - `zigbee_mod_ble.py`：BlueBee/ZigBee symbol 映射辅助脚本。
-
-- `ctc_sim/patternbee/`：PatternBee 方向的历史/辅助实验代码。
-  - `dual_analyze.py`：集成 BLE 与 ZigBee 离线分析，并尝试利用 PatternBee 模式特征进行 ZigBee 符号分析；当前不是主线验证工具。
-
-- `ctc_sim/` 下的通用分析脚本：
-  - `ble_analyze.py`：离线分析 BLE IQ 并打印解码负载。
-  - `ble_iq_spectrum_pysci.py`：使用 scipy 对 BLE IQ 波形做频谱分析。
-  - `generate_ble_iq_from_bits_txt.py`：从指定 bitstream 生成 BLE IQ 波形，用于自定义负载和调制实验。
+- ctc_sim：该文件夹下为CTC算法的模拟
+  - bluebee：通过BLE调制zigbee信息，核心是构造特定负载，脚本zigbee_mod_ble.py用于生成负载的映射表
+  - patternbee：在BLE侧利用zigbee符号的模式特征来解调zigbee信号，脚本dual_analyze.py集成了正常zigbee信号分析和利用patternbee分析zigbee符号的功能
+  - ble_analyze.py：标准的分析BLE信号脚本，数据源为IQ基带信号
+  - generate_ble_iq_from_bits_txt.py：将指定内容调制为BLE信号，目前固定调制在广播信道上
+  - std_zigbee：zigbee_mod将名为data_bits.txt的原始二进制字符调制为标准zigbee符号，由zigbee_analyze分析。
+    - zigbee_rx可以控制hackrf等SDR实时接受并分析zigbee信号
+    - generate_zigbee_iq_30_71M能够生成给e310使用的dma数据，使其能够发射zigbee信号
+- std_ble：该文件下为标准BLE物理层的部分实现
+  - ble_rx及相关脚本通过gnuradio库控制hackrf实现BLE广播数据检测
+  - generate_ble_iq_30_72M.py生成BLE包IQ波形
 
 使用的脚本参考了：[auto_test_tool](https://github.com/nbtool/auto_test_tool/tree/master)中的BLE相关内容。
 
@@ -548,3 +514,4 @@ WINDOW_SYMBOLS = FRAME_SYMBOLS + PREAMBLE_SYMBOLS
 （5）发送端重采样顺序优化
 
 `generate_zigbee_iq_30_72M.py` 先在10MHz生成整数chip边界的O-QPSK波形，再FFT重采样到30.72MHz，最后添加padding。这样既保证了基带波形的构造简单可靠，也避免padding参与FFT重采样产生边界伪影。
+

@@ -60,7 +60,6 @@
 
 static void ble_exadv_tx_cmd(double *param, char param_no);
 static void ble_exadv_stop_cmd(double *param, char param_no);
-static void ble_exadv_secondary_test_cmd(double *param, char param_no);
 
 /******************************************************************************/
 /************************ Constants Definitions *******************************/
@@ -125,7 +124,6 @@ command cmd_list[] = {
 	{"ble_tx_demo?", "Sends BLE data in dma", "", ble_tx_demo},
 	{"ble_tx_adv_name?", "Generate and send BLE ADV name SDR_BLE", "", ble_tx_adv_name_demo},
 	{"ble_exadv_tx?", "Start BLE extended advertising same-channel diagnostic: primary ch37 then secondary ch37", "ble_exadv_tx? 30000 40000 0", ble_exadv_tx_cmd},
-	{"ble_exadv_sec_test?", "Continuously transmit BLE AUX_ADV_IND diagnostic waveform on ch37", "", ble_exadv_secondary_test_cmd},
 	{"ble_exadv_stop?", "Stop BLE extended advertising loop", "", ble_exadv_stop_cmd},
 	{"ble_tx_stop?", "stop BLE TX demo, and set DDS", "", ble_tx_stop},
 	{"change_freq?", "change BLE TX chan to next freq", "", change_freq},
@@ -172,7 +170,8 @@ static XTime last_hop_time = 0;
 #define ZIGBEE_CHANNEL_26		(2480000000)
 
 enum dma_context {
-//	BLE_ADV_CH39,
+	IDLE,
+	BLE_ADV_CH39,
 	ZIGBEE_PREM_CH26,
 //	SINWAVE,
 	BLUEBEE_CH39,
@@ -272,17 +271,18 @@ void dma_tx_demo(double *param, char param_no)
 	/* Flush cache data. */
 //	Xil_DCacheInvalidateRange((uintptr_t)ble_iq_ch39, sizeof(ble_iq_ch39));
 	Xil_DCacheFlushRange((uintptr_t)ble_exadv_secondary_iq_ch3, sizeof(ble_exadv_secondary_iq_ch3));
-	Xil_DCacheFlushRange((uintptr_t)zigbee_iq, sizeof(bluebee_zigbee_frame_iq));
+	Xil_DCacheFlushRange((uintptr_t)bluebee_zigbee_frame_iq, sizeof(bluebee_zigbee_frame_iq));
+	Xil_DCacheFlushRange((uintptr_t)zigbee_iq, sizeof(zigbee_iq));
 	/* Transfer the data. */
 	axi_dac_write(ad9361_phy->tx_dac, AXI_DAC_REG_SYNC_CONTROL, AXI_DAC_SYNC);
 	transfer.cyclic = CYCLIC;
-	transfer.size = sizeof(bluebee_zigbee_frame_iq);
-	transfer.src_addr = (uintptr_t)bluebee_zigbee_frame_iq;
+	transfer.size = sizeof(zigbee_iq);
+	transfer.src_addr = (uintptr_t)zigbee_iq;
 	int ret = axi_dmac_transfer_start(tx_dmac, &transfer);
 	if (ret == 0)
 	{
-		printf("start transfer!(bluebee)\n");
-		context = ZIGBEE_PREM_CH26;
+		printf("start transfer!(zigbee frame)\n");
+		context = IDLE;
 	}
 	else
 	{
@@ -296,24 +296,24 @@ void change_dma_context(double *param, char param_no){
 	is_ble_tx_active = 0;
 	ble_exadv_stop(0);
 	axi_dmac_transfer_stop(tx_dmac);
-	if(context == BLUEBEE_CH39){
+	if(context == IDLE){
 		transfer.size = sizeof(bluebee_zigbee_frame_iq);
 		transfer.src_addr = (uintptr_t)bluebee_zigbee_frame_iq;
-		context = ZIGBEE_PREM_CH26;
-		printf("dma set to bluebee\n");
+		context = BLUEBEE_CH39;
+		printf("dma set to bluebee, BLE channel 39\n");
 	}
-	else if(context == ZIGBEE_PREM_CH26){
+	else if(context == BLUEBEE_CH39){
 		transfer.size = sizeof(ble_exadv_secondary_iq_ch3);
 		transfer.src_addr = (uintptr_t)ble_exadv_secondary_iq_ch3;
-		context = EXADV_PRI_37;
+		context = BLE_ADV_CH39;
 		printf("dma set to exadv secondary\n");
 	}
 	else{
-		transfer.size = sizeof(bluebee_iq_ch39);
-		transfer.src_addr = (uintptr_t)bluebee_iq_ch39;
-		context = BLUEBEE_CH39;
+		transfer.size = sizeof(zigbee_iq);
+		transfer.src_addr = (uintptr_t)zigbee_iq;
+		context = IDLE;
 //		ad9361_set_tx_lo_freq(ad9361_phy, LO_FREQ_CH39);
-		printf("dma set to legacy BlueBee\n");
+		printf("dma set to legacy zigbee\n");
 	}
 	int ret = axi_dmac_transfer_start(tx_dmac, &transfer);
 	if(ret == 0){
@@ -367,47 +367,6 @@ static void ble_exadv_tx_cmd(double *param, char param_no)
 	is_ble_tx_active = 0;
 	ble_exadv_stop(0);
 	ble_exadv_tx_demo(param, param_no);
-}
-
-static void ble_exadv_secondary_test_cmd(double *param, char param_no)
-{
-	(void)param;
-	(void)param_no;
-	int ret;
-
-	is_ble_tx_active = 0;
-	ble_exadv_stop(0);
-	if (tx_dmac == NULL || ad9361_phy == NULL || ad9361_phy->tx_dac == NULL) {
-		printf("ble_exadv_sec_test?: dma/rf path not ready\n");
-		return;
-	}
-
-	ret = axi_dac_set_datasel(ad9361_phy->tx_dac, -1, AXI_DAC_DATA_SEL_DMA);
-	ret |= no_os_gpio_set_value(ad9361_phy->gpio_desc_tx1_ctrl_h, 0);
-	ret |= no_os_gpio_set_value(ad9361_phy->gpio_desc_tx1_ctrl_l, 1);
-	ret |= no_os_gpio_set_value(ad9361_phy->gpio_desc_tx2_ctrl_h, 0);
-	ret |= no_os_gpio_set_value(ad9361_phy->gpio_desc_tx2_ctrl_l, 1);
-	ret |= ad9361_set_tx_rf_port_output(ad9361_phy, TXB);
-	ret |= ad9361_set_tx_lo_freq(ad9361_phy, BLE_EXADV_SECONDARY_FREQ_HZ);
-	if (ret < 0) {
-		printf("ble_exadv_sec_test?: tx path setup failed\n");
-		return;
-	}
-	no_os_mdelay(1);
-
-	Xil_DCacheFlush();
-	Xil_DCacheFlushRange((uintptr_t)ble_exadv_secondary_iq_ch3,
-	                     sizeof(ble_exadv_secondary_iq_ch3));
-	axi_dmac_transfer_stop(tx_dmac);
-	axi_dac_write(ad9361_phy->tx_dac, AXI_DAC_REG_SYNC_CONTROL, AXI_DAC_SYNC);
-	transfer.cyclic = CYCLIC;
-	transfer.size = sizeof(ble_exadv_secondary_iq_ch3);
-	transfer.src_addr = (uintptr_t)ble_exadv_secondary_iq_ch3;
-	ret = axi_dmac_transfer_start(tx_dmac, &transfer);
-	if (ret == 0)
-		printf("BLE EXT ADV secondary test: cyclic same-channel AUX_ADV_IND on ch37 2402 MHz\n");
-	else
-		printf("BLE EXT ADV secondary test: dma start failed\n");
 }
 
 static void ble_exadv_stop_cmd(double *param, char param_no)

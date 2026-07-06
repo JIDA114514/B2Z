@@ -2,13 +2,17 @@
 
 主要开发基于BLE的跨技术通信（cross technology communication,CTC），具体原理基于[BlueBee](https://doi.org/10.1145/3131672.3131678)
 
+在下载裸机代码后，启动命令ble_exadv_tx?，即可在BLE设备和zigbee设备上同时接收到信息，对于不同的BLE设备，显示效果可能不同，具体取决于BLE固件对拓展广播内容的处理方法。
+
+命令ble_tx_demo?会在裸机端先生成BLE标准广播波形，然后循环发送。
+
 使用的硬件为microphase的e310，上面搭载了zynq7020和ad9363.
 
 代码来自于[microphase官方](https://github.com/MicroPhase/antsdr_standalone)的裸机代码程序，需要注意hdl中用于e310开发板的vivado项目为“antsdre310"而非"e310v2"。"e310v2"的代码生成后在下板执行时可能会报错
 
 ## Windows下复原vivado工程
 
-### 所需软件：
+### 所需软件
 
 - git (用于从github上下载源码)
 - vivado2021.1（用于复原工程）
@@ -18,7 +22,7 @@
 
 首先需要从github上下载对应的源码。打开**git bash**，然后在mingwin中使用如下命令下载源码。
 
-```
+```bash
 git clone --recursive https://github.com/MicroPhase/antsdr_standalone.git
 ```
 
@@ -40,7 +44,7 @@ git clone --recursive https://github.com/MicroPhase/antsdr_standalone.git
 
 然后依次执行如下命令：
 
-```
+```tcl
 source ../scripts/adi_make.tcl
 adi_make::lib all
 source ./system_project.tcl
@@ -54,15 +58,12 @@ Vivado在构建IP和工程的时候，需要等待较长的时间，请耐心等
 
 ![image-20210924193419017](README.assets/image-20210924193419017.png)
 
-
-
 ![image-20210924193351690](README.assets/image-20210924193351690.png)
 
 等到整个工程综合完成之后，可以在该工程的 **antsdre310.sdk**或者**antsdre200.sdk**文件夹下找到硬件描述文件，使用这个硬件描述文件，可以用来搭建no-OS工程。
 
-
-
 ### 搭建no-OS工程
+
 对于Windows用户，为了简单构建no-OS的过程，请直接使用已经提供好的no-OS源码，也就是在git下载下来的源文件下的app_e310或者app_e200文件夹下的代码。
 
 打开vitis软件，定位到**antsdrxxx.sdk**目录下
@@ -98,8 +99,6 @@ Vivado在构建IP和工程的时候，需要等待较长的时间，请耐心等
 接下来就可以连接串口jtag到到电脑上，然后在SDK中生成调试用的elf文件进行调试了。
 
 ![image-20210924232424492](README.assets/image-20210924232424492.png)
-
-
 
 ### NOTE
 

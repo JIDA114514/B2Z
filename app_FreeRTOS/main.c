@@ -54,6 +54,12 @@
 #include "gpio_extra.h"
 #include "no_os_irq.h"
 #endif
+#ifdef FREERTOS_INTEGRATION
+#include <xscugic.h>
+#include "FreeRTOS.h"
+#include "task.h"
+#include "freertos_irq_glue.h"
+#endif
 #ifdef LINUX_PLATFORM
 #include "linux_spi.h"
 #include "linux_gpio.h"
@@ -577,6 +583,108 @@ struct ad9361_rf_phy *ad9361_phy_b;
 /***************************************************************************//**
  * @brief main
 *******************************************************************************/
+#ifdef FREERTOS_INTEGRATION
+
+/* FreeRTOS vector table — defined in freertos_vector_table.S */
+extern const uint32_t _freertos_vector_table[ 8 ];
+
+/*-----------------------------------------------------------*/
+/* FreeRTOS Phase 1 — UART-based kernel verification tasks  */
+/*-----------------------------------------------------------*/
+
+static volatile uint32_t g_task1_ticks = 0;
+static volatile uint32_t g_task2_ticks = 0;
+
+/* Task 1: increment counter every 100 ms */
+static void vCounterTask1( void * pvParameters )
+{
+    ( void ) pvParameters;
+    console_print( "[TASK] Cnt1 OK tick=%d count=%d\r\n",
+                   ( long ) xTaskGetTickCount(),
+                   ( long ) g_task1_ticks );
+
+    for( ; ; )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 100 ) );
+        g_task1_ticks++;
+
+        if( ( g_task1_ticks % 10UL ) == 0UL )
+        {
+            console_print( "[TASK] Cnt1 OK tick=%d count=%d\r\n",
+                           ( long ) xTaskGetTickCount(),
+                           ( long ) g_task1_ticks );
+        }
+    }
+}
+
+/* Required by FreeRTOS when configCHECK_FOR_STACK_OVERFLOW is enabled */
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char * pcTaskName )
+{
+    ( void ) xTask;
+    console_print( "\r\n!!! STACK OVERFLOW: " );
+    console_print( pcTaskName );
+    console_print( " !!!\r\n" );
+    portDISABLE_INTERRUPTS();
+    for( ; ; ) { __asm volatile ( "NOP" ); }
+}
+
+void vApplicationMallocFailedHook( void )
+{
+    console_print( "\r\n!!! MALLOC FAILED: heap=%d !!!\r\n",
+                   ( long ) xPortGetFreeHeapSize() );
+    portDISABLE_INTERRUPTS();
+    for( ; ; ) { __asm volatile ( "NOP" ); }
+}
+
+void vApplicationIdleHook( void )
+{
+    const uint32_t ulGicCpuPmrReg = 0xF8F00104UL;
+    const uint32_t ulGicPending0Reg = 0xF8F01200UL;
+    const uint32_t ulTimerIsrReg = 0xF8F0060CUL;
+    uint32_t ulPmr;
+    uint32_t ulPending0;
+    uint32_t ulTimerIsr;
+
+    ulPmr = *( volatile uint32_t * ) ulGicCpuPmrReg;
+    ulPending0 = *( volatile uint32_t * ) ulGicPending0Reg;
+    ulTimerIsr = *( volatile uint32_t * ) ulTimerIsrReg;
+
+    if( ( ( ulPending0 & 0x20000000UL ) != 0UL ) &&
+        ( ( ulTimerIsr & 0x00000001UL ) != 0UL ) &&
+        ( ulPmr != 0x000000FFUL ) )
+    {
+        *( volatile uint32_t * ) ulGicCpuPmrReg = 0x000000FFUL;
+        __asm volatile ( "DSB" ::: "memory" );
+        __asm volatile ( "ISB" ::: "memory" );
+    }
+
+    __asm volatile ( "NOP" );
+}
+
+/* Task 2: increment counter every 250 ms */
+static void vCounterTask2( void * pvParameters )
+{
+    ( void ) pvParameters;
+    console_print( "[TASK] Cnt2 OK tick=%d count=%d\r\n",
+                   ( long ) xTaskGetTickCount(),
+                   ( long ) g_task2_ticks );
+
+    for( ; ; )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 250 ) );
+        g_task2_ticks++;
+
+        if( ( g_task2_ticks % 8UL ) == 0UL )
+        {
+            console_print( "[TASK] Cnt2 OK tick=%d count=%d\r\n",
+                           ( long ) xTaskGetTickCount(),
+                           ( long ) g_task2_ticks );
+        }
+    }
+}
+
+#endif /* FREERTOS_INTEGRATION */
+
 int main(void)
 {
 	int32_t status;
@@ -992,7 +1100,57 @@ int main(void)
 	iio_app_run(devices, NO_OS_ARRAY_SIZE(devices));
 
 #endif // IIO_SUPPORT
-#ifdef CONSOLE_COMMANDS
+
+#ifdef FREERTOS_INTEGRATION
+	/*
+	 * Phase 1: FreeRTOS kernel verification.
+	 * Minimal GIC init for the tick timer, then start the scheduler.
+	 */
+	{
+		XScuGic_Config * gic_cfg;
+		static XScuGic   gic_inst;
+		BaseType_t       rc_cnt1;
+		BaseType_t       rc_cnt2;
+		TaskHandle_t     h_cnt1 = NULL;
+		TaskHandle_t     h_cnt2 = NULL;
+
+		gic_cfg = XScuGic_LookupConfig( XPAR_PS7_SCUGIC_0_DEVICE_ID );
+		if( gic_cfg != NULL )
+		{
+			XScuGic_CfgInitialize( &gic_inst, gic_cfg,
+						gic_cfg->CpuBaseAddress );
+			freertos_irq_set_gic_instance( &gic_inst );
+		}
+
+		/* Create verification tasks */
+		rc_cnt1 = xTaskCreate( vCounterTask1, "Cnt1", 512, NULL, 2, &h_cnt1 );
+		rc_cnt2 = xTaskCreate( vCounterTask2, "Cnt2", 512, NULL, 1, &h_cnt2 );
+
+		if( ( rc_cnt1 != pdPASS ) || ( rc_cnt2 != pdPASS ) )
+		{
+			console_print( "[ERR] FreeRTOS Phase 1 task creation failed; scheduler not started\r\n" );
+			for( ; ; ) { __asm volatile ( "NOP" ); }
+		}
+
+		/*
+		 * Install the FreeRTOS vector table BEFORE starting the scheduler.
+		 * V11 does NOT do this automatically (unlike V10).
+		 * The vector table maps:
+		 *   IRQ → FreeRTOS_IRQ_Handler  (portASM.S)
+		 *   SVC → FreeRTOS_SWI_Handler  (portASM.S, used by portYIELD)
+		 */
+		__asm volatile ( "MCR p15, 0, %0, c12, c0, 0" :: "r" ( &_freertos_vector_table ) : "memory" );
+		__asm volatile ( "DSB" ::: "memory" );
+		__asm volatile ( "ISB" ::: "memory" );
+
+		/* Never returns */
+		vTaskStartScheduler();
+
+		/* Should never reach here */
+		for( ; ; ) { __asm volatile ( "NOP" ); }
+	}
+
+#elif defined( CONSOLE_COMMANDS )
 	get_help(NULL, 0);
 
 	while(1)
@@ -1003,7 +1161,7 @@ int main(void)
 		{
 			param_no = 0;
 			cmd_type = console_check_commands(received_cmd, cmd_list[cmd].name,
-											  param, &param_no);
+							  param, &param_no);
 			if(cmd_type == UNKNOWN_CMD)
 			{
 				invalid_cmd++;

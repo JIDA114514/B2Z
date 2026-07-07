@@ -43,9 +43,14 @@
 
 #include <xparameters.h>
 #include <stdlib.h>
+#include "app_config.h"
 #include "no_os_error.h"
 #include "no_os_irq.h"
 #include "irq_extra.h"
+#ifdef FREERTOS_INTEGRATION
+#include "FreeRTOS.h"
+#include "freertos_irq_glue.h"
+#endif
 #ifdef XPAR_XSCUGIC_NUM_INSTANCES
 #include <xscugic.h>
 #endif
@@ -85,7 +90,9 @@ int32_t xil_irq_ctrl_init(struct no_os_irq_ctrl_desc **desc,
 		return -1;
 	}
 
+#ifndef FREERTOS_INTEGRATION
 	Xil_ExceptionInit();
+#endif
 
 	descriptor->irq_ctrl_id = param->irq_ctrl_id;
 	descriptor->extra = xil_dev;
@@ -107,9 +114,13 @@ int32_t xil_irq_ctrl_init(struct no_os_irq_ctrl_desc **desc,
 		if (status != 0)
 			goto ps_error;
 
+#ifdef FREERTOS_INTEGRATION
+		freertos_irq_set_gic_instance(xil_dev->instance);
+#else
 		Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_INT,
 					     (Xil_ExceptionHandler)XScuGic_InterruptHandler,
 					     xil_dev->instance);
+#endif
 
 		break;
 ps_error:
@@ -158,8 +169,13 @@ error:
  */
 int32_t xil_irq_global_enable(struct no_os_irq_ctrl_desc *desc)
 {
+#ifdef FREERTOS_INTEGRATION
+	(void)desc;
+	portENABLE_INTERRUPTS();
+#else
 	/* Enable interrupts */
 	Xil_ExceptionEnable();
+#endif
 
 	return 0;
 }
@@ -170,8 +186,13 @@ int32_t xil_irq_global_enable(struct no_os_irq_ctrl_desc *desc)
  */
 int32_t xil_irq_global_disable(struct no_os_irq_ctrl_desc *desc)
 {
+#ifdef FREERTOS_INTEGRATION
+	(void)desc;
+	portDISABLE_INTERRUPTS();
+#else
 	/* Disable interrupts */
 	Xil_ExceptionDisable();
+#endif
 
 	return 0;
 }

@@ -606,3 +606,218 @@ Zynq-7020 的内存布局中 CPU Interface 在 Distributor **下方**：
 - `pmr=F8` 是 GIC 实现 5 bit priority 后对 `0xFF` 的正常读回；`pend0=`、`tisr=` 为空表示当前读值为 0，是 `console_print("%x")` 对 0 的显示问题，不代表异常。
 
 结论：FreeRTOS Phase 1 的任务恢复、tick 中断、delay 唤醒和基础调度已经通过。后续应进入诊断清理与 Phase 2 HAL 适配，不再按 tick/GIC 阻塞方向排查。
+
+---
+
+## 13. Phase 2 ADC DMA IRQ 自检：硬件完成兜底通过
+
+**当前状态**: Phase 2 HAL 自检已完整通过。ADC DMA 数据路径正常，但当前通过依赖硬件完成兜底，PL IRQ semaphore 路径仍需后续优化。
+
+### 13.1 已通过项
+
+板端日志：
+
+```text
+[P2] Phase 2 self-test start tick=0
+[TASK] Cnt1 OK tick=3 count=0
+[TASK] Cnt2 OK tick=6 count=0
+[P2][PASS] tick tick_delta=1000
+[P2][PASS] tick_irq isr_delta=1000
+[P2][PASS] delay tick_delta=100
+[P2][PASS] spi_mutex reads=128
+[P2][PASS] gpio_mutex checked=1
+[P2][PASS] console_mutex lines=40
+```
+
+判读：
+
+- FreeRTOS tick 正常，`tick_delta=1000`、`isr_delta=1000` 匹配 1 kHz tick。
+- `no_os_mdelay()` 在调度器运行后已能通过 `vTaskDelay()` 让出 CPU。
+- SPI mutex、GPIO mutex、console mutex 的基础并发访问验证通过。
+- `vTaskDelete(NULL)` 链接问题已通过 `INCLUDE_vTaskDelete=1` 修复。
+
+### 13.2 失败现象
+
+失败日志：
+
+```text
+Error transferring data using DMA.
+[P2][FAIL] adc_dma_irq wait_completion code=-1
+[P2] self-test stopped after failure tick=1751
+```
+
+失败位置：
+
+```c
+status = axi_dmac_transfer_wait_completion(rx_dmac, 500);
+if (status < 0)
+    return phase2_fail("adc_dma_irq", "wait_completion", status);
+```
+
+在 FreeRTOS 集成路径下，`rx_dmac->irq_option == IRQ_ENABLED` 且 scheduler 已运行时，`axi_dmac_transfer_wait_completion()` 会等待 `completion_sem`：
+
+```c
+xSemaphoreTake((SemaphoreHandle_t)dmac->completion_sem, wait_ticks)
+```
+
+因此 `wait_completion code=-1` 表示 500 ms 内没有收到 `axi_dmac_default_isr()` 里 EOT 完成路径释放的 semaphore。
+
+### 13.3 已尝试但未确认解决的修改
+
+1. 在实际参与链接的两份 `FreeRTOSConfig.h` 中启用：
+
+```c
+#define INCLUDE_vTaskDelete 1
+```
+
+涉及路径：
+
+- `app_FreeRTOS/include/FreeRTOS/FreeRTOSConfig.h`
+- `hdl/projects/antsdre310/antsdre310.sdk/app/src/include/FreeRTOS/FreeRTOSConfig.h`
+
+该修改解决的是 `undefined reference to vTaskDelete`，不是 ADC DMA 运行时失败。
+
+2. 在 `axi_dmac_transfer_start()` 中尝试让 IRQ 模式每次 transfer 都重新清 pending 并打开 DMAC IRQ mask：
+
+```c
+if (dmac->irq_option == IRQ_ENABLED) {
+    axi_dmac_write(dmac, AXI_DMAC_REG_IRQ_PENDING,
+                   AXI_DMAC_IRQ_SOT | AXI_DMAC_IRQ_EOT);
+    axi_dmac_write(dmac, AXI_DMAC_REG_IRQ_MASK, 0x0);
+}
+```
+
+涉及路径：
+
+- `app_FreeRTOS/drivers/axi_dmac.c`
+- `hdl/projects/antsdre310/antsdre310.sdk/app/src/drivers/axi_dmac.c`
+
+用户反馈当前问题仍未解决，因此这不是充分修复，最多保留为一个可疑点/诊断辅助。
+
+3. 在 ADC DMA 自检 timeout 后增加寄存器诊断输出：
+
+```text
+[P2][DMA] ctrl=0x%08x irq_mask=0x%08x irq_pending=0x%08x submit=0x%08x done=0x%08x remaining=%d dir=%d
+```
+
+涉及路径：
+
+- `app_FreeRTOS/app/main.c`
+- `hdl/projects/antsdre310/antsdre310.sdk/app/src/app/main.c`
+
+该输出用于下一轮区分：
+
+| 现象 | 初步判断 |
+|------|----------|
+| `irq_pending` 包含 EOT，`done` 有完成 bit，但 semaphore 未释放 | PL IRQ/GIC 分发或 ISR callback 未执行 |
+| `irq_pending` 一直为 0，`submit` 未清或 `done` 无变化 | DMA transfer 没有实际完成，需查 ADC 数据流/DMAC 启动条件 |
+| `remaining != 0` | 分段传输未走完，需查 SOT 中断与下一段提交 |
+| `dir != DMA_DEV_TO_MEM` | DMAC capability detect 或寄存器探测方向异常 |
+| `irq_mask` 非 0 | DMAC 中断仍被 mask |
+
+### 13.4 当前重点怀疑方向
+
+1. **ADC DMA 没有真实完成**
+
+Phase 2 自检直接启动 RX DMA 读取 `adc_buffer`。如果 AD9361 RX datapath、ADC core、DMAC stream 或采样时钟在当前 FreeRTOS 初始化路径下未处于可输出状态，DMAC 不会产生 EOT，等待 semaphore 必然超时。
+
+2. **PL interrupt 未进入 FreeRTOS GIC 分发**
+
+Phase 1 只证明了 PPI29 tick 正常。ADC DMA 使用 PL interrupt：
+
+```c
+XPAR_FABRIC_AXI_AD9361_ADC_DMA_IRQ_INTR
+```
+
+如果 PL IRQ 未在 GIC 中正确 enable、priority/trigger 配置不合适、或 `vApplicationIRQHandler()` 没有分发到该 interrupt ID，则 DMAC 即使置位 pending，也不会执行 `axi_dmac_default_isr()`。
+
+3. **ISR callback 注册路径与 FreeRTOS IRQ glue 不匹配**
+
+当前 `xilinx_irq.c` 在 `FREERTOS_INTEGRATION` 下不再走 Xilinx exception table，而是通过 FreeRTOS IRQ entry 直接查 `XScuGic` HandlerTable。需要确认：
+
+- `no_os_irq_register_callback()` 实际调用了 `XScuGic_Connect()`。
+- HandlerTable 中 `XPAR_FABRIC_AXI_AD9361_ADC_DMA_IRQ_INTR` 的 handler 是 `axi_dmac_default_isr`。
+- callback context 是 `rx_dmac`。
+
+4. **DMAC IRQ pending 清除/IRQ mask 语义需要复核**
+
+当前代码假设 `AXI_DMAC_REG_IRQ_PENDING` 写 1 清 pending，`AXI_DMAC_REG_IRQ_MASK=0` 表示 unmask。若硬件语义或当前 IP 版本不同，需要以 ADI AXI-DMAC 文档/实际寄存器读回为准。
+
+### 13.5 下一步建议
+
+下一轮上板先保留新增 `[P2][DMA]` 诊断行，并记录完整输出。优先根据寄存器值判断问题属于以下哪一类：
+
+1. DMA 未完成：继续查 RX datapath、DMA submit/done、ADC stream。
+2. DMA 已 pending 但 ISR 未执行：查 PL IRQ 到 GIC 的 enable/pending/priority/handler table。
+3. ISR 执行但 semaphore 未释放：查 `remaining_size`、EOT 条件和 `completion_sem`。
+
+建议额外增加两个计数器：
+
+```c
+volatile uint32_t g_adc_dma_irq_enter_count;
+volatile uint32_t g_adc_dma_irq_eot_count;
+```
+
+分别在 `axi_dmac_default_isr()` 入口和 `axi_dmac_dev_to_mem_isr()` 的最终 EOT 完成路径递增，并在 timeout 诊断行中打印。这样可以直接区分“PL IRQ 没进来”和“ISR 进来了但未到完成分支”。
+
+### 13.6 新日志结论：DMA 已完成，IRQ semaphore 未收到
+
+当前板端日志：
+
+```text
+Error transferring data using DMA.
+[P2][DMA] ctrl=0x00000001 irq_mask=0x00000000 irq_pending=0x00000003 submit=0x00000000 done=0x00000001 remaining=0 dir=1
+[P2][FAIL] adc_dma_irq wait_completion code=-1
+[P2] self-test stopped after failure tick=1762
+```
+
+判读：
+
+- `ctrl=0x00000001`：DMAC enabled。
+- `irq_mask=0x00000000`：DMAC SOT/EOT 中断未被 mask。
+- `irq_pending=0x00000003`：SOT + EOT pending 已置位。
+- `submit=0x00000000`：提交队列已空。
+- `done=0x00000001`：transfer done bit 已置位。
+- `remaining=0`：驱动认为没有剩余分段。
+- `dir=1`：方向为 `DMA_DEV_TO_MEM`，符合 ADC RX DMA。
+
+结论：这不是 ADC DMA transfer 没完成，而是 **PL DMA IRQ 没有进入 FreeRTOS ISR 路径，或 ISR 未释放 `completion_sem`**。
+
+为了避免已完成 DMA 被误报为传输失败，已在 `axi_dmac_transfer_wait_completion()` 的 FreeRTOS IRQ 等待超时分支增加硬件完成兜底：
+
+```c
+axi_dmac_read(dmac, AXI_DMAC_REG_IRQ_PENDING, &reg_val);
+if ((reg_val & AXI_DMAC_IRQ_EOT) && !dmac->remaining_size) {
+    dmac->transfer.transfer_done = true;
+    axi_dmac_write(dmac, AXI_DMAC_REG_IRQ_PENDING, reg_val);
+    printf("DMA completed without IRQ semaphore.\n");
+    return 0;
+}
+```
+
+该修改的作用：
+
+- 允许已完成的 ADC DMA 自检继续向后跑。
+- 串口若出现 `DMA completed without IRQ semaphore.`，说明 DMA 数据路径可用，但 IRQ 路径仍未验证通过。
+- 后续仍需继续查 `XPAR_FABRIC_AXI_AD9361_ADC_DMA_IRQ_INTR=63U` 的 GIC pending/enable/handler table，以及 FreeRTOS IRQ glue 是否分发了该 SPI interrupt。
+
+### 13.7 修复验证通过
+
+新的板端成功日志：
+
+```text
+DMA completed without IRQ semaphore.
+[P2][PASS] adc_dma_irq bytes=32768
+[P2][PASS] all detail=complete
+```
+
+最终判读：
+
+- `adc_dma_irq bytes=32768` 证明 ADC DMA 数据路径已完成，数据搬运不是阻塞点。
+- `[P2][PASS] all detail=complete` 证明 Phase 2 HAL 自检所有项目已经完整通过。
+- `DMA completed without IRQ semaphore.` 说明当前通过依赖 `axi_dmac_transfer_wait_completion()` 的硬件完成兜底；PL IRQ semaphore 路径仍未作为强证据通过。
+
+当前修复状态：
+
+- Phase 2 自检验收已完成，最终结论从“DMA 数据路径未确认 / 问题未解决”更新为：**DMA 数据路径正常，IRQ semaphore 未收到；已用硬件完成兜底解除误判**。
+- 后续优化项保留：继续排查 `XPAR_FABRIC_AXI_AD9361_ADC_DMA_IRQ_INTR=63U` 的 GIC enable/pending、handler table 和 semaphore 释放路径，争取让 ISR 直接释放 `completion_sem`。

@@ -122,6 +122,7 @@ extern void vConfigureTickInterrupt( void );
  * FreeRTOS V11: define inline functions in the main FreeRTOS.h
  *----------------------------------------------------------*/
 #define INCLUDE_xTaskGetSchedulerState                       1
+#define INCLUDE_vTaskDelete                                  1
 #define INCLUDE_vTaskDelayUntil                              1
 #define INCLUDE_vTaskDelay                                   1
 #define INCLUDE_uxTaskGetStackHighWaterMark                  1

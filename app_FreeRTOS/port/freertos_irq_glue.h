@@ -6,7 +6,10 @@
 #ifndef FREERTOS_IRQ_GLUE_H
 #define FREERTOS_IRQ_GLUE_H
 
+#include <stdint.h>
 #include "xscugic.h"
+
+extern volatile uint32_t g_tick_isr_count;
 
 /* Register the XScuGic instance so vApplicationIRQHandler can dispatch.
  * Called from hw_init() before vTaskStartScheduler(). */

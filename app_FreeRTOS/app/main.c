@@ -57,6 +57,7 @@
 #ifdef FREERTOS_INTEGRATION
 #include "FreeRTOS.h"
 #include "task.h"
+#include "freertos_irq_glue.h"
 #endif
 #ifdef LINUX_PLATFORM
 #include "linux_spi.h"
@@ -103,7 +104,7 @@ static uint8_t out_buff[MAX_SIZE_BASE_ADDR];
 /************************ Variables Definitions *******************************/
 /******************************************************************************/
 
-#if defined(DAC_DMA_EXAMPLE) || defined(IIO_SUPPORT)
+#if defined(DAC_DMA_EXAMPLE) || defined(IIO_SUPPORT) || defined(PHASE2_SELFTEST)
 uint32_t dac_buffer[DAC_BUFFER_SAMPLES] __attribute__ ((aligned));
 uint16_t adc_buffer[ADC_BUFFER_SAMPLES * ADC_CHANNELS] __attribute__ ((
 			aligned));
@@ -165,7 +166,7 @@ struct axi_dac_init tx_dac_init = {
 struct axi_dmac_init rx_dmac_init = {
 	"rx_dmac",
 	CF_AD9361_RX_DMA_BASEADDR,
-#ifdef ADC_DMA_IRQ_EXAMPLE
+#if defined(ADC_DMA_IRQ_EXAMPLE) || defined(PHASE2_SELFTEST)
 	IRQ_ENABLED
 #else
 	IRQ_DISABLED
@@ -605,6 +606,387 @@ static int32_t freertos_no_os_irq_init(void)
 	return no_os_irq_ctrl_init(&freertos_irq_desc, &irq_init_param);
 }
 
+#ifdef PHASE2_SELFTEST
+
+#define PHASE2_TASK_PRIORITY        4
+#define PHASE2_TASK_STACK_WORDS     2048
+#define PHASE2_CHILD_PRIORITY       3
+#define PHASE2_CHILD_STACK_WORDS    512
+#define PHASE2_SPI_ITERATIONS       64
+#define PHASE2_CONSOLE_LINES        20
+#define PHASE2_ADC_DMA_SAMPLES      4096
+
+struct phase2_child_ctx {
+	TaskHandle_t parent;
+	char *name;
+	volatile int32_t failures;
+	volatile uint32_t iterations;
+};
+
+static int32_t phase2_fail(char *name, char *detail, int32_t code)
+{
+	console_print("[P2][FAIL] %s %s code=%d\r\n", name, detail, (long)code);
+
+	return -1;
+}
+
+static void phase2_pass(char *name, char *detail, int32_t value)
+{
+	console_print("[P2][PASS] %s %s=%d\r\n", name, detail, (long)value);
+}
+
+static int32_t phase2_read_product_id(uint8_t *product_id)
+{
+	uint16_t cmd = AD_READ | AD_CNT(1) | AD_ADDR(REG_PRODUCT_ID);
+	uint8_t buf[3];
+	int32_t ret;
+
+	buf[0] = cmd >> 8;
+	buf[1] = cmd & 0xFF;
+	buf[2] = 0;
+
+	ret = no_os_spi_write_and_read(ad9361_phy->spi, buf, sizeof(buf));
+	if (ret < 0)
+		return ret;
+
+	*product_id = buf[2];
+
+	return 0;
+}
+
+static void phase2_spi_child_task(void *pvParameters)
+{
+	struct phase2_child_ctx *ctx = pvParameters;
+	uint32_t i;
+	uint8_t product_id = 0;
+	int32_t ret;
+
+	for (i = 0; i < PHASE2_SPI_ITERATIONS; i++) {
+		ret = phase2_read_product_id(&product_id);
+		if ((ret < 0) ||
+		    ((product_id & PRODUCT_ID_MASK) != PRODUCT_ID_9361)) {
+			ctx->failures++;
+			break;
+		}
+		ctx->iterations++;
+		vTaskDelay(pdMS_TO_TICKS(1));
+	}
+
+	xTaskNotifyGive(ctx->parent);
+	vTaskDelete(NULL);
+}
+
+static int32_t phase2_test_spi_mutex(void)
+{
+	TaskHandle_t parent = xTaskGetCurrentTaskHandle();
+	struct phase2_child_ctx ctx_a = { parent, "SPI_A", 0, 0 };
+	struct phase2_child_ctx ctx_b = { parent, "SPI_B", 0, 0 };
+	BaseType_t rc_a;
+	BaseType_t rc_b;
+	TaskHandle_t task_a = NULL;
+	TaskHandle_t task_b = NULL;
+	uint32_t total;
+
+	if (!ad9361_phy || !ad9361_phy->spi)
+		return phase2_fail("spi_mutex", "ad9361 spi missing", -1);
+
+	rc_a = xTaskCreate(phase2_spi_child_task, "P2SPIA",
+			   PHASE2_CHILD_STACK_WORDS, &ctx_a,
+			   PHASE2_CHILD_PRIORITY, &task_a);
+	rc_b = xTaskCreate(phase2_spi_child_task, "P2SPIB",
+			   PHASE2_CHILD_STACK_WORDS, &ctx_b,
+			   PHASE2_CHILD_PRIORITY, &task_b);
+
+	if ((rc_a != pdPASS) || (rc_b != pdPASS)) {
+		if (task_a)
+			vTaskDelete(task_a);
+		if (task_b)
+			vTaskDelete(task_b);
+		return phase2_fail("spi_mutex", "task create", -1);
+	}
+
+	ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+	ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
+	if (ctx_a.failures || ctx_b.failures)
+		return phase2_fail("spi_mutex", "read product_id", -1);
+
+	total = ctx_a.iterations + ctx_b.iterations;
+	phase2_pass("spi_mutex", "reads", total);
+
+	return 0;
+}
+
+static int32_t phase2_check_gpio(char *name, struct no_os_gpio_desc *gpio,
+				 uint32_t *checked)
+{
+	uint8_t direction = 0;
+	uint8_t value = 0;
+	int32_t ret;
+
+	if (!gpio)
+		return 0;
+
+	ret = no_os_gpio_get_direction(gpio, &direction);
+	if (ret < 0)
+		return phase2_fail(name, "get_direction", ret);
+
+	ret = no_os_gpio_get_value(gpio, &value);
+	if (ret < 0)
+		return phase2_fail(name, "get_value", ret);
+
+	(*checked)++;
+
+	return 0;
+}
+
+static int32_t phase2_test_gpio_mutex(void)
+{
+	uint32_t checked = 0;
+
+	if (!ad9361_phy)
+		return phase2_fail("gpio_mutex", "ad9361 missing", -1);
+
+	if (phase2_check_gpio("gpio_resetb", ad9361_phy->gpio_desc_resetb,
+			      &checked) < 0)
+		return -1;
+	if (phase2_check_gpio("gpio_sync", ad9361_phy->gpio_desc_sync,
+			      &checked) < 0)
+		return -1;
+	if (phase2_check_gpio("gpio_cal_sw1", ad9361_phy->gpio_desc_cal_sw1,
+			      &checked) < 0)
+		return -1;
+	if (phase2_check_gpio("gpio_cal_sw2", ad9361_phy->gpio_desc_cal_sw2,
+			      &checked) < 0)
+		return -1;
+
+	if (!checked)
+		return phase2_fail("gpio_mutex", "no gpio descriptors", -1);
+
+	phase2_pass("gpio_mutex", "checked", checked);
+
+	return 0;
+}
+
+static void phase2_console_child_task(void *pvParameters)
+{
+	struct phase2_child_ctx *ctx = pvParameters;
+	uint32_t i;
+
+	for (i = 0; i < PHASE2_CONSOLE_LINES; i++) {
+		console_print("[P2][TOKEN] %s line=%d\r\n", ctx->name, (long)i);
+		ctx->iterations++;
+		vTaskDelay(pdMS_TO_TICKS(1));
+	}
+
+	xTaskNotifyGive(ctx->parent);
+	vTaskDelete(NULL);
+}
+
+static int32_t phase2_test_console_mutex(void)
+{
+	TaskHandle_t parent = xTaskGetCurrentTaskHandle();
+	struct phase2_child_ctx ctx_a = { parent, "CONSOLE_A", 0, 0 };
+	struct phase2_child_ctx ctx_b = { parent, "CONSOLE_B", 0, 0 };
+	BaseType_t rc_a;
+	BaseType_t rc_b;
+	TaskHandle_t task_a = NULL;
+	TaskHandle_t task_b = NULL;
+	uint32_t total;
+
+	rc_a = xTaskCreate(phase2_console_child_task, "P2CONA",
+			   PHASE2_CHILD_STACK_WORDS, &ctx_a,
+			   PHASE2_CHILD_PRIORITY, &task_a);
+	rc_b = xTaskCreate(phase2_console_child_task, "P2CONB",
+			   PHASE2_CHILD_STACK_WORDS, &ctx_b,
+			   PHASE2_CHILD_PRIORITY, &task_b);
+
+	if ((rc_a != pdPASS) || (rc_b != pdPASS)) {
+		if (task_a)
+			vTaskDelete(task_a);
+		if (task_b)
+			vTaskDelete(task_b);
+		return phase2_fail("console_mutex", "task create", -1);
+	}
+
+	ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+	ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
+	total = ctx_a.iterations + ctx_b.iterations;
+	if (total != (PHASE2_CONSOLE_LINES * 2U))
+		return phase2_fail("console_mutex", "line count", total);
+
+	phase2_pass("console_mutex", "lines", total);
+
+	return 0;
+}
+
+static int32_t phase2_register_adc_dma_irq(void)
+{
+	struct no_os_callback_desc rx_dmac_callback = {
+		.ctx = rx_dmac,
+		.callback = axi_dmac_default_isr,
+	};
+	int32_t status;
+
+	status = freertos_no_os_irq_init();
+	if (status < 0)
+		return status;
+
+	status = no_os_irq_global_enable(freertos_irq_desc);
+	if (status < 0)
+		return status;
+
+	status = no_os_irq_register_callback(
+		freertos_irq_desc,
+		XPAR_FABRIC_AXI_AD9361_ADC_DMA_IRQ_INTR,
+		&rx_dmac_callback);
+	if (status < 0)
+		return status;
+
+	status = no_os_irq_trigger_level_set(
+		freertos_irq_desc,
+		XPAR_FABRIC_AXI_AD9361_ADC_DMA_IRQ_INTR,
+		NO_OS_IRQ_LEVEL_HIGH);
+	if (status < 0)
+		return status;
+
+	return no_os_irq_enable(freertos_irq_desc,
+				XPAR_FABRIC_AXI_AD9361_ADC_DMA_IRQ_INTR);
+}
+
+static int32_t phase2_test_adc_dma_irq(void)
+{
+	struct axi_dma_transfer read_transfer;
+	uint32_t dma_bytes;
+	int32_t status;
+
+	if (!rx_dmac)
+		return phase2_fail("adc_dma_irq", "rx_dmac missing", -1);
+	if (rx_dmac->irq_option != IRQ_ENABLED)
+		return phase2_fail("adc_dma_irq", "irq disabled", -1);
+
+	status = phase2_register_adc_dma_irq();
+	if (status < 0)
+		return phase2_fail("adc_dma_irq", "irq register", status);
+
+	dma_bytes = PHASE2_ADC_DMA_SAMPLES *
+		    AD9361_ADC_DAC_BYTES_PER_SAMPLE *
+		    rx_adc_init.num_channels;
+	if (dma_bytes > sizeof(adc_buffer))
+		dma_bytes = sizeof(adc_buffer);
+
+	axi_dmac_write(rx_dmac, AXI_DMAC_REG_IRQ_PENDING,
+		       AXI_DMAC_IRQ_SOT | AXI_DMAC_IRQ_EOT);
+
+	read_transfer.size = dma_bytes;
+	read_transfer.transfer_done = 0;
+	read_transfer.cyclic = NO;
+	read_transfer.src_addr = 0;
+	read_transfer.dest_addr = (uintptr_t)adc_buffer;
+
+	status = axi_dmac_transfer_start(rx_dmac, &read_transfer);
+	if (status < 0)
+		return phase2_fail("adc_dma_irq", "transfer_start", status);
+
+	status = axi_dmac_transfer_wait_completion(rx_dmac, 500);
+	if (status < 0) {
+		uint32_t ctrl = 0;
+		uint32_t irq_mask = 0;
+		uint32_t irq_pending = 0;
+		uint32_t submit = 0;
+		uint32_t done = 0;
+
+		axi_dmac_read(rx_dmac, AXI_DMAC_REG_CTRL, &ctrl);
+		axi_dmac_read(rx_dmac, AXI_DMAC_REG_IRQ_MASK, &irq_mask);
+		axi_dmac_read(rx_dmac, AXI_DMAC_REG_IRQ_PENDING, &irq_pending);
+		axi_dmac_read(rx_dmac, AXI_DMAC_REG_TRANSFER_SUBMIT, &submit);
+		axi_dmac_read(rx_dmac, AXI_DMAC_REG_TRANSFER_DONE, &done);
+		console_print("[P2][DMA] ctrl=0x%08x irq_mask=0x%08x irq_pending=0x%08x submit=0x%08x done=0x%08x remaining=%d dir=%d\r\n",
+			      (long)ctrl, (long)irq_mask, (long)irq_pending,
+			      (long)submit, (long)done,
+			      (long)rx_dmac->remaining_size,
+			      (long)rx_dmac->direction);
+		return phase2_fail("adc_dma_irq", "wait_completion", status);
+	}
+
+#ifdef XILINX_PLATFORM
+	Xil_DCacheInvalidateRange((uintptr_t)adc_buffer, dma_bytes);
+#endif
+
+	phase2_pass("adc_dma_irq", "bytes", dma_bytes);
+
+	return 0;
+}
+
+static int32_t phase2_test_tick(void)
+{
+	TickType_t tick_start = xTaskGetTickCount();
+	uint32_t isr_start = g_tick_isr_count;
+	TickType_t tick_delta;
+	uint32_t isr_delta;
+
+	vTaskDelay(pdMS_TO_TICKS(1000));
+
+	tick_delta = xTaskGetTickCount() - tick_start;
+	isr_delta = g_tick_isr_count - isr_start;
+
+	if ((tick_delta < pdMS_TO_TICKS(900)) || (isr_delta < 900U))
+		return phase2_fail("tick", "too small", (int32_t)tick_delta);
+
+	phase2_pass("tick", "tick_delta", tick_delta);
+	phase2_pass("tick_irq", "isr_delta", isr_delta);
+
+	return 0;
+}
+
+static int32_t phase2_test_delay(void)
+{
+	TickType_t tick_start = xTaskGetTickCount();
+	TickType_t tick_delta;
+
+	no_os_mdelay(100);
+	tick_delta = xTaskGetTickCount() - tick_start;
+
+	if (tick_delta < pdMS_TO_TICKS(90))
+		return phase2_fail("delay", "too small", (int32_t)tick_delta);
+
+	phase2_pass("delay", "tick_delta", tick_delta);
+
+	return 0;
+}
+
+static void vPhase2SelfTestTask(void *pvParameters)
+{
+	(void)pvParameters;
+
+	console_print("[P2] Phase 2 self-test start tick=%d\r\n",
+		      (long)xTaskGetTickCount());
+
+	if (phase2_test_tick() < 0)
+		goto fail;
+	if (phase2_test_delay() < 0)
+		goto fail;
+	if (phase2_test_spi_mutex() < 0)
+		goto fail;
+	if (phase2_test_gpio_mutex() < 0)
+		goto fail;
+	if (phase2_test_console_mutex() < 0)
+		goto fail;
+	if (phase2_test_adc_dma_irq() < 0)
+		goto fail;
+
+	console_print("[P2][PASS] all detail=complete\r\n");
+	vTaskDelete(NULL);
+
+fail:
+	console_print("[P2] self-test stopped after failure tick=%d\r\n",
+		      (long)xTaskGetTickCount());
+	vTaskDelete(NULL);
+}
+
+#endif /* PHASE2_SELFTEST */
+
 /*-----------------------------------------------------------*/
 /* FreeRTOS Phase 1 — UART-based kernel verification tasks  */
 /*-----------------------------------------------------------*/
@@ -625,7 +1007,7 @@ static void vCounterTask1( void * pvParameters )
         vTaskDelay( pdMS_TO_TICKS( 100 ) );
         g_task1_ticks++;
 
-        if( ( g_task1_ticks % 10UL ) == 0UL )
+        if( ( g_task1_ticks % 50UL ) == 0UL )
         {
             console_print( "[TASK] Cnt1 OK tick=%d count=%d\r\n",
                            ( long ) xTaskGetTickCount(),
@@ -691,7 +1073,7 @@ static void vCounterTask2( void * pvParameters )
         vTaskDelay( pdMS_TO_TICKS( 250 ) );
         g_task2_ticks++;
 
-        if( ( g_task2_ticks % 8UL ) == 0UL )
+        if( ( g_task2_ticks % 20UL ) == 0UL )
         {
             console_print( "[TASK] Cnt2 OK tick=%d count=%d\r\n",
                            ( long ) xTaskGetTickCount(),
@@ -834,7 +1216,7 @@ int main(void)
 
 #ifndef AXI_ADC_NOT_PRESENT
 #if (defined XILINX_PLATFORM || defined ALTERA_PLATFORM) && \
-	(defined ADC_DMA_EXAMPLE)
+	(defined ADC_DMA_EXAMPLE) && !defined(FREERTOS_INTEGRATION)
 	uint32_t samples = 16384;
 #if (defined ADC_DMA_IRQ_EXAMPLE)
 #ifndef FREERTOS_INTEGRATION
@@ -1137,6 +1519,10 @@ int main(void)
 		BaseType_t       rc_cnt2;
 		TaskHandle_t     h_cnt1 = NULL;
 		TaskHandle_t     h_cnt2 = NULL;
+#ifdef PHASE2_SELFTEST
+		BaseType_t       rc_p2;
+		TaskHandle_t     h_p2 = NULL;
+#endif
 
 		status = freertos_no_os_irq_init();
 		if( status < 0 )
@@ -1148,8 +1534,17 @@ int main(void)
 		/* Create verification tasks */
 		rc_cnt1 = xTaskCreate( vCounterTask1, "Cnt1", 512, NULL, 2, &h_cnt1 );
 		rc_cnt2 = xTaskCreate( vCounterTask2, "Cnt2", 512, NULL, 1, &h_cnt2 );
+#ifdef PHASE2_SELFTEST
+		rc_p2 = xTaskCreate( vPhase2SelfTestTask, "P2SelfTest",
+				     PHASE2_TASK_STACK_WORDS, NULL,
+				     PHASE2_TASK_PRIORITY, &h_p2 );
+#endif
 
-		if( ( rc_cnt1 != pdPASS ) || ( rc_cnt2 != pdPASS ) )
+		if( ( rc_cnt1 != pdPASS ) || ( rc_cnt2 != pdPASS )
+#ifdef PHASE2_SELFTEST
+		    || ( rc_p2 != pdPASS )
+#endif
+		  )
 		{
 			console_print( "[ERR] FreeRTOS Phase 1 task creation failed; scheduler not started\r\n" );
 			for( ; ; ) { __asm volatile ( "NOP" ); }

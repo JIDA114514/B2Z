@@ -271,9 +271,24 @@ int32_t xil_irq_register_callback(struct no_os_irq_ctrl_desc *desc,
 	switch(xil_dev->type) {
 	case IRQ_PS:
 #ifdef XSCUGIC_H
-		return XScuGic_Connect(xil_dev->instance, irq_id,
-				       (Xil_InterruptHandler) callback_desc->legacy_callback,
-				       callback_desc->ctx);
+		{
+			Xil_InterruptHandler handler;
+			union {
+				void (*legacy)(void *ctx, uint32_t event, void *extra);
+				Xil_InterruptHandler xil;
+			} legacy_handler;
+
+			if (callback_desc->callback) {
+				handler = callback_desc->callback;
+			} else {
+				legacy_handler.legacy = callback_desc->legacy_callback;
+				handler = legacy_handler.xil;
+			}
+
+			return XScuGic_Connect(xil_dev->instance, irq_id,
+					       handler,
+					       callback_desc->ctx);
+		}
 #endif
 		break;
 	case IRQ_PL:

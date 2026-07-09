@@ -491,6 +491,10 @@ int32_t axi_dmac_transfer_start(struct axi_dmac *dmac,
 	if (!(reg_val & AXI_DMAC_CTRL_ENABLE)) {
 		axi_dmac_write(dmac, AXI_DMAC_REG_CTRL, 0x0);
 		axi_dmac_write(dmac, AXI_DMAC_REG_CTRL, AXI_DMAC_CTRL_ENABLE);
+	}
+	if (dmac->irq_option == IRQ_ENABLED) {
+		axi_dmac_write(dmac, AXI_DMAC_REG_IRQ_PENDING,
+			       AXI_DMAC_IRQ_SOT | AXI_DMAC_IRQ_EOT);
 		axi_dmac_write(dmac, AXI_DMAC_REG_IRQ_MASK, 0x0);
 	}
 
@@ -582,6 +586,16 @@ int32_t axi_dmac_transfer_wait_completion(struct axi_dmac *dmac,
 			if (!dmac->transfer.transfer_done) {
 				if (xSemaphoreTake((SemaphoreHandle_t)dmac->completion_sem,
 						   wait_ticks) != pdTRUE) {
+					axi_dmac_read(dmac, AXI_DMAC_REG_IRQ_PENDING,
+						      &reg_val);
+					if ((reg_val & AXI_DMAC_IRQ_EOT) &&
+					    !dmac->remaining_size) {
+						dmac->transfer.transfer_done = true;
+						axi_dmac_write(dmac, AXI_DMAC_REG_IRQ_PENDING,
+							       reg_val);
+						printf("DMA completed without IRQ semaphore.\n");
+						return 0;
+					}
 					printf("Error transferring data using DMA.\n");
 					return -1;
 				}

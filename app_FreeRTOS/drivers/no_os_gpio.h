@@ -45,6 +45,7 @@
 /******************************************************************************/
 
 #include <stdint.h>
+#include "app_config.h"
 
 /******************************************************************************/
 /********************** Macros and Constants Definitions **********************/
@@ -110,6 +111,10 @@ typedef struct no_os_gpio_desc {
 	const struct no_os_gpio_platform_ops *platform_ops;
 	/** GPIO extra parameters (device specific) */
 	void		*extra;
+#ifdef FREERTOS_INTEGRATION
+	/** Optional GPIO mutex used once the FreeRTOS scheduler is running. */
+	void		*mutex;
+#endif
 } no_os_gpio_desc;
 
 /**

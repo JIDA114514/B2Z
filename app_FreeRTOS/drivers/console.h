@@ -55,6 +55,7 @@ char console_init(unsigned long baud_rate);
 
 /* Prints formatted data to console. */
 void console_print(char* str, ...);
+void console_print_unlocked(char* str, ...);
 
 /* Reads one command from console. */
 void console_get_command(char* command);

@@ -43,6 +43,11 @@
 
 #include "no_os_delay.h"
 #include <sleep.h>
+#include "app_config.h"
+#ifdef FREERTOS_INTEGRATION
+#include "FreeRTOS.h"
+#include "task.h"
+#endif
 
 /******************************************************************************/
 /************************ Functions Definitions *******************************/
@@ -69,6 +74,16 @@ void no_os_udelay(uint32_t usecs)
  */
 void no_os_mdelay(uint32_t msecs)
 {
+#ifdef FREERTOS_INTEGRATION
+	if (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING) {
+		TickType_t ticks = pdMS_TO_TICKS(msecs);
+
+		if (ticks > 0) {
+			vTaskDelay(ticks);
+			return;
+		}
+	}
+#endif
 #ifdef _XPARAMETERS_PS_H_
 	usleep(msecs * 1000);
 #else

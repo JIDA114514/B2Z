@@ -43,6 +43,7 @@
 /***************************** Include Files **********************************/
 /******************************************************************************/
 #include <stdint.h>
+#include "app_config.h"
 #include "no_os_util.h"
 
 /******************************************************************************/
@@ -124,6 +125,9 @@ struct axi_dmac {
 	uint32_t remaining_size;
 	uint32_t next_src_addr;
 	uint32_t next_dest_addr;
+#ifdef FREERTOS_INTEGRATION
+	void *completion_sem;
+#endif
 };
 
 struct axi_dmac_init {
@@ -138,6 +142,7 @@ struct axi_dmac_init {
 void axi_dmac_dev_to_mem_isr(void *instance);
 void axi_dmac_mem_to_dev_isr(void *instance);
 void axi_dmac_mem_to_mem_isr(void *instance);
+void axi_dmac_default_isr(void *instance);
 void axi_dmac_write_isr(void *instance);
 int32_t axi_dmac_read(struct axi_dmac *dmac, uint32_t reg_addr,
 		      uint32_t *reg_data);

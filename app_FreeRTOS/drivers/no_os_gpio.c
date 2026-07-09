@@ -41,6 +41,48 @@
 #include "no_os_gpio.h"
 #include <stdlib.h>
 #include "no_os_error.h"
+#ifdef FREERTOS_INTEGRATION
+#include "FreeRTOS.h"
+#include "semphr.h"
+#include "task.h"
+
+static int32_t no_os_gpio_create_mutex(struct no_os_gpio_desc *desc)
+{
+	desc->mutex = xSemaphoreCreateMutex();
+
+	return desc->mutex ? 0 : -1;
+}
+
+static void no_os_gpio_lock(struct no_os_gpio_desc *desc)
+{
+	if (desc && desc->mutex &&
+	    (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING))
+		xSemaphoreTake((SemaphoreHandle_t)desc->mutex, portMAX_DELAY);
+}
+
+static void no_os_gpio_unlock(struct no_os_gpio_desc *desc)
+{
+	if (desc && desc->mutex &&
+	    (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING))
+		xSemaphoreGive((SemaphoreHandle_t)desc->mutex);
+}
+#else
+static int32_t no_os_gpio_create_mutex(struct no_os_gpio_desc *desc)
+{
+	(void)desc;
+	return 0;
+}
+
+static void no_os_gpio_lock(struct no_os_gpio_desc *desc)
+{
+	(void)desc;
+}
+
+static void no_os_gpio_unlock(struct no_os_gpio_desc *desc)
+{
+	(void)desc;
+}
+#endif
 
 /******************************************************************************/
 /************************ Functions Definitions *******************************/
@@ -62,6 +104,12 @@ int32_t no_os_gpio_get(struct no_os_gpio_desc **desc,
 		return -1;
 
 	(*desc)->platform_ops = param->platform_ops;
+
+	if (no_os_gpio_create_mutex(*desc) < 0) {
+		(*desc)->platform_ops->gpio_ops_remove(*desc);
+		*desc = NULL;
+		return -1;
+	}
 
 	return 0;
 }
@@ -85,6 +133,12 @@ int32_t no_os_gpio_get_optional(struct no_os_gpio_desc **desc,
 
 	(*desc)->platform_ops = param->platform_ops;
 
+	if (no_os_gpio_create_mutex(*desc) < 0) {
+		(*desc)->platform_ops->gpio_ops_remove(*desc);
+		*desc = NULL;
+		return -1;
+	}
+
 	return 0;
 }
 /**
@@ -94,10 +148,18 @@ int32_t no_os_gpio_get_optional(struct no_os_gpio_desc **desc,
  */
 int32_t no_os_gpio_remove(struct no_os_gpio_desc *desc)
 {
-	if (desc)
+	if (desc) {
+#ifdef FREERTOS_INTEGRATION
+		SemaphoreHandle_t mutex = (SemaphoreHandle_t)desc->mutex;
+
+		desc->mutex = NULL;
+		if (mutex)
+			vSemaphoreDelete(mutex);
+#endif
 		return desc->platform_ops->gpio_ops_remove(desc);
-	else
-		return 0;
+	}
+
+	return 0;
 }
 
 /**
@@ -107,10 +169,15 @@ int32_t no_os_gpio_remove(struct no_os_gpio_desc *desc)
  */
 int32_t no_os_gpio_direction_input(struct no_os_gpio_desc *desc)
 {
-	if (desc)
-		return desc->platform_ops->gpio_ops_direction_input(desc);
-	else
-		return 0;
+	int32_t ret = 0;
+
+	if (desc) {
+		no_os_gpio_lock(desc);
+		ret = desc->platform_ops->gpio_ops_direction_input(desc);
+		no_os_gpio_unlock(desc);
+	}
+
+	return ret;
 }
 
 /**
@@ -124,11 +191,15 @@ int32_t no_os_gpio_direction_input(struct no_os_gpio_desc *desc)
 int32_t no_os_gpio_direction_output(struct no_os_gpio_desc *desc,
 				    uint8_t value)
 {
-	if (desc)
-		return desc->platform_ops->
-		       gpio_ops_direction_output(desc, value);
-	else
-		return 0;
+	int32_t ret = 0;
+
+	if (desc) {
+		no_os_gpio_lock(desc);
+		ret = desc->platform_ops->gpio_ops_direction_output(desc, value);
+		no_os_gpio_unlock(desc);
+	}
+
+	return ret;
 }
 
 /**
@@ -142,11 +213,15 @@ int32_t no_os_gpio_direction_output(struct no_os_gpio_desc *desc,
 int32_t no_os_gpio_get_direction(struct no_os_gpio_desc *desc,
 				 uint8_t *direction)
 {
-	if (desc)
-		return desc->platform_ops->
-		       gpio_ops_get_direction(desc, direction);
-	else
-		return 0;
+	int32_t ret = 0;
+
+	if (desc) {
+		no_os_gpio_lock(desc);
+		ret = desc->platform_ops->gpio_ops_get_direction(desc, direction);
+		no_os_gpio_unlock(desc);
+	}
+
+	return ret;
 }
 
 /**
@@ -160,10 +235,15 @@ int32_t no_os_gpio_get_direction(struct no_os_gpio_desc *desc,
 int32_t no_os_gpio_set_value(struct no_os_gpio_desc *desc,
 			     uint8_t value)
 {
-	if (desc)
-		return desc->platform_ops->gpio_ops_set_value(desc, value);
-	else
-		return 0;
+	int32_t ret = 0;
+
+	if (desc) {
+		no_os_gpio_lock(desc);
+		ret = desc->platform_ops->gpio_ops_set_value(desc, value);
+		no_os_gpio_unlock(desc);
+	}
+
+	return ret;
 }
 
 /**
@@ -177,8 +257,13 @@ int32_t no_os_gpio_set_value(struct no_os_gpio_desc *desc,
 int32_t no_os_gpio_get_value(struct no_os_gpio_desc *desc,
 			     uint8_t *value)
 {
-	if (desc)
-		return desc->platform_ops->gpio_ops_get_value(desc, value);
-	else
-		return 0;
+	int32_t ret = 0;
+
+	if (desc) {
+		no_os_gpio_lock(desc);
+		ret = desc->platform_ops->gpio_ops_get_value(desc, value);
+		no_os_gpio_unlock(desc);
+	}
+
+	return ret;
 }

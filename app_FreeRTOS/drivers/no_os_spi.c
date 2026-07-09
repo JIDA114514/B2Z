@@ -41,6 +41,35 @@
 #include "no_os_spi.h"
 #include <stdlib.h>
 #include "no_os_error.h"
+#ifdef FREERTOS_INTEGRATION
+#include "FreeRTOS.h"
+#include "semphr.h"
+#include "task.h"
+
+static void no_os_spi_lock(struct no_os_spi_desc *desc)
+{
+	if (desc && desc->mutex &&
+	    (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING))
+		xSemaphoreTake((SemaphoreHandle_t)desc->mutex, portMAX_DELAY);
+}
+
+static void no_os_spi_unlock(struct no_os_spi_desc *desc)
+{
+	if (desc && desc->mutex &&
+	    (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING))
+		xSemaphoreGive((SemaphoreHandle_t)desc->mutex);
+}
+#else
+static void no_os_spi_lock(struct no_os_spi_desc *desc)
+{
+	(void)desc;
+}
+
+static void no_os_spi_unlock(struct no_os_spi_desc *desc)
+{
+	(void)desc;
+}
+#endif
 
 /**
  * @brief Initialize the SPI communication peripheral.
@@ -59,6 +88,15 @@ int32_t no_os_spi_init(struct no_os_spi_desc **desc,
 
 	(*desc)->platform_ops = param->platform_ops;
 
+#ifdef FREERTOS_INTEGRATION
+	(*desc)->mutex = xSemaphoreCreateMutex();
+	if (!(*desc)->mutex) {
+		(*desc)->platform_ops->remove(*desc);
+		*desc = NULL;
+		return -1;
+	}
+#endif
+
 	return 0;
 }
 
@@ -69,6 +107,18 @@ int32_t no_os_spi_init(struct no_os_spi_desc **desc,
  */
 int32_t no_os_spi_remove(struct no_os_spi_desc *desc)
 {
+#ifdef FREERTOS_INTEGRATION
+	SemaphoreHandle_t mutex;
+
+	if (!desc)
+		return 0;
+
+	mutex = (SemaphoreHandle_t)desc->mutex;
+	desc->mutex = NULL;
+	if (mutex)
+		vSemaphoreDelete(mutex);
+#endif
+
 	return desc->platform_ops->remove(desc);
 }
 
@@ -83,7 +133,13 @@ int32_t no_os_spi_write_and_read(struct no_os_spi_desc *desc,
 				 uint8_t *data,
 				 uint16_t bytes_number)
 {
-	return desc->platform_ops->write_and_read(desc, data, bytes_number);
+	int32_t ret;
+
+	no_os_spi_lock(desc);
+	ret = desc->platform_ops->write_and_read(desc, data, bytes_number);
+	no_os_spi_unlock(desc);
+
+	return ret;
 }
 
 /**
@@ -103,17 +159,28 @@ int32_t no_os_spi_transfer(struct no_os_spi_desc *desc,
 	if (!desc || !desc->platform_ops)
 		return -EINVAL;
 
-	if (desc->platform_ops->transfer)
-		return desc->platform_ops->transfer(desc, msgs, len);
+	no_os_spi_lock(desc);
+
+	if (desc->platform_ops->transfer) {
+		ret = desc->platform_ops->transfer(desc, msgs, len);
+		no_os_spi_unlock(desc);
+		return ret;
+	}
 
 	for (i = 0; i < len; i++) {
-		if (msgs[i].rx_buff != msgs[i].tx_buff || !msgs[i].tx_buff)
+		if (msgs[i].rx_buff != msgs[i].tx_buff || !msgs[i].tx_buff) {
+			no_os_spi_unlock(desc);
 			return -EINVAL;
-		ret = no_os_spi_write_and_read(desc, msgs[i].rx_buff,
-					       msgs[i].bytes_number);
-		if (NO_OS_IS_ERR_VALUE(ret))
+		}
+		ret = desc->platform_ops->write_and_read(desc, msgs[i].rx_buff,
+							 msgs[i].bytes_number);
+		if (NO_OS_IS_ERR_VALUE(ret)) {
+			no_os_spi_unlock(desc);
 			return ret;
+		}
 	}
+
+	no_os_spi_unlock(desc);
 
 	return 0;
 }

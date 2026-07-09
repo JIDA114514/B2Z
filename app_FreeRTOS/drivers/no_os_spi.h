@@ -45,6 +45,7 @@
 /******************************************************************************/
 
 #include <stdint.h>
+#include "app_config.h"
 
 /******************************************************************************/
 /********************** Macros and Constants Definitions **********************/
@@ -143,6 +144,10 @@ typedef struct no_os_spi_desc {
 	const struct no_os_spi_platform_ops *platform_ops;
 	/**  SPI extra parameters (device specific) */
 	void		*extra;
+#ifdef FREERTOS_INTEGRATION
+	/** Optional bus mutex used once the FreeRTOS scheduler is running. */
+	void		*mutex;
+#endif
 } no_os_spi_desc;
 
 /**

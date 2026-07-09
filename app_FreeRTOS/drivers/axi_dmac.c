@@ -48,6 +48,27 @@
 #include "no_os_error.h"
 #include "no_os_delay.h"
 #include "axi_dmac.h"
+#ifdef FREERTOS_INTEGRATION
+#include "FreeRTOS.h"
+#include "semphr.h"
+#include "task.h"
+
+static void axi_dmac_signal_completion_from_isr(struct axi_dmac *dmac)
+{
+	BaseType_t higher_priority_task_woken = pdFALSE;
+
+	if (dmac->completion_sem)
+		xSemaphoreGiveFromISR((SemaphoreHandle_t)dmac->completion_sem,
+				      &higher_priority_task_woken);
+
+	portYIELD_FROM_ISR(higher_priority_task_woken);
+}
+#else
+static void axi_dmac_signal_completion_from_isr(struct axi_dmac *dmac)
+{
+	(void)dmac;
+}
+#endif
 
 /*******************************************************************************
  * @brief ISR for dev to mem DMA transfer. It computes the next transfer params,
@@ -96,6 +117,7 @@ void axi_dmac_dev_to_mem_isr(void *instance)
 		if (!dmac->remaining_size) {
 			dmac->transfer.transfer_done = true;
 			dmac->next_dest_addr = 0;
+			axi_dmac_signal_completion_from_isr(dmac);
 		}
 	}
 }
@@ -153,6 +175,7 @@ void axi_dmac_mem_to_dev_isr(void *instance)
 		if ((!dmac->remaining_size) && (dmac->transfer.cyclic != CYCLIC)) {
 			dmac->transfer.transfer_done = true;
 			dmac->next_src_addr = 0;
+			axi_dmac_signal_completion_from_isr(dmac);
 		}
 	}
 }
@@ -214,8 +237,28 @@ void axi_dmac_mem_to_mem_isr(void *instance)
 				dmac->transfer.transfer_done = true;
 				dmac->next_src_addr = 0;
 				dmac->next_dest_addr = 0;
+				axi_dmac_signal_completion_from_isr(dmac);
 			}
 		}
+	}
+}
+
+void axi_dmac_default_isr(void *instance)
+{
+	struct axi_dmac *dmac = (struct axi_dmac *)instance;
+
+	switch (dmac->direction) {
+	case DMA_DEV_TO_MEM:
+		axi_dmac_dev_to_mem_isr(instance);
+		break;
+	case DMA_MEM_TO_DEV:
+		axi_dmac_mem_to_dev_isr(instance);
+		break;
+	case DMA_MEM_TO_MEM:
+		axi_dmac_mem_to_mem_isr(instance);
+		break;
+	default:
+		break;
 	}
 }
 
@@ -340,6 +383,15 @@ int32_t axi_dmac_init(struct axi_dmac **dmac_core,
 	dmac->name = init->name;
 	dmac->base = init->base;
 	dmac->irq_option = init->irq_option;
+#ifdef FREERTOS_INTEGRATION
+	if (dmac->irq_option == IRQ_ENABLED) {
+		dmac->completion_sem = xSemaphoreCreateBinary();
+		if (!dmac->completion_sem) {
+			free(dmac);
+			return -1;
+		}
+	}
+#endif
 
 	*dmac_core = dmac;
 
@@ -361,6 +413,11 @@ int32_t axi_dmac_remove(struct axi_dmac *dmac)
 {
 	if (!dmac)
 		return -1;
+
+#ifdef FREERTOS_INTEGRATION
+	if (dmac->completion_sem)
+		vSemaphoreDelete((SemaphoreHandle_t)dmac->completion_sem);
+#endif
 
 	free(dmac);
 
@@ -388,6 +445,11 @@ int32_t axi_dmac_transfer_start(struct axi_dmac *dmac,
 	dmac->transfer.cyclic = dma_transfer->cyclic;
 	dmac->transfer.dest_addr = dma_transfer->dest_addr;
 	dmac->transfer.src_addr = dma_transfer->src_addr;
+	dmac->transfer.transfer_done = false;
+#ifdef FREERTOS_INTEGRATION
+	if (dmac->completion_sem)
+		xSemaphoreTake((SemaphoreHandle_t)dmac->completion_sem, 0);
+#endif
 
 	dmac->remaining_size = dma_transfer->size;
 	dmac->next_dest_addr = dma_transfer->dest_addr;
@@ -510,6 +572,23 @@ int32_t axi_dmac_transfer_wait_completion(struct axi_dmac *dmac,
 	uint32_t reg_val = 0;
 
 	if (dmac->irq_option == IRQ_ENABLED) {
+#ifdef FREERTOS_INTEGRATION
+		if ((xTaskGetSchedulerState() == taskSCHEDULER_RUNNING) &&
+		    dmac->completion_sem) {
+			TickType_t wait_ticks = timeout_ms ?
+						pdMS_TO_TICKS(timeout_ms) :
+						portMAX_DELAY;
+
+			if (!dmac->transfer.transfer_done) {
+				if (xSemaphoreTake((SemaphoreHandle_t)dmac->completion_sem,
+						   wait_ticks) != pdTRUE) {
+					printf("Error transferring data using DMA.\n");
+					return -1;
+				}
+			}
+		} else
+#endif
+		{
 		while (!dmac->transfer.transfer_done) {
 			timeout++;
 			no_os_mdelay(1);
@@ -517,6 +596,7 @@ int32_t axi_dmac_transfer_wait_completion(struct axi_dmac *dmac,
 				printf("Error transferring data using DMA.\n");
 				return -1;
 			}
+		}
 		}
 	} else if (dmac->irq_option == IRQ_DISABLED) {
 		axi_dmac_read(dmac, AXI_DMAC_REG_IRQ_PENDING, &reg_val);

@@ -61,12 +61,12 @@ void vFreeRTOSExceptionHandler( uint32_t ulExceptionId,
             break;
     }
 
-    console_print( "\r\n[EXC] %s id=%d lr=%x spsr=%x restore_stage=%d\r\n",
-                   pcName,
-                   ( long ) ulExceptionId,
-                   ( long ) ulLR,
-                   ( long ) ulSPSR,
-                   ( long ) g_context_restore_stage );
+    console_print_unlocked( "\r\n[EXC] %s id=%d lr=%x spsr=%x restore_stage=%d\r\n",
+                            pcName,
+                            ( long ) ulExceptionId,
+                            ( long ) ulLR,
+                            ( long ) ulSPSR,
+                            ( long ) g_context_restore_stage );
 
     __asm volatile ( "CPSID i" ::: "memory" );
     __asm volatile ( "DSB" ::: "memory" );

@@ -44,6 +44,39 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "console.h"
+#include "app_config.h"
+#ifdef FREERTOS_INTEGRATION
+#include "FreeRTOS.h"
+#include "semphr.h"
+#include "task.h"
+
+static SemaphoreHandle_t console_mutex;
+
+static void console_lock(void)
+{
+	if (!console_mutex)
+		console_mutex = xSemaphoreCreateMutex();
+
+	if (console_mutex &&
+	    (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING))
+		xSemaphoreTake(console_mutex, portMAX_DELAY);
+}
+
+static void console_unlock(void)
+{
+	if (console_mutex &&
+	    (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING))
+		xSemaphoreGive(console_mutex);
+}
+#else
+static void console_lock(void)
+{
+}
+
+static void console_unlock(void)
+{
+}
+#endif
 
 /***************************************************************************//**
  * @brief Initializes the UART communication peripheral. If the value of the
@@ -150,7 +183,7 @@ char *int_to_str(long number, char base)
  *
  * @return None.
 *******************************************************************************/
-void console_print(char* str, ...)
+static void console_vprint(char* str, va_list argp)
 {
 	char*		  string_ptr;
 	char		  first_param  = 0;
@@ -162,9 +195,7 @@ void console_print(char* str, ...)
 	char*		  str_arg;
 	long		  long_arg;
 	double		  double_arg;
-	va_list		  argp;
 
-	va_start(argp, str);
 	for(string_ptr = str; *string_ptr != '\0'; string_ptr++)
 	{
 		if(*string_ptr!='%')
@@ -264,6 +295,25 @@ void console_print(char* str, ...)
 			break;
 		}
 	}
+}
+
+void console_print(char* str, ...)
+{
+	va_list argp;
+
+	console_lock();
+	va_start(argp, str);
+	console_vprint(str, argp);
+	va_end(argp);
+	console_unlock();
+}
+
+void console_print_unlocked(char* str, ...)
+{
+	va_list argp;
+
+	va_start(argp, str);
+	console_vprint(str, argp);
 	va_end(argp);
 }
 

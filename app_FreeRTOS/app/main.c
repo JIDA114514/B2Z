@@ -55,10 +55,8 @@
 #include "no_os_irq.h"
 #endif
 #ifdef FREERTOS_INTEGRATION
-#include <xscugic.h>
 #include "FreeRTOS.h"
 #include "task.h"
-#include "freertos_irq_glue.h"
 #endif
 #ifdef LINUX_PLATFORM
 #include "linux_spi.h"
@@ -588,6 +586,25 @@ struct ad9361_rf_phy *ad9361_phy_b;
 /* FreeRTOS vector table — defined in freertos_vector_table.S */
 extern const uint32_t _freertos_vector_table[ 8 ];
 
+static struct no_os_irq_ctrl_desc *freertos_irq_desc;
+
+static int32_t freertos_no_os_irq_init(void)
+{
+	struct xil_irq_init_param xil_irq_init_par = {
+		.type = IRQ_PS,
+	};
+	struct no_os_irq_init_param irq_init_param = {
+		.irq_ctrl_id = INTC_DEVICE_ID,
+		.platform_ops = &xil_irq_ops,
+		.extra = &xil_irq_init_par,
+	};
+
+	if (freertos_irq_desc)
+		return 0;
+
+	return no_os_irq_ctrl_init(&freertos_irq_desc, &irq_init_param);
+}
+
 /*-----------------------------------------------------------*/
 /* FreeRTOS Phase 1 — UART-based kernel verification tasks  */
 /*-----------------------------------------------------------*/
@@ -820,6 +837,7 @@ int main(void)
 	(defined ADC_DMA_EXAMPLE)
 	uint32_t samples = 16384;
 #if (defined ADC_DMA_IRQ_EXAMPLE)
+#ifndef FREERTOS_INTEGRATION
 	/**
 	 * Xilinx platform dependent initialization for IRQ.
 	 */
@@ -835,15 +853,23 @@ int main(void)
 		.platform_ops = &xil_irq_ops,
 		.extra = &xil_irq_init_par,
 	};
+#endif
 
 	/**
 	 * IRQ instance.
 	 */
 	struct no_os_irq_ctrl_desc *irq_desc;
 
+#ifdef FREERTOS_INTEGRATION
+	status = freertos_no_os_irq_init();
+	if(status < 0)
+		return status;
+	irq_desc = freertos_irq_desc;
+#else
 	status = no_os_irq_ctrl_init(&irq_desc, &irq_init_param);
 	if(status < 0)
 		return status;
+#endif
 
 	status = no_os_irq_global_enable(irq_desc);
 	if (status < 0)
@@ -1104,22 +1130,19 @@ int main(void)
 #ifdef FREERTOS_INTEGRATION
 	/*
 	 * Phase 1: FreeRTOS kernel verification.
-	 * Minimal GIC init for the tick timer, then start the scheduler.
+	 * Use the no-OS IRQ controller path, then start the scheduler.
 	 */
 	{
-		XScuGic_Config * gic_cfg;
-		static XScuGic   gic_inst;
 		BaseType_t       rc_cnt1;
 		BaseType_t       rc_cnt2;
 		TaskHandle_t     h_cnt1 = NULL;
 		TaskHandle_t     h_cnt2 = NULL;
 
-		gic_cfg = XScuGic_LookupConfig( XPAR_PS7_SCUGIC_0_DEVICE_ID );
-		if( gic_cfg != NULL )
+		status = freertos_no_os_irq_init();
+		if( status < 0 )
 		{
-			XScuGic_CfgInitialize( &gic_inst, gic_cfg,
-						gic_cfg->CpuBaseAddress );
-			freertos_irq_set_gic_instance( &gic_inst );
+			console_print( "[ERR] FreeRTOS no-OS IRQ init failed; scheduler not started\r\n" );
+			for( ; ; ) { __asm volatile ( "NOP" ); }
 		}
 
 		/* Create verification tasks */

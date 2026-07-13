@@ -158,4 +158,19 @@ int32_t axi_dmac_transfer_wait_completion(struct axi_dmac *dmac,
 		uint32_t timeout_ms);
 void axi_dmac_transfer_stop(struct axi_dmac *dmac);
 
+#ifdef FREERTOS_INTEGRATION
+#define AXI_DMAC_GIC_FABRIC_DIAG_FIRST_ID 32U
+#define AXI_DMAC_GIC_FABRIC_DIAG_COUNT    64U
+
+extern volatile uint32_t g_adc_dma_irq_enter_count;
+extern volatile uint32_t g_adc_dma_irq_eot_count;
+extern volatile uint32_t g_adc_dma_irq_sem_give_count;
+extern volatile uint32_t g_adc_dma_irq_sem_woken_count;
+extern volatile uint32_t g_adc_dma_irq_fallback_count;
+extern volatile uint32_t g_adc_dma_irq_fallback_pending;
+extern volatile uint32_t g_adc_dma_gic_fabric_enable[AXI_DMAC_GIC_FABRIC_DIAG_COUNT];
+extern volatile uint32_t g_adc_dma_gic_fabric_pending[AXI_DMAC_GIC_FABRIC_DIAG_COUNT];
+extern volatile uint32_t g_adc_dma_gic_fabric_active[AXI_DMAC_GIC_FABRIC_DIAG_COUNT];
+#endif
+
 #endif

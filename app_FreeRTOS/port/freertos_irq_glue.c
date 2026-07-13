@@ -17,6 +17,7 @@
 #include "task.h"
 
 /* Xilinx headers */
+#include "xparameters.h"
 #include "xscugic.h"
 #include "xil_exception.h"
 
@@ -34,6 +35,10 @@ static XScuGic * g_gic_instance = NULL;
 volatile uint32_t g_tick_isr_count = 0UL;
 volatile uint32_t g_tick_handler_return_count = 0UL;
 volatile uint32_t g_context_restore_stage = 0UL;
+volatile uint32_t g_irq_last_id = 0UL;
+volatile uint32_t g_irq_dispatch_count[ XSCUGIC_MAX_NUM_INTR_INPUTS ];
+volatile uint32_t g_irq_unhandled_count[ XSCUGIC_MAX_NUM_INTR_INPUTS ];
+volatile uint32_t g_adc_dma_gic_dispatch_count = 0UL;
 
 /*-----------------------------------------------------------*/
 
@@ -126,21 +131,47 @@ void vApplicationIRQHandler( uint32_t ulICCIAR )
      */
     const uint32_t interrupt_id = ulICCIAR & 0x3FFUL;
 
+    g_irq_last_id = interrupt_id;
+
     /* Count tick interrupts for debug visibility */
     if( interrupt_id == 29U )
     {
         g_tick_isr_count++;
     }
 
-    if( ( g_gic_instance != NULL ) &&
-        ( interrupt_id < XSCUGIC_MAX_NUM_INTR_INPUTS ) )
+    if( interrupt_id < XSCUGIC_MAX_NUM_INTR_INPUTS )
     {
-        XScuGic_VectorTableEntry * table =
-            &( g_gic_instance->Config->HandlerTable[ interrupt_id ] );
+        g_irq_dispatch_count[ interrupt_id ]++;
 
-        if( ( table != NULL ) && ( table->Handler != NULL ) )
+#ifdef XPAR_FABRIC_AXI_AD9361_ADC_DMA_IRQ_INTR
+        if( interrupt_id == XPAR_FABRIC_AXI_AD9361_ADC_DMA_IRQ_INTR )
         {
-            table->Handler( table->CallBackRef );
+            g_adc_dma_gic_dispatch_count++;
+        }
+#endif
+
+        if( g_gic_instance != NULL )
+        {
+            XScuGic_VectorTableEntry * table =
+                &( g_gic_instance->Config->HandlerTable[ interrupt_id ] );
+
+            if( ( table != NULL ) && ( table->Handler != NULL ) )
+            {
+                if( table->CallBackRef == g_gic_instance )
+                {
+                    g_irq_unhandled_count[ interrupt_id ]++;
+                }
+
+                table->Handler( table->CallBackRef );
+            }
+            else
+            {
+                g_irq_unhandled_count[ interrupt_id ]++;
+            }
+        }
+        else
+        {
+            g_irq_unhandled_count[ interrupt_id ]++;
         }
     }
 

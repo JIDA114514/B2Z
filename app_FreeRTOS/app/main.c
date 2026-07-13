@@ -615,6 +615,18 @@ static int32_t freertos_no_os_irq_init(void)
 #define PHASE2_SPI_ITERATIONS       64
 #define PHASE2_CONSOLE_LINES        20
 #define PHASE2_ADC_DMA_SAMPLES      4096
+#define PHASE2_ADC_DMA_BSP_IRQ_ID   XPAR_FABRIC_AXI_AD9361_ADC_DMA_IRQ_INTR
+#define PHASE2_GIC_DIST_BASE        0xF8F01000UL
+#define PHASE2_GIC_CPU_BASE         0xF8F00100UL
+#define PHASE2_GIC_DIST_CTLR        0x000U
+#define PHASE2_GIC_ENABLE_SET       0x100U
+#define PHASE2_GIC_PENDING_SET      0x200U
+#define PHASE2_GIC_ACTIVE           0x300U
+#define PHASE2_GIC_PRIORITY         0x400U
+#define PHASE2_GIC_TARGET           0x800U
+#define PHASE2_GIC_CONFIG           0xC00U
+#define PHASE2_GIC_CPU_PMR          0x004U
+#define PHASE2_ADC_DMA_IRQ_PRIORITY 0xA0U
 
 struct phase2_child_ctx {
 	TaskHandle_t parent;
@@ -633,6 +645,142 @@ static int32_t phase2_fail(char *name, char *detail, int32_t code)
 static void phase2_pass(char *name, char *detail, int32_t value)
 {
 	console_print("[P2][PASS] %s %s=%d\r\n", name, detail, (long)value);
+}
+
+static uint32_t phase2_mmio_read32(uint32_t addr)
+{
+	return *(volatile uint32_t *)addr;
+}
+
+static uint8_t phase2_mmio_read8(uint32_t addr)
+{
+	return *(volatile uint8_t *)addr;
+}
+
+static uint32_t phase2_gic_irq_bit(uint32_t irq_id, uint32_t offset)
+{
+	uint32_t reg = phase2_mmio_read32(PHASE2_GIC_DIST_BASE + offset +
+					  ((irq_id / 32U) * 4U));
+
+	return (reg >> (irq_id % 32U)) & 0x1U;
+}
+
+static void phase2_reset_adc_dma_irq_diag(void)
+{
+	uint32_t i;
+
+	g_irq_last_id = 0xFFFFFFFFUL;
+	g_irq_dispatch_count[PHASE2_ADC_DMA_BSP_IRQ_ID] = 0;
+	g_irq_unhandled_count[PHASE2_ADC_DMA_BSP_IRQ_ID] = 0;
+	g_adc_dma_gic_dispatch_count = 0;
+	g_adc_dma_irq_enter_count = 0;
+	g_adc_dma_irq_eot_count = 0;
+	g_adc_dma_irq_sem_give_count = 0;
+	g_adc_dma_irq_sem_woken_count = 0;
+	g_adc_dma_irq_fallback_count = 0;
+	g_adc_dma_irq_fallback_pending = 0;
+
+	for (i = 0; i < AXI_DMAC_GIC_FABRIC_DIAG_COUNT; i++) {
+		g_adc_dma_gic_fabric_enable[i] = 0;
+		g_adc_dma_gic_fabric_pending[i] = 0;
+		g_adc_dma_gic_fabric_active[i] = 0;
+	}
+}
+
+static void phase2_print_adc_dma_irq_diag(char *tag)
+{
+	uint32_t irq_id = PHASE2_ADC_DMA_BSP_IRQ_ID;
+	uint32_t cfg = phase2_mmio_read32(PHASE2_GIC_DIST_BASE +
+					  PHASE2_GIC_CONFIG +
+					  ((irq_id / 16U) * 4U));
+	uint32_t trigger = (cfg >> ((irq_id % 16U) * 2U)) & 0x3U;
+	uint8_t priority = phase2_mmio_read8(PHASE2_GIC_DIST_BASE +
+					     PHASE2_GIC_PRIORITY + irq_id);
+	uint8_t target = phase2_mmio_read8(PHASE2_GIC_DIST_BASE +
+					   PHASE2_GIC_TARGET + irq_id);
+	uint32_t pmr = phase2_mmio_read32(PHASE2_GIC_CPU_BASE +
+					  PHASE2_GIC_CPU_PMR);
+	uint32_t dist_ctl = phase2_mmio_read32(PHASE2_GIC_DIST_BASE +
+					       PHASE2_GIC_DIST_CTLR);
+	uint32_t ctrl = 0;
+	uint32_t irq_mask = 0;
+	uint32_t irq_pending = 0;
+	uint32_t submit = 0;
+	uint32_t done = 0;
+	uintptr_t handler = 0;
+	uintptr_t callback = 0;
+	uint32_t gic_fabric_nonzero = 0;
+	uint32_t i;
+
+	if (rx_dmac) {
+		axi_dmac_read(rx_dmac, AXI_DMAC_REG_CTRL, &ctrl);
+		axi_dmac_read(rx_dmac, AXI_DMAC_REG_IRQ_MASK, &irq_mask);
+		axi_dmac_read(rx_dmac, AXI_DMAC_REG_IRQ_PENDING, &irq_pending);
+		axi_dmac_read(rx_dmac, AXI_DMAC_REG_TRANSFER_SUBMIT, &submit);
+		axi_dmac_read(rx_dmac, AXI_DMAC_REG_TRANSFER_DONE, &done);
+	}
+
+	if (freertos_irq_desc && freertos_irq_desc->extra) {
+		struct xil_irq_desc *xil_dev = freertos_irq_desc->extra;
+		XScuGic *gic = xil_dev->instance;
+
+		if (gic && gic->Config) {
+			handler = (uintptr_t)
+				gic->Config->HandlerTable[irq_id].Handler;
+			callback = (uintptr_t)
+				gic->Config->HandlerTable[irq_id].CallBackRef;
+		}
+	}
+
+	console_print("[P2][IRQ] %s id=%d last=%d gic=%d unhandled=%d enter=%d eot=%d sem=%d woken=%d\r\n",
+		      tag, (long)irq_id, (long)g_irq_last_id,
+		      (long)g_adc_dma_gic_dispatch_count,
+		      (long)g_irq_unhandled_count[irq_id],
+		      (long)g_adc_dma_irq_enter_count,
+		      (long)g_adc_dma_irq_eot_count,
+		      (long)g_adc_dma_irq_sem_give_count,
+		      (long)g_adc_dma_irq_sem_woken_count);
+	console_print("[P2][GIC] en=%d pend=%d act=%d target=0x%02x prio=0x%02x trig=0x%x pmr=0x%08x dist=0x%08x\r\n",
+		      (long)phase2_gic_irq_bit(irq_id, PHASE2_GIC_ENABLE_SET),
+		      (long)phase2_gic_irq_bit(irq_id, PHASE2_GIC_PENDING_SET),
+		      (long)phase2_gic_irq_bit(irq_id, PHASE2_GIC_ACTIVE),
+		      (long)target, (long)priority, (long)trigger,
+		      (long)pmr, (long)dist_ctl);
+	console_print("[P2][IRQH] handler=0x%x cb=0x%x rx_dmac=0x%x\r\n",
+		      (long)handler, (long)callback, (long)(uintptr_t)rx_dmac);
+	console_print("[P2][DMA] ctrl=0x%08x irq_mask=0x%08x irq_pending=0x%08x submit=0x%08x done=0x%08x remaining=%d dir=%d\r\n",
+		      (long)ctrl, (long)irq_mask, (long)irq_pending,
+		      (long)submit, (long)done,
+		      rx_dmac ? (long)rx_dmac->remaining_size : -1L,
+		      rx_dmac ? (long)rx_dmac->direction : -1L);
+	console_print("[P2][DMACFB] count=%d pending_before_clear=0x%08x\r\n",
+		      (long)g_adc_dma_irq_fallback_count,
+		      (long)g_adc_dma_irq_fallback_pending);
+	for (i = 0; i < AXI_DMAC_GIC_FABRIC_DIAG_COUNT; i++) {
+		if (g_adc_dma_gic_fabric_enable[i] ||
+		    g_adc_dma_gic_fabric_pending[i] ||
+		    g_adc_dma_gic_fabric_active[i])
+			gic_fabric_nonzero++;
+	}
+	console_print("[P2][GICSCAN] first=%d count=%d nonzero=%d\r\n",
+		      (long)AXI_DMAC_GIC_FABRIC_DIAG_FIRST_ID,
+		      (long)AXI_DMAC_GIC_FABRIC_DIAG_COUNT,
+		      (long)gic_fabric_nonzero);
+	for (i = 0; i < AXI_DMAC_GIC_FABRIC_DIAG_COUNT; i++) {
+		uint32_t fab_id = AXI_DMAC_GIC_FABRIC_DIAG_FIRST_ID + i;
+
+		if (fab_id != PHASE2_ADC_DMA_BSP_IRQ_ID &&
+		    !g_adc_dma_gic_fabric_enable[i] &&
+		    !g_adc_dma_gic_fabric_pending[i] &&
+		    !g_adc_dma_gic_fabric_active[i])
+			continue;
+
+		console_print("[P2][GICFAB] id=%d en=%d pend=%d act=%d\r\n",
+			      (long)fab_id,
+			      (long)g_adc_dma_gic_fabric_enable[i],
+			      (long)g_adc_dma_gic_fabric_pending[i],
+			      (long)g_adc_dma_gic_fabric_active[i]);
+	}
 }
 
 static int32_t phase2_read_product_id(uint8_t *product_id)
@@ -839,20 +987,30 @@ static int32_t phase2_register_adc_dma_irq(void)
 
 	status = no_os_irq_register_callback(
 		freertos_irq_desc,
-		XPAR_FABRIC_AXI_AD9361_ADC_DMA_IRQ_INTR,
+		PHASE2_ADC_DMA_BSP_IRQ_ID,
 		&rx_dmac_callback);
 	if (status < 0)
 		return status;
 
 	status = no_os_irq_trigger_level_set(
 		freertos_irq_desc,
-		XPAR_FABRIC_AXI_AD9361_ADC_DMA_IRQ_INTR,
+		PHASE2_ADC_DMA_BSP_IRQ_ID,
 		NO_OS_IRQ_LEVEL_HIGH);
 	if (status < 0)
 		return status;
 
-	return no_os_irq_enable(freertos_irq_desc,
-				XPAR_FABRIC_AXI_AD9361_ADC_DMA_IRQ_INTR);
+	if (freertos_irq_desc && freertos_irq_desc->extra) {
+		struct xil_irq_desc *xil_dev = freertos_irq_desc->extra;
+		XScuGic *gic = xil_dev->instance;
+
+		if (gic)
+			XScuGic_SetPriorityTriggerType(
+				gic, PHASE2_ADC_DMA_BSP_IRQ_ID,
+				PHASE2_ADC_DMA_IRQ_PRIORITY,
+				NO_OS_IRQ_LEVEL_HIGH);
+	}
+
+	return no_os_irq_enable(freertos_irq_desc, PHASE2_ADC_DMA_BSP_IRQ_ID);
 }
 
 static int32_t phase2_test_adc_dma_irq(void)
@@ -869,6 +1027,8 @@ static int32_t phase2_test_adc_dma_irq(void)
 	status = phase2_register_adc_dma_irq();
 	if (status < 0)
 		return phase2_fail("adc_dma_irq", "irq register", status);
+
+	phase2_reset_adc_dma_irq_diag();
 
 	dma_bytes = PHASE2_ADC_DMA_SAMPLES *
 		    AD9361_ADC_DAC_BYTES_PER_SAMPLE *
@@ -891,24 +1051,11 @@ static int32_t phase2_test_adc_dma_irq(void)
 
 	status = axi_dmac_transfer_wait_completion(rx_dmac, 500);
 	if (status < 0) {
-		uint32_t ctrl = 0;
-		uint32_t irq_mask = 0;
-		uint32_t irq_pending = 0;
-		uint32_t submit = 0;
-		uint32_t done = 0;
-
-		axi_dmac_read(rx_dmac, AXI_DMAC_REG_CTRL, &ctrl);
-		axi_dmac_read(rx_dmac, AXI_DMAC_REG_IRQ_MASK, &irq_mask);
-		axi_dmac_read(rx_dmac, AXI_DMAC_REG_IRQ_PENDING, &irq_pending);
-		axi_dmac_read(rx_dmac, AXI_DMAC_REG_TRANSFER_SUBMIT, &submit);
-		axi_dmac_read(rx_dmac, AXI_DMAC_REG_TRANSFER_DONE, &done);
-		console_print("[P2][DMA] ctrl=0x%08x irq_mask=0x%08x irq_pending=0x%08x submit=0x%08x done=0x%08x remaining=%d dir=%d\r\n",
-			      (long)ctrl, (long)irq_mask, (long)irq_pending,
-			      (long)submit, (long)done,
-			      (long)rx_dmac->remaining_size,
-			      (long)rx_dmac->direction);
+		phase2_print_adc_dma_irq_diag("fail");
 		return phase2_fail("adc_dma_irq", "wait_completion", status);
 	}
+
+	phase2_print_adc_dma_irq_diag("done");
 
 #ifdef XILINX_PLATFORM
 	Xil_DCacheInvalidateRange((uintptr_t)adc_buffer, dma_bytes);

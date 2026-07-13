@@ -821,3 +821,85 @@ DMA completed without IRQ semaphore.
 
 - Phase 2 自检验收已完成，最终结论从“DMA 数据路径未确认 / 问题未解决”更新为：**DMA 数据路径正常，IRQ semaphore 未收到；已用硬件完成兜底解除误判**。
 - 后续优化项保留：继续排查 `XPAR_FABRIC_AXI_AD9361_ADC_DMA_IRQ_INTR=63U` 的 GIC enable/pending、handler table 和 semaphore 释放路径，争取让 ISR 直接释放 `completion_sem`。
+
+---
+
+## 14. DMA/VIO PL IRQ 进一步实验记录
+
+### 14.1 GIC 软件 pending 路径已确认正常
+
+新增 ID63/ID64 软件 pending 自检后，板端日志：
+
+```text
+[P2][IRQMAP] swpend id=63 count=1 last=29 pend=0 act=0
+[P2][IRQMAP] swpend id=64 count=1 last=29 pend=0 act=0
+[P2][PASS] irqmap_swpend id63=1
+[P2][PASS] irqmap_swpend id64=1
+```
+
+判读：
+
+- GIC ID63 和 ID64 的 FreeRTOS IRQ 入口、XScuGic HandlerTable 分发、callback 注册路径均可工作。
+- `last=29` 是后续 tick IRQ 覆盖了 `g_irq_last_id`，不是 ID63/64 分发失败。
+- 因此，当前 DMA IRQ 问题不应再优先怀疑 FreeRTOS IRQ glue 的基本软件分发路径。
+
+### 14.2 VIO In10 仍无法被 PS/GIC 检测
+
+同一轮实验中，VIO 测试日志停在：
+
+```text
+[P2][VIOIRQ] armed id=66 en=1 pend=0 act=0 trig=0x1
+```
+
+用户反馈：
+
+- VIO 翻转仍然只能被 ILA 看到。
+- PS 端 VIO IRQ 自检仍失败。
+- 这说明 VIO 对 `sys_concat_intc` 的输入可见，但该路径未形成 PS/GIC 可接收的 interrupt 事件，或软件假定的 VIO GIC ID 与实际 bitstream 映射不一致。
+
+### 14.3 ILA 捕获到 adc_dma_irq 上升沿与 concat 输出
+
+新 ILA 观察：
+
+```text
+adc_dma_irq 上升沿后，concat_intc_dout = 0x1400
+此时 VIO 已经置 1
+```
+
+判读：
+
+- `0x1400 = bit12 | bit10`。
+- bit10 与已置 1 的 VIO 相符。
+- adc_dma_irq 上升沿同时让 `concat_intc_dout[12]` 为 1，说明当前被观察到的 DMA IRQ 信号实际出现在 concat bit12。
+- 在当前 BSP/PS7 `PCW_IRQ_F2P_MODE=REVERSE` 的映射下，历史导出关系为：
+
+```text
+concat bit14 -> GIC ID62
+concat bit13 -> GIC ID63
+concat bit12 -> GIC ID64
+concat bit11 -> GIC ID65
+concat bit10 -> GIC ID66
+```
+
+因此，若本次 ILA 观察对应的是 ADC DMA IRQ，则当前实际进入 PS 的 ADC DMA 线更可能对应 **GIC ID64**，而不是 BSP 名义上的 `XPAR_FABRIC_AXI_AD9361_ADC_DMA_IRQ_INTR=63U`。这与用户此前为排查 DAC DMA IRQ 而交换 ADC/DAC IRQ 接口的实验背景一致。
+
+### 14.4 当前结论
+
+1. **GIC ID63/64 软件路径正常**：软件 pending 可进入 ISR。
+2. **VIO In10 不是可靠的 PL->PS IRQ 判据**：ILA 可见但 PS/GIC 未进 ISR，需继续查 In10 到 IRQ_F2P 的实际映射或触发条件。
+3. **DMA IRQ 更有价值**：ILA 已看到 adc_dma_irq 上升沿，并且 concat 输出显示 bit12 置位。
+4. **当前 DMA IRQ 注册应围绕 ID63/ID64 同时诊断**：不要只根据 ADC/DAC 外设名注册单一 BSP 宏。
+
+### 14.5 下一步建议
+
+- 继续使用 `PHASE2_TEST_IRQ_A_ID=63` 和 `PHASE2_TEST_IRQ_B_ID=64` 的双 ID stub ISR。
+- 重点查看后续日志：
+
+```text
+[P2][IRQMAP] src=rx_dmac ...
+[P2][IRQMAP] src=tx_dmac ...
+[P2][IRQMAP] src=tx_dmac_start ...
+```
+
+- 若 `src=rx_dmac` 或 `src=tx_dmac_start` 中 `id64>0`，则说明当前 DMA IRQ 通过 concat bit12/GIC ID64 进入 PS。
+- 若 ILA 看到 `concat_intc_dout[12]=1` 但软件 ID64 计数仍为 0，则问题集中在 PS7 IRQ_F2P/GIC 对真实 PL interrupt 的接收或触发配置，而不是 FreeRTOS callback 注册。

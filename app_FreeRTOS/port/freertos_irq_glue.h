@@ -10,6 +10,10 @@
 #include "xscugic.h"
 
 extern volatile uint32_t g_tick_isr_count;
+extern volatile uint32_t g_irq_last_id;
+extern volatile uint32_t g_irq_dispatch_count[ XSCUGIC_MAX_NUM_INTR_INPUTS ];
+extern volatile uint32_t g_irq_unhandled_count[ XSCUGIC_MAX_NUM_INTR_INPUTS ];
+extern volatile uint32_t g_adc_dma_gic_dispatch_count;
 
 /* Register the XScuGic instance so vApplicationIRQHandler can dispatch.
  * Called from hw_init() before vTaskStartScheduler(). */

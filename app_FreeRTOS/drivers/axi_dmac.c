@@ -53,13 +53,59 @@
 #include "semphr.h"
 #include "task.h"
 
+volatile uint32_t g_adc_dma_irq_enter_count = 0;
+volatile uint32_t g_adc_dma_irq_eot_count = 0;
+volatile uint32_t g_adc_dma_irq_sem_give_count = 0;
+volatile uint32_t g_adc_dma_irq_sem_woken_count = 0;
+volatile uint32_t g_adc_dma_irq_fallback_count = 0;
+volatile uint32_t g_adc_dma_irq_fallback_pending = 0;
+volatile uint32_t g_adc_dma_gic_fabric_enable[AXI_DMAC_GIC_FABRIC_DIAG_COUNT];
+volatile uint32_t g_adc_dma_gic_fabric_pending[AXI_DMAC_GIC_FABRIC_DIAG_COUNT];
+volatile uint32_t g_adc_dma_gic_fabric_active[AXI_DMAC_GIC_FABRIC_DIAG_COUNT];
+
+#define AXI_DMAC_GIC_DIST_BASE    0xF8F01000UL
+#define AXI_DMAC_GIC_ENABLE_SET   0x100UL
+#define AXI_DMAC_GIC_PENDING_SET  0x200UL
+#define AXI_DMAC_GIC_ACTIVE       0x300UL
+
+static uint32_t axi_dmac_gic_irq_bit(uint32_t offset, uint32_t irq_id)
+{
+	uint32_t reg = *(volatile uint32_t *)(AXI_DMAC_GIC_DIST_BASE + offset +
+					     ((irq_id / 32U) * 4U));
+
+	return (reg >> (irq_id % 32U)) & 0x1U;
+}
+
+static void axi_dmac_snapshot_gic_fabric_irqs(void)
+{
+	uint32_t i;
+
+	for (i = 0; i < AXI_DMAC_GIC_FABRIC_DIAG_COUNT; i++) {
+		uint32_t irq_id = AXI_DMAC_GIC_FABRIC_DIAG_FIRST_ID + i;
+
+		g_adc_dma_gic_fabric_enable[i] =
+			axi_dmac_gic_irq_bit(AXI_DMAC_GIC_ENABLE_SET, irq_id);
+		g_adc_dma_gic_fabric_pending[i] =
+			axi_dmac_gic_irq_bit(AXI_DMAC_GIC_PENDING_SET, irq_id);
+		g_adc_dma_gic_fabric_active[i] =
+			axi_dmac_gic_irq_bit(AXI_DMAC_GIC_ACTIVE, irq_id);
+	}
+}
+
 static void axi_dmac_signal_completion_from_isr(struct axi_dmac *dmac)
 {
 	BaseType_t higher_priority_task_woken = pdFALSE;
 
-	if (dmac->completion_sem)
-		xSemaphoreGiveFromISR((SemaphoreHandle_t)dmac->completion_sem,
-				      &higher_priority_task_woken);
+	if (dmac->completion_sem) {
+		if (xSemaphoreGiveFromISR((SemaphoreHandle_t)dmac->completion_sem,
+					  &higher_priority_task_woken) == pdPASS) {
+			if (dmac->direction == DMA_DEV_TO_MEM) {
+				g_adc_dma_irq_sem_give_count++;
+				if (higher_priority_task_woken == pdTRUE)
+					g_adc_dma_irq_sem_woken_count++;
+			}
+		}
+	}
 
 	portYIELD_FROM_ISR(higher_priority_task_woken);
 }
@@ -117,6 +163,9 @@ void axi_dmac_dev_to_mem_isr(void *instance)
 		if (!dmac->remaining_size) {
 			dmac->transfer.transfer_done = true;
 			dmac->next_dest_addr = 0;
+#ifdef FREERTOS_INTEGRATION
+			g_adc_dma_irq_eot_count++;
+#endif
 			axi_dmac_signal_completion_from_isr(dmac);
 		}
 	}
@@ -247,8 +296,14 @@ void axi_dmac_default_isr(void *instance)
 {
 	struct axi_dmac *dmac = (struct axi_dmac *)instance;
 
+	if (!dmac)
+		return;
+
 	switch (dmac->direction) {
 	case DMA_DEV_TO_MEM:
+#ifdef FREERTOS_INTEGRATION
+		g_adc_dma_irq_enter_count++;
+#endif
 		axi_dmac_dev_to_mem_isr(instance);
 		break;
 	case DMA_MEM_TO_DEV:
@@ -590,6 +645,9 @@ int32_t axi_dmac_transfer_wait_completion(struct axi_dmac *dmac,
 						      &reg_val);
 					if ((reg_val & AXI_DMAC_IRQ_EOT) &&
 					    !dmac->remaining_size) {
+						g_adc_dma_irq_fallback_count++;
+						g_adc_dma_irq_fallback_pending = reg_val;
+						axi_dmac_snapshot_gic_fabric_irqs();
 						dmac->transfer.transfer_done = true;
 						axi_dmac_write(dmac, AXI_DMAC_REG_IRQ_PENDING,
 							       reg_val);

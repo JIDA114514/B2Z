@@ -46,6 +46,7 @@
 #define DO_CMD	   	0
 #define READ_CMD	1
 #define WRITE_CMD	2
+#define CONSOLE_MAX_COMMAND_LEN 64u
 
 /******************************************************************************/
 /************************ Functions Declarations ******************************/

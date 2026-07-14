@@ -347,8 +347,14 @@ void console_get_command(char* command)
 	while((received_char != '\n') && (received_char != '\r'))
 	{
 		uart_read_char(&received_char);
-		command[char_number++] = received_char;
+		if ((received_char == '\n') || (received_char == '\r')) {
+			if (char_number < (CONSOLE_MAX_COMMAND_LEN - 1u))
+				command[char_number++] = received_char;
+		} else if (char_number < (CONSOLE_MAX_COMMAND_LEN - 2u)) {
+			command[char_number++] = received_char;
+		}
 	}
+	command[char_number] = '\0';
 }
 
 /***************************************************************************//**

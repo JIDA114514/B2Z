@@ -903,3 +903,85 @@ concat bit10 -> GIC ID66
 
 - 若 `src=rx_dmac` 或 `src=tx_dmac_start` 中 `id64>0`，则说明当前 DMA IRQ 通过 concat bit12/GIC ID64 进入 PS。
 - 若 ILA 看到 `concat_intc_dout[12]=1` 但软件 ID64 计数仍为 0，则问题集中在 PS7 IRQ_F2P/GIC 对真实 PL interrupt 的接收或触发配置，而不是 FreeRTOS callback 注册。
+
+---
+
+## 15. BLE ch39 预生成波形 DMA 测试
+
+### 15.1 实验目的
+
+`ble_tx_adv_name=XXX` 运行时生成 BLE advertising 波形后，手机/接收端无法检测到信号。为了区分问题来自：
+
+- 运行时 BLE packet / whitening / GFSK 波形生成；
+- TX DMA / DAC / AD9361 发射链路；
+- FreeRTOS 任务调度与 TX 资源互斥；
+
+先绕过运行时生成逻辑，直接使用已生成的 `ble_waveform_30_72M.h` 中 BLE channel 39 IQ 数据作为 DMA 源发送。
+
+### 15.2 代码改动
+
+将根目录 `ble_waveform_30_72M.h` 复制到：
+
+```text
+app_FreeRTOS/app/dma_tx_waveforms/dma_tx_ble_waveform_30_72M.h
+hdl/projects/antsdre310/antsdre310.sdk/app/src/app/dma_tx_waveforms/dma_tx_ble_waveform_30_72M.h
+```
+
+该头文件内容：
+
+```c
+// Sample Rate: 30.72 MSPS (Dual Channel Interleaved)
+// Channel: 39
+const uint32_t ble_iq_ch39[13764] __attribute__((aligned(64))) = { ... };
+```
+
+在 `dma_tx_waveforms.h` 中新增：
+
+```c
+DMA_TX_WAVEFORM_BLE_CH39
+```
+
+在 `dma_tx_waveforms.c` 中新增 waveform 描述：
+
+```c
+[DMA_TX_WAVEFORM_BLE_CH39] = {
+    .name = "BLE legacy advertising ch39",
+    .data = ble_iq_ch39,
+    .bytes = sizeof(ble_iq_ch39),
+    .tx_lo_hz = 2480000000ULL,
+},
+```
+
+同时将 `dma_tx_demo?` 改为直接启动 `DMA_TX_WAVEFORM_BLE_CH39`，`dma_switch?` 改为按 `DMA_TX_WAVEFORM_COUNT` 通用轮转。
+
+### 15.3 实验命令
+
+```text
+dma_tx_demo?
+```
+
+预期串口输出：
+
+```text
+start transfer!(BLE legacy advertising ch39)
+```
+
+### 15.4 实验结果
+
+用户实测：使用 `dma_tx_demo?` 发送该预生成 BLE ch39 波形后，信号可以被正常检测到。
+
+### 15.5 判读
+
+该结果说明：
+
+1. TX DMA 非 cyclic/cyclic 启动路径、DAC DMA datasel、AD9361 TX LO 设置到 `2480 MHz` 的基本发射链路可用。
+2. `ble_waveform_30_72M.h` 中的 `ble_iq_ch39[13764]` 波形本身可被接收链路识别。
+3. 当前 `ble_tx_adv_name=XXX` 不可检测的问题，更可能集中在 FreeRTOS 运行时生成波形路径或任务发送节奏，而不是 RF/DMA 基础链路。
+4. 后续调试应优先对比运行时生成的 `BLE_ADV running ... words=...` 波形与预生成 `ble_iq_ch39` 的 packet bytes、IQ word 序列、DMA size 和 TX 启动时序。
+
+### 15.6 下一步建议
+
+- 先保留 `dma_tx_demo?` 作为 BLE ch39 发射链路 sanity check。
+- 对默认名 `SDR_BLE`，将运行时生成的 ch39 IQ 前若干 word 与 `ble_iq_ch39` 对比。
+- 若 IQ 不一致，继续查运行时 GFSK LUT、PDU header、CRC/whitening、bit order。
+- 若 IQ 一致但 `ble_tx_adv_name=` 不可见，继续查 `BLE_TX_ADV` 任务中的 non-cyclic DMA 重启周期、DMA stop/start 间隔、LO hop 时序以及是否被其它 TX 模式抢占。

@@ -224,10 +224,10 @@ void dds_tx2_tone2_scale(double* param, char param_no);
 /* Sets the DDS TX2 Tone 2 scale. */
 void set_dds_tx2_tone2_scale(double* param, char param_no);
 
-/* Starts cyclic TX DMA using the legacy ZigBee waveform. */
+/* Starts cyclic TX DMA using the BLE channel 39 waveform. */
 void dma_tx_demo(double *param, char param_no);
 
-/* Switches cyclic TX DMA among BlueBee, BLE exadv secondary, and ZigBee. */
+/* Switches cyclic TX DMA among all configured waveforms. */
 void change_dma_context(double *param, char param_no);
 
 #endif  // __COMMAND_H__

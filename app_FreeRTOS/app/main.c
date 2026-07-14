@@ -99,6 +99,7 @@ static uint8_t out_buff[MAX_SIZE_BASE_ADDR];
 #ifdef CONSOLE_COMMANDS
 #include "command.h"
 #include "console.h"
+#include "ble_tx_adv.h"
 #endif
 
 /******************************************************************************/
@@ -194,9 +195,7 @@ double				param[5]		 = {0, 0, 0, 0, 0};
 char				param_no		 =  0;
 int					cmd_type		 = -1;
 char				invalid_cmd		 =  0;
-char				received_cmd[30] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-										0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-										0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+char				received_cmd[CONSOLE_MAX_COMMAND_LEN] = {0};
 #endif
 
 AD9361_InitParam default_init_param = {
@@ -577,6 +576,22 @@ AD9361_TXFIRConfig tx_fir_config = {	// BPF PASSBAND 3/20 fs to 1/4 fs
 struct ad9361_rf_phy *ad9361_phy;
 #ifdef FMCOMMS5
 struct ad9361_rf_phy *ad9361_phy_b;
+#endif
+
+#ifdef CONSOLE_COMMANDS
+static int console_handle_ble_tx_adv_name_cmd(char *cmd_buf)
+{
+	static const char prefix[] = "ble_tx_adv_name=";
+	uint32_t prefix_len = sizeof(prefix) - 1u;
+
+	if (strncmp(cmd_buf, prefix, prefix_len) != 0)
+		return 0;
+
+	if (ble_tx_adv_start_name(&cmd_buf[prefix_len]) < 0)
+		console_print("BLE ADV start failed\r\n");
+
+	return 1;
+}
 #endif
 
 
@@ -1148,6 +1163,8 @@ fail:
 
 #define FREERTOS_CONSOLE_TASK_PRIORITY        1
 #define FREERTOS_CONSOLE_TASK_STACK_WORDS     2048
+#define FREERTOS_BLE_TX_ADV_TASK_PRIORITY     8
+#define FREERTOS_BLE_TX_ADV_TASK_STACK_WORDS  4096
 #define FREERTOS_DMAC_POLL_TASK_PRIORITY      8
 #define FREERTOS_DMAC_POLL_TASK_STACK_WORDS   512
 #define FREERTOS_DMAC_POLL_PERIOD_MS          1
@@ -1166,6 +1183,9 @@ static void vConsoleCommandTask(void *pvParameters)
 		invalid_cmd = 0;
 
 		console_get_command(received_cmd);
+
+		if (console_handle_ble_tx_adv_name_cmd(received_cmd))
+			continue;
 
 		for (cmd = 0; cmd < cmd_no; cmd++) {
 			param_no = 0;
@@ -1733,7 +1753,9 @@ int main(void)
 		TaskHandle_t     h_dmac_poll = NULL;
 #ifdef CONSOLE_COMMANDS
 		BaseType_t       rc_console;
+		BaseType_t       rc_ble_tx_adv;
 		TaskHandle_t     h_console = NULL;
+		TaskHandle_t     h_ble_tx_adv = NULL;
 #endif
 #ifdef FREERTOS_ENABLE_COUNTER_TEST_TASKS
 		BaseType_t       rc_cnt1;
@@ -1759,11 +1781,22 @@ int main(void)
 					    FREERTOS_DMAC_POLL_TASK_PRIORITY,
 					    &h_dmac_poll );
 #ifdef CONSOLE_COMMANDS
+		if( ble_tx_adv_init() < 0 )
+		{
+			console_print( "[ERR] BLE ADV TX init failed; scheduler not started\r\n" );
+			for( ; ; ) { __asm volatile ( "NOP" ); }
+		}
+
 		rc_console = xTaskCreate( vConsoleCommandTask, "Console",
 					  FREERTOS_CONSOLE_TASK_STACK_WORDS,
 					  NULL,
 					  FREERTOS_CONSOLE_TASK_PRIORITY,
 					  &h_console );
+		rc_ble_tx_adv = xTaskCreate( ble_tx_adv_task, "BLE_TX_ADV",
+					     FREERTOS_BLE_TX_ADV_TASK_STACK_WORDS,
+					     NULL,
+					     FREERTOS_BLE_TX_ADV_TASK_PRIORITY,
+					     &h_ble_tx_adv );
 #endif
 #ifdef FREERTOS_ENABLE_COUNTER_TEST_TASKS
 		rc_cnt1 = xTaskCreate( vCounterTask1, "Cnt1", 512, NULL, 2, &h_cnt1 );
@@ -1778,6 +1811,7 @@ int main(void)
 		if( ( rc_dmac_poll != pdPASS )
 #ifdef CONSOLE_COMMANDS
 		    || ( rc_console != pdPASS )
+		    || ( rc_ble_tx_adv != pdPASS )
 #endif
 #ifdef FREERTOS_ENABLE_COUNTER_TEST_TASKS
 		    || ( rc_cnt1 != pdPASS ) || ( rc_cnt2 != pdPASS )
@@ -1815,6 +1849,8 @@ int main(void)
 	while(1)
 	{
 		console_get_command(received_cmd);
+		if (console_handle_ble_tx_adv_name_cmd(received_cmd))
+			continue;
 		invalid_cmd = 0;
 		for(cmd = 0; cmd < cmd_no; cmd++)
 		{

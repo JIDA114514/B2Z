@@ -2,6 +2,7 @@
 
 #define BLE_EXADV_WAVEFORM_DEFINE_ARRAYS
 #include "dma_tx_waveforms/dma_tx_ble_exadv_waveform_30_72M.h"
+#include "dma_tx_waveforms/dma_tx_ble_waveform_30_72M.h"
 #include "dma_tx_waveforms/dma_tx_bluebee_waveform.h"
 
 extern const uint32_t zigbee_iq[14018] __attribute__((aligned(64)));
@@ -26,6 +27,12 @@ const struct dma_tx_waveform_desc
 		.name = "exadv secondary",
 		.data = ble_exadv_secondary_iq_ch3,
 		.bytes = sizeof(ble_exadv_secondary_iq_ch3),
+		.tx_lo_hz = DMA_TX_FREQ_CH39_HZ,
+	},
+	[DMA_TX_WAVEFORM_BLE_CH39] = {
+		.name = "BLE legacy advertising ch39",
+		.data = ble_iq_ch39,
+		.bytes = sizeof(ble_iq_ch39),
 		.tx_lo_hz = DMA_TX_FREQ_CH39_HZ,
 	},
 };

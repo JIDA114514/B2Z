@@ -48,6 +48,7 @@
 #include "parameters.h"
 #include "app_config.h"
 #include "axi_dmac.h"
+#include "ble_tx_adv.h"
 #include "dma_tx_waveforms.h"
 #include "no_os_gpio.h"
 #ifdef XILINX_PLATFORM
@@ -112,7 +113,9 @@ command cmd_list[] = {
 	{"dds_tx2_tone1_scale=", "Sets the DDS TX2 Tone 1 scale.", "", set_dds_tx2_tone1_scale},
 	{"dds_tx2_tone2_scale?", "Gets current DDS TX2 Tone 2 scale.", "", dds_tx2_tone2_scale},
 	{"dds_tx2_tone2_scale=", "Sets the DDS TX2 Tone 2 scale.", "", set_dds_tx2_tone2_scale},
-	{"dma_tx_demo?", "Sends legacy ZigBee data in DMA.", "", dma_tx_demo},
+	{"ble_tx_adv_name=", "Sets BLE legacy advertising name and starts 37/38/39 TX.", "", ble_tx_adv_name_cmd},
+	{"ble_tx_stop?", "Stops BLE advertising TX and restores DDS.", "", ble_tx_adv_stop_cmd},
+	{"dma_tx_demo?", "Sends BLE ch39 legacy advertising waveform in DMA.", "", dma_tx_demo},
 	{"dma_switch?", "Switches cyclic DMA waveform.", "", change_dma_context},
 };
 const char cmd_no = (sizeof(cmd_list) / sizeof(command));
@@ -143,6 +146,9 @@ static int32_t dma_tx_start_waveform(enum dma_tx_waveform_id id)
 	if (!ad9361_phy || !ad9361_phy->tx_dac || !tx_dmac)
 		return -1;
 
+	ble_tx_adv_stop(0u);
+	ble_tx_adv_tx_lock();
+
 	waveform = &g_dma_tx_waveforms[id];
 
 	axi_dmac_transfer_stop(tx_dmac);
@@ -167,6 +173,8 @@ static int32_t dma_tx_start_waveform(enum dma_tx_waveform_id id)
 	if (ret == 0)
 		dma_tx_context = id;
 
+	ble_tx_adv_tx_unlock();
+
 	return ret;
 }
 
@@ -177,9 +185,10 @@ void dma_tx_demo(double *param, char param_no)
 	(void)param;
 	(void)param_no;
 
-	ret = dma_tx_start_waveform(DMA_TX_WAVEFORM_ZIGBEE);
+	ret = dma_tx_start_waveform(DMA_TX_WAVEFORM_BLE_CH39);
 	if (ret == 0)
-		console_print("start transfer!(zigbee frame)\n");
+		console_print("start transfer!(%s)\n",
+			      g_dma_tx_waveforms[DMA_TX_WAVEFORM_BLE_CH39].name);
 	else
 		console_print("dma start failed\n");
 }
@@ -192,12 +201,8 @@ void change_dma_context(double *param, char param_no)
 	(void)param;
 	(void)param_no;
 
-	if (dma_tx_context == DMA_TX_WAVEFORM_ZIGBEE)
-		next = DMA_TX_WAVEFORM_BLUEBEE;
-	else if (dma_tx_context == DMA_TX_WAVEFORM_BLUEBEE)
-		next = DMA_TX_WAVEFORM_EXADV_SECONDARY;
-	else
-		next = DMA_TX_WAVEFORM_ZIGBEE;
+	next = (enum dma_tx_waveform_id)((dma_tx_context + 1) %
+					 DMA_TX_WAVEFORM_COUNT);
 
 	ret = dma_tx_start_waveform(next);
 	if (ret == 0)

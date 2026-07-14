@@ -57,6 +57,9 @@ volatile uint32_t g_adc_dma_irq_enter_count = 0;
 volatile uint32_t g_adc_dma_irq_eot_count = 0;
 volatile uint32_t g_adc_dma_irq_sem_give_count = 0;
 volatile uint32_t g_adc_dma_irq_sem_woken_count = 0;
+volatile uint32_t g_adc_dma_poll_count = 0;
+volatile uint32_t g_adc_dma_poll_eot_count = 0;
+volatile uint32_t g_adc_dma_poll_sem_give_count = 0;
 volatile uint32_t g_adc_dma_irq_fallback_count = 0;
 volatile uint32_t g_adc_dma_irq_fallback_pending = 0;
 volatile uint32_t g_adc_dma_gic_fabric_enable[AXI_DMAC_GIC_FABRIC_DIAG_COUNT];
@@ -92,11 +95,14 @@ static void axi_dmac_snapshot_gic_fabric_irqs(void)
 	}
 }
 
-static void axi_dmac_signal_completion_from_isr(struct axi_dmac *dmac)
+static void axi_dmac_signal_completion(struct axi_dmac *dmac, bool from_isr)
 {
 	BaseType_t higher_priority_task_woken = pdFALSE;
 
-	if (dmac->completion_sem) {
+	if (!dmac->completion_sem)
+		return;
+
+	if (from_isr) {
 		if (xSemaphoreGiveFromISR((SemaphoreHandle_t)dmac->completion_sem,
 					  &higher_priority_task_woken) == pdPASS) {
 			if (dmac->direction == DMA_DEV_TO_MEM) {
@@ -105,34 +111,28 @@ static void axi_dmac_signal_completion_from_isr(struct axi_dmac *dmac)
 					g_adc_dma_irq_sem_woken_count++;
 			}
 		}
-	}
 
-	portYIELD_FROM_ISR(higher_priority_task_woken);
+		portYIELD_FROM_ISR(higher_priority_task_woken);
+	} else {
+		if (xSemaphoreGive((SemaphoreHandle_t)dmac->completion_sem) == pdPASS) {
+			if (dmac->direction == DMA_DEV_TO_MEM)
+				g_adc_dma_poll_sem_give_count++;
+		}
+	}
 }
 #else
-static void axi_dmac_signal_completion_from_isr(struct axi_dmac *dmac)
+static void axi_dmac_signal_completion(struct axi_dmac *dmac, bool from_isr)
 {
 	(void)dmac;
+	(void)from_isr;
 }
 #endif
 
-/*******************************************************************************
- * @brief ISR for dev to mem DMA transfer. It computes the next transfer params,
- *			if any, and sets the transfer structure fields accordingly.
- *
- * @param instance - the instance that triggered the ISR.
- *
- * @return None.
-*******************************************************************************/
-void axi_dmac_dev_to_mem_isr(void *instance)
+static void axi_dmac_dev_to_mem_handle_pending(struct axi_dmac *dmac,
+					       uint32_t reg_val,
+					       bool from_isr)
 {
-	struct axi_dmac *dmac = (struct axi_dmac *)instance;
 	uint32_t burst_size;
-	uint32_t reg_val;
-
-	/* Get interrupt sources and clear interrupts. */
-	axi_dmac_read(dmac, AXI_DMAC_REG_IRQ_PENDING, &reg_val);
-	axi_dmac_write(dmac, AXI_DMAC_REG_IRQ_PENDING, reg_val);
 
 	if (reg_val & AXI_DMAC_IRQ_SOT) {
 		if (dmac->remaining_size) {
@@ -164,30 +164,21 @@ void axi_dmac_dev_to_mem_isr(void *instance)
 			dmac->transfer.transfer_done = true;
 			dmac->next_dest_addr = 0;
 #ifdef FREERTOS_INTEGRATION
-			g_adc_dma_irq_eot_count++;
+			if (from_isr)
+				g_adc_dma_irq_eot_count++;
+			else
+				g_adc_dma_poll_eot_count++;
 #endif
-			axi_dmac_signal_completion_from_isr(dmac);
+			axi_dmac_signal_completion(dmac, from_isr);
 		}
 	}
 }
 
-/*******************************************************************************
- * @brief ISR for mem DMA to dev transfer. It computes the next transfer params,
- *			if any, and sets the transfer structure fields accordingly.
- *
- * @param instance - the instance that triggered the ISR.
- *
- * @return None.
-*******************************************************************************/
-void axi_dmac_mem_to_dev_isr(void *instance)
+static void axi_dmac_mem_to_dev_handle_pending(struct axi_dmac *dmac,
+					       uint32_t reg_val,
+					       bool from_isr)
 {
-	struct axi_dmac *dmac = (struct axi_dmac *)instance;
 	uint32_t burst_size;
-	uint32_t reg_val;
-
-	/* Get interrupt sources and clear interrupts. */
-	axi_dmac_read(dmac, AXI_DMAC_REG_IRQ_PENDING, &reg_val);
-	axi_dmac_write(dmac, AXI_DMAC_REG_IRQ_PENDING, reg_val);
 
 	if (reg_val & AXI_DMAC_IRQ_SOT) {
 		if ((dmac->transfer.cyclic == CYCLIC) &&
@@ -224,33 +215,21 @@ void axi_dmac_mem_to_dev_isr(void *instance)
 		if ((!dmac->remaining_size) && (dmac->transfer.cyclic != CYCLIC)) {
 			dmac->transfer.transfer_done = true;
 			dmac->next_src_addr = 0;
-			axi_dmac_signal_completion_from_isr(dmac);
+			axi_dmac_signal_completion(dmac, from_isr);
 		}
 	}
 }
 
-/*******************************************************************************
- * @brief ISR for mem DMA to mem DMA transfer. It computes the next transfer
- *			params, if any, and sets the transfer structure fields accordingly.
- *
- * @param instance - the instance that triggered the ISR.
- *
- * @return None.
-*******************************************************************************/
-void axi_dmac_mem_to_mem_isr(void *instance)
+static void axi_dmac_mem_to_mem_handle_pending(struct axi_dmac *dmac,
+					       uint32_t reg_val,
+					       bool from_isr)
 {
-	struct axi_dmac *dmac = (struct axi_dmac *)instance;
 	uint32_t burst_size;
-	uint32_t reg_val;
-
-	/* Get interrupt sources and clear interrupts. */
-	axi_dmac_read(dmac, AXI_DMAC_REG_IRQ_PENDING, &reg_val);
-	axi_dmac_write(dmac, AXI_DMAC_REG_IRQ_PENDING, reg_val);
 
 	if (reg_val & AXI_DMAC_IRQ_SOT) {
 		if (dmac->remaining_size) {
-			/** See if remaining size is bigger than max transfer size and
-			 * set burst size. */
+			/** See if remaining size is bigger than max transfer
+			 * size and set burst size. */
 			if (dmac->remaining_size > dmac->max_length) {
 				burst_size = dmac->max_length;
 			} else {
@@ -286,10 +265,70 @@ void axi_dmac_mem_to_mem_isr(void *instance)
 				dmac->transfer.transfer_done = true;
 				dmac->next_src_addr = 0;
 				dmac->next_dest_addr = 0;
-				axi_dmac_signal_completion_from_isr(dmac);
+				axi_dmac_signal_completion(dmac, from_isr);
 			}
 		}
 	}
+}
+
+/*******************************************************************************
+ * @brief ISR for dev to mem DMA transfer. It computes the next transfer params,
+ *			if any, and sets the transfer structure fields accordingly.
+ *
+ * @param instance - the instance that triggered the ISR.
+ *
+ * @return None.
+*******************************************************************************/
+void axi_dmac_dev_to_mem_isr(void *instance)
+{
+	struct axi_dmac *dmac = (struct axi_dmac *)instance;
+	uint32_t reg_val;
+
+	/* Get interrupt sources and clear interrupts. */
+	axi_dmac_read(dmac, AXI_DMAC_REG_IRQ_PENDING, &reg_val);
+	axi_dmac_write(dmac, AXI_DMAC_REG_IRQ_PENDING, reg_val);
+
+	axi_dmac_dev_to_mem_handle_pending(dmac, reg_val, true);
+}
+
+/*******************************************************************************
+ * @brief ISR for mem DMA to dev transfer. It computes the next transfer params,
+ *			if any, and sets the transfer structure fields accordingly.
+ *
+ * @param instance - the instance that triggered the ISR.
+ *
+ * @return None.
+*******************************************************************************/
+void axi_dmac_mem_to_dev_isr(void *instance)
+{
+	struct axi_dmac *dmac = (struct axi_dmac *)instance;
+	uint32_t reg_val;
+
+	/* Get interrupt sources and clear interrupts. */
+	axi_dmac_read(dmac, AXI_DMAC_REG_IRQ_PENDING, &reg_val);
+	axi_dmac_write(dmac, AXI_DMAC_REG_IRQ_PENDING, reg_val);
+
+	axi_dmac_mem_to_dev_handle_pending(dmac, reg_val, true);
+}
+
+/*******************************************************************************
+ * @brief ISR for mem DMA to mem DMA transfer. It computes the next transfer
+ *			params, if any, and sets the transfer structure fields accordingly.
+ *
+ * @param instance - the instance that triggered the ISR.
+ *
+ * @return None.
+*******************************************************************************/
+void axi_dmac_mem_to_mem_isr(void *instance)
+{
+	struct axi_dmac *dmac = (struct axi_dmac *)instance;
+	uint32_t reg_val;
+
+	/* Get interrupt sources and clear interrupts. */
+	axi_dmac_read(dmac, AXI_DMAC_REG_IRQ_PENDING, &reg_val);
+	axi_dmac_write(dmac, AXI_DMAC_REG_IRQ_PENDING, reg_val);
+
+	axi_dmac_mem_to_mem_handle_pending(dmac, reg_val, true);
 }
 
 void axi_dmac_default_isr(void *instance)
@@ -316,6 +355,42 @@ void axi_dmac_default_isr(void *instance)
 		break;
 	}
 }
+
+#ifdef FREERTOS_INTEGRATION
+int32_t axi_dmac_poll_pending(struct axi_dmac *dmac)
+{
+	uint32_t reg_val;
+
+	if (!dmac)
+		return -1;
+
+	if (dmac->irq_option != IRQ_ENABLED)
+		return 0;
+
+	axi_dmac_read(dmac, AXI_DMAC_REG_IRQ_PENDING, &reg_val);
+	if (!(reg_val & (AXI_DMAC_IRQ_SOT | AXI_DMAC_IRQ_EOT)))
+		return 0;
+
+	axi_dmac_write(dmac, AXI_DMAC_REG_IRQ_PENDING, reg_val);
+
+	switch (dmac->direction) {
+	case DMA_DEV_TO_MEM:
+		g_adc_dma_poll_count++;
+		axi_dmac_dev_to_mem_handle_pending(dmac, reg_val, false);
+		break;
+	case DMA_MEM_TO_DEV:
+		axi_dmac_mem_to_dev_handle_pending(dmac, reg_val, false);
+		break;
+	case DMA_MEM_TO_MEM:
+		axi_dmac_mem_to_mem_handle_pending(dmac, reg_val, false);
+		break;
+	default:
+		return -1;
+	}
+
+	return 1;
+}
+#endif
 
 /*******************************************************************************
  * @brief Wrapper for AXI IO through UIO/devmem read function.

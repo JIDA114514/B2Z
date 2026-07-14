@@ -152,14 +152,12 @@ void get_help(double* param, char param_no) // "help?" command
 void get_register(double* param, char param_no) // "register?" command
 {
 	uint16_t reg_addr;
-	uint8_t reg_val;
-	struct spi_device spi;
+	int32_t reg_val;
 
 	if(param_no >= 1)
 	{
-		spi.id_no = 0;
 		reg_addr = param[0];
-		reg_val = ad9361_spi_read(&spi, reg_addr);
+		reg_val = ad9361_spi_read(ad9361_phy->spi, reg_addr);
 		console_print("register[0x%x]=0x%x\n", reg_addr, reg_val);
 	}
 	else
@@ -761,6 +759,7 @@ void get_dds_tx1_tone1_phase(double* param, char param_no)	// dds_tx1_tone1_phas
 void set_dds_tx1_tone1_phase(double* param, char param_no)	// dds_tx1_tone1_phase=
 {
 	int32_t phase = (uint32_t)param[0];
+	uint32_t read_phase;
 
 	if(param_no >= 1)
 	{
@@ -768,8 +767,8 @@ void set_dds_tx1_tone1_phase(double* param, char param_no)	// dds_tx1_tone1_phas
 		if ((phase - 90) < 0)
 			phase += 360;
 		axi_dac_dds_set_phase(ad9361_phy->tx_dac, DDS_CHAN_TX1_Q_F1, (uint32_t)((phase - 90) * 1000));
-		axi_dac_dds_get_phase(ad9361_phy->tx_dac, DDS_CHAN_TX1_I_F1, &phase);
-		phase /= 1000;
+		axi_dac_dds_get_phase(ad9361_phy->tx_dac, DDS_CHAN_TX1_I_F1, &read_phase);
+		phase = read_phase / 1000;
 		console_print("dds_tx1_tone1_phase=%d\n", phase);
 	}
 	else
@@ -797,6 +796,7 @@ void get_dds_tx1_tone2_phase(double* param, char param_no)	// dds_tx1_tone2_phas
 void set_dds_tx1_tone2_phase(double* param, char param_no)	// dds_tx1_tone2_phase=
 {
 	int32_t phase = (uint32_t)param[0];
+	uint32_t read_phase;
 
 	if(param_no >= 1)
 	{
@@ -804,8 +804,8 @@ void set_dds_tx1_tone2_phase(double* param, char param_no)	// dds_tx1_tone2_phas
 		if ((phase - 90) < 0)
 			phase += 360;
 		axi_dac_dds_set_phase(ad9361_phy->tx_dac, DDS_CHAN_TX1_Q_F2, (uint32_t)((phase - 90) * 1000));
-		axi_dac_dds_get_phase(ad9361_phy->tx_dac, DDS_CHAN_TX1_I_F2, &phase);
-		phase /= 1000;
+		axi_dac_dds_get_phase(ad9361_phy->tx_dac, DDS_CHAN_TX1_I_F2, &read_phase);
+		phase = read_phase / 1000;
 		console_print("dds_tx1_tone2_phase=%d\n", phase);
 	}
 	else
@@ -960,6 +960,7 @@ void get_dds_tx2_tone1_phase(double* param, char param_no)	// dds_tx2_tone1_phas
 void set_dds_tx2_tone1_phase(double* param, char param_no)	// dds_tx2_tone1_phase=
 {
 	int32_t phase = (uint32_t)param[0];
+	uint32_t read_phase;
 
 	if(param_no >= 1)
 	{
@@ -968,8 +969,8 @@ void set_dds_tx2_tone1_phase(double* param, char param_no)	// dds_tx2_tone1_phas
 			phase += 360;
 		axi_dac_dds_set_phase(ad9361_phy->tx_dac, DDS_CHAN_TX2_Q_F1, (uint32_t)((phase - 90) * 1000));
 
-		axi_dac_dds_get_phase(ad9361_phy->tx_dac, DDS_CHAN_TX2_I_F1, &phase);
-		phase /= 1000;
+		axi_dac_dds_get_phase(ad9361_phy->tx_dac, DDS_CHAN_TX2_I_F1, &read_phase);
+		phase = read_phase / 1000;
 		console_print("dds_tx2_tone1_phase=%d\n", phase);
 	}
 	else
@@ -997,6 +998,7 @@ void get_dds_tx2_tone2_phase(double* param, char param_no)	// dds_tx2_tone2_phas
 void set_dds_tx2_tone2_phase(double* param, char param_no)	// dds_tx2_tone2_phase=
 {
 	int32_t phase = (uint32_t)param[0];
+	uint32_t read_phase;
 
 	if(param_no >= 1)
 	{
@@ -1004,8 +1006,8 @@ void set_dds_tx2_tone2_phase(double* param, char param_no)	// dds_tx2_tone2_phas
 		if ((phase - 90) < 0)
 			phase += 360;
 		axi_dac_dds_set_phase(ad9361_phy->tx_dac, DDS_CHAN_TX2_Q_F2, (uint32_t)((phase - 90) * 1000));
-		axi_dac_dds_get_phase(ad9361_phy->tx_dac, DDS_CHAN_TX2_I_F2, &phase);
-		phase /= 1000;
+		axi_dac_dds_get_phase(ad9361_phy->tx_dac, DDS_CHAN_TX2_I_F2, &read_phase);
+		phase = read_phase / 1000;
 		console_print("dds_tx2_tone2_phase=%d\n", phase);
 	}
 	else

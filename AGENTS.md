@@ -131,21 +131,7 @@
 5. `doc/BLE_Core_v5.1.pdf` 可作为 BLE 规范参考，但当前阶段不再以"规范手机跟随 AuxPtr"作为主要成功判据。
 6. FreeRTOS 移植使用 `FREERTOS_INTEGRATION` 条件编译宏，所有 HAL 修改通过 `#ifdef` 保持裸机兼容。
 7. `app_FreeRTOS/` 缺少 BLE/CTC 文件，实现时需从 `app_B2Z/` 复制。
-
-## DMA/PL IRQ 当前诊断状态
-
-- BSP 导出的名义中断号为：ADC DMA `XPAR_FABRIC_AXI_AD9361_ADC_DMA_IRQ_INTR = 63U`，DAC DMA `XPAR_FABRIC_AXI_AD9361_DAC_DMA_IRQ_INTR = 64U`。
-- 用户为排查 DAC DMA IRQ 曾交换 ADC/DAC IRQ 接口，因此当前实验不要只按外设名判断 IRQ ID；应同时监听/诊断 ID63 和 ID64。
-- Phase2 软件 pending 自检已证明 GIC ID63/64 的 FreeRTOS 软件分发路径正常：
-  - `swpend id=63 count=1`
-  - `swpend id=64 count=1`
-- VIO In10 测试仍失败：ILA 能看到 VIO 翻转影响 `sys_concat_intc/dout`，但 PS/GIC 未进入 VIO ISR。VIO 不能作为当前 PL->PS IRQ 通路已打通的证据。
-- 最新 ILA 观察：`adc_dma_irq` 上升沿后，`concat_intc_dout = 0x1400`，且当时 VIO 已置 1。
-  - `0x1400 = bit12 | bit10`
-  - bit10 对应 VIO 已置 1
-  - adc_dma_irq 相关信号当前表现为 concat bit12 置位
-  - 在 `PCW_IRQ_F2P_MODE=REVERSE` 和当前 BSP 历史映射下，concat bit12 更可能对应 GIC ID64
-- 后续 DMA IRQ 测试应优先查看 `[P2][IRQMAP] src=rx_dmac ...` 和 `[P2][IRQMAP] src=tx_dmac_start ...` 中 ID63/ID64 的计数，判断真实 DMA IRQ 最终落在哪个 GIC ID。
+8. 当前DMA实现中无法正常触发IRQ信号，在之后的处理中要主动检查相关寄存器确定传输状态。
 
 ## 手机 BLE 检测的负载上限
 

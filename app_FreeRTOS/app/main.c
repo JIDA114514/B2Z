@@ -41,6 +41,7 @@
 /***************************** Include Files **********************************/
 /******************************************************************************/
 #include <inttypes.h>
+#include <string.h>
 #include "app_config.h"
 #include "ad9361_api.h"
 #include "parameters.h"
@@ -186,7 +187,7 @@ struct axi_dmac *tx_dmac;
 
 #ifdef CONSOLE_COMMANDS
 extern command	  	cmd_list[];
-extern char			cmd_no;
+extern const char	cmd_no;
 extern cmd_function	cmd_functions[11];
 unsigned char		cmd				 =  0;
 double				param[5]		 = {0, 0, 0, 0, 0};
@@ -677,6 +678,9 @@ static void phase2_reset_adc_dma_irq_diag(void)
 	g_adc_dma_irq_eot_count = 0;
 	g_adc_dma_irq_sem_give_count = 0;
 	g_adc_dma_irq_sem_woken_count = 0;
+	g_adc_dma_poll_count = 0;
+	g_adc_dma_poll_eot_count = 0;
+	g_adc_dma_poll_sem_give_count = 0;
 	g_adc_dma_irq_fallback_count = 0;
 	g_adc_dma_irq_fallback_pending = 0;
 
@@ -756,6 +760,10 @@ static void phase2_print_adc_dma_irq_diag(char *tag)
 	console_print("[P2][DMACFB] count=%d pending_before_clear=0x%08x\r\n",
 		      (long)g_adc_dma_irq_fallback_count,
 		      (long)g_adc_dma_irq_fallback_pending);
+	console_print("[P2][DMACPOLL] count=%d eot=%d sem=%d\r\n",
+		      (long)g_adc_dma_poll_count,
+		      (long)g_adc_dma_poll_eot_count,
+		      (long)g_adc_dma_poll_sem_give_count);
 	for (i = 0; i < AXI_DMAC_GIC_FABRIC_DIAG_COUNT; i++) {
 		if (g_adc_dma_gic_fabric_enable[i] ||
 		    g_adc_dma_gic_fabric_pending[i] ||
@@ -1135,9 +1143,65 @@ fail:
 #endif /* PHASE2_SELFTEST */
 
 /*-----------------------------------------------------------*/
-/* FreeRTOS Phase 1 — UART-based kernel verification tasks  */
+/* FreeRTOS application tasks                               */
 /*-----------------------------------------------------------*/
 
+#define FREERTOS_CONSOLE_TASK_PRIORITY        1
+#define FREERTOS_CONSOLE_TASK_STACK_WORDS     2048
+#define FREERTOS_DMAC_POLL_TASK_PRIORITY      8
+#define FREERTOS_DMAC_POLL_TASK_STACK_WORDS   512
+#define FREERTOS_DMAC_POLL_PERIOD_MS          1
+
+#ifdef CONSOLE_COMMANDS
+static void vConsoleCommandTask(void *pvParameters)
+{
+	(void)pvParameters;
+
+	get_help(NULL, 0);
+
+	for (;;) {
+		memset(received_cmd, 0, sizeof(received_cmd));
+		memset(param, 0, sizeof(param));
+		param_no = 0;
+		invalid_cmd = 0;
+
+		console_get_command(received_cmd);
+
+		for (cmd = 0; cmd < cmd_no; cmd++) {
+			param_no = 0;
+			cmd_type = console_check_commands(received_cmd,
+							  cmd_list[cmd].name,
+							  param, &param_no);
+			if (cmd_type == UNKNOWN_CMD) {
+				invalid_cmd++;
+			} else {
+				cmd_list[cmd].function(param, param_no);
+			}
+		}
+
+		if (invalid_cmd == cmd_no)
+			console_print("Invalid command!\n");
+
+		taskYIELD();
+	}
+}
+#endif
+
+static void vDmacPollTask(void *pvParameters)
+{
+	(void)pvParameters;
+
+	for (;;) {
+		if (rx_dmac && (rx_dmac->irq_option == IRQ_ENABLED))
+			axi_dmac_poll_pending(rx_dmac);
+		if (tx_dmac && (tx_dmac->irq_option == IRQ_ENABLED))
+			axi_dmac_poll_pending(tx_dmac);
+
+		vTaskDelay(pdMS_TO_TICKS(FREERTOS_DMAC_POLL_PERIOD_MS));
+	}
+}
+
+#ifdef FREERTOS_ENABLE_COUNTER_TEST_TASKS
 static volatile uint32_t g_task1_ticks = 0;
 static volatile uint32_t g_task2_ticks = 0;
 
@@ -1162,6 +1226,7 @@ static void vCounterTask1( void * pvParameters )
         }
     }
 }
+#endif
 
 /* Required by FreeRTOS when configCHECK_FOR_STACK_OVERFLOW is enabled */
 void vApplicationStackOverflowHook( TaskHandle_t xTask, char * pcTaskName )
@@ -1207,6 +1272,7 @@ void vApplicationIdleHook( void )
     __asm volatile ( "NOP" );
 }
 
+#ifdef FREERTOS_ENABLE_COUNTER_TEST_TASKS
 /* Task 2: increment counter every 250 ms */
 static void vCounterTask2( void * pvParameters )
 {
@@ -1228,6 +1294,7 @@ static void vCounterTask2( void * pvParameters )
         }
     }
 }
+#endif
 
 #endif /* FREERTOS_INTEGRATION */
 
@@ -1662,10 +1729,18 @@ int main(void)
 	 * Use the no-OS IRQ controller path, then start the scheduler.
 	 */
 	{
+		BaseType_t       rc_dmac_poll;
+		TaskHandle_t     h_dmac_poll = NULL;
+#ifdef CONSOLE_COMMANDS
+		BaseType_t       rc_console;
+		TaskHandle_t     h_console = NULL;
+#endif
+#ifdef FREERTOS_ENABLE_COUNTER_TEST_TASKS
 		BaseType_t       rc_cnt1;
 		BaseType_t       rc_cnt2;
 		TaskHandle_t     h_cnt1 = NULL;
 		TaskHandle_t     h_cnt2 = NULL;
+#endif
 #ifdef PHASE2_SELFTEST
 		BaseType_t       rc_p2;
 		TaskHandle_t     h_p2 = NULL;
@@ -1678,22 +1753,41 @@ int main(void)
 			for( ; ; ) { __asm volatile ( "NOP" ); }
 		}
 
-		/* Create verification tasks */
+		rc_dmac_poll = xTaskCreate( vDmacPollTask, "DmacPoll",
+					    FREERTOS_DMAC_POLL_TASK_STACK_WORDS,
+					    NULL,
+					    FREERTOS_DMAC_POLL_TASK_PRIORITY,
+					    &h_dmac_poll );
+#ifdef CONSOLE_COMMANDS
+		rc_console = xTaskCreate( vConsoleCommandTask, "Console",
+					  FREERTOS_CONSOLE_TASK_STACK_WORDS,
+					  NULL,
+					  FREERTOS_CONSOLE_TASK_PRIORITY,
+					  &h_console );
+#endif
+#ifdef FREERTOS_ENABLE_COUNTER_TEST_TASKS
 		rc_cnt1 = xTaskCreate( vCounterTask1, "Cnt1", 512, NULL, 2, &h_cnt1 );
 		rc_cnt2 = xTaskCreate( vCounterTask2, "Cnt2", 512, NULL, 1, &h_cnt2 );
+#endif
 #ifdef PHASE2_SELFTEST
 		rc_p2 = xTaskCreate( vPhase2SelfTestTask, "P2SelfTest",
 				     PHASE2_TASK_STACK_WORDS, NULL,
 				     PHASE2_TASK_PRIORITY, &h_p2 );
 #endif
 
-		if( ( rc_cnt1 != pdPASS ) || ( rc_cnt2 != pdPASS )
+		if( ( rc_dmac_poll != pdPASS )
+#ifdef CONSOLE_COMMANDS
+		    || ( rc_console != pdPASS )
+#endif
+#ifdef FREERTOS_ENABLE_COUNTER_TEST_TASKS
+		    || ( rc_cnt1 != pdPASS ) || ( rc_cnt2 != pdPASS )
+#endif
 #ifdef PHASE2_SELFTEST
 		    || ( rc_p2 != pdPASS )
 #endif
 		  )
 		{
-			console_print( "[ERR] FreeRTOS Phase 1 task creation failed; scheduler not started\r\n" );
+			console_print( "[ERR] FreeRTOS task creation failed; scheduler not started\r\n" );
 			for( ; ; ) { __asm volatile ( "NOP" ); }
 		}
 

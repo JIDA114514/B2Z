@@ -47,6 +47,12 @@
 //#include "platform.h"
 #include "parameters.h"
 #include "app_config.h"
+#include "axi_dmac.h"
+#include "dma_tx_waveforms.h"
+#include "no_os_gpio.h"
+#ifdef XILINX_PLATFORM
+#include <xil_cache.h>
+#endif
 
 /******************************************************************************/
 /************************ Constants Definitions *******************************/
@@ -106,6 +112,8 @@ command cmd_list[] = {
 	{"dds_tx2_tone1_scale=", "Sets the DDS TX2 Tone 1 scale.", "", set_dds_tx2_tone1_scale},
 	{"dds_tx2_tone2_scale?", "Gets current DDS TX2 Tone 2 scale.", "", dds_tx2_tone2_scale},
 	{"dds_tx2_tone2_scale=", "Sets the DDS TX2 Tone 2 scale.", "", set_dds_tx2_tone2_scale},
+	{"dma_tx_demo?", "Sends legacy ZigBee data in DMA.", "", dma_tx_demo},
+	{"dma_switch?", "Switches cyclic DMA waveform.", "", change_dma_context},
 };
 const char cmd_no = (sizeof(cmd_list) / sizeof(command));
 
@@ -114,6 +122,89 @@ const char cmd_no = (sizeof(cmd_list) / sizeof(command));
 /******************************************************************************/
 extern struct dds_state dds_st;
 extern struct ad9361_rf_phy *ad9361_phy;
+extern struct axi_dmac *tx_dmac;
+
+static enum dma_tx_waveform_id dma_tx_context = DMA_TX_WAVEFORM_ZIGBEE;
+static struct axi_dma_transfer dma_tx_transfer = {
+	.size = 0,
+	.transfer_done = 0,
+	.cyclic = CYCLIC,
+	.src_addr = 0,
+	.dest_addr = 0,
+};
+
+static int32_t dma_tx_start_waveform(enum dma_tx_waveform_id id)
+{
+	const struct dma_tx_waveform_desc *waveform;
+	int32_t ret;
+
+	if (id >= DMA_TX_WAVEFORM_COUNT)
+		return -1;
+	if (!ad9361_phy || !ad9361_phy->tx_dac || !tx_dmac)
+		return -1;
+
+	waveform = &g_dma_tx_waveforms[id];
+
+	axi_dmac_transfer_stop(tx_dmac);
+	axi_dac_set_datasel(ad9361_phy->tx_dac, -1, AXI_DAC_DATA_SEL_DMA);
+
+	no_os_gpio_set_value(ad9361_phy->gpio_desc_tx1_ctrl_h, 0);
+	no_os_gpio_set_value(ad9361_phy->gpio_desc_tx1_ctrl_l, 1);
+	no_os_gpio_set_value(ad9361_phy->gpio_desc_tx2_ctrl_h, 0);
+	no_os_gpio_set_value(ad9361_phy->gpio_desc_tx2_ctrl_l, 1);
+	ad9361_set_tx_rf_port_output(ad9361_phy, TXB);
+	ad9361_set_tx_lo_freq(ad9361_phy, waveform->tx_lo_hz);
+
+#ifdef XILINX_PLATFORM
+	Xil_DCacheFlushRange((uintptr_t)waveform->data, waveform->bytes);
+#endif
+	dma_tx_transfer.cyclic = CYCLIC;
+	dma_tx_transfer.size = waveform->bytes;
+	dma_tx_transfer.src_addr = (uintptr_t)waveform->data;
+	dma_tx_transfer.dest_addr = 0;
+
+	ret = axi_dmac_transfer_start(tx_dmac, &dma_tx_transfer);
+	if (ret == 0)
+		dma_tx_context = id;
+
+	return ret;
+}
+
+void dma_tx_demo(double *param, char param_no)
+{
+	int32_t ret;
+
+	(void)param;
+	(void)param_no;
+
+	ret = dma_tx_start_waveform(DMA_TX_WAVEFORM_ZIGBEE);
+	if (ret == 0)
+		console_print("start transfer!(zigbee frame)\n");
+	else
+		console_print("dma start failed\n");
+}
+
+void change_dma_context(double *param, char param_no)
+{
+	enum dma_tx_waveform_id next;
+	int32_t ret;
+
+	(void)param;
+	(void)param_no;
+
+	if (dma_tx_context == DMA_TX_WAVEFORM_ZIGBEE)
+		next = DMA_TX_WAVEFORM_BLUEBEE;
+	else if (dma_tx_context == DMA_TX_WAVEFORM_BLUEBEE)
+		next = DMA_TX_WAVEFORM_EXADV_SECONDARY;
+	else
+		next = DMA_TX_WAVEFORM_ZIGBEE;
+
+	ret = dma_tx_start_waveform(next);
+	if (ret == 0)
+		console_print("dma set to %s\n", g_dma_tx_waveforms[next].name);
+	else
+		console_print("dma change failed\n");
+}
 
 /**************************************************************************//***
  * @brief Show the invalid parameter message.

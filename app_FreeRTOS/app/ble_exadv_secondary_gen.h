@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #define BLE_EXADV_SECONDARY_GEN_TX_LO_HZ 2480000000ULL
+#define BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES 46u
 
 struct ble_exadv_secondary_gen_meta {
 	const uint8_t *zigbee_payload;
@@ -30,6 +31,8 @@ struct ble_exadv_secondary_gen_meta {
 };
 
 int32_t ble_exadv_secondary_gen_build_default(void);
+int32_t ble_exadv_secondary_gen_build_payload(const uint8_t *payload,
+					      uint32_t payload_len);
 const struct ble_exadv_secondary_gen_meta *
 ble_exadv_secondary_gen_get_last_meta(void);
 

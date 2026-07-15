@@ -244,4 +244,11 @@ int32_t bluebee_gen_start_payload(const uint8_t *payload, uint32_t payload_len);
 /* Builds and transmits the fixed BLE extended advertising secondary packet. */
 void ble_exadv_secondary_gen_cmd(double *param, char param_no);
 
+/* Builds and transmits a BLE extended advertising secondary packet from text. */
+int32_t ble_exadv_secondary_gen_cmdline(const char *payload_text);
+
+/* Builds and transmits a BLE extended advertising secondary packet. */
+int32_t ble_exadv_secondary_gen_start_payload(const uint8_t *payload,
+					      uint32_t payload_len);
+
 #endif  // __COMMAND_H__

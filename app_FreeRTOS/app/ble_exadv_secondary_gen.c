@@ -34,10 +34,10 @@
 
 #define ZIGBEE_PREAMBLE_BYTES              4u
 #define ZIGBEE_SFD                         0xA7u
-#define ZIGBEE_DEFAULT_PAYLOAD_BYTES       46u
-#define ZIGBEE_FRAME_BYTES \
-	(ZIGBEE_PREAMBLE_BYTES + 1u + 1u + ZIGBEE_DEFAULT_PAYLOAD_BYTES + 2u)
-#define BLUEBEE_BYTES                      ((ZIGBEE_FRAME_BYTES * 32u) / 8u)
+#define ZIGBEE_MAX_FRAME_BYTES \
+	(ZIGBEE_PREAMBLE_BYTES + 1u + 1u + \
+	 BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES + 2u)
+#define BLUEBEE_MAX_BYTES                  ((ZIGBEE_MAX_FRAME_BYTES * 32u) / 8u)
 #define BLE_EXADV_ADV_DATA_MAX_BYTES       255u
 
 #ifndef M_PI
@@ -54,7 +54,8 @@ static const uint8_t g_default_mac[6] = {
 
 static const char g_default_name[] = "S";
 
-static const uint8_t g_default_zigbee_payload[ZIGBEE_DEFAULT_PAYLOAD_BYTES] = {
+static const uint8_t
+g_default_zigbee_payload[BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES] = {
 	0x00u, 0x01u, 0x02u, 0x03u, 0x04u, 0x05u, 0x06u, 0x07u,
 	0x08u, 0x09u, 0x0Au, 0x0Bu, 0x0Cu, 0x0Du, 0x0Eu, 0x0Fu,
 	0x10u, 0x11u, 0x12u, 0x13u, 0x14u, 0x15u, 0x16u, 0x17u,
@@ -70,8 +71,9 @@ static const uint16_t g_bluebee_gfsk_symbol_map[16] = {
 	0xD5FCu, 0x57F3u, 0x5BCFu, 0x6F3Du,
 };
 
-static uint8_t g_zigbee_frame[ZIGBEE_FRAME_BYTES];
-static uint8_t g_bluebee_bytes[BLUEBEE_BYTES];
+static uint8_t g_zigbee_payload[BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES];
+static uint8_t g_zigbee_frame[ZIGBEE_MAX_FRAME_BYTES];
+static uint8_t g_bluebee_bytes[BLUEBEE_MAX_BYTES];
 static uint8_t g_adv_data[BLE_EXADV_ADV_DATA_MAX_BYTES];
 static uint8_t g_pdu[BLE_EXADV_MAX_PDU_BYTES];
 static uint8_t g_crc[BLE_EXADV_CRC_LEN];
@@ -150,23 +152,32 @@ static uint16_t crc16_ccitt_reflected(const uint8_t *data, uint32_t len)
 	return crc;
 }
 
-static void build_zigbee_frame(void)
+static int32_t build_zigbee_frame(const uint8_t *payload,
+				  uint32_t payload_len,
+				  uint32_t *frame_len)
 {
 	uint16_t fcs;
 	uint32_t off = 0u;
 
+	if (!payload || payload_len == 0u ||
+	    payload_len > BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES)
+		return -1;
+
+	memcpy(g_zigbee_payload, payload, payload_len);
 	memset(g_zigbee_frame, 0, ZIGBEE_PREAMBLE_BYTES);
 	off += ZIGBEE_PREAMBLE_BYTES;
 	g_zigbee_frame[off++] = ZIGBEE_SFD;
-	g_zigbee_frame[off++] = ZIGBEE_DEFAULT_PAYLOAD_BYTES + 2u;
-	memcpy(&g_zigbee_frame[off], g_default_zigbee_payload,
-	       sizeof(g_default_zigbee_payload));
-	off += sizeof(g_default_zigbee_payload);
+	g_zigbee_frame[off++] = (uint8_t)(payload_len + 2u);
+	memcpy(&g_zigbee_frame[off], g_zigbee_payload, payload_len);
+	off += payload_len;
 
-	fcs = crc16_ccitt_reflected(g_default_zigbee_payload,
-				    sizeof(g_default_zigbee_payload));
+	fcs = crc16_ccitt_reflected(g_zigbee_payload, payload_len);
 	g_zigbee_frame[off++] = (uint8_t)(fcs & 0xFFu);
 	g_zigbee_frame[off++] = (uint8_t)(fcs >> 8);
+
+	*frame_len = off;
+
+	return 0;
 }
 
 static uint8_t get_frame_bit_lsb_first(uint32_t bit_idx)
@@ -187,13 +198,14 @@ static uint8_t get_python_symbol(uint32_t bit_idx)
 	return symbol;
 }
 
-static void build_bluebee_bytes(void)
+static uint32_t build_bluebee_bytes(uint32_t frame_len)
 {
 	uint32_t out_bit = 0u;
+	uint32_t bluebee_byte_count;
 
 	memset(g_bluebee_bytes, 0, sizeof(g_bluebee_bytes));
 
-	for (uint32_t bit = 0u; bit < (ZIGBEE_FRAME_BYTES * 8u); bit += 4u) {
+	for (uint32_t bit = 0u; bit < (frame_len * 8u); bit += 4u) {
 		uint8_t symbol = get_python_symbol(bit);
 		uint16_t mapped = g_bluebee_gfsk_symbol_map[symbol];
 
@@ -204,6 +216,10 @@ static void build_bluebee_bytes(void)
 			out_bit++;
 		}
 	}
+
+	bluebee_byte_count = (out_bit + 7u) / 8u;
+
+	return bluebee_byte_count;
 }
 
 static uint32_t append_complete_local_name(uint8_t *out, uint32_t off)
@@ -218,10 +234,12 @@ static uint32_t append_complete_local_name(uint8_t *out, uint32_t off)
 	return off;
 }
 
-static int32_t build_adv_data(uint32_t *bluebee_start, uint32_t *adv_data_len)
+static int32_t build_adv_data(uint32_t bluebee_byte_count,
+			      uint32_t *bluebee_start,
+			      uint32_t *adv_data_len)
 {
 	uint32_t off = 0u;
-	uint32_t ad_len = BLUEBEE_BYTES + 3u;
+	uint32_t ad_len = bluebee_byte_count + 3u;
 
 	g_adv_data[off++] = 0x02u;
 	g_adv_data[off++] = BLE_AD_TYPE_FLAGS;
@@ -229,15 +247,16 @@ static int32_t build_adv_data(uint32_t *bluebee_start, uint32_t *adv_data_len)
 	off = append_complete_local_name(g_adv_data, off);
 
 	*bluebee_start = off + 4u;
-	if ((off + 4u + BLUEBEE_BYTES) > sizeof(g_adv_data) || ad_len > 0xFFu)
+	if ((off + 4u + bluebee_byte_count) > sizeof(g_adv_data) ||
+	    ad_len > 0xFFu)
 		return -1;
 
 	g_adv_data[off++] = (uint8_t)ad_len;
 	g_adv_data[off++] = BLE_AD_TYPE_MANUFACTURER;
 	g_adv_data[off++] = 0xFFu;
 	g_adv_data[off++] = 0xFFu;
-	memcpy(&g_adv_data[off], g_bluebee_bytes, sizeof(g_bluebee_bytes));
-	off += sizeof(g_bluebee_bytes);
+	memcpy(&g_adv_data[off], g_bluebee_bytes, bluebee_byte_count);
+	off += bluebee_byte_count;
 
 	*adv_data_len = off;
 
@@ -315,6 +334,7 @@ static void bt_whiten(const uint8_t *in, uint32_t len,
 
 static int32_t build_secondary_ll_payload(uint32_t adv_data_len,
 					  uint32_t bluebee_start,
+					  uint32_t bluebee_byte_count,
 					  uint32_t *pdu_len,
 					  uint32_t *ll_payload_len)
 {
@@ -349,7 +369,7 @@ static int32_t build_secondary_ll_payload(uint32_t adv_data_len,
 	memset(whiten_in, 0, off + BLE_EXADV_CRC_LEN);
 	bt_whiten(whiten_in, off + BLE_EXADV_CRC_LEN,
 		  BLE_EXADV_DEFAULT_CHANNEL, whitening_mask);
-	for (uint32_t i = 0u; i < BLUEBEE_BYTES; i++)
+	for (uint32_t i = 0u; i < bluebee_byte_count; i++)
 		g_pdu[bluebee_pdu_start + i] ^=
 			whitening_mask[bluebee_pdu_start + i];
 
@@ -440,32 +460,38 @@ static int32_t build_iq_from_ll_payload(const uint8_t *ll_payload,
 	return 0;
 }
 
-int32_t ble_exadv_secondary_gen_build_default(void)
+int32_t ble_exadv_secondary_gen_build_payload(const uint8_t *payload,
+					      uint32_t payload_len)
 {
 	uint32_t bluebee_start = 0u;
+	uint32_t frame_len = 0u;
+	uint32_t bluebee_byte_count;
 	uint32_t adv_data_len = 0u;
 	uint32_t pdu_len = 0u;
 	uint32_t ll_payload_len = 0u;
 	uint32_t iq_word_count = 0u;
 
-	build_zigbee_frame();
-	build_bluebee_bytes();
+	if (build_zigbee_frame(payload, payload_len, &frame_len) < 0)
+		return -1;
+	bluebee_byte_count = build_bluebee_bytes(frame_len);
 
-	if (build_adv_data(&bluebee_start, &adv_data_len) < 0)
+	if (build_adv_data(bluebee_byte_count, &bluebee_start,
+			   &adv_data_len) < 0)
 		return -1;
 	if (build_secondary_ll_payload(adv_data_len, bluebee_start,
-				       &pdu_len, &ll_payload_len) < 0)
+				       bluebee_byte_count, &pdu_len,
+				       &ll_payload_len) < 0)
 		return -1;
 	if (build_iq_from_ll_payload(g_ll_payload, ll_payload_len,
 				     &iq_word_count) < 0)
 		return -1;
 
-	g_meta.zigbee_payload = g_default_zigbee_payload;
-	g_meta.zigbee_payload_len = sizeof(g_default_zigbee_payload);
+	g_meta.zigbee_payload = g_zigbee_payload;
+	g_meta.zigbee_payload_len = payload_len;
 	g_meta.zigbee_frame = g_zigbee_frame;
-	g_meta.zigbee_frame_len = sizeof(g_zigbee_frame);
+	g_meta.zigbee_frame_len = frame_len;
 	g_meta.bluebee_bytes = g_bluebee_bytes;
-	g_meta.bluebee_byte_count = sizeof(g_bluebee_bytes);
+	g_meta.bluebee_byte_count = bluebee_byte_count;
 	g_meta.adv_data = g_adv_data;
 	g_meta.adv_data_len = adv_data_len;
 	g_meta.pdu = g_pdu;
@@ -483,6 +509,12 @@ int32_t ble_exadv_secondary_gen_build_default(void)
 	g_meta.tx_lo_hz = BLE_EXADV_SECONDARY_GEN_TX_LO_HZ;
 
 	return 0;
+}
+
+int32_t ble_exadv_secondary_gen_build_default(void)
+{
+	return ble_exadv_secondary_gen_build_payload(
+		g_default_zigbee_payload, sizeof(g_default_zigbee_payload));
 }
 
 const struct ble_exadv_secondary_gen_meta *

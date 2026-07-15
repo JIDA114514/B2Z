@@ -120,7 +120,7 @@ command cmd_list[] = {
 	{"dma_tx_demo?", "Sends BLE ch39 legacy advertising waveform in DMA.", "", dma_tx_demo},
 	{"dma_switch?", "Switches cyclic DMA waveform.", "", change_dma_context},
 	{"bluebee_gen_demo?", "Builds BlueBee ZigBee frame at runtime and starts cyclic TX DMA.", "bluebee_gen_demo? 11 22 33 44", bluebee_gen_demo},
-	{"ble_exadv_secondary_gen?", "Builds fixed BLE extended advertising secondary packet and starts cyclic TX DMA on ch39.", "", ble_exadv_secondary_gen_cmd},
+	{"ble_exadv_secondary_gen?", "Builds BLE extended advertising secondary packet and starts cyclic TX DMA on ch39.", "ble_exadv_secondary_gen? 11 22 33 44", ble_exadv_secondary_gen_cmd},
 };
 const char cmd_no = (sizeof(cmd_list) / sizeof(command));
 
@@ -291,11 +291,12 @@ static int8_t hex_value(char c)
 
 static int32_t parse_bluebee_payload_text(const char *text,
 					  uint8_t *payload,
-					  uint32_t *payload_len)
+					  uint32_t *payload_len,
+					  uint32_t max_payload_len)
 {
 	uint32_t out = 0u;
 
-	if (!text || !payload || !payload_len)
+	if (!text || !payload || !payload_len || max_payload_len == 0u)
 		return -1;
 
 	while (is_payload_separator(*text))
@@ -329,7 +330,7 @@ static int32_t parse_bluebee_payload_text(const char *text,
 				return -1;
 			if (!token_has_prefix && token_digits >= 2u)
 				return -1;
-			if (out >= BLUEBEE_GEN_MAX_PAYLOAD_BYTES)
+			if (out >= max_payload_len)
 				return -1;
 
 			if ((token_digits & 1u) == 0u) {
@@ -413,7 +414,8 @@ int32_t bluebee_gen_demo_cmdline(const char *payload_text)
 	uint32_t payload_len = 0u;
 
 	if (parse_bluebee_payload_text(payload_text ? payload_text : "",
-				       payload, &payload_len) < 0) {
+				       payload, &payload_len,
+				       BLUEBEE_GEN_MAX_PAYLOAD_BYTES) < 0) {
 		console_print("bluebee_gen invalid payload\n");
 		print_bluebee_gen_usage();
 		return -1;
@@ -421,6 +423,78 @@ int32_t bluebee_gen_demo_cmdline(const char *payload_text)
 
 	return bluebee_gen_start_payload(payload_len ? payload : NULL,
 					 payload_len);
+}
+
+static void print_exadv_secondary_gen_usage(void)
+{
+	console_print("Usage: ble_exadv_secondary_gen? [hex ZigBee payload bytes]\n");
+	console_print("Example: ble_exadv_secondary_gen? 11 22 33 44\n");
+	console_print("Max payload bytes: %d\n",
+		      (long)BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES);
+}
+
+int32_t ble_exadv_secondary_gen_start_payload(const uint8_t *payload,
+					      uint32_t payload_len)
+{
+	const struct ble_exadv_secondary_gen_meta *meta;
+	int32_t ret;
+
+	console_print("ble_exadv_secondary_gen: generating waveform...\n");
+
+	if (payload && payload_len > 0u)
+		ret = ble_exadv_secondary_gen_build_payload(payload, payload_len);
+	else
+		ret = ble_exadv_secondary_gen_build_default();
+	if (ret < 0) {
+		console_print("ble_exadv_secondary_gen build failed\n");
+		return ret;
+	}
+
+	meta = ble_exadv_secondary_gen_get_last_meta();
+
+	print_hex_bytes("exadv secondary zigbee payload: ",
+			meta->zigbee_payload, meta->zigbee_payload_len);
+	print_hex_bytes("exadv secondary zigbee frame: ",
+			meta->zigbee_frame, meta->zigbee_frame_len);
+	console_print("exadv secondary bluebee_bytes=%d adv_data=%d pdu=%d ll=%d\n",
+		      (long)meta->bluebee_byte_count,
+		      (long)meta->adv_data_len,
+		      (long)meta->pdu_len,
+		      (long)meta->ll_payload_len);
+	print_hex_bytes("exadv secondary pdu: ", meta->pdu, meta->pdu_len);
+	print_hex_bytes("exadv secondary crc: ", meta->crc, meta->crc_len);
+	console_print("exadv secondary air_us=%d post_pad_us=%d iq_words=%d tx_lo=%d MHz whiten_ch=%d\n",
+		      (long)meta->air_us,
+		      (long)meta->post_pad_us,
+		      (long)meta->iq_word_count,
+		      (long)(meta->tx_lo_hz / 1000000ULL),
+		      (long)meta->whitening_channel);
+
+	ret = dma_tx_start_exadv_secondary_generated(meta);
+	if (ret == 0)
+		console_print("ble_exadv_secondary_gen DMA running bytes=%d\n",
+			      (long)meta->iq_byte_count);
+	else
+		console_print("ble_exadv_secondary_gen dma start failed\n");
+
+	return ret;
+}
+
+int32_t ble_exadv_secondary_gen_cmdline(const char *payload_text)
+{
+	uint8_t payload[BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES];
+	uint32_t payload_len = 0u;
+
+	if (parse_bluebee_payload_text(payload_text ? payload_text : "",
+				       payload, &payload_len,
+				       BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES) < 0) {
+		console_print("ble_exadv_secondary_gen invalid payload\n");
+		print_exadv_secondary_gen_usage();
+		return -1;
+	}
+
+	return ble_exadv_secondary_gen_start_payload(payload_len ? payload : NULL,
+						    payload_len);
 }
 
 void dma_tx_demo(double *param, char param_no)
@@ -466,42 +540,10 @@ void bluebee_gen_demo(double *param, char param_no)
 
 void ble_exadv_secondary_gen_cmd(double *param, char param_no)
 {
-	const struct ble_exadv_secondary_gen_meta *meta;
-	int32_t ret;
-
 	(void)param;
 	(void)param_no;
 
-	ret = ble_exadv_secondary_gen_build_default();
-	if (ret < 0) {
-		console_print("ble_exadv_secondary_gen build failed\n");
-		return;
-	}
-
-	meta = ble_exadv_secondary_gen_get_last_meta();
-
-	print_hex_bytes("exadv secondary zigbee frame: ",
-			meta->zigbee_frame, meta->zigbee_frame_len);
-	console_print("exadv secondary bluebee_bytes=%d adv_data=%d pdu=%d ll=%d\n",
-		      (long)meta->bluebee_byte_count,
-		      (long)meta->adv_data_len,
-		      (long)meta->pdu_len,
-		      (long)meta->ll_payload_len);
-	print_hex_bytes("exadv secondary pdu: ", meta->pdu, meta->pdu_len);
-	print_hex_bytes("exadv secondary crc: ", meta->crc, meta->crc_len);
-	console_print("exadv secondary air_us=%d post_pad_us=%d iq_words=%d tx_lo=%d MHz whiten_ch=%d\n",
-		      (long)meta->air_us,
-		      (long)meta->post_pad_us,
-		      (long)meta->iq_word_count,
-		      (long)(meta->tx_lo_hz / 1000000ULL),
-		      (long)meta->whitening_channel);
-
-	ret = dma_tx_start_exadv_secondary_generated(meta);
-	if (ret == 0)
-		console_print("ble_exadv_secondary_gen DMA running bytes=%d\n",
-			      (long)meta->iq_byte_count);
-	else
-		console_print("ble_exadv_secondary_gen dma start failed\n");
+	ble_exadv_secondary_gen_start_payload(NULL, 0u);
 }
 
 /**************************************************************************//***

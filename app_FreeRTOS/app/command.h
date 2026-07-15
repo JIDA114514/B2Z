@@ -39,6 +39,8 @@
 #ifndef __COMMAND_H__
 #define __COMMAND_H__
 
+#include <stdint.h>
+
 /******************************************************************************/
 /********************** Macros and Constants Definitions **********************/
 /******************************************************************************/
@@ -232,5 +234,11 @@ void change_dma_context(double *param, char param_no);
 
 /* Builds and transmits the default BlueBee ZigBee frame at runtime. */
 void bluebee_gen_demo(double *param, char param_no);
+
+/* Builds and transmits a BlueBee ZigBee frame from raw command text. */
+int32_t bluebee_gen_demo_cmdline(const char *payload_text);
+
+/* Builds and transmits a BlueBee ZigBee frame from payload bytes. */
+int32_t bluebee_gen_start_payload(const uint8_t *payload, uint32_t payload_len);
 
 #endif  // __COMMAND_H__

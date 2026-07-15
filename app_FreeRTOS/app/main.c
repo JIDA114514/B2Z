@@ -592,6 +592,19 @@ static int console_handle_ble_tx_adv_name_cmd(char *cmd_buf)
 
 	return 1;
 }
+
+static int console_handle_bluebee_gen_demo_cmd(char *cmd_buf)
+{
+	static const char prefix[] = "bluebee_gen_demo?";
+	uint32_t prefix_len = sizeof(prefix) - 1u;
+
+	if (strncmp(cmd_buf, prefix, prefix_len) != 0)
+		return 0;
+
+	bluebee_gen_demo_cmdline(&cmd_buf[prefix_len]);
+
+	return 1;
+}
 #endif
 
 
@@ -1184,7 +1197,8 @@ static void vConsoleCommandTask(void *pvParameters)
 
 		console_get_command(received_cmd);
 
-		if (console_handle_ble_tx_adv_name_cmd(received_cmd)) {
+		if (console_handle_ble_tx_adv_name_cmd(received_cmd) ||
+		    console_handle_bluebee_gen_demo_cmd(received_cmd)) {
 			vTaskDelay(1);
 			continue;
 		}
@@ -1851,7 +1865,8 @@ int main(void)
 	while(1)
 	{
 		console_get_command(received_cmd);
-		if (console_handle_ble_tx_adv_name_cmd(received_cmd))
+		if (console_handle_ble_tx_adv_name_cmd(received_cmd) ||
+		    console_handle_bluebee_gen_demo_cmd(received_cmd))
 			continue;
 		invalid_cmd = 0;
 		for(cmd = 0; cmd < cmd_no; cmd++)

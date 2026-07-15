@@ -118,7 +118,7 @@ command cmd_list[] = {
 	{"ble_tx_stop?", "Stops BLE advertising TX and restores DDS.", "", ble_tx_adv_stop_cmd},
 	{"dma_tx_demo?", "Sends BLE ch39 legacy advertising waveform in DMA.", "", dma_tx_demo},
 	{"dma_switch?", "Switches cyclic DMA waveform.", "", change_dma_context},
-	{"bluebee_gen_demo?", "Builds default BlueBee ZigBee frame at runtime and starts cyclic TX DMA.", "", bluebee_gen_demo},
+	{"bluebee_gen_demo?", "Builds BlueBee ZigBee frame at runtime and starts cyclic TX DMA.", "bluebee_gen_demo? 11 22 33 44", bluebee_gen_demo},
 };
 const char cmd_no = (sizeof(cmd_list) / sizeof(command));
 
@@ -227,6 +227,162 @@ static int32_t dma_tx_start_bluebee_generated(
 	return ret;
 }
 
+static uint8_t is_payload_separator(char c)
+{
+	return (uint8_t)(c == ' ' || c == '\t' || c == ',' ||
+			 c == ':' || c == ';');
+}
+
+static uint8_t is_line_end(char c)
+{
+	return (uint8_t)(c == '\0' || c == '\r' || c == '\n');
+}
+
+static int8_t hex_value(char c)
+{
+	if (c >= '0' && c <= '9')
+		return (int8_t)(c - '0');
+	if (c >= 'a' && c <= 'f')
+		return (int8_t)(c - 'a' + 10);
+	if (c >= 'A' && c <= 'F')
+		return (int8_t)(c - 'A' + 10);
+	return -1;
+}
+
+static int32_t parse_bluebee_payload_text(const char *text,
+					  uint8_t *payload,
+					  uint32_t *payload_len)
+{
+	uint32_t out = 0u;
+
+	if (!text || !payload || !payload_len)
+		return -1;
+
+	while (is_payload_separator(*text))
+		text++;
+
+	if (is_line_end(*text)) {
+		*payload_len = 0u;
+		return 0;
+	}
+
+	while (!is_line_end(*text)) {
+		uint8_t token_digits = 0u;
+		uint8_t token_has_prefix = 0u;
+
+		while (is_payload_separator(*text))
+			text++;
+		if (is_line_end(*text))
+			break;
+
+		if (text[0] == '0' && (text[1] == 'x' || text[1] == 'X')) {
+			token_has_prefix = 1u;
+			text += 2;
+		}
+
+		while (!is_line_end(*text) && !is_payload_separator(*text)) {
+			int8_t v = hex_value(*text);
+
+			if (v < 0)
+				return -1;
+			if (token_has_prefix && token_digits >= 2u)
+				return -1;
+			if (!token_has_prefix && token_digits >= 2u)
+				return -1;
+			if (out >= BLUEBEE_GEN_MAX_PAYLOAD_BYTES)
+				return -1;
+
+			if ((token_digits & 1u) == 0u) {
+				payload[out] = (uint8_t)v;
+			} else {
+				payload[out] =
+					(uint8_t)((payload[out] << 4) |
+						  (uint8_t)v);
+				out++;
+			}
+			token_digits++;
+			text++;
+		}
+
+		if (token_digits == 0u)
+			return -1;
+		if (token_digits == 1u) {
+			payload[out] = payload[out] & 0x0Fu;
+			out++;
+		}
+	}
+
+	*payload_len = out;
+
+	return 0;
+}
+
+static void print_bluebee_gen_usage(void)
+{
+	console_print("Usage: bluebee_gen_demo? [hex payload bytes]\n");
+	console_print("Example: bluebee_gen_demo? 11 22 33 44\n");
+	console_print("Max payload bytes: %d\n",
+		      (long)BLUEBEE_GEN_MAX_PAYLOAD_BYTES);
+}
+
+int32_t bluebee_gen_start_payload(const uint8_t *payload, uint32_t payload_len)
+{
+	const struct bluebee_gen_meta *meta;
+	int32_t ret;
+
+	if (payload && payload_len > 0u)
+		ret = bluebee_gen_build_payload(payload, payload_len);
+	else
+		ret = bluebee_gen_build_default();
+
+	if (ret < 0) {
+		console_print("bluebee_gen build failed\n");
+		return ret;
+	}
+
+	meta = bluebee_gen_get_last_meta();
+
+	print_hex_bytes("bluebee payload: ", meta->payload, meta->payload_len);
+	print_hex_bytes("zigbee frame: ", meta->frame, meta->frame_len);
+	console_print("bluebee gfsk_bits=%d gfsk_bytes=%d iq_words=%d\n",
+		      (long)meta->gfsk_bit_count,
+		      (long)meta->gfsk_byte_count,
+		      (long)meta->iq_word_count);
+	console_print("bluebee air_us=%d post_pad_us=%d tx_lo=%d MHz\n",
+		      (long)meta->air_us,
+		      (long)meta->post_pad_us,
+		      (long)(meta->tx_lo_hz / 1000000ULL));
+	console_print("bluebee projection=%s dist=%d-%d\n",
+		      meta->zigbee_projection_ok ? "OK" : "FAIL",
+		      (long)meta->symbol_distance_min,
+		      (long)meta->symbol_distance_max);
+
+	ret = dma_tx_start_bluebee_generated(meta);
+	if (ret == 0)
+		console_print("bluebee_gen DMA running bytes=%d\n",
+			      (long)meta->iq_byte_count);
+	else
+		console_print("bluebee_gen dma start failed\n");
+
+	return ret;
+}
+
+int32_t bluebee_gen_demo_cmdline(const char *payload_text)
+{
+	uint8_t payload[BLUEBEE_GEN_MAX_PAYLOAD_BYTES];
+	uint32_t payload_len = 0u;
+
+	if (parse_bluebee_payload_text(payload_text ? payload_text : "",
+				       payload, &payload_len) < 0) {
+		console_print("bluebee_gen invalid payload\n");
+		print_bluebee_gen_usage();
+		return -1;
+	}
+
+	return bluebee_gen_start_payload(payload_len ? payload : NULL,
+					 payload_len);
+}
+
 void dma_tx_demo(double *param, char param_no)
 {
 	int32_t ret;
@@ -262,41 +418,10 @@ void change_dma_context(double *param, char param_no)
 
 void bluebee_gen_demo(double *param, char param_no)
 {
-	const struct bluebee_gen_meta *meta;
-	int32_t ret;
-
 	(void)param;
 	(void)param_no;
 
-	ret = bluebee_gen_build_default();
-	if (ret < 0) {
-		console_print("bluebee_gen build failed\n");
-		return;
-	}
-
-	meta = bluebee_gen_get_last_meta();
-
-	print_hex_bytes("bluebee payload: ", meta->payload, meta->payload_len);
-	print_hex_bytes("zigbee frame: ", meta->frame, meta->frame_len);
-	console_print("bluebee gfsk_bits=%d gfsk_bytes=%d iq_words=%d\n",
-		      (long)meta->gfsk_bit_count,
-		      (long)meta->gfsk_byte_count,
-		      (long)meta->iq_word_count);
-	console_print("bluebee air_us=%d post_pad_us=%d tx_lo=%d MHz\n",
-		      (long)meta->air_us,
-		      (long)meta->post_pad_us,
-		      (long)(meta->tx_lo_hz / 1000000ULL));
-	console_print("bluebee projection=%s dist=%d-%d\n",
-		      meta->zigbee_projection_ok ? "OK" : "FAIL",
-		      (long)meta->symbol_distance_min,
-		      (long)meta->symbol_distance_max);
-
-	ret = dma_tx_start_bluebee_generated(meta);
-	if (ret == 0)
-		console_print("bluebee_gen DMA running bytes=%d\n",
-			      (long)meta->iq_byte_count);
-	else
-		console_print("bluebee_gen dma start failed\n");
+	bluebee_gen_start_payload(NULL, 0u);
 }
 
 /**************************************************************************//***

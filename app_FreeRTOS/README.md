@@ -1,0 +1,426 @@
+# app_FreeRTOS — 裸机到 FreeRTOS 移植说明
+
+本文档对比 [app_B2Z/](../app_B2Z/)（裸机 no-OS 程序），描述 [app_FreeRTOS/](./) 在 Zynq-7020 平台上移植到 FreeRTOS 后的关键变化，以及应用代码如何通过 FreeRTOS 实现多任务调度和功能执行。
+
+## 一、执行模型：从超级循环到抢占式多任务
+
+### 裸机执行模型
+
+裸机程序在 `main()` 中完成硬件初始化（`hw_init()`）后，进入一个单线程超级循环（super-loop），所有功能以函数调用的方式顺序执行：
+
+```c
+// app_B2Z/main.c:1008 — 裸机超级循环
+while (1) {
+    ble_tx_task_tick();       // BLE 发送周期处理
+    ble_exadv_task_tick();    // BLE extended advertising 周期处理
+    ble_rx_service_poll();    // BLE 接收轮询
+    if (XUartPs_IsReceiveData(STDIN_BASEADDR)) {
+        console_get_command(received_cmd);
+        // ... 命令匹配与执行
+    }
+}
+```
+
+关键特征：
+
+- **单线程**：所有功能跑在同一个 `while(1)` 循环中
+- **协作式**：每个函数必须快速返回，否则阻塞整个系统
+- **忙等延时**：`usleep()` 在 CPU 上自旋等待，不释放处理器
+- **轮询串口**：必须主动检查 `XUartPs_IsReceiveData()` 才能读取命令
+- **无优先级**：所有功能平等，无法保证时序关键路径的实时性
+
+### FreeRTOS 执行模型
+
+FreeRTOS 程序在 `main()` 中完成硬件初始化后，创建多个独立任务，然后调用 `vTaskStartScheduler()` 启动抢占式调度器——此函数**永不返回**：
+
+```c
+// app/main.c:1776 — 任务创建与调度器启动
+rc_dmac_poll = xTaskCreate(vDmacPollTask, "DmacPoll", 512, NULL, 8, &h_dmac_poll);
+rc_console   = xTaskCreate(vConsoleCommandTask, "Console", 2048, NULL, 1, &h_console);
+rc_ble_tx    = xTaskCreate(ble_tx_adv_task, "BLE_TX_ADV", 4096, NULL, 8, &h_ble_tx_adv);
+
+// 安装 FreeRTOS 向量表，替换 Xilinx asm_vectors.S
+__asm volatile ("MCR p15, 0, %0, c12, c0, 0" :: "r" (&_freertos_vector_table));
+
+vTaskStartScheduler();  // 永不返回
+```
+
+关键特征：
+
+- **抢占式**：高优先级任务就绪时立即抢占低优先级任务
+- **时间片**：同优先级任务轮转调度（1 ms tick）
+- **阻塞式延时**：`vTaskDelay()` 让出 CPU，调度器切换到其他任务
+- **事件驱动**：任务可以阻塞等待信号量/通知，不消耗 CPU
+- **优先级隔离**：BLE 时隙任务最高优先级，调试任务最低优先级
+
+## 二、中断处理体系的变化
+
+这是移植中**最底层、最关键**的变化。
+
+### 裸机中断路径
+
+```
+硬件 IRQ → Xilinx asm_vectors.S → Xil_ExceptionHandler()
+         → XScuGic_InterruptHandler() → 查表调用用户 ISR
+```
+
+- `Xil_ExceptionInit()` 注册 Xilinx 异常处理到 VBAR
+- `Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_INT, XScuGic_InterruptHandler, ...)` 挂 IRQ 入口
+- ISR 完成后直接返回到被中断的代码，不存在上下文切换
+
+### FreeRTOS 中断路径
+
+```
+硬件 IRQ → _freertos_vector_table (VBAR替换)
+         → FreeRTOS_IRQ_Handler (portASM.S)
+           → 读 ICCIAR → 获取中断ID
+           → 调用 vApplicationIRQHandler(irq_id)
+             → 查 XScuGic HandlerTable → 调用用户 ISR
+           → 写 ICCEOIR
+           → 检查 ulPortYieldRequired → 如有更高优先级任务就绪则上下文切换
+```
+
+核心变化：
+
+1. **VBAR 替换**（[main.c:1865](app/main.c#L1865)）：`vTaskStartScheduler()` 内部调用 `vPortInstallFreeRTOSVectorTable()`，将 VBAR 指向 `freertos_vector_table.S` 定义的向量表。Xilinx 的 `asm_vectors.S` 不再被硬件使用（但保留在二进制中）。
+
+2. **ICCIAR 由汇编读取**（[freertos_irq_glue.c:126](port/freertos_irq_glue.c#L126)）：`portASM.S` 中的 `FreeRTOS_IRQ_Handler` 从 GIC CPU Interface 读取 ICCIAR 获取中断 ID，传入 `vApplicationIRQHandler()`。这意味着不能再调用 Xilinx BSP 的 `XScuGic_InterruptHandler()`（它也会读 ICCIAR，导致中断 ID 丢失），而是直接从 `HandlerTable` 分发。
+
+3. **ISR 可触发上下文切换**（[axi_dmac.c:106-115](drivers/axi_dmac.c#L106-L115)）：当 ISR 中调用 `xSemaphoreGiveFromISR()` 唤醒更高优先级的任务时，`portYIELD_FROM_ISR()` 标记 `ulPortYieldRequired`，汇编出口路径在写 ICCEOIR 后执行 SVC 指令切换到新任务。这是从"IRQ 返回到被中断线程"到"IRQ 可能切换到等待该事件的最高优先级任务"的本质跃迁。
+
+4. **不调用 `Xil_ExceptionInit()`**（[xilinx_irq.c:93-95](drivers/xilinx_irq.c#L93-L95)）：FreeRTOS 路径跳过 Xilinx 异常初始化，仅初始化 `XScuGic` 实例并通过 `freertos_irq_set_gic_instance()` 暴露给 `vApplicationIRQHandler`。
+
+5. **`global_enable/disable` 改用 FreeRTOS API**（[xilinx_irq.c:170-176](drivers/xilinx_irq.c#L170-L176)）：`xil_irq_global_enable()` 改为 `portENABLE_INTERRUPTS()`，`xil_irq_global_disable()` 改为 `portDISABLE_INTERRUPTS()`。这两个宏操作 CPSR 的 IRQ mask bit，保证与 FreeRTOS 临界区机制一致。
+
+## 三、HAL 层线程安全适配
+
+裸机程序不需要考虑并发访问，所有全局状态和硬件访问都是安全的。FreeRTOS 下多任务并发，需要对共享资源加锁。所有修改通过 `#ifdef FREERTOS_INTEGRATION` 条件编译，**裸机编译路径不受影响**。
+
+### 3.1 SPI 总线互斥
+
+**文件**：[no_os_spi.c](drivers/no_os_spi.c), [no_os_spi.h](drivers/no_os_spi.h)
+
+| 修改点 | 裸机 | FreeRTOS |
+|--------|------|----------|
+| 描述符字段 | 无 | `no_os_spi_desc.mutex`（`void *` 指向 `SemaphoreHandle_t`） |
+| `init` | 仅初始化硬件 | 额外调用 `xSemaphoreCreateMutex()` 创建互斥锁 |
+| `write` / `read` / `transfer` | 直接操作 SPI | 操作前后调用 `no_os_spi_lock()` / `no_os_spi_unlock()` |
+| `remove` | 仅释放硬件 | 额外调用 `vSemaphoreDelete()` |
+
+锁的实现：
+
+```c
+// drivers/no_os_spi.c:49
+static void no_os_spi_lock(struct no_os_spi_desc *desc) {
+    if (desc && desc->mutex &&
+        (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING))
+        xSemaphoreTake((SemaphoreHandle_t)desc->mutex, portMAX_DELAY);
+}
+```
+
+注意 `xTaskGetSchedulerState() == taskSCHEDULER_RUNNING` 检查：在 `hw_init()` 阶段（调度器尚未启动），不会尝试获取互斥锁，避免了死锁。
+
+### 3.2 GPIO 互斥
+
+**文件**：[no_os_gpio.c](drivers/no_os_gpio.c), [no_os_gpio.h](drivers/no_os_gpio.h)
+
+与 SPI 完全对称的模式：`no_os_gpio_desc` 新增 `mutex` 字段，`init` 创建互斥锁，`set_value` / `get_value` 操作前后加锁。
+
+### 3.3 Console 互斥
+
+**文件**：[console.c](drivers/console.c)
+
+`console_print()` 被多个任务调用时，如果不加锁，UART 输出会交错。解决方案：在 `console_print()` 进入时调用 `console_lock()`，离开时 `console_unlock()`。
+
+```c
+// drivers/console.c:304
+void console_print(char* str, ...) {
+    console_lock();
+    va_start(argp, str);
+    console_vprint(str, argp);  // 完整格式化输出
+    va_end(argp);
+    console_unlock();
+}
+```
+
+同时额外提供 `console_print_unlocked()` 供异常处理函数使用（`vApplicationStackOverflowHook` 等可能在临界上下文中被调用）。
+
+### 3.4 延时函数
+
+**文件**：[delay.c](drivers/delay.c)
+
+这是最直接影响任务调度的 HAL 修改：
+
+```c
+// drivers/delay.c:75
+void no_os_mdelay(uint32_t msecs) {
+#ifdef FREERTOS_INTEGRATION
+    if (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING) {
+        TickType_t ticks = pdMS_TO_TICKS(msecs);
+        if (ticks > 0) {
+            vTaskDelay(ticks);   // 让出 CPU，调度器切换到其他任务
+            return;
+        }
+    }
+#endif
+    usleep(msecs * 1000);        // 调度器未启动时回退到忙等
+}
+```
+
+裸机的 `no_os_mdelay()` 就是 `usleep()` 的忙等循环。FreeRTOS 下改为 `vTaskDelay()`，调用任务进入 Blocked 状态，调度器在此期间可以运行其他任务，显著提升 CPU 利用率。
+
+`no_os_udelay()` 保持忙等不变——微秒级延时太短，不值得上下文切换的开销。
+
+## 四、DMA 完成通知：从轮询到信号量
+
+这是应用架构变化最大的部分。裸机通过忙等轮询 DMA 寄存器来确认传输完成，FreeRTOS 则改为基于信号量的阻塞等待。
+
+### 结构体变化
+
+**文件**：[axi_dmac.h](drivers/axi_dmac.h)
+
+```c
+struct axi_dmac {
+    // ... 原有字段 ...
+#ifdef FREERTOS_INTEGRATION
+    void *completion_sem;   // SemaphoreHandle_t，DMA 完成信号量
+#endif
+};
+```
+
+### 初始化
+
+[axi_dmac.c:516-523](drivers/axi_dmac.c#L516-L523)：如果 DMA 通道配置为 `IRQ_ENABLED`，`axi_dmac_init()` 创建 Binary Semaphore（初始为空）。
+
+### ISR 中释放信号量
+
+[axi_dmac.c:98-115](drivers/axi_dmac.c#L98-L115)：DMA 传输完成的 ISR 回调中，`axi_dmac_signal_completion()` 调用 `xSemaphoreGiveFromISR()` 释放信号量，并用 `portYIELD_FROM_ISR()` 标记是否需要立即切换：
+
+```c
+static void axi_dmac_signal_completion(struct axi_dmac *dmac, bool from_isr) {
+    BaseType_t higher_priority_task_woken = pdFALSE;
+    if (from_isr) {
+        xSemaphoreGiveFromISR(dmac->completion_sem, &higher_priority_task_woken);
+        portYIELD_FROM_ISR(higher_priority_task_woken);
+    } else {
+        xSemaphoreGive(dmac->completion_sem);   // 轮询路径
+    }
+}
+```
+
+### 任务中等待信号量
+
+[axi_dmac.c:709-735](drivers/axi_dmac.c#L709-L735)：`axi_dmac_transfer_wait_completion()` 不再忙等，而是调用 `xSemaphoreTake()` 阻塞等待：
+
+```c
+if (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING && dmac->completion_sem) {
+    TickType_t wait_ticks = timeout_ms ? pdMS_TO_TICKS(timeout_ms) : portMAX_DELAY;
+    if (xSemaphoreTake(dmac->completion_sem, wait_ticks) != pdTRUE) {
+        // 超时处理：fallback 检查 IRQ 是否已到来但信号量丢失
+    }
+}
+```
+
+这种设计的优势：
+
+- **零 CPU 消耗**：等待 DMA 期间，调度器运行其他任务
+- **确定性唤醒**：DMA ISR 到来后，等待任务被精确唤醒
+- **优先级正确**：如果等待任务是最高优先级，ISR 返回时立即切换
+
+### DMA 轮询补充任务
+
+[main.c:1240-1252](app/main.c#L1240-L1252)：`vDmacPollTask` 以 1 ms 周期轮询 DMA 中断状态寄存器，对尚未触发 ISR 但已完成传输的边缘情况做补偿：
+
+```c
+static void vDmacPollTask(void *pvParameters) {
+    for (;;) {
+        if (rx_dmac && (rx_dmac->irq_option == IRQ_ENABLED))
+            axi_dmac_poll_pending(rx_dmac);
+        if (tx_dmac && (tx_dmac->irq_option == IRQ_ENABLED))
+            axi_dmac_poll_pending(tx_dmac);
+        vTaskDelay(pdMS_TO_TICKS(1));
+    }
+}
+```
+
+## 五、串口命令读取：从阻塞到非阻塞
+
+裸机的 `console_get_command()` 调用 Xilinx BSP 的阻塞式 `uart_read_char()`（内部忙等 FIFO）。FreeRTOS 下改为先检查 FIFO 状态再决定行为：
+
+```c
+// drivers/console.c:346
+void console_get_command(char* command) {
+    while ((received_char != '\n') && (received_char != '\r')) {
+#if defined(FREERTOS_INTEGRATION) && defined(XILINX_PLATFORM) && defined(STDIN_BASEADDRESS)
+        if (!XUartPs_IsReceiveData(STDIN_BASEADDR)) {
+            vTaskDelay(1);        // FIFO 为空 → 阻塞 1ms，让出 CPU
+            continue;
+        }
+        received_char = XUartPs_RecvByte(STDIN_BASEADDR);
+#else
+        uart_read_char(&received_char);  // 裸机：阻塞等待
+#endif
+        // ... 行缓冲处理
+    }
+}
+```
+
+`vTaskDelay(1)` 让调用任务睡眠 1ms（1 tick），在此期间调度器运行其他任务。用户无感知（按键操作时间远大于 1ms），但避免了 CPU 空转。
+
+## 六、任务架构与优先级设计
+
+### 当前任务清单
+
+| 优先级 | 任务名 | 栈空间 | 触发方式 | 功能 |
+|--------|--------|--------|----------|------|
+| 8 | BLE_TX_ADV | 4096 words (16 KB) | 100 µs 周期定时 | BLE advertising TX（含 extended advertising） |
+| 8 | DmacPoll | 512 words (2 KB) | 1 ms 周期 `vTaskDelay` | DMA 中断状态轮询补偿 |
+| 1 | Console | 2048 words (8 KB) | `vTaskDelay(1)` 等待串口输入 | CLI 命令接收、解析和执行 |
+
+### 优先级设计理由
+
+- **BLE_TX_ADV（优先级 8）**：时序最敏感。BLE advertising 需要在精确的 100 µs 间隔发送，必须能抢占任何其他任务。与 DmacPoll 同优先级，DMA 传输发起后不延迟 BLE 处理。
+- **DmacPoll（优先级 8）**：DMA 状态轮询需要及时处理（避免丢失传输完成信号），与 BLE 同优先级确保不落后。该任务每次只做一次寄存器检查然后 `vTaskDelay`，不长时间占用 CPU。
+- **Console（优先级 1）**：最低优先级。用户输入交互不应打断 BLE 传输或 DMA 处理。
+
+### 为什么没有创建 ISR 专用的 Bottom-Half 任务？
+
+原始设计规划了 ADC_DMA_BH 和 DAC_DMA_BH 任务（优先级 8/9），由 DMA ISR 通过 Task Notification 唤醒。当前实现中，DMA ISR 直接通过 `xSemaphoreGiveFromISR()` 通知等待在 `xSemaphoreTake()` 上的任务（即调用 `axi_dmac_transfer_wait_completion()` 的业务任务）。这避免了 BH 任务链条的额外延迟和开销，更适合当前 ADC/DAC DMA IRQ 的简单场景。
+
+## 七、FreeRTOS Tick 配置
+
+Zynq-7020 不使用 SysTick 而是使用 **Cortex-A9 Private Timer**：
+
+| 参数 | 值 |
+|------|-----|
+| 基地址 | `0xF8F00600` |
+| 时钟源 | `CPU_CLK / 2 ≈ 333.33 MHz`（configCPU_CLOCK_HZ = 666666687） |
+| Tick 频率 | 1000 Hz |
+| Load 值 | 333333 |
+| PPI ID | 29（Private Peripheral Interrupt） |
+| 优先级 | 30（最低可用优先级，configKERNEL_INTERRUPT_PRIORITY） |
+
+[freertos_irq_glue.c:205-273](port/freertos_irq_glue.c#L205-L273) 中的 `vConfigureTickInterrupt()` 完成：
+1. 停止定时器，设置 Load 值
+2. 通过 `XScuGic_Connect()` 注册 `FreeRTOS_Tick_Handler` 到 PPI 29
+3. 配置优先级和触发类型（level-sensitive）
+4. 使能 PPI 并在 GIC Distributor 中启用
+5. 启动定时器（AutoReload + IRQ Enable + Timer Enable）
+
+## 八、中断/异常向量表
+
+FreeRTOS V11 的 ARM_CA9 移植层 `port.c` 在 `xPortStartScheduler()` 中调用 `vPortInstallFreeRTOSVectorTable()` 安装自定义向量表 `_freertos_vector_table`（定义在 `port/freertos_vector_table.S`）：
+
+| 异常类型 | 偏移 | 向量 |
+|----------|------|------|
+| Reset | 0x00 | `_boot`（BSP `boot.S` 入口） |
+| Undefined | 0x04 | `FreeRTOS_Undefined_Handler` |
+| SVC | 0x08 | `FreeRTOS_SWI_Handler`（用于 `portYIELD` / 任务切换） |
+| Prefetch Abort | 0x0C | `FreeRTOS_Prefetch_Abort_Handler` |
+| Data Abort | 0x10 | `FreeRTOS_Data_Abort_Handler` |
+| Unused | 0x14 | 保留 |
+| IRQ | 0x18 | `FreeRTOS_IRQ_Handler`（核心中断入口） |
+| FIQ | 0x1C | `FreeRTOS_FIQ_Handler` |
+
+异常处理函数内部调用 [vFreeRTOSExceptionHandler()](port/freertos_irq_glue.c#L45-L84) 打印异常信息后 halt，便于 JTAG 调试。
+
+## 九、FreeRTOS 配置要点
+
+完整配置见 [include/FreeRTOS/FreeRTOSConfig.h](include/FreeRTOS/FreeRTOSConfig.h)，关键决策如下：
+
+| 配置项 | 值 | 理由 |
+|--------|-----|------|
+| `configTOTAL_HEAP_SIZE` | 1 MB | 足够容纳所有任务的栈和运行时分配 |
+| `configTICK_RATE_HZ` | 1000 | 1 ms tick，平衡响应性与开销 |
+| `configMAX_PRIORITIES` | 16 | 足够当前 8→1 的优先级范围 |
+| `configUSE_PREEMPTION` | 1 | 抢占式调度是核心需求 |
+| `configUSE_MUTEXES` | 1 | SPI/GPIO/Console 互斥锁 |
+| `configUSE_TASK_NOTIFICATIONS` | 1 | 规划中的 BH 通知路径 |
+| `configCHECK_FOR_STACK_OVERFLOW` | 2 | 开发阶段严格检测栈溢出（canary） |
+| `configUSE_TASK_FPU_SUPPORT` | 2 | 所有任务默认启用 FPU 上下文 |
+| `configUSE_TICKLESS_IDLE` | 0 | BLE 需要确定性 tick，不能进入 tickless |
+| `configKERNEL_INTERRUPT_PRIORITY` | 30 | Tick 中断最低优先级 |
+| `configMAX_API_CALL_INTERRUPT_PRIORITY` | 18 | 优先级 18–31 的中断可调用 ISR API |
+| `configUNIQUE_INTERRUPT_PRIORITIES` | 32 | GIC PL390 实现 5 bit 优先级 |
+
+## 十、堆内存管理
+
+- **`heap_4.c`**：支持相邻空闲块合并，减少碎片。适合长时间运行的应用。
+- **`configTOTAL_HEAP_SIZE = 1 MB`**：所有 FreeRTOS 内核对象（任务栈、TCB、队列、信号量、互斥锁）从此堆分配。
+- **裸机 C 库堆**：`lscript.ld` 中扩大至 64 KB，仅在 `hw_init()` 阶段的 `calloc()` 使用（如 `axi_dmac_init` 中的 `dmac` 结构体分配）。调度器启动后，运行时分配使用 `pvPortMalloc()`。
+- **启动前分配**：所有硬件描述符（AD9361 PHY、DMA 描述符、SPI 描述符等）在 `hw_init()` 中通过 `calloc()` 从 C 库堆分配，调度器启动后不再调用 `malloc/calloc`，避免线程安全问题。
+
+## 十一、链接脚本变化
+
+`lscript.ld` 相比裸机版本的主要调整：
+
+| 区域 | 裸机 | FreeRTOS |
+|------|------|----------|
+| Supervisor 栈 (SYS) | 8 KB | 64 KB（FreeRTOS 在 SVC 模式下运行，所有任务共享此栈） |
+| IRQ 栈 | 1 KB | 4 KB |
+| SVC/ABT/UND/FIQ 栈 | 各 1 KB | 各 4 KB |
+| C 库堆 (Heap) | 8 KB | 64 KB（`hw_init()` 中的 `calloc` 需要更多空间） |
+
+## 十二、移植兼容性保证
+
+所有 HAL 修改通过 `#ifdef FREERTOS_INTEGRATION` 条件编译，确保：
+
+1. **裸机 `app_B2Z/` 不受影响**：相同的 `drivers/` 源码在裸机项目中不定义 `FREERTOS_INTEGRATION`，编译器选择原有路径。
+2. **驱动源码共享**：`app_FreeRTOS/drivers/` 中的驱动源码与 `app_B2Z/` 中的对应文件功能完全一致，仅在 FreeRTOS 宏启用时插入线程安全代码。
+3. **IV：业务代码可移植**：`app/` 中的 BLE/BlueBee 业务逻辑（`ble_tx_adv.c`、`bluebee_gen.c` 等）与裸机版本功能一致，仅调用路径从函数直接调用变为任务入口调用。
+
+## 十三、验证与诊断
+
+FreeRTOS 移植内建了多级验证机制：
+
+### FreeRTOS 内置诊断
+
+- **栈溢出检测**：`configCHECK_FOR_STACK_OVERFLOW = 2`，在任务栈顶设置 canary，切换任务时检查。
+- **堆不足 Hook**：`vApplicationMallocFailedHook()` 打印剩余堆大小后 halt。
+- **Idle Hook**：`vApplicationIdleHook()` 检测 GIC PMR 异常并自动恢复（防止 tick 被误屏蔽导致系统 hang 死）。
+- **异常捕获**：`vFreeRTOSExceptionHandler()` 打印异常类型和寄存器后 halt。
+
+### Phase 2 自检任务
+
+`PHASE2_SELFTEST` 宏启用 `vPhase2SelfTestTask`：
+
+1. Tick 验证：`vTaskDelay(100)` 实际延迟是否在 99–101 ms 内
+2. SPI Mutex 验证：多线程并发 SPI 传输不出错
+3. GPIO Mutex 验证：并发 GPIO 操作
+4. Console Mutex 验证：多线程 `console_print()` 不交错
+5. IRQ 分发验证：`swpend` 命令触发软件 pending 确认 GIC 分发路径
+
+### IRQ 诊断计数器
+
+[freertos_irq_glue.h](port/freertos_irq_glue.h) 暴露的全局诊断变量：
+
+| 变量 | 意义 |
+|------|------|
+| `g_tick_isr_count` | tick ISR 进入次数 |
+| `g_irq_last_id` | 最后一次 IRQ 的 GIC ID |
+| `g_irq_dispatch_count[id]` | 各 GIC ID 的分发计数 |
+| `g_irq_unhandled_count[id]` | 无 handler 的中断数 |
+| `g_adc_dma_gic_dispatch_count` | ADC DMA IRQ 在 GIC 层分发的次数 |
+| `g_adc_dma_irq_enter_count` | ADC DMA ISR 进入次数 |
+| `g_adc_dma_irq_eot_count` | EOT 事件计数 |
+| `g_adc_dma_irq_sem_give_count` | ISR 中 `xSemaphoreGiveFromISR` 成功次数 |
+| `g_adc_dma_irq_sem_woken_count` | 触发任务唤醒的次数 |
+
+这些计数器通过串口命令可读，用于诊断 "IRQ 是否到达 GIC → 是否被 FreeRTOS 分发 → ISR 是否被调用 → 信号量是否释放" 的完整链路。
+
+## 十四、关键文件索引
+
+| 文件 | 内容 |
+|------|------|
+| [app/main.c](app/main.c) | `main()` 入口、`hw_init()`、任务创建、FreeRTOS Hook 函数 |
+| [port/freertos_irq_glue.c](port/freertos_irq_glue.c) | `vApplicationIRQHandler()`、`vConfigureTickInterrupt()`、异常处理、诊断计数器 |
+| [port/freertos_vector_table.S](port/freertos_vector_table.S) | FreeRTOS 专用异常向量表 |
+| [port/port.c](port/port.c) | FreeRTOS ARM_CA9 移植层：任务上下文初始化、`xPortStartScheduler()` |
+| [port/portASM.S](port/portASM.S) | 汇编级上下文保存/恢复、`FreeRTOS_IRQ_Handler`、`FreeRTOS_SWI_Handler` |
+| [include/FreeRTOS/FreeRTOSConfig.h](include/FreeRTOS/FreeRTOSConfig.h) | FreeRTOS 完整配置（GIC 基地址、tick 频率、堆大小、FPU 等） |
+| [drivers/axi_dmac.c](drivers/axi_dmac.c) | DMA 驱动：信号量通知、ISR 上下文切换 |
+| [drivers/no_os_spi.c](drivers/no_os_spi.c) | SPI 互斥锁实现 |
+| [drivers/no_os_gpio.c](drivers/no_os_gpio.c) | GPIO 互斥锁实现 |
+| [drivers/console.c](drivers/console.c) | Console 互斥锁、非阻塞 UART 读取 |
+| [drivers/delay.c](drivers/delay.c) | 调度感知的 `no_os_mdelay()` |
+| [drivers/xilinx_irq.c](drivers/xilinx_irq.c) | IRQ 初始化（跳过 `Xil_ExceptionInit`、暴露 GIC 实例） |

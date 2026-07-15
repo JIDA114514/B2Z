@@ -241,4 +241,7 @@ int32_t bluebee_gen_demo_cmdline(const char *payload_text);
 /* Builds and transmits a BlueBee ZigBee frame from payload bytes. */
 int32_t bluebee_gen_start_payload(const uint8_t *payload, uint32_t payload_len);
 
+/* Builds and transmits the fixed BLE extended advertising secondary packet. */
+void ble_exadv_secondary_gen_cmd(double *param, char param_no);
+
 #endif  // __COMMAND_H__

@@ -48,6 +48,7 @@
 #include "parameters.h"
 #include "app_config.h"
 #include "axi_dmac.h"
+#include "ble_exadv_secondary_gen.h"
 #include "ble_tx_adv.h"
 #include "bluebee_gen.h"
 #include "dma_tx_waveforms.h"
@@ -119,6 +120,7 @@ command cmd_list[] = {
 	{"dma_tx_demo?", "Sends BLE ch39 legacy advertising waveform in DMA.", "", dma_tx_demo},
 	{"dma_switch?", "Switches cyclic DMA waveform.", "", change_dma_context},
 	{"bluebee_gen_demo?", "Builds BlueBee ZigBee frame at runtime and starts cyclic TX DMA.", "bluebee_gen_demo? 11 22 33 44", bluebee_gen_demo},
+	{"ble_exadv_secondary_gen?", "Builds fixed BLE extended advertising secondary packet and starts cyclic TX DMA on ch39.", "", ble_exadv_secondary_gen_cmd},
 };
 const char cmd_no = (sizeof(cmd_list) / sizeof(command));
 
@@ -191,6 +193,44 @@ static void print_hex_bytes(const char *prefix, const uint8_t *data,
 
 static int32_t dma_tx_start_bluebee_generated(
 	const struct bluebee_gen_meta *meta)
+{
+	int32_t ret;
+
+	if (!meta || !meta->iq_words || meta->iq_byte_count == 0u)
+		return -1;
+	if (!ad9361_phy || !ad9361_phy->tx_dac || !tx_dmac)
+		return -1;
+
+	ble_tx_adv_stop(0u);
+	ble_tx_adv_tx_lock();
+
+	axi_dmac_transfer_stop(tx_dmac);
+	axi_dac_set_datasel(ad9361_phy->tx_dac, -1, AXI_DAC_DATA_SEL_DMA);
+
+	no_os_gpio_set_value(ad9361_phy->gpio_desc_tx1_ctrl_h, 0);
+	no_os_gpio_set_value(ad9361_phy->gpio_desc_tx1_ctrl_l, 1);
+	no_os_gpio_set_value(ad9361_phy->gpio_desc_tx2_ctrl_h, 0);
+	no_os_gpio_set_value(ad9361_phy->gpio_desc_tx2_ctrl_l, 1);
+	ad9361_set_tx_rf_port_output(ad9361_phy, TXB);
+	ad9361_set_tx_lo_freq(ad9361_phy, meta->tx_lo_hz);
+
+#ifdef XILINX_PLATFORM
+	Xil_DCacheFlushRange((uintptr_t)meta->iq_words, meta->iq_byte_count);
+#endif
+	dma_tx_transfer.cyclic = CYCLIC;
+	dma_tx_transfer.size = meta->iq_byte_count;
+	dma_tx_transfer.src_addr = (uintptr_t)meta->iq_words;
+	dma_tx_transfer.dest_addr = 0;
+
+	ret = axi_dmac_transfer_start(tx_dmac, &dma_tx_transfer);
+
+	ble_tx_adv_tx_unlock();
+
+	return ret;
+}
+
+static int32_t dma_tx_start_exadv_secondary_generated(
+	const struct ble_exadv_secondary_gen_meta *meta)
 {
 	int32_t ret;
 
@@ -422,6 +462,46 @@ void bluebee_gen_demo(double *param, char param_no)
 	(void)param_no;
 
 	bluebee_gen_start_payload(NULL, 0u);
+}
+
+void ble_exadv_secondary_gen_cmd(double *param, char param_no)
+{
+	const struct ble_exadv_secondary_gen_meta *meta;
+	int32_t ret;
+
+	(void)param;
+	(void)param_no;
+
+	ret = ble_exadv_secondary_gen_build_default();
+	if (ret < 0) {
+		console_print("ble_exadv_secondary_gen build failed\n");
+		return;
+	}
+
+	meta = ble_exadv_secondary_gen_get_last_meta();
+
+	print_hex_bytes("exadv secondary zigbee frame: ",
+			meta->zigbee_frame, meta->zigbee_frame_len);
+	console_print("exadv secondary bluebee_bytes=%d adv_data=%d pdu=%d ll=%d\n",
+		      (long)meta->bluebee_byte_count,
+		      (long)meta->adv_data_len,
+		      (long)meta->pdu_len,
+		      (long)meta->ll_payload_len);
+	print_hex_bytes("exadv secondary pdu: ", meta->pdu, meta->pdu_len);
+	print_hex_bytes("exadv secondary crc: ", meta->crc, meta->crc_len);
+	console_print("exadv secondary air_us=%d post_pad_us=%d iq_words=%d tx_lo=%d MHz whiten_ch=%d\n",
+		      (long)meta->air_us,
+		      (long)meta->post_pad_us,
+		      (long)meta->iq_word_count,
+		      (long)(meta->tx_lo_hz / 1000000ULL),
+		      (long)meta->whitening_channel);
+
+	ret = dma_tx_start_exadv_secondary_generated(meta);
+	if (ret == 0)
+		console_print("ble_exadv_secondary_gen DMA running bytes=%d\n",
+			      (long)meta->iq_byte_count);
+	else
+		console_print("ble_exadv_secondary_gen dma start failed\n");
 }
 
 /**************************************************************************//***

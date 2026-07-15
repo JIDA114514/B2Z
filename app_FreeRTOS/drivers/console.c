@@ -49,6 +49,10 @@
 #include "FreeRTOS.h"
 #include "semphr.h"
 #include "task.h"
+#ifdef XILINX_PLATFORM
+#include <xparameters.h>
+#include <xuartps_hw.h>
+#endif
 
 static SemaphoreHandle_t console_mutex;
 
@@ -346,7 +350,15 @@ void console_get_command(char* command)
 
 	while((received_char != '\n') && (received_char != '\r'))
 	{
+#if defined(FREERTOS_INTEGRATION) && defined(XILINX_PLATFORM) && defined(STDIN_BASEADDRESS)
+		if (!XUartPs_IsReceiveData(STDIN_BASEADDRESS)) {
+			vTaskDelay(1);
+			continue;
+		}
+		received_char = (char)XUartPs_RecvByte(STDIN_BASEADDRESS);
+#else
 		uart_read_char(&received_char);
+#endif
 		if ((received_char == '\n') || (received_char == '\r')) {
 			if (char_number < (CONSOLE_MAX_COMMAND_LEN - 1u))
 				command[char_number++] = received_char;

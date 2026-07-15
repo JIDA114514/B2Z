@@ -21,7 +21,7 @@
 #endif
 
 #define BLE_ADV_DEFAULT_NAME        "SDR_BLE"
-#define BLE_ADV_CHANNEL_COUNT       3u
+#define BLE_ADV_CHANNEL_COUNT       1u
 #define BLE_ADV_FLAGS_AD_LEN        3u
 #define BLE_ADV_ADDR_LEN            6u
 #define BLE_ADV_PDU_HEADER_LEN      2u
@@ -33,14 +33,14 @@
 #define BLE_ADV_MAX_PDU_BYTES       (BLE_ADV_PDU_HEADER_LEN + BLE_ADV_MAX_PDU_PAYLOAD_LEN + BLE_ADV_CRC_LEN)
 #define BLE_ADV_MAX_PACKET_BYTES    (BLE_ADV_PREAMBLE_LEN + BLE_ADV_ACCESS_ADDR_LEN + BLE_ADV_MAX_PDU_BYTES)
 #define BLE_ADV_MAX_IQ_WORDS        24576u
-#define BLE_ADV_IQ_AMPLITUDE        12000
+#define BLE_ADV_IQ_AMPLITUDE        10000
 #define BLE_ADV_LO_SETTLE_US        1000u
 #define BLE_ADV_POST_TX_GUARD_US    900u
 #define BLE_ADV_IDLE_DELAY_MS       10u
 #define BLE_ADV_HOP_DELAY_MS        1u
 #define BLE_GFSK_SPS_HIGH           768u
 #define BLE_GFSK_DECIM              25u
-#define BLE_GFSK_SPAN               3u
+#define BLE_GFSK_SPAN               4u
 #define BLE_GFSK_BT                 0.5f
 #define BLE_GFSK_TAPS               (BLE_GFSK_SPAN * BLE_GFSK_SPS_HIGH)
 #define BLE_GFSK_LUT_PHASES         BLE_GFSK_SPS_HIGH
@@ -63,8 +63,6 @@ struct ble_adv_channel_waveform {
 
 static struct ble_adv_channel_waveform g_ble_adv_waves[BLE_ADV_CHANNEL_COUNT] = {
 	{ 37u, 2402000000ULL, 0u, { 0u } },
-	{ 38u, 2426000000ULL, 0u, { 0u } },
-	{ 39u, 2480000000ULL, 0u, { 0u } },
 };
 
 static SemaphoreHandle_t g_ble_adv_state_mutex;
@@ -75,8 +73,6 @@ static char g_ble_adv_pending_name[BLE_TX_ADV_NAME_MAX_LEN + 1u] = BLE_ADV_DEFAU
 static char g_ble_adv_active_name[BLE_TX_ADV_NAME_MAX_LEN + 1u] = BLE_ADV_DEFAULT_NAME;
 static float g_ble_gfsk_taps[BLE_GFSK_TAPS];
 static uint8_t g_ble_gfsk_taps_ready;
-static float g_ble_gfsk_phase_lut[BLE_GFSK_LUT_PHASES][8];
-static uint8_t g_ble_gfsk_phase_lut_ready;
 
 static uint32_t pack_iq_word(int16_t i, int16_t q)
 {
@@ -100,19 +96,6 @@ static float wrap_pi(float x)
 		x += two_pi;
 
 	return x;
-}
-
-static void fast_sin_cos(float x, float *out_sin, float *out_cos)
-{
-	float x2;
-	float x4;
-
-	x = wrap_pi(x);
-	x2 = x * x;
-	x4 = x2 * x2;
-
-	*out_sin = x * (1.0f - (x2 * 0.16666667f) + (x4 * 0.008333333f));
-	*out_cos = 1.0f - (x2 * 0.5f) + (x4 * 0.041666667f);
 }
 
 static int32_t round_float_to_int(float x)
@@ -147,47 +130,6 @@ static void init_ble_gfsk_taps(void)
 	}
 
 	g_ble_gfsk_taps_ready = 1u;
-}
-
-static void init_ble_gfsk_phase_lut(void)
-{
-	if (g_ble_gfsk_phase_lut_ready)
-		return;
-
-	init_ble_gfsk_taps();
-
-	for (uint32_t phase_idx = 0u; phase_idx < BLE_GFSK_LUT_PHASES;
-	     phase_idx++) {
-		uint32_t r = (phase_idx * BLE_GFSK_DECIM) % BLE_GFSK_SPS_HIGH;
-		int32_t n_high = (int32_t)BLE_GFSK_SPS_HIGH + (int32_t)r;
-		int32_t start = n_high - (int32_t)(BLE_GFSK_TAPS / 2u);
-
-		for (uint32_t pat = 0u; pat < 8u; pat++) {
-			float acc = 0.0f;
-			float sym_prev = (pat & 0x4u) ? 1.0f : -1.0f;
-			float sym_cur = (pat & 0x2u) ? 1.0f : -1.0f;
-			float sym_next = (pat & 0x1u) ? 1.0f : -1.0f;
-
-			for (uint32_t k = 0u; k < BLE_GFSK_TAPS; k++) {
-				int32_t idx = start + (int32_t)k;
-
-				if (idx >= 0 &&
-				    idx < (int32_t)(3u * BLE_GFSK_SPS_HIGH)) {
-					uint32_t rel = (uint32_t)idx /
-						       BLE_GFSK_SPS_HIGH;
-					float sym = (rel == 0u) ? sym_prev :
-						    ((rel == 1u) ? sym_cur :
-						     sym_next);
-
-					acc += g_ble_gfsk_taps[k] * sym;
-				}
-			}
-
-			g_ble_gfsk_phase_lut[phase_idx][pat] = acc;
-		}
-	}
-
-	g_ble_gfsk_phase_lut_ready = 1u;
 }
 
 static uint8_t bt_swap_bits(uint8_t v)
@@ -305,7 +247,7 @@ static int32_t build_adv_packet_bytes(uint8_t channel, const char *name,
 				      uint8_t *pkt, uint32_t *pkt_len)
 {
 	static const uint8_t adv_addr[BLE_ADV_ADDR_LEN] = {
-		0xFFu, 0x11u, 0x22u, 0x33u, 0x44u, 0xFFu
+		0xFFu, 0x22u, 0x33u, 0x44u, 0x55u, 0xFFu
 	};
 	static const uint8_t flags_ad[BLE_ADV_FLAGS_AD_LEN] = {
 		0x02u, 0x01u, 0x06u
@@ -360,10 +302,10 @@ static int32_t build_adv_packet_bytes(uint8_t channel, const char *name,
 	return 0;
 }
 
-static int32_t build_adv_iq_words_gfsk_lut(const uint8_t *pkt,
-					   uint32_t pkt_len,
-					   uint32_t *iq,
-					   uint32_t *out_word_count)
+static int32_t build_adv_iq_words_gfsk(const uint8_t *pkt,
+				       uint32_t pkt_len,
+				       uint32_t *iq,
+				       uint32_t *out_word_count)
 {
 	uint32_t total_bits = pkt_len * 8u;
 	uint32_t high_count = total_bits * BLE_GFSK_SPS_HIGH;
@@ -376,21 +318,12 @@ static int32_t build_adv_iq_words_gfsk_lut(const uint8_t *pkt,
 	if ((out_samples * 2u) > BLE_ADV_MAX_IQ_WORDS)
 		return -1;
 
-	init_ble_gfsk_phase_lut();
+	init_ble_gfsk_taps();
 
 	for (uint32_t n_out = 0u; n_out < out_samples; n_out++) {
 		uint32_t n = n_out * BLE_GFSK_DECIM;
-		uint32_t bit_idx = n / BLE_GFSK_SPS_HIGH;
-		uint8_t prev = (bit_idx > 0u) ?
-			       get_bit_lsb_first(pkt, bit_idx - 1u) : 0u;
-		uint8_t cur = (bit_idx < total_bits) ?
-			      get_bit_lsb_first(pkt, bit_idx) : 0u;
-		uint8_t next = (bit_idx + 1u < total_bits) ?
-			       get_bit_lsb_first(pkt, bit_idx + 1u) : 0u;
-		uint32_t pat = ((uint32_t)prev << 2) |
-			       ((uint32_t)cur << 1) | (uint32_t)next;
-		uint32_t phase_idx = n_out % BLE_GFSK_LUT_PHASES;
-		float acc = g_ble_gfsk_phase_lut[phase_idx][pat];
+		int32_t start = (int32_t)n - (int32_t)(BLE_GFSK_TAPS / 2u);
+		float acc = 0.0f;
 		float fi;
 		float fq;
 		int32_t ii;
@@ -398,9 +331,24 @@ static int32_t build_adv_iq_words_gfsk_lut(const uint8_t *pkt,
 		int16_t oi;
 		int16_t oq;
 
+		for (uint32_t k = 0u; k < BLE_GFSK_TAPS; k++) {
+			int32_t idx = start + (int32_t)k;
+
+			if (idx >= 0 && idx < (int32_t)high_count) {
+				uint32_t bit_idx = (uint32_t)idx /
+						   BLE_GFSK_SPS_HIGH;
+				uint8_t bit = get_bit_lsb_first(pkt, bit_idx);
+				float sym = bit ? 1.0f : -1.0f;
+
+				acc += g_ble_gfsk_taps[k] * sym;
+			}
+		}
+
 		phase += acc * phase_step_decim;
 
-		fast_sin_cos(phase, &fq, &fi);
+		phase = wrap_pi(phase);
+		fi = cosf(phase);
+		fq = sinf(phase);
 		ii = round_float_to_int(fi * (float)BLE_ADV_IQ_AMPLITUDE);
 		iqv = round_float_to_int(fq * (float)BLE_ADV_IQ_AMPLITUDE);
 
@@ -437,9 +385,9 @@ static int32_t ble_adv_build_all_channels(const char *name)
 		if (ret < 0)
 			return ret;
 
-		ret = build_adv_iq_words_gfsk_lut(packet, packet_len,
-						  g_ble_adv_waves[i].iq,
-						  &g_ble_adv_waves[i].iq_words);
+		ret = build_adv_iq_words_gfsk(packet, packet_len,
+					      g_ble_adv_waves[i].iq,
+					      &g_ble_adv_waves[i].iq_words);
 		if (ret < 0)
 			return ret;
 	}
@@ -612,11 +560,9 @@ void ble_tx_adv_task(void *pvParameters)
 			}
 			strcpy(g_ble_adv_active_name, build_name);
 			channel_idx = 0u;
-			console_print("BLE ADV running, name=%s words=%d/%d/%d\r\n",
+			console_print("BLE ADV ch37 running, name=%s words=%d\r\n",
 				      g_ble_adv_active_name,
-				      (long)g_ble_adv_waves[0].iq_words,
-				      (long)g_ble_adv_waves[1].iq_words,
-				      (long)g_ble_adv_waves[2].iq_words);
+				      (long)g_ble_adv_waves[0].iq_words);
 		}
 
 		ble_tx_adv_tx_lock();
@@ -629,9 +575,7 @@ void ble_tx_adv_task(void *pvParameters)
 		}
 		ble_tx_adv_tx_unlock();
 
-		channel_idx++;
-		if (channel_idx >= BLE_ADV_CHANNEL_COUNT)
-			channel_idx = 0u;
+		channel_idx = 0u;
 
 		vTaskDelay(pdMS_TO_TICKS(BLE_ADV_HOP_DELAY_MS));
 	}

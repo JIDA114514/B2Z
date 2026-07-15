@@ -985,3 +985,104 @@ start transfer!(BLE legacy advertising ch39)
 - 对默认名 `SDR_BLE`，将运行时生成的 ch39 IQ 前若干 word 与 `ble_iq_ch39` 对比。
 - 若 IQ 不一致，继续查运行时 GFSK LUT、PDU header、CRC/whitening、bit order。
 - 若 IQ 一致但 `ble_tx_adv_name=` 不可见，继续查 `BLE_TX_ADV` 任务中的 non-cyclic DMA 重启周期、DMA stop/start 间隔、LO hop 时序以及是否被其它 TX 模式抢占。
+
+---
+
+## 16. `ble_tx_adv_name=` 生成后需再次串口输入才发送
+
+### 16.1 症状
+
+运行 `ble_tx_adv_name=XXX` 后，BLE_TX_ADV 任务能进入波形生成流程，但生成完成后不会立即正常发射。必须等待一段时间后，再通过串口输入一条有效命令，信号才开始被检测到；否则系统表现为一直等待。
+
+该现象说明问题不只在 BLE packet/GFSK 波形内容，也与 FreeRTOS 下 console 任务和 BLE_TX_ADV 任务的调度有关。
+
+### 16.2 初步修复尝试
+
+`ble_tx_adv_name=` 使用 `console_handle_ble_tx_adv_name_cmd()` 特殊字符串解析路径。该路径处理成功后直接 `continue`，跳过普通命令路径末尾的 `taskYIELD()`。
+
+因此先在 FreeRTOS console task 的特殊命令分支中增加：
+
+```c
+if (console_handle_ble_tx_adv_name_cmd(received_cmd)) {
+    vTaskDelay(1);
+    continue;
+}
+```
+
+结果：用户实测“情况没有变化”。这说明问题不是只发生在命令提交后的第一次让出 CPU，而是 console 任务后续等待串口输入期间仍然影响了其它任务运行。
+
+### 16.3 根因判断
+
+FreeRTOS 下原 `console_get_command()` 使用：
+
+```c
+uart_read_char(&received_char);
+```
+
+而 `uart_read_char()` 内部调用：
+
+```c
+*data = getchar();
+```
+
+在 Xilinx standalone BSP 中，`getchar()`/`inbyte()` 是阻塞式串口读取。Console 任务进入等待下一条命令后，可能长期停在该阻塞路径中，导致 BLE_TX_ADV 任务不能按预期继续运行。现象上就表现为：只有再次输入串口命令时，阻塞读返回，调度才继续推进，BLE 发送才开始。
+
+### 16.4 最终修复
+
+在 FreeRTOS + Xilinx 平台下，将 `console_get_command()` 改为 UART RX FIFO 非阻塞轮询；没有收到字符时主动 `vTaskDelay(1)` 让出 CPU：
+
+```c
+#if defined(FREERTOS_INTEGRATION) && defined(XILINX_PLATFORM) && defined(STDIN_BASEADDRESS)
+    if (!XUartPs_IsReceiveData(STDIN_BASEADDRESS)) {
+        vTaskDelay(1);
+        continue;
+    }
+    received_char = (char)XUartPs_RecvByte(STDIN_BASEADDRESS);
+#else
+    uart_read_char(&received_char);
+#endif
+```
+
+同步修改文件：
+
+```text
+app_FreeRTOS/drivers/console.c
+hdl/projects/antsdre310/antsdre310.sdk/app/src/drivers/console.c
+```
+
+同时保留 `ble_tx_adv_name=` 特殊命令分支后的 `vTaskDelay(1)`，作为提交启动请求后的显式让出点：
+
+```text
+app_FreeRTOS/app/main.c
+hdl/projects/antsdre310/antsdre310.sdk/app/src/app/main.c
+```
+
+### 16.5 验证状态
+
+SDK Debug 构建通过：
+
+```text
+make -C hdl/projects/antsdre310/antsdre310.sdk/app/Debug all
+```
+
+生成结果：
+
+```text
+text=1280612 data=103800 bss=1221656 dec=2606068
+```
+
+`a9-linaro-pre-build-step` 仍然是 Vitis 生成 makefile 中已有的 ignored pre-build 提示，不影响 `app.elf` 链接。
+
+### 16.6 后续判据
+
+重新上板后，应优先验证：
+
+```text
+ble_tx_adv_name=TEST
+```
+
+预期行为：
+
+1. 命令提交后无需再输入其它串口命令，BLE_TX_ADV 任务应自动完成生成并开始 ch37 循环发送。
+2. Console 在等待下一条命令时不再阻塞 FreeRTOS 调度。
+3. 若仍需二次串口输入，则下一步应在 BLE_TX_ADV task 中加入 tick 计数日志或 GPIO 翻转，确认任务是否在 `console_get_command()` 等待期间继续运行。

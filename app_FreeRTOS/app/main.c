@@ -1184,8 +1184,10 @@ static void vConsoleCommandTask(void *pvParameters)
 
 		console_get_command(received_cmd);
 
-		if (console_handle_ble_tx_adv_name_cmd(received_cmd))
+		if (console_handle_ble_tx_adv_name_cmd(received_cmd)) {
+			vTaskDelay(1);
 			continue;
+		}
 
 		for (cmd = 0; cmd < cmd_no; cmd++) {
 			param_no = 0;

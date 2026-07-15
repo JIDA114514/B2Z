@@ -49,6 +49,7 @@
 #include "app_config.h"
 #include "axi_dmac.h"
 #include "ble_tx_adv.h"
+#include "bluebee_gen.h"
 #include "dma_tx_waveforms.h"
 #include "no_os_gpio.h"
 #ifdef XILINX_PLATFORM
@@ -117,6 +118,7 @@ command cmd_list[] = {
 	{"ble_tx_stop?", "Stops BLE advertising TX and restores DDS.", "", ble_tx_adv_stop_cmd},
 	{"dma_tx_demo?", "Sends BLE ch39 legacy advertising waveform in DMA.", "", dma_tx_demo},
 	{"dma_switch?", "Switches cyclic DMA waveform.", "", change_dma_context},
+	{"bluebee_gen_demo?", "Builds default BlueBee ZigBee frame at runtime and starts cyclic TX DMA.", "", bluebee_gen_demo},
 };
 const char cmd_no = (sizeof(cmd_list) / sizeof(command));
 
@@ -178,6 +180,53 @@ static int32_t dma_tx_start_waveform(enum dma_tx_waveform_id id)
 	return ret;
 }
 
+static void print_hex_bytes(const char *prefix, const uint8_t *data,
+			    uint32_t len)
+{
+	console_print((char *)prefix);
+	for (uint32_t i = 0u; i < len; i++)
+		console_print("%02x%s", (long)data[i],
+			      (i + 1u == len) ? "\n" : " ");
+}
+
+static int32_t dma_tx_start_bluebee_generated(
+	const struct bluebee_gen_meta *meta)
+{
+	int32_t ret;
+
+	if (!meta || !meta->iq_words || meta->iq_byte_count == 0u)
+		return -1;
+	if (!ad9361_phy || !ad9361_phy->tx_dac || !tx_dmac)
+		return -1;
+
+	ble_tx_adv_stop(0u);
+	ble_tx_adv_tx_lock();
+
+	axi_dmac_transfer_stop(tx_dmac);
+	axi_dac_set_datasel(ad9361_phy->tx_dac, -1, AXI_DAC_DATA_SEL_DMA);
+
+	no_os_gpio_set_value(ad9361_phy->gpio_desc_tx1_ctrl_h, 0);
+	no_os_gpio_set_value(ad9361_phy->gpio_desc_tx1_ctrl_l, 1);
+	no_os_gpio_set_value(ad9361_phy->gpio_desc_tx2_ctrl_h, 0);
+	no_os_gpio_set_value(ad9361_phy->gpio_desc_tx2_ctrl_l, 1);
+	ad9361_set_tx_rf_port_output(ad9361_phy, TXB);
+	ad9361_set_tx_lo_freq(ad9361_phy, meta->tx_lo_hz);
+
+#ifdef XILINX_PLATFORM
+	Xil_DCacheFlushRange((uintptr_t)meta->iq_words, meta->iq_byte_count);
+#endif
+	dma_tx_transfer.cyclic = CYCLIC;
+	dma_tx_transfer.size = meta->iq_byte_count;
+	dma_tx_transfer.src_addr = (uintptr_t)meta->iq_words;
+	dma_tx_transfer.dest_addr = 0;
+
+	ret = axi_dmac_transfer_start(tx_dmac, &dma_tx_transfer);
+
+	ble_tx_adv_tx_unlock();
+
+	return ret;
+}
+
 void dma_tx_demo(double *param, char param_no)
 {
 	int32_t ret;
@@ -209,6 +258,45 @@ void change_dma_context(double *param, char param_no)
 		console_print("dma set to %s\n", g_dma_tx_waveforms[next].name);
 	else
 		console_print("dma change failed\n");
+}
+
+void bluebee_gen_demo(double *param, char param_no)
+{
+	const struct bluebee_gen_meta *meta;
+	int32_t ret;
+
+	(void)param;
+	(void)param_no;
+
+	ret = bluebee_gen_build_default();
+	if (ret < 0) {
+		console_print("bluebee_gen build failed\n");
+		return;
+	}
+
+	meta = bluebee_gen_get_last_meta();
+
+	print_hex_bytes("bluebee payload: ", meta->payload, meta->payload_len);
+	print_hex_bytes("zigbee frame: ", meta->frame, meta->frame_len);
+	console_print("bluebee gfsk_bits=%d gfsk_bytes=%d iq_words=%d\n",
+		      (long)meta->gfsk_bit_count,
+		      (long)meta->gfsk_byte_count,
+		      (long)meta->iq_word_count);
+	console_print("bluebee air_us=%d post_pad_us=%d tx_lo=%d MHz\n",
+		      (long)meta->air_us,
+		      (long)meta->post_pad_us,
+		      (long)(meta->tx_lo_hz / 1000000ULL));
+	console_print("bluebee projection=%s dist=%d-%d\n",
+		      meta->zigbee_projection_ok ? "OK" : "FAIL",
+		      (long)meta->symbol_distance_min,
+		      (long)meta->symbol_distance_max);
+
+	ret = dma_tx_start_bluebee_generated(meta);
+	if (ret == 0)
+		console_print("bluebee_gen DMA running bytes=%d\n",
+			      (long)meta->iq_byte_count);
+	else
+		console_print("bluebee_gen dma start failed\n");
 }
 
 /**************************************************************************//***

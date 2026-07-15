@@ -230,4 +230,7 @@ void dma_tx_demo(double *param, char param_no);
 /* Switches cyclic TX DMA among all configured waveforms. */
 void change_dma_context(double *param, char param_no);
 
+/* Builds and transmits the default BlueBee ZigBee frame at runtime. */
+void bluebee_gen_demo(double *param, char param_no);
+
 #endif  // __COMMAND_H__

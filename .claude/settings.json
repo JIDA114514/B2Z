@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /home/jida/Desktop/antsdr/FreeRTOS-Kernel && grep -n 'portmacro' include/portable.h)",
+      "Read(//home/jida/Desktop/antsdr/FreeRTOS-Kernel/**)",
+      "Bash(mkdir -p /home/jida/Desktop/antsdr/B2Z/app_FreeRTOS/include/FreeRTOS && echo \"Directory created\")",
+      "Bash(cp /home/jida/Desktop/antsdr/FreeRTOS-Kernel/portable/GCC/ARM_CA9/portmacro.h /home/jida/Desktop/antsdr/B2Z/app_FreeRTOS/include/FreeRTOS/ && echo \"portmacro.h copied\")",
+      "Bash(cp /home/jida/Desktop/antsdr/FreeRTOS-Kernel/portable/GCC/ARM_CA9/port.c /home/jida/Desktop/antsdr/B2Z/app_FreeRTOS/ && echo \"port.c\" && cp /home/jida/Desktop/antsdr/FreeRTOS-Kernel/portable/GCC/ARM_CA9/portASM.S /home/jida/Desktop/antsdr/B2Z/app_FreeRTOS/ && echo \"portASM.S\" && cp /home/jida/Desktop/antsdr/FreeRTOS-Kernel/portable/MemMang/heap_4.c /home/jida/Desktop/antsdr/B2Z/app_FreeRTOS/ && echo \"heap_4.c\")",
+      "Bash(grep -n 'vPortSetupTimerInterrupt\\\\|configSETUP_TICK_INTERRUPT\\\\|configCLEAR_TICK_INTERRUPT' /home/jida/Desktop/antsdr/FreeRTOS-Kernel/portable/GCC/ARM_CA9/port.c | head -15)",
+      "Read(//home/jida/Desktop/antsdr/FreeRTOS-Kernel/portable/GCC/ARM_CA9/**)",
+      "Bash(grep -n 'vPortSetupTimerInterrupt\\\\|Private.*Timer\\\\|0xF8F00600\\\\|PTIMER\\\\|PRIVATE_TIMER' /home/jida/Desktop/antsdr/FreeRTOS-Kernel/portable/GCC/ARM_CA9/port.c | head -10)",
+      "Bash(python3 -c ' *)",
+      "Bash(find /home/jida/Desktop/antsdr/FreeRTOS-Kernel -name \"*.c\" -o -name \"*.S\" -o -name \"*.s\" | xargs grep -l 'freertos_vector_table\\\\|vPortInstallFreeRTOSVectorTable\\\\|VBAR' 2>/dev/null)",
+      "Bash(find /home/jida/Desktop/antsdr/FreeRTOS-Kernel -name \"*.S\" -o -name \"*.s\" -o -name \"*.c\" | xargs grep -l 'freertos_vector_table' 2>/dev/null)",
+      "Bash(find /home/jida/Desktop/antsdr/FreeRTOS-Kernel -path \"*/ARM_CA9/*\" -type f | sort)",
+      "Bash(grep -A20 '_freertos_vector_table' /home/jida/Desktop/antsdr/FreeRTOS-Kernel/portable/RVDS/ARM_CA9/portASM.s | head -30)",
+      "Read(//home/jida/Desktop/antsdr/FreeRTOS-Kernel/portable/RVDS/ARM_CA9/**)",
+      "Bash(grep -n '_freertos_vector_table\\\\|FreeRTOS.*Handler\\\\|vector_table\\\\|VBAR' /home/jida/Desktop/antsdr/FreeRTOS-Kernel/portable/RVDS/ARM_CA9/portASM.s | head -20)",
+      "Bash(git mv *)"
+    ],
+    "additionalDirectories": [
+      "/home/jida/Desktop/antsdr/B2Z/app_FreeRTOS/include",
+      "/home/jida/Desktop/antsdr/FreeRTOS-Kernel/portable/GCC/ARM_CA9",
+      "/home/jida/Desktop/antsdr/FreeRTOS-Kernel/portable/MemMang"
+    ]
+  }
+}

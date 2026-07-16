@@ -52,17 +52,30 @@
 /*************************** Types Declarations *******************************/
 /******************************************************************************/
 typedef void (*cmd_function)(double* param, char param_no);
+typedef int32_t (*cmd_text_function)(const char *args);
 typedef struct
 {
 	const char* name;
 	const char* description;
 	const char* example;
 	cmd_function function;
+	cmd_text_function text_function;
 }command;
 
 /******************************************************************************/
 /************************ Functions Declarations ******************************/
 /******************************************************************************/
+
+/* Matches and executes one command line. Returns 1 when handled, 0 otherwise. */
+int32_t command_dispatch_line(char *line);
+
+#ifdef FREERTOS_INTEGRATION
+/* Creates the queue used to move BLE work out of the console task. */
+int32_t ble_command_service_init(void);
+
+/* Processes queued BLE commands in task context. */
+void ble_command_service_task(void *pvParameters);
+#endif
 
 /* Displays all available commands. */
 void get_help(double* param, char param_no);

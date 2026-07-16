@@ -96,32 +96,6 @@
   - 能输出完整 frame bytes 供比对
   - 若同时 FCS OK，则视为更强证据
 
-## 相关路径
-
-### Python 端
-- `python/ctc_sim/bluebee/`
-  - `bluebee_zigbee_frame_iq_30_72M.py`：生成纯 bluebee 构造的完整 zigbee 帧
-  - `bluebee_phase_analyze.py`、`bluebee_phase_zigbee_rx.py`：BlueBee/ZigBee 分析辅助工具
-- `python/ctc_sim/std_zigbee/`
-  - `bluebee_rx.py`：当前主接收验证脚本，用于解调 bluebee 构造的 zigbee 帧
-  - `zigbee_rx.py`：标准 zigbee 解调脚本
-- `python/std_ble/`
-  - `generate_ble_exadv_iq_30_72M.py`：将 bluebee 负载嵌入到 BLE 广播包中，调试参数 `--timing-debug-same-channel --channel 39 --append-bluebee-zigbee --aux-offset-us 600 --post-pad-us 10`
-
-### 裸机端
-- `app_B2Z/`：当前主应用（含 BLE/CTC 代码），57 个源文件
-- `app_FreeRTOS/`：FreeRTOS 移植目标目录（当前是 `app_e310/` 副本，缺 BLE 文件）
-- `app_e310/`、`app_e200/`、`app_e310v2/`：参考裸机应用（无 BLE 代码）
-- `hdl/projects/antsdre310/antsdre310.sdk/`：Vitis SDK 工作区
-  - `app/src/`：SDK 中编译的源文件
-  - `system_top/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/`：BSP
-
-### HDL 端
-- `hdl/projects/antsdre310/`：Vivado 工程（2021.1）
-  - `system_top.v`：顶层 Verilog
-  - `system_bd.tcl`：Block Design 脚本（含地址映射和中断连接）
-  - `system.xdc`：约束文件
-
 ## 注意事项
 
 1. 工作区裸机程序代码未被 git 追踪。
@@ -131,7 +105,7 @@
 5. `doc/BLE_Core_v5.1.pdf` 可作为 BLE 规范参考，但当前阶段不再以"规范手机跟随 AuxPtr"作为主要成功判据。
 6. FreeRTOS 移植使用 `FREERTOS_INTEGRATION` 条件编译宏，所有 HAL 修改通过 `#ifdef` 保持裸机兼容。
 7. `app_FreeRTOS/` 缺少 BLE/CTC 文件，实现时需从 `app_B2Z/` 复制。
-8. 当前DMA实现中无法正常触发IRQ信号，在之后的处理中要主动检查相关寄存器确定传输状态。
+8. 当前DMA实现中无法正常触发IRQ信号，在实际实现中要主动检查相关寄存器确定传输状态。
 
 ## 手机 BLE 检测的负载上限
 

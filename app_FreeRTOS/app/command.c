@@ -40,6 +40,8 @@
 /******************************************************************************/
 /***************************** Include Files **********************************/
 /******************************************************************************/
+#include <string.h>
+
 #include "command.h"
 #include "console.h"
 #include "ad9361_api.h"
@@ -53,6 +55,11 @@
 #include "bluebee_gen.h"
 #include "dma_tx_waveforms.h"
 #include "no_os_gpio.h"
+#ifdef FREERTOS_INTEGRATION
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "task.h"
+#endif
 #ifdef XILINX_PLATFORM
 #include <xil_cache.h>
 #endif
@@ -60,6 +67,20 @@
 /******************************************************************************/
 /************************ Constants Definitions *******************************/
 /******************************************************************************/
+static int32_t ble_tx_adv_name_text_cmd(const char *args);
+static int32_t ble_tx_stop_text_cmd(const char *args);
+static int32_t bluebee_gen_text_cmd(const char *args);
+static int32_t ble_exadv_secondary_gen_text_cmd(const char *args);
+static void print_bluebee_gen_usage(void);
+static void print_exadv_secondary_gen_usage(void);
+
+enum ble_command_request_type {
+	BLE_COMMAND_ADV_START,
+	BLE_COMMAND_STOP,
+	BLE_COMMAND_BLUEBEE_START,
+	BLE_COMMAND_EXADV_SECONDARY_START,
+};
+
 command cmd_list[] = {
 	{"help?", "Displays all available commands.", "", get_help},
 	{"register?", "Gets the specified register value.", "", get_register},
@@ -115,14 +136,45 @@ command cmd_list[] = {
 	{"dds_tx2_tone1_scale=", "Sets the DDS TX2 Tone 1 scale.", "", set_dds_tx2_tone1_scale},
 	{"dds_tx2_tone2_scale?", "Gets current DDS TX2 Tone 2 scale.", "", dds_tx2_tone2_scale},
 	{"dds_tx2_tone2_scale=", "Sets the DDS TX2 Tone 2 scale.", "", set_dds_tx2_tone2_scale},
-	{"ble_tx_adv_name=", "Sets BLE legacy advertising name and starts 37/38/39 TX.", "", ble_tx_adv_name_cmd},
-	{"ble_tx_stop?", "Stops BLE advertising TX and restores DDS.", "", ble_tx_adv_stop_cmd},
+	{"ble_tx_adv_name=", "Sets BLE legacy advertising name and starts TX.", "ble_tx_adv_name=SDR_BLE", ble_tx_adv_name_cmd, ble_tx_adv_name_text_cmd},
+	{"ble_tx_stop?", "Stops BLE advertising TX and restores DDS.", "", ble_tx_adv_stop_cmd, ble_tx_stop_text_cmd},
 	{"dma_tx_demo?", "Sends BLE ch39 legacy advertising waveform in DMA.", "", dma_tx_demo},
 	{"dma_switch?", "Switches cyclic DMA waveform.", "", change_dma_context},
-	{"bluebee_gen_demo?", "Builds BlueBee ZigBee frame at runtime and starts cyclic TX DMA.", "bluebee_gen_demo? 11 22 33 44", bluebee_gen_demo},
-	{"ble_exadv_secondary_gen?", "Builds BLE extended advertising secondary packet and starts cyclic TX DMA on ch39.", "ble_exadv_secondary_gen? 11 22 33 44", ble_exadv_secondary_gen_cmd},
+	{"bluebee_gen_demo?", "Builds BlueBee ZigBee frame at runtime and starts cyclic TX DMA.", "bluebee_gen_demo? 11 22 33 44", bluebee_gen_demo, bluebee_gen_text_cmd},
+	{"ble_exadv_secondary_gen?", "Builds BLE extended advertising secondary packet and starts cyclic TX DMA on ch39.", "ble_exadv_secondary_gen? 11 22 33 44", ble_exadv_secondary_gen_cmd, ble_exadv_secondary_gen_text_cmd},
 };
 const char cmd_no = (sizeof(cmd_list) / sizeof(command));
+
+int32_t command_dispatch_line(char *line)
+{
+	double params[CONSOLE_MAX_PARAM_COUNT] = { 0 };
+	char params_no;
+
+	if (!line)
+		return 0;
+
+	for (uint32_t i = 0u; i < (uint32_t)cmd_no; i++) {
+		if (cmd_list[i].text_function) {
+			uint32_t name_len = (uint32_t)strlen(cmd_list[i].name);
+
+			if (strncmp(line, cmd_list[i].name, name_len) == 0) {
+				cmd_list[i].text_function(&line[name_len]);
+				return 1;
+			}
+			continue;
+		}
+
+		params_no = 0;
+		memset(params, 0, sizeof(params));
+		if (console_check_commands(line, cmd_list[i].name,
+					   params, &params_no) != UNKNOWN_CMD) {
+			cmd_list[i].function(params, params_no);
+			return 1;
+		}
+	}
+
+	return 0;
+}
 
 /******************************************************************************/
 /************************ Variables Definitions *******************************/
@@ -139,6 +191,90 @@ static struct axi_dma_transfer dma_tx_transfer = {
 	.src_addr = 0,
 	.dest_addr = 0,
 };
+
+#ifdef FREERTOS_INTEGRATION
+#define BLE_COMMAND_QUEUE_LENGTH 4u
+
+struct ble_command_request {
+	enum ble_command_request_type type;
+	uint32_t payload_len;
+	union {
+		char name[BLE_TX_ADV_NAME_MAX_LEN + 1u];
+		uint8_t payload[BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES];
+	} data;
+};
+
+static QueueHandle_t g_ble_command_queue;
+
+int32_t ble_command_service_init(void)
+{
+	if (g_ble_command_queue)
+		return 0;
+
+	g_ble_command_queue = xQueueCreate(BLE_COMMAND_QUEUE_LENGTH,
+					     sizeof(struct ble_command_request));
+
+	return g_ble_command_queue ? 0 : -1;
+}
+
+static int32_t ble_command_enqueue(const struct ble_command_request *request,
+				   uint8_t send_to_front)
+{
+	BaseType_t ret;
+
+	if (!request || ble_command_service_init() < 0)
+		return -1;
+
+	if (send_to_front)
+		ret = xQueueSendToFront(g_ble_command_queue, request, 0);
+	else
+		ret = xQueueSend(g_ble_command_queue, request, 0);
+
+	if (ret != pdPASS) {
+		console_print("BLE command queue busy\r\n");
+		return -1;
+	}
+
+	return 0;
+}
+
+void ble_command_service_task(void *pvParameters)
+{
+	struct ble_command_request request;
+
+	(void)pvParameters;
+
+	for (;;) {
+		if (xQueueReceive(g_ble_command_queue, &request,
+				  portMAX_DELAY) != pdPASS)
+			continue;
+
+		switch (request.type) {
+		case BLE_COMMAND_ADV_START:
+			if (ble_tx_adv_start_name(request.data.name) < 0)
+				console_print("BLE ADV start failed\r\n");
+			break;
+		case BLE_COMMAND_STOP:
+			ble_tx_adv_stop(1u);
+			console_print("BLE TX stopped\r\n");
+			break;
+		case BLE_COMMAND_BLUEBEE_START:
+			bluebee_gen_start_payload(request.payload_len ?
+						   request.data.payload : NULL,
+						   request.payload_len);
+			break;
+		case BLE_COMMAND_EXADV_SECONDARY_START:
+			ble_exadv_secondary_gen_start_payload(request.payload_len ?
+							 request.data.payload : NULL,
+							 request.payload_len);
+			break;
+		default:
+			console_print("Invalid BLE command request\r\n");
+			break;
+		}
+	}
+}
+#endif
 
 static int32_t dma_tx_start_waveform(enum dma_tx_waveform_id id)
 {
@@ -358,6 +494,135 @@ static int32_t parse_bluebee_payload_text(const char *text,
 	return 0;
 }
 
+static uint8_t text_has_only_line_end_or_space(const char *text)
+{
+	if (!text)
+		return 1u;
+
+	while (*text == ' ' || *text == '\t')
+		text++;
+
+	return is_line_end(*text);
+}
+
+static int32_t ble_tx_adv_name_text_cmd(const char *args)
+{
+	char name[BLE_TX_ADV_NAME_MAX_LEN + 1u];
+	uint32_t len = 0u;
+
+	if (!args)
+		args = "";
+
+	while (!is_line_end(args[len])) {
+		unsigned char c = (unsigned char)args[len];
+
+		if (c < 0x20u || c > 0x7eu || len >= BLE_TX_ADV_NAME_MAX_LEN) {
+			console_print("Invalid BLE ADV name (1-%d printable characters)\r\n",
+				      (long)BLE_TX_ADV_NAME_MAX_LEN);
+			return -1;
+		}
+		name[len] = args[len];
+		len++;
+	}
+	name[len] = '\0';
+	if (len == 0u) {
+		console_print("Invalid BLE ADV name (1-%d printable characters)\r\n",
+			      (long)BLE_TX_ADV_NAME_MAX_LEN);
+		return -1;
+	}
+
+#ifdef FREERTOS_INTEGRATION
+	{
+		struct ble_command_request request;
+
+		memset(&request, 0, sizeof(request));
+		request.type = BLE_COMMAND_ADV_START;
+		memcpy(request.data.name, name, len + 1u);
+		return ble_command_enqueue(&request, 0u);
+	}
+#else
+	return ble_tx_adv_start_name(name);
+#endif
+}
+
+static int32_t ble_tx_stop_text_cmd(const char *args)
+{
+	if (!text_has_only_line_end_or_space(args)) {
+		console_print("Usage: ble_tx_stop?\r\n");
+		return -1;
+	}
+
+#ifdef FREERTOS_INTEGRATION
+	{
+		struct ble_command_request request;
+
+		memset(&request, 0, sizeof(request));
+		request.type = BLE_COMMAND_STOP;
+		return ble_command_enqueue(&request, 1u);
+	}
+#else
+	ble_tx_adv_stop(1u);
+	console_print("BLE TX stopped\r\n");
+	return 0;
+#endif
+}
+
+static int32_t queue_or_start_payload(enum ble_command_request_type type,
+				      const uint8_t *payload,
+				      uint32_t payload_len)
+{
+#ifdef FREERTOS_INTEGRATION
+	struct ble_command_request request;
+
+	memset(&request, 0, sizeof(request));
+	request.type = type;
+	request.payload_len = payload_len;
+	if (payload_len)
+		memcpy(request.data.payload, payload, payload_len);
+
+	return ble_command_enqueue(&request, 0u);
+#else
+	if (type == BLE_COMMAND_BLUEBEE_START)
+		return bluebee_gen_start_payload(payload_len ? payload : NULL,
+						 payload_len);
+
+	return ble_exadv_secondary_gen_start_payload(payload_len ? payload : NULL,
+							 payload_len);
+#endif
+}
+
+static int32_t bluebee_gen_text_cmd(const char *args)
+{
+	uint8_t payload[BLUEBEE_GEN_MAX_PAYLOAD_BYTES];
+	uint32_t payload_len = 0u;
+
+	if (parse_bluebee_payload_text(args ? args : "", payload, &payload_len,
+				       sizeof(payload)) < 0) {
+		console_print("bluebee_gen invalid payload\n");
+		print_bluebee_gen_usage();
+		return -1;
+	}
+
+	return queue_or_start_payload(BLE_COMMAND_BLUEBEE_START,
+				      payload, payload_len);
+}
+
+static int32_t ble_exadv_secondary_gen_text_cmd(const char *args)
+{
+	uint8_t payload[BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES];
+	uint32_t payload_len = 0u;
+
+	if (parse_bluebee_payload_text(args ? args : "", payload, &payload_len,
+				       sizeof(payload)) < 0) {
+		console_print("ble_exadv_secondary_gen invalid payload\n");
+		print_exadv_secondary_gen_usage();
+		return -1;
+	}
+
+	return queue_or_start_payload(BLE_COMMAND_EXADV_SECONDARY_START,
+				      payload, payload_len);
+}
+
 static void print_bluebee_gen_usage(void)
 {
 	console_print("Usage: bluebee_gen_demo? [hex payload bytes]\n");
@@ -370,6 +635,8 @@ int32_t bluebee_gen_start_payload(const uint8_t *payload, uint32_t payload_len)
 {
 	const struct bluebee_gen_meta *meta;
 	int32_t ret;
+
+	console_print("bluebee_gen: generating waveform...\n");
 
 	if (payload && payload_len > 0u)
 		ret = bluebee_gen_build_payload(payload, payload_len);
@@ -410,19 +677,7 @@ int32_t bluebee_gen_start_payload(const uint8_t *payload, uint32_t payload_len)
 
 int32_t bluebee_gen_demo_cmdline(const char *payload_text)
 {
-	uint8_t payload[BLUEBEE_GEN_MAX_PAYLOAD_BYTES];
-	uint32_t payload_len = 0u;
-
-	if (parse_bluebee_payload_text(payload_text ? payload_text : "",
-				       payload, &payload_len,
-				       BLUEBEE_GEN_MAX_PAYLOAD_BYTES) < 0) {
-		console_print("bluebee_gen invalid payload\n");
-		print_bluebee_gen_usage();
-		return -1;
-	}
-
-	return bluebee_gen_start_payload(payload_len ? payload : NULL,
-					 payload_len);
+	return bluebee_gen_text_cmd(payload_text);
 }
 
 static void print_exadv_secondary_gen_usage(void)
@@ -482,19 +737,7 @@ int32_t ble_exadv_secondary_gen_start_payload(const uint8_t *payload,
 
 int32_t ble_exadv_secondary_gen_cmdline(const char *payload_text)
 {
-	uint8_t payload[BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES];
-	uint32_t payload_len = 0u;
-
-	if (parse_bluebee_payload_text(payload_text ? payload_text : "",
-				       payload, &payload_len,
-				       BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES) < 0) {
-		console_print("ble_exadv_secondary_gen invalid payload\n");
-		print_exadv_secondary_gen_usage();
-		return -1;
-	}
-
-	return ble_exadv_secondary_gen_start_payload(payload_len ? payload : NULL,
-						    payload_len);
+	return ble_exadv_secondary_gen_text_cmd(payload_text);
 }
 
 void dma_tx_demo(double *param, char param_no)

@@ -553,6 +553,8 @@ void ble_tx_adv_task(void *pvParameters)
 		}
 
 		if (rebuild) {
+			console_print("BLE ADV: generating waveform, name=%s\r\n",
+				      build_name);
 			if (ble_adv_build_all_channels(build_name) < 0) {
 				console_print("BLE ADV build failed\r\n");
 				ble_adv_set_stopped();

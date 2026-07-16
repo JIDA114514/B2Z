@@ -450,6 +450,8 @@ int console_check_commands(char*	   received_cmd,
 			{
 				if((received_cmd[char_index] == 0x20))
 				{
+					if (*param_no >= CONSOLE_MAX_PARAM_COUNT)
+						return UNKNOWN_CMD;
 					*param = 0;
 					if((param_string[0] == '0') && (param_string[1] == 'x'))
 					{
@@ -488,6 +490,8 @@ int console_check_commands(char*	   received_cmd,
 				}
 				else
 				{
+					if(param_index >= (sizeof(param_string) - 1u))
+						return UNKNOWN_CMD;
 					param_string[param_index] = received_cmd[char_index];
 					char_index++;
 					param_index++;
@@ -495,6 +499,8 @@ int console_check_commands(char*	   received_cmd,
 			}
 			if(param_index)
 			{
+				if (*param_no >= CONSOLE_MAX_PARAM_COUNT)
+					return UNKNOWN_CMD;
 				*param = 0;
 				if((param_string[0] == '0') && (param_string[1] == 'x'))
 				{

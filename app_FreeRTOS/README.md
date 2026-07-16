@@ -34,9 +34,10 @@ while (1) {
 FreeRTOS 程序在 `main()` 中完成硬件初始化后，创建多个独立任务，然后调用 `vTaskStartScheduler()` 启动抢占式调度器——此函数**永不返回**：
 
 ```c
-// app/main.c:1776 — 任务创建与调度器启动
+// app/main.c — 任务创建与调度器启动
 rc_dmac_poll = xTaskCreate(vDmacPollTask, "DmacPoll", 512, NULL, 8, &h_dmac_poll);
 rc_console   = xTaskCreate(vConsoleCommandTask, "Console", 2048, NULL, 1, &h_console);
+rc_ble_ctrl  = xTaskCreate(ble_command_service_task, "BLE_CTRL", 2048, NULL, 5, &h_ble_control);
 rc_ble_tx    = xTaskCreate(ble_tx_adv_task, "BLE_TX_ADV", 4096, NULL, 8, &h_ble_tx_adv);
 
 // 安装 FreeRTOS 向量表，替换 Xilinx asm_vectors.S
@@ -243,7 +244,24 @@ static void vDmacPollTask(void *pvParameters) {
 }
 ```
 
-## 五、串口命令读取：从阻塞到非阻塞
+## 五、串口命令读取与异步执行
+
+串口命令路径分为“读取与解析”和“业务执行”两个阶段。这样设计的原因是 BlueBee 与 BLE extended advertising 的波形生成包含大量浮点运算；如果直接在 Console 任务中执行，Console 在计算完成前无法继续读取 `ble_tx_stop?` 等命令，而且低优先级 Console 持有共享资源时也会增加任务耦合。
+
+当前 FreeRTOS 路径为：
+
+```text
+UART FIFO
+  → Console：逐字符读取并组成完整命令行
+  → command_dispatch_line()：统一匹配、解析和校验
+  → BLE 请求队列：复制名称或 payload
+  → BLE_CTRL
+      ├─ BlueBee/exadv：波形生成、模式切换和 DMA 启动
+      └─ 普通 BLE advertising：更新发送状态
+           → BLE_TX_ADV：波形构建与周期发送
+```
+
+### 5.1 UART 读取不再忙等
 
 裸机的 `console_get_command()` 调用 Xilinx BSP 的阻塞式 `uart_read_char()`（内部忙等 FIFO）。FreeRTOS 下改为先检查 FIFO 状态再决定行为：
 
@@ -267,21 +285,79 @@ void console_get_command(char* command) {
 
 `vTaskDelay(1)` 让调用任务睡眠 1ms（1 tick），在此期间调度器运行其他任务。用户无感知（按键操作时间远大于 1ms），但避免了 CPU 空转。
 
+命令行缓冲区 `CONSOLE_MAX_COMMAND_LEN` 为 192 字节。`console_get_command()` 为行结束符和结尾 `\0` 预留空间，最多接收 190 个命令字符；超出的字符会被丢弃直到收到换行符，防止 UART 输入覆盖内存。192 字节可以容纳最长的 46 字节 ZigBee payload 命令；例如使用空格分隔的完整 `ble_exadv_secondary_gen?` 命令约为 163 字节。
+
+### 5.2 所有命令使用统一分发表
+
+旧实现先在 `main.c` 中调用多个 `console_handle_ble_*()` 特殊处理函数，未匹配时才遍历 `cmd_list[]`。这使 BLE 命令存在两套入口，帮助信息、参数解析和实际执行函数容易不一致。
+
+当前 `vConsoleCommandTask()` 对所有输入只调用 [command_dispatch_line()](app/command.c#L148)：
+
+```c
+console_get_command(received_cmd);
+if (!command_dispatch_line(received_cmd))
+    console_print("Invalid command!\n");
+```
+
+`cmd_list[]` 的每个表项可以选择两种处理接口：
+
+- `cmd_function(double *param, char param_no)`：保留给原有数值命令。解析器最多接收 5 个参数，每个参数文本最多 9 个字符，超限时返回 `UNKNOWN_CMD`，避免 `param[]` 和 `param_string[]` 越界。
+- `cmd_text_function(const char *args)`：用于 BLE 名称和十六进制 payload 等不能安全转换为 `double` 的参数。命令名称仍由同一张 `cmd_list[]` 匹配，handler 只接收名称之后的原始参数文本。
+
+当前文本命令包括 `ble_tx_adv_name=`、`ble_tx_stop?`、`bluebee_gen_demo?` 和 `ble_exadv_secondary_gen?`。BLE 名称限制为 1–26 个可打印 ASCII 字符；payload 最大 46 字节，支持空格、Tab、逗号、冒号或分号分隔，并支持可选的 `0x` 前缀。
+
+### 5.3 BLE 请求队列与参数所有权
+
+FreeRTOS 启动调度器前，`ble_command_service_init()` 创建长度为 4 的队列。每个队列元素都是固定大小的 `ble_command_request`：
+
+```c
+struct ble_command_request {
+    enum ble_command_request_type type;
+    uint32_t payload_len;
+    union {
+        char name[BLE_TX_ADV_NAME_MAX_LEN + 1];
+        uint8_t payload[BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES];
+    } data;
+};
+```
+
+Console handler 在入队前完成校验，并把名称或 payload **复制**到请求结构中，绝不把 `received_cmd` 内部指针传给其他任务。这样下一条串口命令覆盖接收缓冲区时，不会破坏尚未执行的请求；运行期间也不需要为每条命令调用 `malloc()`。
+
+普通请求使用 `xQueueSend()`，`ble_tx_stop?` 使用 `xQueueSendToFront()`，因此停止请求会优先于尚未开始的启动请求。队列已满时输出 `BLE command queue busy`，命令不会悄悄丢失。队首发送只能调整等待中请求的顺序，不能中断已经开始的波形计算。
+
+### 5.4 提示信息输出时机
+
+入队后不输出通用的 `BLE command accepted`。原因是 `BLE_CTRL` 优先级高于 Console：`xQueueSend()` 唤醒 `BLE_CTRL` 后可能立即发生抢占，如果提示由 Console 在入队返回后打印，反而可能等到整段波形计算完成才出现。
+
+现在提示由实际执行计算的任务在计算开始前输出：
+
+```text
+bluebee_gen: generating waveform...
+ble_exadv_secondary_gen: generating waveform...
+BLE ADV: generating waveform, name=<name>
+```
+
+前两条由 `BLE_CTRL` 输出；普通 BLE advertising 的波形实际在 `BLE_TX_ADV` 中构建，因此第三条由 `BLE_TX_ADV` 在调用 `ble_adv_build_all_channels()` 前输出。这样串口日志顺序能够真实反映任务执行进度。
+
+未定义 `FREERTOS_INTEGRATION` 时不创建请求队列，文本 handler 保持同步调用，兼容裸机执行路径。
+
 ## 六、任务架构与优先级设计
 
 ### 当前任务清单
 
 | 优先级 | 任务名 | 栈空间 | 触发方式 | 功能 |
 |--------|--------|--------|----------|------|
-| 8 | BLE_TX_ADV | 4096 words (16 KB) | 100 µs 周期定时 | BLE advertising TX（含 extended advertising） |
+| 8 | BLE_TX_ADV | 4096 words (16 KB) | 状态驱动，空闲 10 ms/发送循环 1 ms 延时 | 普通 BLE advertising 波形构建与 TX |
 | 8 | DmacPoll | 512 words (2 KB) | 1 ms 周期 `vTaskDelay` | DMA 中断状态轮询补偿 |
-| 1 | Console | 2048 words (8 KB) | `vTaskDelay(1)` 等待串口输入 | CLI 命令接收、解析和执行 |
+| 5 | BLE_CTRL | 2048 words (8 KB) | 阻塞等待 BLE 请求队列 | BlueBee/exadv 波形生成、BLE 模式控制和 DMA 启动 |
+| 1 | Console | 2048 words (8 KB) | `vTaskDelay(1)` 等待串口输入 | CLI 命令读取、匹配、校验和请求入队 |
 
 ### 优先级设计理由
 
-- **BLE_TX_ADV（优先级 8）**：时序最敏感。BLE advertising 需要在精确的 100 µs 间隔发送，必须能抢占任何其他任务。与 DmacPoll 同优先级，DMA 传输发起后不延迟 BLE 处理。
+- **BLE_TX_ADV（优先级 8）**：负责普通 BLE advertising 的波形构建和发送，必须能抢占波形生成及 Console 处理。与 DmacPoll 同优先级，DMA 状态检查不会长期落后；任务每轮发送后按当前实现延时 1 ms，空闲时延时 10 ms。
 - **DmacPoll（优先级 8）**：DMA 状态轮询需要及时处理（避免丢失传输完成信号），与 BLE 同优先级确保不落后。该任务每次只做一次寄存器检查然后 `vTaskDelay`，不长时间占用 CPU。
-- **Console（优先级 1）**：最低优先级。用户输入交互不应打断 BLE 传输或 DMA 处理。
+- **BLE_CTRL（优先级 5）**：高于 Console，确保命令入队后及时开始计算；低于 BLE_TX_ADV 和 DmacPoll，使耗时的浮点波形生成不会阻塞时序关键任务。任务没有请求时阻塞在 `xQueueReceive(..., portMAX_DELAY)`，不消耗 CPU。
+- **Console（优先级 1）**：最低优先级。只完成轻量的输入、解析和入队，用户交互不会直接执行耗时波形计算，也不会打断 BLE 传输或 DMA 处理。
 
 ### 为什么没有创建 ISR 专用的 Bottom-Half 任务？
 
@@ -422,5 +498,7 @@ FreeRTOS 移植内建了多级验证机制：
 | [drivers/no_os_spi.c](drivers/no_os_spi.c) | SPI 互斥锁实现 |
 | [drivers/no_os_gpio.c](drivers/no_os_gpio.c) | GPIO 互斥锁实现 |
 | [drivers/console.c](drivers/console.c) | Console 互斥锁、非阻塞 UART 读取 |
+| [app/command.c](app/command.c) | 统一命令分发、文本参数解析、BLE 请求队列和 `BLE_CTRL` 任务 |
+| [app/ble_tx_adv.c](app/ble_tx_adv.c) | BLE advertising 波形生成与 `BLE_TX_ADV` 发送任务 |
 | [drivers/delay.c](drivers/delay.c) | 调度感知的 `no_os_mdelay()` |
 | [drivers/xilinx_irq.c](drivers/xilinx_irq.c) | IRQ 初始化（跳过 `Xil_ExceptionInit`、暴露 GIC 实例） |

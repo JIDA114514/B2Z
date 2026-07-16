@@ -187,14 +187,6 @@ struct axi_dmac_init tx_dmac_init = {
 struct axi_dmac *tx_dmac;
 
 #ifdef CONSOLE_COMMANDS
-extern command	  	cmd_list[];
-extern const char	cmd_no;
-extern cmd_function	cmd_functions[11];
-unsigned char		cmd				 =  0;
-double				param[5]		 = {0, 0, 0, 0, 0};
-char				param_no		 =  0;
-int					cmd_type		 = -1;
-char				invalid_cmd		 =  0;
 char				received_cmd[CONSOLE_MAX_COMMAND_LEN] = {0};
 #endif
 
@@ -577,49 +569,6 @@ struct ad9361_rf_phy *ad9361_phy;
 #ifdef FMCOMMS5
 struct ad9361_rf_phy *ad9361_phy_b;
 #endif
-
-#ifdef CONSOLE_COMMANDS
-static int console_handle_ble_tx_adv_name_cmd(char *cmd_buf)
-{
-	static const char prefix[] = "ble_tx_adv_name=";
-	uint32_t prefix_len = sizeof(prefix) - 1u;
-
-	if (strncmp(cmd_buf, prefix, prefix_len) != 0)
-		return 0;
-
-	if (ble_tx_adv_start_name(&cmd_buf[prefix_len]) < 0)
-		console_print("BLE ADV start failed\r\n");
-
-	return 1;
-}
-
-static int console_handle_bluebee_gen_demo_cmd(char *cmd_buf)
-{
-	static const char prefix[] = "bluebee_gen_demo?";
-	uint32_t prefix_len = sizeof(prefix) - 1u;
-
-	if (strncmp(cmd_buf, prefix, prefix_len) != 0)
-		return 0;
-
-	bluebee_gen_demo_cmdline(&cmd_buf[prefix_len]);
-
-	return 1;
-}
-
-static int console_handle_ble_exadv_secondary_gen_cmd(char *cmd_buf)
-{
-	static const char prefix[] = "ble_exadv_secondary_gen?";
-	uint32_t prefix_len = sizeof(prefix) - 1u;
-
-	if (strncmp(cmd_buf, prefix, prefix_len) != 0)
-		return 0;
-
-	ble_exadv_secondary_gen_cmdline(&cmd_buf[prefix_len]);
-
-	return 1;
-}
-#endif
-
 
 /***************************************************************************//**
  * @brief main
@@ -1189,6 +1138,8 @@ fail:
 
 #define FREERTOS_CONSOLE_TASK_PRIORITY        1
 #define FREERTOS_CONSOLE_TASK_STACK_WORDS     2048
+#define FREERTOS_BLE_CONTROL_TASK_PRIORITY    5
+#define FREERTOS_BLE_CONTROL_TASK_STACK_WORDS 2048
 #define FREERTOS_BLE_TX_ADV_TASK_PRIORITY     8
 #define FREERTOS_BLE_TX_ADV_TASK_STACK_WORDS  4096
 #define FREERTOS_DMAC_POLL_TASK_PRIORITY      8
@@ -1204,32 +1155,10 @@ static void vConsoleCommandTask(void *pvParameters)
 
 	for (;;) {
 		memset(received_cmd, 0, sizeof(received_cmd));
-		memset(param, 0, sizeof(param));
-		param_no = 0;
-		invalid_cmd = 0;
 
 		console_get_command(received_cmd);
 
-		if (console_handle_ble_tx_adv_name_cmd(received_cmd) ||
-		    console_handle_bluebee_gen_demo_cmd(received_cmd) ||
-		    console_handle_ble_exadv_secondary_gen_cmd(received_cmd)) {
-			vTaskDelay(1);
-			continue;
-		}
-
-		for (cmd = 0; cmd < cmd_no; cmd++) {
-			param_no = 0;
-			cmd_type = console_check_commands(received_cmd,
-							  cmd_list[cmd].name,
-							  param, &param_no);
-			if (cmd_type == UNKNOWN_CMD) {
-				invalid_cmd++;
-			} else {
-				cmd_list[cmd].function(param, param_no);
-			}
-		}
-
-		if (invalid_cmd == cmd_no)
+		if (!command_dispatch_line(received_cmd))
 			console_print("Invalid command!\n");
 
 		taskYIELD();
@@ -1783,8 +1712,10 @@ int main(void)
 		TaskHandle_t     h_dmac_poll = NULL;
 #ifdef CONSOLE_COMMANDS
 		BaseType_t       rc_console;
+		BaseType_t       rc_ble_control;
 		BaseType_t       rc_ble_tx_adv;
 		TaskHandle_t     h_console = NULL;
+		TaskHandle_t     h_ble_control = NULL;
 		TaskHandle_t     h_ble_tx_adv = NULL;
 #endif
 #ifdef FREERTOS_ENABLE_COUNTER_TEST_TASKS
@@ -1816,12 +1747,22 @@ int main(void)
 			console_print( "[ERR] BLE ADV TX init failed; scheduler not started\r\n" );
 			for( ; ; ) { __asm volatile ( "NOP" ); }
 		}
+		if( ble_command_service_init() < 0 )
+		{
+			console_print( "[ERR] BLE command service init failed; scheduler not started\r\n" );
+			for( ; ; ) { __asm volatile ( "NOP" ); }
+		}
 
 		rc_console = xTaskCreate( vConsoleCommandTask, "Console",
 					  FREERTOS_CONSOLE_TASK_STACK_WORDS,
 					  NULL,
 					  FREERTOS_CONSOLE_TASK_PRIORITY,
 					  &h_console );
+		rc_ble_control = xTaskCreate( ble_command_service_task, "BLE_CTRL",
+					      FREERTOS_BLE_CONTROL_TASK_STACK_WORDS,
+					      NULL,
+					      FREERTOS_BLE_CONTROL_TASK_PRIORITY,
+					      &h_ble_control );
 		rc_ble_tx_adv = xTaskCreate( ble_tx_adv_task, "BLE_TX_ADV",
 					     FREERTOS_BLE_TX_ADV_TASK_STACK_WORDS,
 					     NULL,
@@ -1841,6 +1782,7 @@ int main(void)
 		if( ( rc_dmac_poll != pdPASS )
 #ifdef CONSOLE_COMMANDS
 		    || ( rc_console != pdPASS )
+		    || ( rc_ble_control != pdPASS )
 		    || ( rc_ble_tx_adv != pdPASS )
 #endif
 #ifdef FREERTOS_ENABLE_COUNTER_TEST_TASKS
@@ -1879,29 +1821,8 @@ int main(void)
 	while(1)
 	{
 		console_get_command(received_cmd);
-		if (console_handle_ble_tx_adv_name_cmd(received_cmd) ||
-		    console_handle_bluebee_gen_demo_cmd(received_cmd) ||
-		    console_handle_ble_exadv_secondary_gen_cmd(received_cmd))
-			continue;
-		invalid_cmd = 0;
-		for(cmd = 0; cmd < cmd_no; cmd++)
-		{
-			param_no = 0;
-			cmd_type = console_check_commands(received_cmd, cmd_list[cmd].name,
-							  param, &param_no);
-			if(cmd_type == UNKNOWN_CMD)
-			{
-				invalid_cmd++;
-			}
-			else
-			{
-				cmd_list[cmd].function(param, param_no);
-			}
-		}
-		if(invalid_cmd == cmd_no)
-		{
+		if (!command_dispatch_line(received_cmd))
 			console_print("Invalid command!\n");
-		}
 	}
 #endif
 	printf("Done.\n");

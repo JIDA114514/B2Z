@@ -53,6 +53,7 @@
 #include "ble_exadv_secondary_gen.h"
 #include "ble_tx_adv.h"
 #include "bluebee_gen.h"
+#include "bluebee_perf.h"
 #include "dma_tx_waveforms.h"
 #include "no_os_gpio.h"
 #ifdef FREERTOS_INTEGRATION
@@ -142,6 +143,12 @@ command cmd_list[] = {
 	{"dma_switch?", "Switches cyclic DMA waveform.", "", change_dma_context},
 	{"bluebee_gen_demo?", "Builds BlueBee ZigBee frame at runtime and starts cyclic TX DMA.", "bluebee_gen_demo? 11 22 33 44", bluebee_gen_demo, bluebee_gen_text_cmd},
 	{"ble_exadv_secondary_gen?", "Builds BLE extended advertising secondary packet and starts cyclic TX DMA on ch39.", "ble_exadv_secondary_gen? 11 22 33 44", ble_exadv_secondary_gen_cmd, ble_exadv_secondary_gen_text_cmd},
+#ifdef FREERTOS_INTEGRATION
+	{"bluebee_pure_perf_start?", "Starts Phase-1 pure BlueBee performance test.", "bluebee_pure_perf_start? 46 10000 60 1 0", NULL, bluebee_pure_perf_start_cmdline},
+	{"bluebee_exadv_perf_start?", "Starts Phase-1 extended-advertising BlueBee performance test.", "bluebee_exadv_perf_start? 46 100000 60 1 0", NULL, bluebee_exadv_perf_start_cmdline},
+	{"bluebee_perf_stop?", "Stops the active BlueBee performance test.", "bluebee_perf_stop?", NULL, bluebee_perf_stop_cmdline},
+	{"bluebee_perf_status?", "Reports BlueBee performance configuration and counters.", "bluebee_perf_status?", NULL, bluebee_perf_status_cmdline},
+#endif
 };
 const char cmd_no = (sizeof(cmd_list) / sizeof(command));
 
@@ -656,7 +663,8 @@ int32_t bluebee_gen_start_payload(const uint8_t *payload, uint32_t payload_len)
 		      (long)meta->gfsk_bit_count,
 		      (long)meta->gfsk_byte_count,
 		      (long)meta->iq_word_count);
-	console_print("bluebee air_us=%d post_pad_us=%d tx_lo=%d MHz\n",
+	console_print("bluebee pre_pad_us=%d air_us=%d post_pad_us=%d tx_lo=%d MHz\n",
+		      (long)meta->pre_pad_us,
 		      (long)meta->air_us,
 		      (long)meta->post_pad_us,
 		      (long)(meta->tx_lo_hz / 1000000ULL));

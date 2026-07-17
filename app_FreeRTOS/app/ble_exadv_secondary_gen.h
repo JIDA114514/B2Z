@@ -26,6 +26,10 @@ struct ble_exadv_secondary_gen_meta {
 	uint32_t iq_byte_count;
 	uint32_t air_us;
 	uint32_t post_pad_us;
+	uint32_t frame_time_us;
+	uint32_t mapping_time_us;
+	uint32_t gfsk_time_us;
+	uint32_t total_time_us;
 	uint32_t whitening_channel;
 	uint64_t tx_lo_hz;
 };

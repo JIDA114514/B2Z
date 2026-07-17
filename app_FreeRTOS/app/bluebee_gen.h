@@ -18,8 +18,13 @@ struct bluebee_gen_meta {
 	const uint32_t *iq_words;
 	uint32_t iq_word_count;
 	uint32_t iq_byte_count;
+	uint32_t pre_pad_us;
 	uint32_t air_us;
 	uint32_t post_pad_us;
+	uint32_t frame_time_us;
+	uint32_t mapping_time_us;
+	uint32_t gfsk_time_us;
+	uint32_t total_time_us;
 	uint8_t zigbee_projection_ok;
 	uint8_t symbol_distance_min;
 	uint8_t symbol_distance_max;

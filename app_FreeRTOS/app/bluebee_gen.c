@@ -3,7 +3,14 @@
 #include <stdint.h>
 #include <string.h>
 
+#ifndef BLUEBEE_GEN_HOST_TEST
+#include "app_config.h"
+#endif
 #include "bluebee_gen.h"
+
+#ifdef XILINX_PLATFORM
+#include "xtime_l.h"
+#endif
 
 #define BLUEBEE_GEN_PREAMBLE_BYTES       4u
 #define BLUEBEE_GEN_SFD                  0xA7u
@@ -27,7 +34,12 @@
 #define BLUEBEE_GEN_BT                   0.5f
 #define BLUEBEE_GEN_IQ_AMPLITUDE         10000
 #define BLUEBEE_GEN_OUTPUT_SAMPLE_RATE   30720000u
+#define BLUEBEE_GEN_PRE_PAD_US           1000u
 #define BLUEBEE_GEN_POST_PAD_US          1000u
+#define BLUEBEE_GEN_PRE_PAD_WORDS \
+	((uint32_t)((((uint64_t)BLUEBEE_GEN_OUTPUT_SAMPLE_RATE * \
+		      BLUEBEE_GEN_PRE_PAD_US) + 500000ULL) / 1000000ULL) * \
+	 2u)
 #define BLUEBEE_GEN_POST_PAD_WORDS \
 	((uint32_t)((((uint64_t)BLUEBEE_GEN_OUTPUT_SAMPLE_RATE * \
 		      BLUEBEE_GEN_POST_PAD_US) + 500000ULL) / 1000000ULL) * \
@@ -36,7 +48,8 @@
 	((((BLUEBEE_GEN_MAX_GFSK_BITS * BLUEBEE_GEN_SPS_HIGH) - 1u) / \
 	  BLUEBEE_GEN_DECIM) + 1u)
 #define BLUEBEE_GEN_MAX_IQ_WORDS \
-	((BLUEBEE_GEN_MAX_IQ_UNIQUE_WORDS * 2u) + BLUEBEE_GEN_POST_PAD_WORDS)
+	(BLUEBEE_GEN_PRE_PAD_WORDS + (BLUEBEE_GEN_MAX_IQ_UNIQUE_WORDS * 2u) + \
+	 BLUEBEE_GEN_POST_PAD_WORDS)
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -81,6 +94,7 @@ static uint8_t g_gfsk_bytes[BLUEBEE_GEN_MAX_GFSK_BYTES];
 static uint32_t g_iq_words[BLUEBEE_GEN_MAX_IQ_WORDS]
 	__attribute__((aligned(64)));
 static float g_gfsk_taps[BLUEBEE_GEN_TAPS];
+static float g_gfsk_tap_prefix[BLUEBEE_GEN_TAPS + 1u];
 static uint8_t g_gfsk_taps_ready;
 static struct bluebee_gen_meta g_meta;
 
@@ -104,6 +118,34 @@ static float wrap_pi(float x)
 		x += two_pi;
 
 	return x;
+}
+
+static uint64_t timing_now(void)
+{
+#ifdef XILINX_PLATFORM
+	XTime now;
+
+	XTime_GetTime(&now);
+	return (uint64_t)now;
+#else
+	return 0u;
+#endif
+}
+
+static uint32_t timing_elapsed_us(uint64_t start, uint64_t end)
+{
+#ifdef XILINX_PLATFORM
+	uint64_t us;
+
+	if (end <= start)
+		return 0u;
+	us = ((end - start) * 1000000ULL) / COUNTS_PER_SECOND;
+	return us > 0xFFFFFFFFULL ? 0xFFFFFFFFu : (uint32_t)us;
+#else
+	(void)start;
+	(void)end;
+	return 0u;
+#endif
 }
 
 static void init_gfsk_taps(void)
@@ -131,6 +173,11 @@ static void init_gfsk_taps(void)
 		for (uint32_t n = 0u; n < BLUEBEE_GEN_TAPS; n++)
 			g_gfsk_taps[n] *= inv_sum;
 	}
+
+	g_gfsk_tap_prefix[0] = 0.0f;
+	for (uint32_t n = 0u; n < BLUEBEE_GEN_TAPS; n++)
+		g_gfsk_tap_prefix[n + 1u] =
+			g_gfsk_tap_prefix[n] + g_gfsk_taps[n];
 
 	g_gfsk_taps_ready = 1u;
 }
@@ -297,7 +344,8 @@ static int32_t build_iq_words_from_gfsk_bits(const uint8_t *bits,
 {
 	uint32_t high_count = bit_count * BLUEBEE_GEN_SPS_HIGH;
 	uint32_t out_samples = ((high_count - 1u) / BLUEBEE_GEN_DECIM) + 1u;
-	uint32_t out_words = (out_samples * 2u) + BLUEBEE_GEN_POST_PAD_WORDS;
+	uint32_t out_words = BLUEBEE_GEN_PRE_PAD_WORDS + (out_samples * 2u) +
+		BLUEBEE_GEN_POST_PAD_WORDS;
 	float phase_step =
 		(float)M_PI / (2.0f * (float)BLUEBEE_GEN_SPS_HIGH);
 	float phase_step_decim = phase_step * (float)BLUEBEE_GEN_DECIM;
@@ -309,6 +357,17 @@ static int32_t build_iq_words_from_gfsk_bits(const uint8_t *bits,
 
 	init_gfsk_taps();
 
+	/*
+	 * A one-shot DMAC transfer starts feeding the DAC immediately after the
+	 * core is stopped, reconfigured and synchronized.  Preserve the beginning
+	 * of the BlueBee preamble by allowing that pipeline to settle on zeros.
+	 * Cyclic transfers previously obtained the same guard from the preceding
+	 * iteration's post padding, which is why they decoded while one-shot
+	 * performance transfers did not.
+	 */
+	for (uint32_t pad = 0u; pad < BLUEBEE_GEN_PRE_PAD_WORDS; pad++)
+		iq[w++] = 0u;
+
 	for (uint32_t n_out = 0u; n_out < out_samples; n_out++) {
 		uint32_t n = n_out * BLUEBEE_GEN_DECIM;
 		int32_t start = (int32_t)n - (int32_t)(BLUEBEE_GEN_TAPS / 2u);
@@ -316,15 +375,42 @@ static int32_t build_iq_words_from_gfsk_bits(const uint8_t *bits,
 		int32_t ii;
 		int32_t qq;
 
-		for (uint32_t k = 0u; k < BLUEBEE_GEN_TAPS; k++) {
-			int32_t idx = start + (int32_t)k;
+		/*
+		 * The NRZ value is constant for a complete 768-sample symbol.
+		 * Sum each overlapping tap interval through the prefix table instead
+		 * of visiting all 3072 taps for every output sample.  A four-symbol
+		 * Gaussian span overlaps at most five NRZ intervals at a boundary.
+		 */
+		{
+			int32_t valid_start = start > 0 ? start : 0;
+			int32_t valid_end = start + (int32_t)BLUEBEE_GEN_TAPS;
 
-			if (idx >= 0 && idx < (int32_t)high_count) {
-				uint32_t bit_idx =
-					(uint32_t)idx / BLUEBEE_GEN_SPS_HIGH;
-				float sym = bits[bit_idx] ? 1.0f : -1.0f;
+			if (valid_end > (int32_t)high_count)
+				valid_end = (int32_t)high_count;
+			if (valid_start < valid_end) {
+				uint32_t first_bit =
+					(uint32_t)valid_start / BLUEBEE_GEN_SPS_HIGH;
+				uint32_t last_bit =
+					(uint32_t)(valid_end - 1) / BLUEBEE_GEN_SPS_HIGH;
 
-				acc += g_gfsk_taps[k] * sym;
+				for (uint32_t bit_idx = first_bit;
+				     bit_idx <= last_bit; bit_idx++) {
+					int32_t symbol_start =
+						(int32_t)(bit_idx * BLUEBEE_GEN_SPS_HIGH);
+					int32_t symbol_end = symbol_start +
+						(int32_t)BLUEBEE_GEN_SPS_HIGH;
+					int32_t interval_start =
+						valid_start > symbol_start ? valid_start : symbol_start;
+					int32_t interval_end =
+						valid_end < symbol_end ? valid_end : symbol_end;
+					uint32_t tap_start = (uint32_t)(interval_start - start);
+					uint32_t tap_end = (uint32_t)(interval_end - start);
+					float tap_sum = g_gfsk_tap_prefix[tap_end] -
+						g_gfsk_tap_prefix[tap_start];
+					float sym = bits[bit_idx] ? 1.0f : -1.0f;
+
+					acc += tap_sum * sym;
+				}
 			}
 		}
 
@@ -365,26 +451,42 @@ int32_t bluebee_gen_build_payload(const uint8_t *payload, uint32_t payload_len)
 	uint8_t projection_ok = 0u;
 	uint8_t distance_min = 0u;
 	uint8_t distance_max = 0u;
+	uint64_t total_start;
+	uint64_t stage_start;
+	uint64_t stage_end;
+	uint32_t frame_time_us;
+	uint32_t mapping_time_us;
+	uint32_t gfsk_time_us;
 
 	if (!payload || payload_len == 0u ||
 	    payload_len > BLUEBEE_GEN_MAX_PAYLOAD_BYTES)
 		return -1;
 
+	total_start = timing_now();
+	stage_start = total_start;
 	memcpy(g_payload, payload, payload_len);
 
 	if (build_zigbee_phy_frame(g_payload, payload_len,
 				   g_frame, &frame_len) < 0)
 		return -1;
+	stage_end = timing_now();
+	frame_time_us = timing_elapsed_us(stage_start, stage_end);
 
+	stage_start = stage_end;
 	if (zigbee_frame_to_gfsk_bits(g_frame, frame_len,
 				      g_gfsk_bits, g_gfsk_bytes,
 				      &gfsk_bit_count, &projection_ok,
 				      &distance_min, &distance_max) < 0)
 		return -1;
+	stage_end = timing_now();
+	mapping_time_us = timing_elapsed_us(stage_start, stage_end);
 
+	stage_start = stage_end;
 	if (build_iq_words_from_gfsk_bits(g_gfsk_bits, gfsk_bit_count,
 					  g_iq_words, &iq_word_count) < 0)
 		return -1;
+	stage_end = timing_now();
+	gfsk_time_us = timing_elapsed_us(stage_start, stage_end);
 
 	g_meta.payload = g_payload;
 	g_meta.payload_len = payload_len;
@@ -396,8 +498,13 @@ int32_t bluebee_gen_build_payload(const uint8_t *payload, uint32_t payload_len)
 	g_meta.iq_words = g_iq_words;
 	g_meta.iq_word_count = iq_word_count;
 	g_meta.iq_byte_count = iq_word_count * sizeof(uint32_t);
+	g_meta.pre_pad_us = BLUEBEE_GEN_PRE_PAD_US;
 	g_meta.air_us = gfsk_bit_count;
 	g_meta.post_pad_us = BLUEBEE_GEN_POST_PAD_US;
+	g_meta.frame_time_us = frame_time_us;
+	g_meta.mapping_time_us = mapping_time_us;
+	g_meta.gfsk_time_us = gfsk_time_us;
+	g_meta.total_time_us = timing_elapsed_us(total_start, stage_end);
 	g_meta.zigbee_projection_ok = projection_ok;
 	g_meta.symbol_distance_min = distance_min;
 	g_meta.symbol_distance_max = distance_max;

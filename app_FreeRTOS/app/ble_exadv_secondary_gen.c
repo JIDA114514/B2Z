@@ -2,7 +2,12 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "app_config.h"
 #include "ble_exadv_secondary_gen.h"
+
+#ifdef XILINX_PLATFORM
+#include "xtime_l.h"
+#endif
 
 #define BLE_EXADV_DEFAULT_CHANNEL          39u
 #define BLE_EXADV_PREAMBLE_AND_AA_LEN      5u
@@ -81,6 +86,7 @@ static uint8_t g_ll_payload[BLE_EXADV_MAX_LL_PAYLOAD_BYTES];
 static uint32_t g_iq_words[BLE_EXADV_MAX_IQ_WORDS]
 	__attribute__((aligned(64)));
 static float g_gfsk_taps[BLE_EXADV_TAPS];
+static float g_gfsk_tap_prefix[BLE_EXADV_TAPS + 1u];
 static uint8_t g_gfsk_taps_ready;
 static struct ble_exadv_secondary_gen_meta g_meta;
 
@@ -104,6 +110,34 @@ static float wrap_pi(float x)
 		x += two_pi;
 
 	return x;
+}
+
+static uint64_t timing_now(void)
+{
+#ifdef XILINX_PLATFORM
+	XTime now;
+
+	XTime_GetTime(&now);
+	return (uint64_t)now;
+#else
+	return 0u;
+#endif
+}
+
+static uint32_t timing_elapsed_us(uint64_t start, uint64_t end)
+{
+#ifdef XILINX_PLATFORM
+	uint64_t us;
+
+	if (end <= start)
+		return 0u;
+	us = ((end - start) * 1000000ULL) / COUNTS_PER_SECOND;
+	return us > 0xFFFFFFFFULL ? 0xFFFFFFFFu : (uint32_t)us;
+#else
+	(void)start;
+	(void)end;
+	return 0u;
+#endif
 }
 
 static void init_gfsk_taps(void)
@@ -131,6 +165,11 @@ static void init_gfsk_taps(void)
 		for (uint32_t n = 0u; n < BLE_EXADV_TAPS; n++)
 			g_gfsk_taps[n] *= inv_sum;
 	}
+
+	g_gfsk_tap_prefix[0] = 0.0f;
+	for (uint32_t n = 0u; n < BLE_EXADV_TAPS; n++)
+		g_gfsk_tap_prefix[n + 1u] =
+			g_gfsk_tap_prefix[n] + g_gfsk_taps[n];
 
 	g_gfsk_taps_ready = 1u;
 }
@@ -418,17 +457,38 @@ static int32_t build_iq_from_ll_payload(const uint8_t *ll_payload,
 		int32_t ii;
 		int32_t qq;
 
-		for (uint32_t k = 0u; k < BLE_EXADV_TAPS; k++) {
-			int32_t idx = start + (int32_t)k;
+		{
+			int32_t valid_start = start > 0 ? start : 0;
+			int32_t valid_end = start + (int32_t)BLE_EXADV_TAPS;
 
-			if (idx >= 0 && idx < (int32_t)high_count) {
-				uint32_t bit_idx =
-					(uint32_t)idx / BLE_EXADV_SPS_HIGH;
-				float sym = get_ll_bit_lsb_first(ll_payload,
-								  bit_idx) ?
-					    1.0f : -1.0f;
+			if (valid_end > (int32_t)high_count)
+				valid_end = (int32_t)high_count;
+			if (valid_start < valid_end) {
+				uint32_t first_bit =
+					(uint32_t)valid_start / BLE_EXADV_SPS_HIGH;
+				uint32_t last_bit =
+					(uint32_t)(valid_end - 1) / BLE_EXADV_SPS_HIGH;
 
-				acc += g_gfsk_taps[k] * sym;
+				for (uint32_t bit_idx = first_bit;
+				     bit_idx <= last_bit; bit_idx++) {
+					int32_t symbol_start =
+						(int32_t)(bit_idx * BLE_EXADV_SPS_HIGH);
+					int32_t symbol_end = symbol_start +
+						(int32_t)BLE_EXADV_SPS_HIGH;
+					int32_t interval_start =
+						valid_start > symbol_start ? valid_start : symbol_start;
+					int32_t interval_end =
+						valid_end < symbol_end ? valid_end : symbol_end;
+					uint32_t tap_start = (uint32_t)(interval_start - start);
+					uint32_t tap_end = (uint32_t)(interval_end - start);
+					float tap_sum = g_gfsk_tap_prefix[tap_end] -
+						g_gfsk_tap_prefix[tap_start];
+					float sym = get_ll_bit_lsb_first(ll_payload,
+									  bit_idx) ?
+						1.0f : -1.0f;
+
+					acc += tap_sum * sym;
+				}
 			}
 		}
 
@@ -470,9 +530,18 @@ int32_t ble_exadv_secondary_gen_build_payload(const uint8_t *payload,
 	uint32_t pdu_len = 0u;
 	uint32_t ll_payload_len = 0u;
 	uint32_t iq_word_count = 0u;
+	uint64_t total_start = timing_now();
+	uint64_t stage_start = total_start;
+	uint64_t stage_end;
+	uint32_t frame_time_us;
+	uint32_t mapping_time_us;
+	uint32_t gfsk_time_us;
 
 	if (build_zigbee_frame(payload, payload_len, &frame_len) < 0)
 		return -1;
+	stage_end = timing_now();
+	frame_time_us = timing_elapsed_us(stage_start, stage_end);
+	stage_start = stage_end;
 	bluebee_byte_count = build_bluebee_bytes(frame_len);
 
 	if (build_adv_data(bluebee_byte_count, &bluebee_start,
@@ -482,9 +551,14 @@ int32_t ble_exadv_secondary_gen_build_payload(const uint8_t *payload,
 				       bluebee_byte_count, &pdu_len,
 				       &ll_payload_len) < 0)
 		return -1;
+	stage_end = timing_now();
+	mapping_time_us = timing_elapsed_us(stage_start, stage_end);
+	stage_start = stage_end;
 	if (build_iq_from_ll_payload(g_ll_payload, ll_payload_len,
 				     &iq_word_count) < 0)
 		return -1;
+	stage_end = timing_now();
+	gfsk_time_us = timing_elapsed_us(stage_start, stage_end);
 
 	g_meta.zigbee_payload = g_zigbee_payload;
 	g_meta.zigbee_payload_len = payload_len;
@@ -505,6 +579,10 @@ int32_t ble_exadv_secondary_gen_build_payload(const uint8_t *payload,
 	g_meta.iq_byte_count = iq_word_count * sizeof(uint32_t);
 	g_meta.air_us = ll_payload_len * 8u;
 	g_meta.post_pad_us = BLE_EXADV_POST_PAD_US;
+	g_meta.frame_time_us = frame_time_us;
+	g_meta.mapping_time_us = mapping_time_us;
+	g_meta.gfsk_time_us = gfsk_time_us;
+	g_meta.total_time_us = timing_elapsed_us(total_start, stage_end);
 	g_meta.whitening_channel = BLE_EXADV_DEFAULT_CHANNEL;
 	g_meta.tx_lo_hz = BLE_EXADV_SECONDARY_GEN_TX_LO_HZ;
 

@@ -1086,3 +1086,225 @@ ble_tx_adv_name=TEST
 1. 命令提交后无需再输入其它串口命令，BLE_TX_ADV 任务应自动完成生成并开始 ch37 循环发送。
 2. Console 在等待下一条命令时不再阻塞 FreeRTOS 调度。
 3. 若仍需二次串口输入，则下一步应在 BLE_TX_ADV task 中加入 tick 计数日志或 GPIO 翻转，确认任务是否在 `console_get_command()` 等待期间继续运行。
+
+---
+
+## 17. pure realtime 生成瓶颈与 phase 突发帧漏检
+
+### 17.1 问题现象
+
+pure realtime 初始实验同时出现两类问题：
+
+1. 板端使用 Debug `-O0` 构建时，GFSK 波形生成速度过慢，60 秒内只能完成约 17 包，无法满足 1 秒一个时隙的基本性能实验。
+2. phase 诊断接收链能识别部分 preamble/SFD，但 one-shot 帧经常出现 PHR、payload 或 FCS 损坏；循环发送同一波形时却能稳定得到有效帧。
+
+最初 phase 接收端只保留 5 倍采样中的固定 offset 0。每次独立启动的突发帧相对于接收采样时钟具有不同相位，因此固定 offset 会放大 one-shot 帧的采样误差。后续改为五相位并行后，又暴露出 Python 接收端本身的扫描吞吐和缓存截断问题。
+
+### 17.2 板端 GFSK 生成瓶颈及优化
+
+原实现对每个输出 IQ 样本都遍历全部 3072 个 Gaussian taps 做卷积。在 `-O0` 下，这一复杂度成为主要瓶颈。
+
+修复方法：
+
+- 为 Gaussian taps 建立前缀和。
+- 利用 NRZ 输入在一个符号区间内为常量的特点，将逐 tap 卷积改为对重叠的符号区间求和。
+- 每个输出样本只需处理最多约 5 个 NRZ 符号区间，不再循环 3072 个 taps。
+- 保持相位积分、IQ 量化、BlueBee 映射、payload/FCS 生成以及 1 ms 前后静默不变。
+- frame、mapping、GFSK 和 total 四个阶段分别记录耗时，并在最终统计中报告 samples、min、max 和 avg。
+
+相关文件：
+
+```text
+app_FreeRTOS/app/bluebee_gen.c
+app_FreeRTOS/app/ble_exadv_secondary_gen.c
+app_FreeRTOS/app/bluebee_perf.c
+```
+
+主机侧增加了旧逐 tap 实现和新前缀和实现的等价性测试：
+
+- IQ 长度一致。
+- 前后静默长度一致。
+- 有效 IQ 相关系数不低于 0.999。
+- 中心点解调得到的 GFSK bits 完全一致。
+
+测试文件：
+
+```text
+python/perf_test/tests/test_bluebee_gen_waveform.py
+```
+
+### 17.3 `PERF_TIMING` 全部为 0
+
+第一次 1 秒间隔实验已经达到：
+
+```text
+scheduled=60 generated=60 tx_started=60 tx_completed=60
+deadline_miss=0 dma_timeout=0
+```
+
+但四个 `PERF_TIMING` 阶段的 min/max/avg 全部为 0。原因不是生成时间真的小于 1 us，而是生成器源文件没有包含 `app_config.h`，导致 `XILINX_PLATFORM` 对该编译单元不可见，计时函数进入了返回 0 的非平台 fallback。
+
+修复方法：
+
+- 板端生成器显式包含 `app_config.h`，使用 Xilinx 全局定时器。
+- 主机波形等价性测试通过 `BLUEBEE_GEN_HOST_TEST` 隔离板端头文件和计时实现。
+
+修复后的 run 1235，配置为 10 字节 payload、5 秒间隔、持续 60 秒，结果如下：
+
+```text
+PERF_STATS final=1 test=pure state=complete payload_len=10
+interval_us=5000000 duration_s=60 run_id=1235 mode=realtime
+expected_packets=12 scheduled=12 generated=12 tx_started=12 tx_completed=12
+deadline_miss=0 dma_timeout=0
+
+PERF_TIMING stage=frame   samples=12 min_us=3     max_us=4     avg_us=3
+PERF_TIMING stage=mapping samples=12 min_us=1008  max_us=1013  avg_us=1010
+PERF_TIMING stage=gfsk    samples=12 min_us=22120 max_us=22928 avg_us=22222
+PERF_TIMING stage=total   samples=12 min_us=23137 max_us=23944 avg_us=23237
+```
+
+判读：
+
+- 板端 12 个计划时隙全部完成生成和 DMA 发送，没有 deadline miss 或 DMA timeout。
+- 单包平均生成总耗时约 23.237 ms，其中 GFSK 约占 22.222 ms，是主要开销。
+- 当前实现的 10 字节 payload 生成上限约为 43 包/秒，已足以支持 1 秒和 5 秒间隔实验。
+- 因此后续 one-shot 少收不能继续归因于原来的 60 秒仅生成 17 包问题。
+
+### 17.4 五相位 phase 诊断接收
+
+为避免固定采样相位漏掉独立突发帧，phase 诊断链改为同时输出五个 offset：
+
+```text
+offset 0 -> tcp://127.0.0.1:55557
+offset 1 -> tcp://127.0.0.1:55558
+offset 2 -> tcp://127.0.0.1:55559
+offset 3 -> tcp://127.0.0.1:55560
+offset 4 -> tcp://127.0.0.1:55561
+```
+
+`zigbee_perf_rx.py` 增加：
+
+```text
+--phase-keep-offset auto|0|1|2|3|4
+```
+
+phase 模式默认使用 `auto`。auto 同时读取五路候选，优先级依次考虑有效 FCS、preamble 距离和整帧距离。同一接收循环中由多个 offset 解出的相同 Sequence 只计一次；后续循环再次收到相同 Sequence 才计为真正的 duplicate。标准验收链 `zigbee_rx.py`/55556 保持不变，五相位只用于诊断。
+
+相关文件：
+
+```text
+python/ctc_sim/std_zigbee/gr_zigbee.py
+python/perf_test/zigbee_perf_rx.py
+```
+
+### 17.5 phase 宽松 preamble 检测产生噪声伪候选
+
+为了容忍突发帧采样误差，phase 诊断曾允许 preamble/SFD 存在一个符号错误，同时要求 PHR 精确、payload FCS 正确。新实验只报告约 5 次 CRC 错误而没有有效 Sequence，检查 JSON 后发现这些候选并非真实发送帧：
+
+- 实际记录到 6 个 CRC failure。
+- SFD 解成 `A0`，而期望值为 `A7`。
+- preamble distance 为 93--191，整帧 distance 为 256--546。
+- 候选时间戳不符合板端 5 秒发送周期。
+- 此前真实有效帧的 preamble distance 约为 22，整帧 distance 约为 51。
+
+因此这些 CRC failure 主要是宽松相关器在噪声中产生的伪候选，不能解释为板端发送的 5/6 个帧到达但 FCS 损坏。
+
+修复方法：phase 候选增加平均每符号最大 4 chips 的距离门限，超过门限的噪声候选在进入协议统计前丢弃；standard 接收链不改。
+
+### 17.6 循环波形对照实验及其正确判读
+
+循环发送 run 1237 的固定帧：
+
+```text
+B2 5A 01 0A D5 04 00 00 00 00
+```
+
+接收端在约 15.394 秒内得到：
+
+```text
+unique=1 duplicate=19 crc_failure=0
+```
+
+五个 offset 都能解出有效 FCS，候选计数分别为：
+
+```text
+offset0=17 offset1=14 offset2=18 offset3=17 offset4=20
+```
+
+这证明：
+
+- 当前 BlueBee 波形、映射、极性和 phase 解码器之间能够形成完整有效帧。
+- 五个采样 offset 都可能成功，不能把问题简化为“只有某一个固定 offset 正确”。
+
+但该实验不能证明 one-shot DMA 有问题，也不能把 `1 unique + 19 duplicate` 当作板端只发送了 20 包。循环 DMA 在 15 秒内实际重复了大量帧，而接收端仅约每 0.75--0.8 秒产出一次结果。这个异常周期最终指向主机接收器的扫描吞吐瓶颈。
+
+### 17.7 根因：五相位 Python 扫描慢于缓存保留时间
+
+旧实现的五相位噪声扫描一次约需 0.622 秒，而每相位只保留：
+
+```text
+MAX_CHIPS=12000
+chip rate=2 Mchip/s
+buffer span=6 ms
+```
+
+当扫描线程忙于处理上一轮数据时，ZMQ 中会继续积累样本。下一次读取把积压数据拼接后又只保留最后 6 ms，导致位于更早位置的稀疏 one-shot 突发帧在分析前就被截掉。循环波形的任意尾部窗口通常仍含有一帧，因此表现为循环能稳定解码，而 5 秒间隔的 one-shot 大量漏检。
+
+这也解释了 run 1237 的 duplicate 约按 0.75--0.8 秒出现：它更接近 Python 扫描周期，而不是实际 RF 发包周期。
+
+### 17.8 phase 扫描性能优化
+
+已实施以下优化：
+
+- 使用 NumPy 向量化完成 chips 到 symbols 的距离计算。
+- 增加已知 BlueBee optimized map 的快速 phase detector：先对 2 个 preamble symbols 做短相关，只在命中附近解完整帧。
+- `MAX_CHIPS` 从 12000 增至 24000，缓存保留时间从 6 ms 增至 12 ms。
+- live auto 在未锁定极性前，每轮只扫描一种极性，并在 normal/inverted 间轮换；一旦出现有效 FCS，就锁定该极性，避免每轮重复做两倍工作。
+- CSV 增加实际 phase offset、极性、preamble/frame distance；JSON 增加 `phase_scan_timing`，记录 samples、avg_ms、max_ms 和 buffer_span_ms。
+
+性能变化：
+
+| 实现 | 五相位单轮扫描时间 | 缓存保留时间 |
+|---|---:|---:|
+| 原始全帧 Python 扫描 | 约 622 ms | 6 ms |
+| symbols 向量化后 | 约 289 ms | 6 ms |
+| 快速前缀检测中间版本 | 约 54 ms | 6 ms |
+| 3-symbol 前缀 | 约 15.7 ms | 6 ms |
+| 最终 2-symbol、单极性扫描 | 约 9.0 ms | 12 ms |
+
+最终基准约 9 ms，低于 12 ms 缓存窗口，已消除已知的“扫描尚未完成，突发数据先被尾部截断”条件。
+
+Python 单元测试覆盖五个 phase offset、反相极性、跨 offset 去重、真实 duplicate、FCS failure、宽松 preamble 和快速 detector；当前 13 个测试均通过。Python 语法检查、ARM `-O0` 完整链接和 `git diff --check` 也已通过。板端源文件已同步到 SDK 实际编译目录。
+
+### 17.9 当前结论与下一步验证
+
+当前可确认：
+
+1. 板端 realtime 生成瓶颈已经解决，60 个 1 秒时隙可全部完成，DMA 计数无异常。
+2. `PERF_TIMING` 计时为 0 的问题已经修复，当前实测单包生成约 23 ms。
+3. 循环波形能得到有效 FCS，说明波形和 phase 解码链可以正确配合。
+4. 旧 phase auto 对稀疏 one-shot 的主要已知漏检原因是主机扫描速度远慢于缓存窗口，而不是已经证实的 one-shot DMA 故障。
+5. phase 中少量高距离 CRC failure 是噪声伪候选，不能计作实际接收包。
+
+下一轮先用固定 offset 0 降低诊断变量：
+
+```text
+python3 python/perf_test/zigbee_perf_rx.py \
+  --chip-source phase \
+  --phase-keep-offset 0 \
+  --duration 80 \
+  --run-id 1238 \
+  --payload-len 10 \
+  --output-prefix python/perf_test/pure-1238-phase0
+
+bluebee_pure_perf_start? 10 5000000 60 1238 0
+```
+
+验证时必须同时检查：
+
+- JSON 中 `phase_scan_timing.avg_ms` 和 `max_ms` 是否持续低于 `buffer_span_ms=12`。
+- 有效 FCS 帧的 Run ID、Sequence 和确定性填充是否正确。
+- 板端 `tx_completed=12` 时，接收端 unique、duplicate 和 CRC failure 的实际值。
+- 固定 offset 验证后再使用 phase auto；最终 PRR 仍以 standard/55556 接收链和同一 Run ID 的板端最终统计合并计算。
+
+若优化后的 phase 能稳定收到 one-shot，而 standard 仍失败，应将问题单独归入标准 OQPSK 定时恢复，不再归因于板端生成或 DMA。

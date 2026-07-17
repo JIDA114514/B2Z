@@ -601,19 +601,19 @@ int32_t axi_dmac_transfer_start(struct axi_dmac *dmac,
 		}
 	}
 
-	/* Cyclic transfers set to HW or SW depending on size for MEM to DEV. */
-	if ((dmac->direction == DMA_MEM_TO_DEV) && (dmac->transfer.cyclic == CYCLIC)) {
-		if ((dmac->remaining_size - 1) <= dmac->max_length) {
-			if (dmac->hw_cyclic) {
-				axi_dmac_read(dmac, AXI_DMAC_REG_FLAGS, &reg_val);
-				reg_val = reg_val | DMA_CYCLIC;
-				axi_dmac_write(dmac, AXI_DMAC_REG_FLAGS, reg_val);
-			}
-		} else {
-			axi_dmac_read(dmac, AXI_DMAC_REG_FLAGS, &reg_val);
-			reg_val = reg_val & ~DMA_CYCLIC;
-			axi_dmac_write(dmac, AXI_DMAC_REG_FLAGS, reg_val);
-		}
+	/*
+	 * Configure HW cyclic mode for every MEM_TO_DEV transfer.  The flag is
+	 * persistent, so a non-cyclic transfer must explicitly clear state left by
+	 * an earlier cyclic transfer.
+	 */
+	if (dmac->direction == DMA_MEM_TO_DEV) {
+		axi_dmac_read(dmac, AXI_DMAC_REG_FLAGS, &reg_val);
+		if ((dmac->transfer.cyclic == CYCLIC) && dmac->hw_cyclic &&
+		    ((dmac->remaining_size - 1) <= dmac->max_length))
+			reg_val |= DMA_CYCLIC;
+		else
+			reg_val &= ~DMA_CYCLIC;
+		axi_dmac_write(dmac, AXI_DMAC_REG_FLAGS, reg_val);
 	}
 
 	/* Enable DMA if not already enabled. */

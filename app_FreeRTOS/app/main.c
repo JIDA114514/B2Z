@@ -100,6 +100,7 @@ static uint8_t out_buff[MAX_SIZE_BASE_ADDR];
 #include "command.h"
 #include "console.h"
 #include "ble_tx_adv.h"
+#include "bluebee_perf.h"
 #endif
 
 /******************************************************************************/
@@ -1136,12 +1137,14 @@ fail:
 /* FreeRTOS application tasks                               */
 /*-----------------------------------------------------------*/
 
-#define FREERTOS_CONSOLE_TASK_PRIORITY        1
+#define FREERTOS_CONSOLE_TASK_PRIORITY        7
 #define FREERTOS_CONSOLE_TASK_STACK_WORDS     2048
 #define FREERTOS_BLE_CONTROL_TASK_PRIORITY    5
 #define FREERTOS_BLE_CONTROL_TASK_STACK_WORDS 2048
 #define FREERTOS_BLE_TX_ADV_TASK_PRIORITY     8
 #define FREERTOS_BLE_TX_ADV_TASK_STACK_WORDS  4096
+#define FREERTOS_BLUEBEE_PERF_TASK_PRIORITY   6
+#define FREERTOS_BLUEBEE_PERF_TASK_STACK_WORDS 4096
 #define FREERTOS_DMAC_POLL_TASK_PRIORITY      8
 #define FREERTOS_DMAC_POLL_TASK_STACK_WORDS   512
 #define FREERTOS_DMAC_POLL_PERIOD_MS          1
@@ -1714,9 +1717,11 @@ int main(void)
 		BaseType_t       rc_console;
 		BaseType_t       rc_ble_control;
 		BaseType_t       rc_ble_tx_adv;
+		BaseType_t       rc_bluebee_perf;
 		TaskHandle_t     h_console = NULL;
 		TaskHandle_t     h_ble_control = NULL;
 		TaskHandle_t     h_ble_tx_adv = NULL;
+		TaskHandle_t     h_bluebee_perf = NULL;
 #endif
 #ifdef FREERTOS_ENABLE_COUNTER_TEST_TASKS
 		BaseType_t       rc_cnt1;
@@ -1768,6 +1773,11 @@ int main(void)
 					     NULL,
 					     FREERTOS_BLE_TX_ADV_TASK_PRIORITY,
 					     &h_ble_tx_adv );
+		rc_bluebee_perf = xTaskCreate( bluebee_perf_task, "BLUEBEE_PERF",
+					       FREERTOS_BLUEBEE_PERF_TASK_STACK_WORDS,
+					       NULL,
+					       FREERTOS_BLUEBEE_PERF_TASK_PRIORITY,
+					       &h_bluebee_perf );
 #endif
 #ifdef FREERTOS_ENABLE_COUNTER_TEST_TASKS
 		rc_cnt1 = xTaskCreate( vCounterTask1, "Cnt1", 512, NULL, 2, &h_cnt1 );
@@ -1784,6 +1794,7 @@ int main(void)
 		    || ( rc_console != pdPASS )
 		    || ( rc_ble_control != pdPASS )
 		    || ( rc_ble_tx_adv != pdPASS )
+		    || ( rc_bluebee_perf != pdPASS )
 #endif
 #ifdef FREERTOS_ENABLE_COUNTER_TEST_TASKS
 		    || ( rc_cnt1 != pdPASS ) || ( rc_cnt2 != pdPASS )

@@ -58,9 +58,18 @@ class gr_zigbee(gr.top_block):
         ##################################################
 
         self.zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_char, 1, 'tcp://127.0.0.1:55556', 100, False, (20), '', True, True)
-        self.phase_zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_char, 1, 'tcp://127.0.0.1:55557', 100, False, (20), '', True, True)
         self.unpacked_to_packed = blocks.unpacked_to_packed_bb(1, gr.GR_LSB_FIRST)
-        self.phase_unpacked_to_packed = blocks.unpacked_to_packed_bb(1, gr.GR_LSB_FIRST)
+        self.phase_zeromq_pub_sinks = [
+            zeromq.pub_sink(
+                gr.sizeof_char, 1, f'tcp://127.0.0.1:{55557 + offset}',
+                100, False, (20), '', True, True
+            )
+            for offset in range(demod_sps)
+        ]
+        self.phase_unpacked_to_packeds = [
+            blocks.unpacked_to_packed_bb(1, gr.GR_LSB_FIRST)
+            for _ in range(demod_sps)
+        ]
 
         self.rtlsdr_source_0 = osmosdr.source(
             args="numchan=" + str(1) + " " + "hackrf=0"
@@ -87,8 +96,13 @@ class gr_zigbee(gr.top_block):
         self.phase_conj = blocks.conjugate_cc()
         self.phase_multiply = blocks.multiply_vcc(1)
         self.phase_arg = blocks.complex_to_arg(1)
-        self.phase_keep = blocks.keep_m_in_n(gr.sizeof_float, 1, demod_keep_n, phase_keep_offset)
-        self.phase_slicer = digital.binary_slicer_fb()
+        self.phase_keeps = [
+            blocks.keep_m_in_n(gr.sizeof_float, 1, demod_keep_n, offset)
+            for offset in range(demod_sps)
+        ]
+        self.phase_slicers = [
+            digital.binary_slicer_fb() for _ in range(demod_sps)
+        ]
 
         # Split I/Q
         self.complex_to_real = blocks.complex_to_real(1)
@@ -144,10 +158,17 @@ class gr_zigbee(gr.top_block):
         self.connect((self.phase_delay, 0), (self.phase_conj, 0))
         self.connect((self.phase_conj, 0), (self.phase_multiply, 1))
         self.connect((self.phase_multiply, 0), (self.phase_arg, 0))
-        self.connect((self.phase_arg, 0), (self.phase_keep, 0))
-        self.connect((self.phase_keep, 0), (self.phase_slicer, 0))
-        self.connect((self.phase_slicer, 0), (self.phase_unpacked_to_packed, 0))
-        self.connect((self.phase_unpacked_to_packed, 0), (self.phase_zeromq_pub_sink, 0))
+        for offset in range(demod_sps):
+            self.connect((self.phase_arg, 0), (self.phase_keeps[offset], 0))
+            self.connect((self.phase_keeps[offset], 0), (self.phase_slicers[offset], 0))
+            self.connect((self.phase_slicers[offset], 0), (self.phase_unpacked_to_packeds[offset], 0))
+            self.connect((self.phase_unpacked_to_packeds[offset], 0), (self.phase_zeromq_pub_sinks[offset], 0))
+
+        # Backward-compatible aliases for code that only inspects offset 0.
+        self.phase_keep = self.phase_keeps[0]
+        self.phase_slicer = self.phase_slicers[0]
+        self.phase_unpacked_to_packed = self.phase_unpacked_to_packeds[0]
+        self.phase_zeromq_pub_sink = self.phase_zeromq_pub_sinks[0]
 
     def get_transition_width(self):
         return self.transition_width
@@ -236,8 +257,9 @@ class gr_zigbee(gr.top_block):
             self.i_keep.set_n(self.demod_sps)
         if hasattr(self, 'q_keep'):
             self.q_keep.set_n(self.demod_sps)
-        if hasattr(self, 'phase_keep'):
-            self.phase_keep.set_n(self.demod_sps)
+        if hasattr(self, 'phase_keeps'):
+            for keep in self.phase_keeps:
+                keep.set_n(self.demod_sps)
 
     def get_demod_keep_offset(self):
         return self.demod_keep_offset
@@ -253,9 +275,9 @@ class gr_zigbee(gr.top_block):
         return self.phase_keep_offset
 
     def set_phase_keep_offset(self, phase_keep_offset):
-        self.phase_keep_offset = int(phase_keep_offset)
-        if hasattr(self, 'phase_keep'):
-            self.phase_keep.set_offset(self.phase_keep_offset)
+        # The diagnostic graph now publishes every fixed phase concurrently;
+        # consumers select the corresponding 55557..55561 endpoint.
+        self.phase_keep_offset = int(phase_keep_offset) % self.demod_sps
 
     def get_freq_offset(self):
         return self.freq_offset

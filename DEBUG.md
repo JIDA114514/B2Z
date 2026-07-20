@@ -1252,14 +1252,15 @@ buffer span=6 ms
 
 这也解释了 run 1237 的 duplicate 约按 0.75--0.8 秒出现：它更接近 Python 扫描周期，而不是实际 RF 发包周期。
 
-### 17.8 phase 扫描性能优化
+### 17.8 解决方案：phase 扫描性能优化
 
 已实施以下优化：
 
-- 使用 NumPy 向量化完成 chips 到 symbols 的距离计算。
-- 增加已知 BlueBee optimized map 的快速 phase detector：先对 2 个 preamble symbols 做短相关，只在命中附近解完整帧。
+- `chips_to_symbols()` 使用 NumPy 将全部 32-chip symbol 批量 pack 成整数，一次性与 16 个参考 symbol 做 XOR，通过 8 位 popcount 查表计算 Hamming distance，再使用 `argmin` 选择最近 symbol，替代逐 symbol/逐参考码的 Python 循环。
+- 增加已知 BlueBee optimized map 的 `find_phase_frame_candidate_fast()`：根据预期 payload 长度构造 preamble/SFD/PHR chip 前缀，先对 2 个 symbols 做向量化短相关，只对距离门限内、互相至少间隔 32 chips 的位置解完整帧，每个极性最多检查 16 个位置。
 - `MAX_CHIPS` 从 12000 增至 24000，缓存保留时间从 6 ms 增至 12 ms。
 - live auto 在未锁定极性前，每轮只扫描一种极性，并在 normal/inverted 间轮换；一旦出现有效 FCS，就锁定该极性，避免每轮重复做两倍工作。
+- auto 模式按 FCS、prefix symbol errors、preamble distance 和整帧 distance 对五个 offset 的候选排序；同一接收循环命中的所有 offset 一起消费，只向 SequenceTracker 提交一次，避免跨 offset 虚增 duplicate。
 - CSV 增加实际 phase offset、极性、preamble/frame distance；JSON 增加 `phase_scan_timing`，记录 samples、avg_ms、max_ms 和 buffer_span_ms。
 
 性能变化：
@@ -1276,17 +1277,11 @@ buffer span=6 ms
 
 Python 单元测试覆盖五个 phase offset、反相极性、跨 offset 去重、真实 duplicate、FCS failure、宽松 preamble 和快速 detector；当前 13 个测试均通过。Python 语法检查、ARM `-O0` 完整链接和 `git diff --check` 也已通过。板端源文件已同步到 SDK 实际编译目录。
 
-### 17.9 当前结论与下一步验证
+当前 GNU Radio 流图会无条件生成五路 phase：公共的 phase difference 只计算一次，但每个 offset 都有独立的 keep、binary slicer、packer 和 ZMQ PUB。每路约 250 KB/s，五路约 1.25 MB/s；固定 offset 时 Python 只订阅一路，但 GNU Radio 侧仍承担五路发布开销。auto 模式还会使 Python 收包和候选搜索量接近固定 offset 的五倍，因此必须使用 `phase_scan_timing.max_ms < buffer_span_ms` 作为运行时安全判据。
 
-当前可确认：
+### 17.9 修复验证：run 1238 one-shot 全部接收
 
-1. 板端 realtime 生成瓶颈已经解决，60 个 1 秒时隙可全部完成，DMA 计数无异常。
-2. `PERF_TIMING` 计时为 0 的问题已经修复，当前实测单包生成约 23 ms。
-3. 循环波形能得到有效 FCS，说明波形和 phase 解码链可以正确配合。
-4. 旧 phase auto 对稀疏 one-shot 的主要已知漏检原因是主机扫描速度远慢于缓存窗口，而不是已经证实的 one-shot DMA 故障。
-5. phase 中少量高距离 CRC failure 是噪声伪候选，不能计作实际接收包。
-
-下一轮先用固定 offset 0 降低诊断变量：
+固定 offset 0 的验证命令：
 
 ```text
 python3 python/perf_test/zigbee_perf_rx.py \
@@ -1300,11 +1295,41 @@ python3 python/perf_test/zigbee_perf_rx.py \
 bluebee_pure_perf_start? 10 5000000 60 1238 0
 ```
 
-验证时必须同时检查：
+板端发送 12 包，接收结果：
+
+```text
+unique=12 duplicate=0 out_of_order=0 longest_loss_burst=0
+sequence=0..11
+phase_scan avg=2.206 ms max=5.013 ms buffer=12 ms
+```
+
+在板端 `tx_completed=12` 的前提下：
+
+```text
+调度完成率  = 12/12 = 100%
+无线 PRR     = 12/12 = 100%
+端到端接收率 = 12/12 = 100%
+```
+
+本轮还有 3 个 FCS failure，但它们分别具有 100--111 的 preamble distance、317--361 的 frame distance、7--8 个 prefix symbol errors，出现时间也不符合 5 秒发送周期，且没有有效 Run ID/Sequence。有效帧的 preamble distance 为 0--34、frame distance 为 0--96，因此这 3 个记录是噪声伪候选，不是 12 个已发送包的错误副本。
+
+该结果证明扫描优化已经消除当前已知的 Python 缓存截断问题：平均和最大扫描时间都低于 12 ms 缓存窗口，12 个稀疏 one-shot 均在正确时隙被识别。
+
+### 17.10 当前结论与下一步验证
+
+当前可确认：
+
+1. 板端 realtime 生成瓶颈已经解决，60 个 1 秒时隙可全部完成，DMA 计数无异常。
+2. `PERF_TIMING` 计时为 0 的问题已经修复，当前实测单包生成约 23 ms。
+3. 循环波形能得到有效 FCS，说明波形和 phase 解码链可以正确配合。
+4. 旧 phase auto 对稀疏 one-shot 的主要已知漏检原因是主机扫描速度远慢于缓存窗口，而不是已经证实的 one-shot DMA 故障。
+5. phase 中少量高距离 CRC failure 是噪声伪候选，不能计作实际接收包。
+
+固定 offset 0 已完成验证。下一步使用 phase auto 验证五路候选选择，再切换到 standard/55556 进行正式 PRR 验收。验证时必须同时检查：
 
 - JSON 中 `phase_scan_timing.avg_ms` 和 `max_ms` 是否持续低于 `buffer_span_ms=12`。
 - 有效 FCS 帧的 Run ID、Sequence 和确定性填充是否正确。
-- 板端 `tx_completed=12` 时，接收端 unique、duplicate 和 CRC failure 的实际值。
-- 固定 offset 验证后再使用 phase auto；最终 PRR 仍以 standard/55556 接收链和同一 Run ID 的板端最终统计合并计算。
+- phase auto 是否仍能做到跨 offset 只统计一次，且不会因五路开销重新出现缓存截断。
+- 最终 PRR 仍以 standard/55556 接收链和同一 Run ID 的板端最终统计合并计算；接收 JSON 必须使用 `--board-stats` 或后处理方式填入板端统计，不能保持 `board=null`。
 
 若优化后的 phase 能稳定收到 one-shot，而 standard 仍失败，应将问题单独归入标准 OQPSK 定时恢复，不再归因于板端生成或 DMA。

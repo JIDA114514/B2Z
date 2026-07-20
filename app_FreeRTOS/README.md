@@ -484,7 +484,78 @@ FreeRTOS 移植内建了多级验证机制：
 
 这些计数器通过串口命令可读，用于诊断 "IRQ 是否到达 GIC → 是否被 FreeRTOS 分发 → ISR 是否被调用 → 信号量是否释放" 的完整链路。
 
-## 十四、关键文件索引
+## 十四、BlueBee 性能测试与 realtime 生成优化
+
+当前板端性能测试集成在 FreeRTOS 应用中；公共 payload 构造逻辑位于 `FREERTOS_INTEGRATION` 条件块之外，驱动修改继续保留裸机编译路径，但 `app_B2Z/` 尚未创建对应的性能任务和命令入口。
+
+### 14.1 测试协议和命令
+
+每包前 10 字节为固定测试头：
+
+| 偏移 | 字段 | 编码 |
+|---:|---|---|
+| 0--1 | Magic | `B2 5A` |
+| 2 | Version | `1` |
+| 3 | Header length | `10` |
+| 4--5 | Run ID | 小端 16 位 |
+| 6--9 | Sequence | 小端 32 位 |
+
+10 字节之后使用 32 位 LCG 确定性填充，初始值为 `0xB25A5A2D ^ (run_id << 16) ^ sequence`。接收端会重建并比较整个 payload，而不是只检查测试头。
+
+命令格式：
+
+```text
+bluebee_pure_perf_start? <payload_len> <interval_us> <duration_s> [run_id] [mode] [batch_size]
+bluebee_exadv_perf_start? <payload_len> <interval_us> <duration_s> [run_id] [mode] [batch_size]
+bluebee_perf_status?
+bluebee_perf_stop?
+```
+
+`payload_len` 为 10--46，`duration_s` 为 0--600，参数只接受十进制整数。当前 Phase 1 只实现 `mode=0` realtime；`mode=1` batch 和 `mode=2` double 仅保留参数协议，使用时会返回 `PERF_ERROR`。
+
+### 14.2 时隙、DMA 和统计
+
+- Sequence 取计划时隙编号；生成或 DMA 失败时不回退、不补发、不复用。
+- IRQ 关闭时主动读取 DMAC `TRANSFER_SUBMIT`、`TRANSFER_DONE` 和 `IRQ_PENDING`，不能依赖 IRQ 回调确认完成。
+- `PERF_STATS` 输出 `scheduled`、`generated`、`tx_started`、`tx_completed`、`deadline_miss`、`dma_timeout`。
+- `PERF_TIMING` 输出 frame、mapping、GFSK、total 四阶段的 samples/min/max/avg。
+- pure 发送保留 1 ms 前置和后置静默，one-shot DMA 每个计划时隙独立提交。
+- pure 和 exadv 共用相同测试头、Sequence 和填充规则；exadv 先发 primary，再按 AuxOffset 发送包含 BlueBee 负载的 secondary。
+
+### 14.3 Gaussian 卷积优化
+
+Debug `-O0` 下，旧生成器对每个 IQ 样本遍历全部 3072 个 Gaussian taps，60 秒只能生成约 17 包。当前实现为 taps 建立前缀和，利用 NRZ 在符号区间内恒定的特性，将逐 tap 乘加改成最多约 5 个符号区间求和。
+
+该优化保持以下行为不变：
+
+- ZigBee frame、FCS 和 optimized BlueBee chip map。
+- GFSK 相位积分和 IQ 量化。
+- 有效 IQ 长度以及 1 ms 前后静默。
+- TX LO、DMA word 格式和 one-shot 提交流程。
+
+主机等价性测试比较新旧实现，要求 IQ 相关系数不低于 0.999，且中心点解调出的 GFSK bits 完全一致。
+
+### 14.4 实测结果
+
+10 字节 pure realtime 的 run 1235：
+
+```text
+scheduled=12 generated=12 tx_started=12 tx_completed=12
+deadline_miss=0 dma_timeout=0
+frame avg=3 us mapping avg=1010 us gfsk avg=22222 us total avg=23237 us
+```
+
+1 秒间隔的 60 秒实验也达到 `scheduled=generated=tx_started=tx_completed=60`，且 `deadline_miss=0`、`dma_timeout=0`。这表明原来的板端生成瓶颈已经解决；后续无线少收必须与接收端 Run ID/Sequence 和板端最终计数合并判断。
+
+`PERF_TIMING` 曾全部为 0，原因是生成器编译单元没有包含 `app_config.h`，导致 `XILINX_PLATFORM` 不可见并进入计时 fallback。当前生成器已显式包含平台配置；主机测试使用 `BLUEBEE_GEN_HOST_TEST` 隔离板端计时头文件。
+
+板端源码修改后还必须同步到 SDK 实际编译目录：
+
+```text
+hdl/projects/antsdre310/antsdre310.sdk/app/src/app/
+```
+
+## 十五、关键文件索引
 
 | 文件 | 内容 |
 |------|------|
@@ -500,5 +571,8 @@ FreeRTOS 移植内建了多级验证机制：
 | [drivers/console.c](drivers/console.c) | Console 互斥锁、非阻塞 UART 读取 |
 | [app/command.c](app/command.c) | 统一命令分发、文本参数解析、BLE 请求队列和 `BLE_CTRL` 任务 |
 | [app/ble_tx_adv.c](app/ble_tx_adv.c) | BLE advertising 波形生成与 `BLE_TX_ADV` 发送任务 |
+| [app/bluebee_perf.c](app/bluebee_perf.c) | 测试 payload、时隙调度、pure/exadv realtime 发送、DMA 轮询和性能统计 |
+| [app/bluebee_gen.c](app/bluebee_gen.c) | pure BlueBee frame/mapping/GFSK 生成和 Gaussian 前缀和优化 |
+| [app/ble_exadv_secondary_gen.c](app/ble_exadv_secondary_gen.c) | exadv secondary/BlueBee 波形生成和分阶段耗时元数据 |
 | [drivers/delay.c](drivers/delay.c) | 调度感知的 `no_os_mdelay()` |
 | [drivers/xilinx_irq.c](drivers/xilinx_irq.c) | IRQ 初始化（跳过 `Xil_ExceptionInit`、暴露 GIC 实例） |

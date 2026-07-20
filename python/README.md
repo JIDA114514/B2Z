@@ -9,6 +9,7 @@
 | `std_ble/` | 当前 BLE 物理层、extended advertising 生成和 BLE/HackRF 接收调试代码。 |
 | `ctc_sim/bluebee/` | 当前 BlueBee 论文复现实验、BlueBee/ZigBee 波形生成和接收验证代码。 |
 | `ctc_sim/std_zigbee/` | 当前标准 ZigBee 生成、GNU Radio 接收流图和 frame 解析代码。 |
+| `perf_test/` | BlueBee 性能测试协议、Run ID/Sequence 统计、phase 诊断接收、CSV/JSON 原始结果和单元测试。 |
 | `ctc_sim/patternbee/` | 历史 PatternBee 实验代码，当前 FreeRTOS/BlueBee 主线不依赖。 |
 | `ctc_sim/` 顶层脚本 | 离线分析和旧实验辅助脚本，使用前先查看脚本 `--help` 或源码入口。 |
 
@@ -26,6 +27,7 @@
 | `std_ble/ble_exadv_hackrf_sniffer.py` | BLE extended advertising 捕获和时序调试入口。 |
 | `std_ble/ble_packet_detector.py` | BLE packet 检测调试入口。 |
 | `ctc_sim/std_zigbee/generate_zigbee_iq_30_72M.py` | 标准 ZigBee 30.72 MSPS 头文件生成辅助入口。 |
+| `perf_test/zigbee_perf_rx.py` | 标准/五相位性能接收、FCS/payload 校验、序列统计及板端日志合并入口。 |
 
 查看脚本参数时从仓库根目录执行：
 
@@ -35,6 +37,7 @@ python3 python/ctc_sim/bluebee/generate_bluebee_zigbee_frame_iq_30_72M.py --help
 python3 python/ctc_sim/bluebee/generate_bluebee_iq_30_72M.py --help
 python3 python/ctc_sim/std_zigbee/zigbee_rx.py --help
 python3 python/ctc_sim/bluebee/bluebee_rx.py --help
+python3 python/perf_test/zigbee_perf_rx.py --help
 ```
 
 ## 运行约定
@@ -45,6 +48,64 @@ python3 python/ctc_sim/bluebee/bluebee_rx.py --help
 - 新增脚本应支持 `--help`，并把可复制的主线命令写到根目录 `README.md`，不要在本文件重复参数表。
 - 生成的 `.h`、`.iq`、`.c64` 和临时捕获文件容易覆盖已有结果；调试时优先输出到 `/tmp`。
 - 面向 AD9363 TX DMA 的 30.72 MSPS C 头文件仍使用当前工程约定：`uint32_t` 中高 16 位为 Q、低 16 位为 I，并按双通道 DMA 格式重复采样。
+
+## BlueBee 性能接收与 phase 诊断
+
+### 接收入口和数据流
+
+`perf_test/zigbee_perf_rx.py` 是当前性能统计入口。`ctc_sim/std_zigbee/gr_zigbee.py` 同时提供：
+
+| 数据流 | ZMQ | 用途 |
+|---|---:|---|
+| standard | 55556 | 正式 ZigBee OQPSK 验收 |
+| phase offset 0 | 55557 | BlueBee 相位差诊断 |
+| phase offset 1--4 | 55558--55561 | 其余四个 5 倍采样相位 |
+
+phase 模式支持：
+
+```text
+--phase-keep-offset auto|0|1|2|3|4
+```
+
+`auto` 同时扫描五路，按 FCS、preamble distance 和整帧 distance 选择最佳候选。同一次接收循环中多个 offset 解出的相同突发只提交一次，之后真正再次收到相同 Sequence 才计入 duplicate。固定 offset 只在 Python 中订阅一路，但当前 GNU Radio 流图仍会生成和发布全部五路。
+
+五路 phase 每路为 2 Mchip/s，打包后约 250 KB/s，合计约 1.25 MB/s。公共相位差只计算一次，但五套 keep/slicer/packer/ZMQ sink 会带来额外调度和消息开销；auto 的 Python 扫描量也接近固定 offset 的五倍。因此 phase 只作为诊断链，最终 PRR 使用 standard/55556。
+
+### one-shot 漏检及接收器优化
+
+旧实现对整个缓存做 Python 全帧搜索，五相位单轮约需 622 ms，而 `MAX_CHIPS=12000` 在 2 Mchip/s 下只保留 6 ms。稀疏 one-shot 突发在轮到分析前已被尾部截断；循环波形因为任意尾部窗口仍可能包含帧，所以表现为“循环能收、one-shot 少收”。
+
+当前优化包括：
+
+1. `chips_to_symbols()` 使用 NumPy 批量 pack、XOR、popcount 和 `argmin`，替代逐 symbol/逐参考码 Python 循环。
+2. `find_phase_frame_candidate_fast()` 根据已知 payload 长度和 optimized map 构造前缀，先对 2 个 symbol 做向量化相关，只在最多 16 个非相邻命中位置解完整帧。
+3. `MAX_CHIPS` 增至 24000，缓存窗口从 6 ms 增至 12 ms。
+4. 未锁定极性时每轮只扫描 normal 或 inverted 之一并交替；首次有效 FCS 后锁定极性。
+5. JSON 的 `phase_scan_timing` 记录 samples、avg_ms、max_ms 和 buffer_span_ms，用于直接判断扫描是否会追不上缓存。
+
+优化后的五相位基准约 9 ms；固定 offset 0 的 run 1238 实测平均 2.21 ms、最大 5.01 ms，均低于 12 ms 缓存窗口。板端发送 12 包，接收端得到 Sequence 0--11 的 12 unique、0 duplicate、0 out-of-order。另有 3 个高距离 FCS failure，时间不符合 5 秒发送周期且没有有效 Run ID/Sequence，属于噪声伪候选，不能作为已发送包损坏计入 PRR 分母。
+
+### 运行和结果合并
+
+固定相位诊断示例：
+
+```bash
+python3 python/perf_test/zigbee_perf_rx.py \
+  --chip-source phase \
+  --phase-keep-offset 0 \
+  --duration 80 \
+  --run-id 1238 \
+  --payload-len 10 \
+  --output-prefix python/perf_test/pure-1238-phase0
+```
+
+五相位诊断时将 offset 改为 `auto`。正式验收使用 `--chip-source standard`，并通过：
+
+```text
+--board-stats <serial.log>
+```
+
+读取同一 Run ID 的最终 `PERF_STATS`。只有合并板端 `scheduled`/`tx_completed` 后，JSON 中的调度完成率、无线 PRR 和端到端接收率才具有正式统计意义。
 
 ## BLE 协议概述
 
@@ -485,4 +546,3 @@ BlueBee 接收端 `ctc_sim/bluebee/bluebee_rx.py` 多了两层处理：
 1. 只看到 preamble/SFD：说明同步模式可能出现，但不保证 payload 正确。
 2. 能输出完整 frame bytes：说明 DSSS 解扩和 byte 还原路径已经闭合。
 3. FCS OK：说明 payload 和 FCS 一致，是当前最强的软件侧证据。
-

@@ -31,7 +31,7 @@ MIN_FRAME_LEN = PREAMBLE_BYTES + 1 + 1 + MIN_PAYLOAD_LEN + 2
 MAX_FRAME_LEN = PREAMBLE_BYTES + 1 + 1 + MAX_PAYLOAD_LEN + 2
 PREAMBLE_SYMBOLS = PREAMBLE_BYTES * 2
 MIN_FRAME_CHIPS = MIN_FRAME_LEN * 2 * 32
-MAX_CHIPS = 24000
+MAX_CHIPS = 48000
 STATS_PERIOD = 2.0
 DIAG_SCAN_CHIPS = 4096
 PHASE_MAX_AVG_SYMBOL_DISTANCE = 4
@@ -105,6 +105,16 @@ def unpack_bytes_to_chips(data):
         for byte in data
         for bit in range(8)
     )
+
+
+def unpack_messages_to_chips(messages):
+    """Vectorized LSB-first unpack for one batch of ZMQ messages."""
+    packed = b"".join(message for message in messages if message)
+    if not packed:
+        return ""
+    values = np.frombuffer(packed, dtype=np.uint8)
+    bits = np.unpackbits(values, bitorder="little")
+    return (bits + ord("0")).tobytes().decode("ascii")
 
 
 def chips_to_symbols(chips, chip_map=CHIP_MAP):
@@ -251,12 +261,21 @@ def find_phase_frame_candidate_fast(
         return None
 
     best = None
-    ones = np.ones(len(prefix_values), dtype=np.int16)
     prefix_ones = int(prefix_values.sum())
     for polarity in polarities:
         work_values = chip_values if polarity == "normal" else 1 - chip_values
         correlations = np.correlate(work_values, prefix_values, mode="valid")
-        window_ones = np.correlate(work_values, ones, mode="valid")
+        cumulative_ones = np.empty(len(work_values) + 1, dtype=np.int64)
+        cumulative_ones[0] = 0
+        np.cumsum(
+            work_values,
+            dtype=np.int64,
+            out=cumulative_ones[1:],
+        )
+        window_ones = (
+            cumulative_ones[len(prefix_values) :]
+            - cumulative_ones[: -len(prefix_values)]
+        )
         distances = window_ones + prefix_ones - 2 * correlations
         positions = np.flatnonzero(distances <= PHASE_PREFIX_MAX_DISTANCE)
         if not len(positions):
@@ -774,6 +793,7 @@ def main():
 
     try:
         while True:
+            processing_start = time.perf_counter()
             received_any = False
             poll_ms = 10 if len(subscribers) == 1 else 2
             for offset, subscriber in subscribers.items():
@@ -786,14 +806,11 @@ def main():
                 message_count = len(raw_messages)
                 zmq_msgs += message_count
                 zmq_msgs_by_offset[offset] += message_count
-                chip_buffers[offset] += "".join(
-                    unpack_bytes_to_chips(raw) for raw in raw_messages if raw
-                )
+                chip_buffers[offset] += unpack_messages_to_chips(raw_messages)
                 if len(chip_buffers[offset]) > MAX_CHIPS:
                     chip_buffers[offset] = chip_buffers[offset][-MAX_CHIPS:]
 
             if received_any or pending_scan:
-                scan_start = time.perf_counter()
                 candidates = {}
                 for offset, chip_buffer in chip_buffers.items():
                     if len(chip_buffer) < MIN_FRAME_CHIPS:
@@ -832,7 +849,10 @@ def main():
                                 ] += 1
 
                 if args.chip_source == "phase":
-                    scan_elapsed = time.perf_counter() - scan_start
+                    # Include ZMQ receive and packed-bit expansion.  These
+                    # dominated auto mode even when candidate search alone
+                    # appeared to fit inside the retained chip window.
+                    scan_elapsed = time.perf_counter() - processing_start
                     phase_scan_count += 1
                     phase_scan_sum_s += scan_elapsed
                     phase_scan_max_s = max(phase_scan_max_s, scan_elapsed)

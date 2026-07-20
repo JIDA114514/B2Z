@@ -1327,9 +1327,154 @@ phase_scan avg=2.206 ms max=5.013 ms buffer=12 ms
 
 固定 offset 0 已完成验证。下一步使用 phase auto 验证五路候选选择，再切换到 standard/55556 进行正式 PRR 验收。验证时必须同时检查：
 
-- JSON 中 `phase_scan_timing.avg_ms` 和 `max_ms` 是否持续低于 `buffer_span_ms=12`。
+- JSON 中 `phase_scan_timing.avg_ms` 和 `max_ms` 是否持续低于报告的 `buffer_span_ms`。
 - 有效 FCS 帧的 Run ID、Sequence 和确定性填充是否正确。
 - phase auto 是否仍能做到跨 offset 只统计一次，且不会因五路开销重新出现缓存截断。
 - 最终 PRR 仍以 standard/55556 接收链和同一 Run ID 的板端最终统计合并计算；接收 JSON 必须使用 `--board-stats` 或后处理方式填入板端统计，不能保持 `board=null`。
 
 若优化后的 phase 能稳定收到 one-shot，而 standard 仍失败，应将问题单独归入标准 OQPSK 定时恢复，不再归因于板端生成或 DMA。
+
+### 17.11 exadv phase auto 二次瓶颈与修复
+
+exadv run 1240 使用五相位 auto 后只得到：
+
+```text
+unique=3 crc_failure=4
+phase_scan avg=11.107 ms max=15.397 ms buffer=12 ms
+phase ZMQ messages=1157858
+scan samples=471 / 65 s
+```
+
+有效 Sequence 只有 1、10、11。五路每路约收到 23 万条 ZMQ 小消息，但 65 秒只完成 471 次扫描；最大处理时间超过缓存窗口。这说明结果不是无线 PRR 突然降到 3/12，而是 auto 五路读取后再次发生主机积压和尾部截断。
+
+第一阶段的 `phase_scan_timing` 从 ZMQ 读取之后才开始计时，因此只覆盖候选搜索，没有暴露逐消息解包的真实开销。旧路径对每条 ZMQ 消息执行 Python 的“逐 byte × 8 bits”字符串循环，单路 500 条、每条约 70 bytes 的基准约需 23.66 ms。
+
+二次修复：
+
+- 将同一路本轮所有 ZMQ payload 先用 `bytes.join` 合并，再用 `np.unpackbits(bitorder="little")` 整批转换，保持原 LSB-first 位序；单路 500 条基准降至约 0.76 ms。
+- prefix distance 原来执行两次 `np.correlate`：一次计算前缀重合，一次计算滑窗“1”数量。后者改用 `np.cumsum` 的区间差，结果完全一致。
+- `MAX_CHIPS` 从 24000 增至 48000，缓存从 12 ms 增至 24 ms。
+- `phase_scan_timing` 的起点移到 ZMQ 读取之前，当前统计覆盖 ZMQ receive、packed-bit 展开和五相位候选搜索的完整路径。
+- 增加批量解包与旧逐字节实现完全一致的 LSB-first 单元测试。
+
+当前 5×500 条合成消息基准：
+
+```text
+vector unpack = 2.528 ms
+five-phase scan = 12.117 ms
+total = 14.645 ms
+buffer = 24.000 ms
+```
+
+14 个 Python 单元测试、`py_compile` 和 `git diff --check` 均通过。该基准尚未包含真实 ZMQ 调度抖动，下一轮 exadv auto 必须确认实际 `phase_scan_timing.max_ms < 24 ms`，并检查五路消息计数是否接近、扫描 samples 是否从每秒约 7 次恢复到能够持续追上输入。
+
+### 17.12 run 1241 验证结果与剩余优化方案
+
+二次优化后的 exadv phase auto 使用 10 字节 payload、5 秒间隔、60 秒实验，板端共发送 12 包。接收结果：
+
+```text
+unique=11 duplicate=0 out_of_order=0 longest_loss_burst=1
+crc_failure(raw candidates)=7
+valid sequence=0..6,8..11
+missing sequence=7
+```
+
+在板端 `tx_completed=12` 的前提下：
+
+```text
+无线 PRR     = 11/12 = 91.67%
+端到端接收率 = 11/12 = 91.67%
+```
+
+#### CRC failure 分类
+
+7 个原始 CRC failure 中，只有一个与实际 5 秒发送时隙对齐：
+
+```text
+elapsed=36.480 s
+expected sequence=7
+phase offset=3
+prefix symbol errors=0
+preamble distance=36
+frame distance=104
+frame=00 00 00 00 A7 0C B2 BA 8E 42 D9 04 07 00 00 00 F1 0B
+```
+
+该候选具有正确 preamble、SFD、PHR，并保留 Run ID 1241 和 Sequence 7 的字节痕迹，但 payload 多个字节损坏，因此属于真实 secondary 解码失败。
+
+其余 6 个候选位于发送时隙之间，prefix symbol errors 为 6--8、preamble distance 为 103--117、frame distance 为 338--387，且没有有效 Run ID/Sequence，属于噪声或 BLE primary 触发的伪候选。
+
+因此本轮正确口径为：
+
+```text
+11 个有效 secondary
+1 个实际损坏 secondary
+6 个噪声伪候选
+```
+
+不能按 `11 / (11 + 7)` 计算 PRR。
+
+#### 二次优化效果
+
+五相位 auto 的处理状态由 run 1240 的：
+
+```text
+scan samples=471 / 65 s
+unique=3
+```
+
+提升为：
+
+```text
+scan samples=4224 / 65 s
+unique=11
+phase_scan avg=15.370 ms
+phase_scan max=52.425 ms
+buffer=24 ms
+```
+
+扫描次数约提高 9 倍，五路 ZMQ 消息数均约为 22--24 万，说明整批 NumPy 解包、累计和相关和 24 ms 缓存已经解决主要的持续积压问题。
+
+各 offset 的有效 FCS 候选数：
+
+```text
+offset0=11 offset1=10 offset2=11 offset3=11 offset4=11
+```
+
+Sequence 7 没有在其它采样相位恢复，说明固定采样相位已不是本轮唯一失败的主要原因。由于 Sequence 7 已形成高可信 CRC-failure 候选，本轮失败不是突发在 Python 缓存中完全丢失，而是实际帧内容损坏。
+
+#### 剩余问题
+
+虽然平均完整处理时间低于 24 ms，但最大值 52.425 ms 仍超过缓存窗口。该最大值更可能来自操作系统调度、五个 ZMQ socket 的小消息读取或瞬时批处理抖动。它没有造成 run 1241 的 Sequence 7 完全漏检，但在更长实验中仍可能导致偶发尾部截断。
+
+同时，当前 `crc_failure` 把所有快速前缀命中但 FCS 失败的候选都计入协议统计，导致 1 个真实帧错误被显示成 7 个 CRC failure。
+
+#### 后续优化方案
+
+1. **拆分 CRC 与噪声统计**
+   - 保留所有候选到 CSV。
+   - JSON 分开记录 `crc_failure` 和 `noise_candidate`。
+   - 先使用已验证的质量范围区分：高可信失败要求 prefix symbol errors 不超过 3 且 preamble distance 不超过 80；超出范围且不在发送时隙附近的候选归为噪声。
+   - 正式 PRR 始终使用 `unique / board.tx_completed`，不得使用 `unique + crc_failure` 作为分母。
+
+2. **将五路 ZMQ 改成单路全采样 phase-bit 流**
+   - GNU Radio 对 10 MS/s 的公共 phase-difference 结果只做一次 binary slicer 和 pack。
+   - 使用一个 ZMQ endpoint 发布完整 phase-bit 流。
+   - Python 用 NumPy 的 `bits[offset::5]` 重建 offset 0--4。
+   - 总 packed 数据率仍约 1.25 MB/s，但可以去掉五套 keep/slicer/packer/PUB 和五个 socket 的小消息调度开销。
+   - standard 模式完全关闭 phase 输出；固定 offset 模式只构造需要的数据；auto 才做五相位切分。
+
+3. **避免未处理数据直接尾部截断**
+   - 将当前字符串尾部缓存改成带“已处理位置”的环形或分块缓冲。
+   - 每批只丢弃已经完成搜索的数据，保留至少一个完整 frame 长度的重叠区。
+   - 即使某轮被调度暂停超过 buffer span，也不应在扫描前直接丢弃整个突发。
+
+4. **补充分位数性能统计**
+   - 在 `phase_scan_timing` 中增加 p50、p95 和 p99。
+   - max 用于发现极端调度暂停，p99 用于判断持续处理能力。
+   - 长时间实验要求 p99 明显低于有效缓存跨度，并同时观察 ZMQ HWM/drop。
+
+5. **继续区分接收器性能与 exadv 无线可靠性**
+   - 使用同参数至少重复 3 轮 phase auto，确认 11/12 是否可重复以及失败 Sequence 是否随机。
+   - phase 稳定后切换 standard/55556 进行正式 PRR。
+   - 若各 offset 都对同一帧损坏，应继续检查 exadv secondary 内 BlueBee 区域的 GFSK 滤波连续性、前导过渡和 RF 信噪比，不再归因于单一采样 offset。

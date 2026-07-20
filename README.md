@@ -185,7 +185,9 @@ deadline_miss=0 dma_timeout=0
 - CSV 保存每个候选；JSON 保存接收计数、每相位候选数、扫描耗时和板端合并后的比率。
 - 使用 `--board-stats <serial.log>` 合并同一 Run ID 的最终 `PERF_STATS`，才能正式计算无线 PRR 和端到端接收率。
 
-one-shot phase 漏检的根因曾是 Python 五相位扫描约需 622 ms，而缓存只保留 6 ms。接收器现已使用 NumPy 批量 Hamming distance、两 symbol 短前缀相关、局部完整帧解码、极性轮换/锁定，并把缓存扩大为 12 ms。固定 offset 0 的 run 1238 实测扫描平均 2.21 ms、最大 5.01 ms，板端发送 12 包并收到连续 Sequence 0--11，共 12 unique、0 duplicate、0 out-of-order。
+one-shot phase 漏检的根因曾是 Python 五相位扫描约需 622 ms，而缓存只保留 6 ms。接收器已使用 NumPy 批量 Hamming distance、两 symbol 短前缀相关、局部完整帧解码和极性轮换/锁定；固定 offset 0 的 run 1238 在 12 ms 缓存下实测扫描平均 2.21 ms、最大 5.01 ms，板端发送 12 包并收到连续 Sequence 0--11。
+
+run 1240 的五相位 auto 又暴露出逐消息 Python bit 解包和第二次滑窗相关开销：完整扫描最大 15.40 ms，超过当时的 12 ms 缓存。当前进一步改为整批 NumPy LSB-first 解包、用累计和替代第二次相关，并把 `MAX_CHIPS` 增至 48000（24 ms）。5×500 条合成消息的完整处理基准约 14.65 ms，下一轮仍须以 JSON 中包含 ZMQ 读取/解包的实际 `phase_scan_timing.max_ms < 24 ms` 为准。
 
 固定相位诊断示例：
 

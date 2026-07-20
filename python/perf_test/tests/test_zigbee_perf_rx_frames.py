@@ -38,6 +38,21 @@ def bluebee_bits_to_chips(bit_string):
 
 
 class VariableFrameTests(unittest.TestCase):
+    def test_vectorized_message_unpack_matches_scalar_lsb_order(self):
+        messages = [
+            bytes((0x00, 0x01, 0x80, 0xFF)),
+            b"",
+            bytes((0xA5, 0x5A)),
+        ]
+        expected = "".join(
+            zigbee_perf_rx.unpack_bytes_to_chips(message)
+            for message in messages
+        )
+        self.assertEqual(
+            zigbee_perf_rx.unpack_messages_to_chips(messages),
+            expected,
+        )
+
     def test_minimum_and_maximum_payload(self):
         for payload_len in (10, 16, 46):
             with self.subTest(payload_len=payload_len):

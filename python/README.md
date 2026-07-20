@@ -79,11 +79,15 @@ phase 模式支持：
 
 1. `chips_to_symbols()` 使用 NumPy 批量 pack、XOR、popcount 和 `argmin`，替代逐 symbol/逐参考码 Python 循环。
 2. `find_phase_frame_candidate_fast()` 根据已知 payload 长度和 optimized map 构造前缀，先对 2 个 symbol 做向量化相关，只在最多 16 个非相邻命中位置解完整帧。
-3. `MAX_CHIPS` 增至 24000，缓存窗口从 6 ms 增至 12 ms。
+3. `MAX_CHIPS` 最终增至 48000，缓存窗口从 6 ms 增至 24 ms。
 4. 未锁定极性时每轮只扫描 normal 或 inverted 之一并交替；首次有效 FCS 后锁定极性。
-5. JSON 的 `phase_scan_timing` 记录 samples、avg_ms、max_ms 和 buffer_span_ms，用于直接判断扫描是否会追不上缓存。
+5. 五路 ZMQ 消息先分别合并，再使用 `np.unpackbits(..., bitorder="little")` 整批展开，替代逐消息、逐字节、逐 bit 的 Python 字符串循环。
+6. prefix distance 只保留一次相关运算，滑窗中“1”的数量改用 `cumsum` 求区间和，检测结果不变。
+7. JSON 的 `phase_scan_timing` 记录 samples、avg_ms、max_ms 和 buffer_span_ms，并包含 ZMQ 读取、packed-bit 展开和候选搜索的完整时间。
 
-优化后的五相位基准约 9 ms；固定 offset 0 的 run 1238 实测平均 2.21 ms、最大 5.01 ms，均低于 12 ms 缓存窗口。板端发送 12 包，接收端得到 Sequence 0--11 的 12 unique、0 duplicate、0 out-of-order。另有 3 个高距离 FCS failure，时间不符合 5 秒发送周期且没有有效 Run ID/Sequence，属于噪声伪候选，不能作为已发送包损坏计入 PRR 分母。
+第一阶段优化后的五相位候选搜索约 9 ms；固定 offset 0 的 run 1238 实测平均 2.21 ms、最大 5.01 ms，均低于当时的 12 ms 缓存窗口。板端发送 12 包，接收端得到 Sequence 0--11 的 12 unique、0 duplicate、0 out-of-order。
+
+exadv run 1240 的 auto 复测仅得到 3 unique，并显示完整扫描平均 11.11 ms、最大 15.40 ms，最大值已超过 12 ms；五路共处理约 116 万条 ZMQ 小消息，说明逐消息 bit 展开仍会形成积压。二次优化后，单路 500 条消息解包由约 23.66 ms 降至 0.76 ms；24 ms 缓存下的 5×500 消息解包和五相位扫描合成基准约 14.65 ms。该数值不包含真实 ZMQ 调度抖动，必须通过下一轮板上实验验证。
 
 ### 运行和结果合并
 

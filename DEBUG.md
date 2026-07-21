@@ -1478,3 +1478,150 @@ Sequence 7 没有在其它采样相位恢复，说明固定采样相位已不是
    - 使用同参数至少重复 3 轮 phase auto，确认 11/12 是否可重复以及失败 Sequence 是否随机。
    - phase 稳定后切换 standard/55556 进行正式 PRR。
    - 若各 offset 都对同一帧损坏，应继续检查 exadv secondary 内 BlueBee 区域的 GFSK 滤波连续性、前导过渡和 RF 信噪比，不再归因于单一采样 offset。
+
+### 17.13 standard 主机扫描瓶颈与第一阶段优化
+
+phase 诊断链恢复到能够稳定形成候选后，正式验收需要切回 standard/55556。对当前 standard 路径做 48k-chip 合成缓存基准时发现，它对每个缓存依次尝试 0--31 共 32 个 chip alignment，并对每个 alignment 做全缓存 CHIP_MAP 判决、bit/byte 重组和 preamble 搜索。单轮耗时为：
+
+```text
+payload=10  legacy avg=56.316 ms
+payload=46  legacy avg=50.760 ms
+```
+
+这不但慢于 phase 固定 offset，而且旧路径只改变 chip alignment，没有覆盖 byte 重组的另一个 nibble 相位。若真实 preamble 在正确 chip alignment 后落于奇数 symbol 位置，即使理想无噪 chip 也可能完全找不到帧。
+
+第一阶段修复在提供 `--payload-len` 时启用 standard 已知长度快速检测：
+
+1. 使用标准 `CHIP_MAP` 构造 4 字节 preamble。由于它等价于连续 8 个 symbol 0，只执行一次 32-chip Hamming 相关，再把相隔 32 chips 的 8 个距离向量相加，避免 256-chip 长相关。
+2. 在原始 chip 流的每个可能位置搜索，因此自然覆盖 0--31 chip alignment 和两种 nibble 边界；前缀允许平均每 symbol 最多 8 个 chip 错误。
+3. 最多保留 16 个非相邻前缀候选，只对候选位置的已知长度局部帧做完整符号判决，并要求 PHR 与 `payload_len + 2` 一致；FCS 失败帧仍返回统计，不能只保留成功帧。
+4. 多帧同时位于缓存时按 chip 位置选择最早候选，防止后面的有效 FCS 帧越过前面的损坏帧；缓存仍有待处理帧时，下一轮 ZMQ poll 使用 0 ms，去掉逐帧额外 10 ms 阻塞。
+5. standard 和 phase 都在 JSON `receiver.processing_timing` 中报告完整接收迭代的 samples、avg_ms、max_ms、buffer_chips 和是否包含 ZMQ receive；原 `phase_scan_timing` 保持兼容。
+
+同一台主机、相同 48k-chip 缓存、每项 10 次的修复后基准：
+
+```text
+payload=10  fast avg=3.166 ms  speedup=17.79x
+payload=46  fast avg=4.123 ms  speedup=12.31x
+```
+
+新增回归覆盖 10/46 字节、全部 0--31 chip 起点、有效 FCS、FCS 失败和同缓存先坏帧后好帧的顺序。完整 Python 测试目前为 17 项，均通过。该优化解决的是 Python standard 候选扫描与对齐覆盖问题，不等同于 GNU Radio standard OQPSK 定时恢复；下一轮必须用 standard/55556 实测 `receiver.processing_timing`、Sequence 和 PRR。若处理耗时稳定而 PRR 仍显著低于 phase，应继续优化 matched-filter 后的采样定时，而不是继续归因于 Python 扫描或板端 DMA。
+
+### 17.14 run 1242 standard 零候选与 Costas/IQ 模糊
+
+相同 exadv 发射参数分别运行 standard 与 phase。standard 结果：
+
+```text
+unique=0 crc_failure=0
+ZMQ messages=302756
+processing samples=19620
+processing avg=3.307 ms max=10.850 ms
+```
+
+standard 在65秒内持续收到55556数据并完成近两万次扫描，平均和最大处理时间均低于48k-chip对应的24 ms缓存跨度。因此零候选不是ZMQ断流，也不是上一阶段Python扫描仍追不上输入；失败位置已经前移到GNU Radio standard OQPSK前端或其输出的chip变换。
+
+同参数phase auto结果：
+
+```text
+unique=7: sequence 3,4,6,8,9,10,11
+raw crc_failure=9
+processing avg=14.693 ms max=33.995 ms
+```
+
+9个原始FCS失败中，只有36.308秒附近的候选具有完整正确preamble/SFD/PHR和10字节payload边界，可能对应实际损坏帧；其余候选多为6--8个prefix symbol错误、preamble distance 106--149的噪声。不能把本轮解释成“7个有效包加9个真实坏包”。由于JSON仍为 `board=null`，也不能正式计算7/12 PRR，最终仍需合并同Run ID的板端 `tx_completed`。
+
+standard 前端当前使用四阶Costas环。QPSK载波恢复存在90度象限模糊，对交织后的I/Q chip流表现为整体反相、单路反相以及pair交换的组合；此前standard扫描只接受normal CHIP_MAP，因此即使符号信息存在也可能完全没有preamble候选。修复后：
+
+1. `--standard-ambiguity auto` 默认尝试normal、整体反相、偶/奇chip反相和pair交换后的四个对应变换，共8种。
+2. CSV新增 `standard_ambiguity`；JSON新增配置值和逐变换 candidates/FCS统计。
+3. `--standard-keep-offset 0..4` 设置GNU Radio matched-filter固定采样offset，用于在仍为零候选时逐项扫描定时相位。
+4. 八变换合成回归覆盖全部组合，完整Python测试增至18项并通过。48k-chip、10字节缓存的auto基准平均约15.3 ms、最大17.8 ms，仍低于24 ms缓存跨度，但显著高于固定normal的约3.2 ms，暂用于5秒间隔定位，不作为最大吞吐配置。
+
+下一轮先固定offset 0验证Costas/IQ自动消歧：
+
+```bash
+python3 python/perf_test/zigbee_perf_rx.py \
+  --chip-source standard \
+  --standard-ambiguity auto \
+  --standard-keep-offset 0 \
+  --duration 70 \
+  --run-id 1243 \
+  --payload-len 10 \
+  --output-prefix python/perf_test/exadv-1243-standard-o0
+```
+
+若仍为零候选，使用新的Run ID依次把 `--standard-keep-offset` 改为1、2、3、4。若某个offset能恢复有效FCS，下一阶段再实现standard五相位并行选择；若全部offset和8种变换仍为零，则需要保存filtered/Costas IQ，检查Costas是否适用于BlueBee GFSK波形、I/Q半chip延迟方向和matched-filter采样位置，不能继续只调整Python前缀门限。
+
+### 17.15 standard 五相位差分接收重构
+
+17.14 提出的五个 matched-filter offset 和 8 种 Costas/IQ 变换已全部实测，仍然没有任何 standard 候选。该结果排除了“只差一个固定抽样点或 Costas 象限变换”的解释，因此进一步对无射频理想 IQ 做了分层验证。
+
+检查首先发现旧相干 O-QPSK 支路的参数与 I/Q 每支路只承载隔一个 chip 的事实不一致：在 10 MS/s、2 Mchip/s 下，每支路半正弦脉冲和符号周期均为 10 samples，I/Q 错位应为一个 chip，即 5 samples；旧实现却使用 5-sample taps、5:1 支路抽取和 2-sample 延迟。改为 10-sample taps、10:1 抽取、5-sample 延迟后，原生理想 ZigBee O-QPSK IQ 可以在 offset 9 得到有效 FCS，证明修正后的相干链本身可用。该参考输出迁移到 ZMQ 55566。
+
+然而，把同一修正相干链用于当前 BlueBee GFSK IQ 时，所有相位仍无法得到有效帧。相反，对相邻 IQ 直接计算 `angle(s[n] * conj(s[n-1]))`、按符号切 bit，再每隔 5 samples 取一路，五个相位都能用标准 `CHIP_MAP` 恢复有效 FCS。这说明原问题不是半正弦滤波器破坏了相位，而是相干 I/Q 符号切片模型不适用于 BlueBee 通过 GFSK 相位增量承载的 chip；正式 BlueBee standard 链应保留差分相位观测，再以标准 DSSS 码本验收。
+
+据此完成以下重构：
+
+1. ZMQ 55556 改为单路 10 Msample/s 全采样差分相位 bit 流，只进行一次 slicer 和 pack。
+2. Python 对该单路数据按全局模 5 位置拆成五个 2 Mchip/s 相位，并跨 ZMQ 消息、跨批次保存拆相状态；`--standard-keep-offset auto` 同时比较五路，固定 `0..4` 仅保留指定路。
+3. standard 使用 IEEE 802.15.4 `CHIP_MAP`，不使用发射端 `BLUEBEE_OPTIMIZED_MAP`。BlueBee optimized 投影相对标准码本的理想固有距离为每 symbol 8 chips；10 字节理想帧的 preamble distance 为 96、frame distance 为 288，仍能完整恢复 payload 和有效 FCS。
+4. 前缀门限由历史宽松值收紧为平均 10 chips/symbol，即允许 8 chips 的映射固有距离和额外 2 chips 的无线误差，减少噪声伪候选。
+5. `--standard-ambiguity auto` 只在差分极性 normal/inverted 之间轮换，首次有效 FCS 后锁定。多个 offset 对同一突发的候选先按 FCS、前缀错误、preamble/frame distance 选优，再统一消费同一时间窗，避免虚增 duplicate。
+6. JSON 新增 `receiver.standard_offset_stats` 和 `receiver.standard_stream`；原生相干参考只在 55566 保留，不计入正式 PRR。
+
+无射频端到端回归使用真实 BlueBee 生成 IQ，经过 10 MS/s 重采样、差分切片、LSB pack、非 5 对齐的任意消息切分、unpack 和模 5 拆相，再用标准 `CHIP_MAP` 解码。五个 offset 均得到有效 FCS，且测试头、Run ID、Sequence 和确定性 payload 完整一致。新增回归还覆盖跨批次拆相连续性、10/46 字节 BlueBee 标准码本投影、standard 跨 offset 只计一次、后续真实重发计 duplicate、反相极性和 FCS 失败选优；完整 Python 测试目前为 22 项并通过。
+
+五相位 48k-chip standard 合成缓存基准在收紧门限后为：
+
+```text
+avg=13.101 ms  min=11.822 ms  max=16.130 ms
+buffer_span=24.000 ms
+```
+
+下一次 exadv 上板复测先启动接收端：
+
+```bash
+python3 python/perf_test/zigbee_perf_rx.py \
+  --chip-source standard \
+  --standard-keep-offset auto \
+  --standard-ambiguity auto \
+  --duration 70 \
+  --run-id 1243 \
+  --payload-len 10 \
+  --output-prefix python/perf_test/exadv-1243-standard-auto
+```
+
+再执行板端命令：
+
+```text
+bluebee_exadv_perf_start? 10 5000000 60 1243 0
+```
+
+验收时先确认 `receiver.processing_timing.max_ms < 24 ms`，再检查 `standard_offset_stats` 是否形成有效 FCS、Sequence 是否连续，并合并同 Run ID 的板端 `PERF_STATS final=1`。只有合并后的 `unique / tx_completed` 才是正式无线 PRR；原始 CRC failure 中高距离噪声候选仍不能直接解释为实际损坏包。
+
+#### 17.15.1 优化方法总结与 run 1243 验证
+
+本轮 standard 优化没有继续对传统相干 O-QPSK 输出叠加更多固定 offset 或 Costas 象限变换，而是把 BlueBee 的调制特性、标准 DSSS 判决和多相位定时恢复分开处理：
+
+1. **前端改用差分相位观测**：在 Costas 和 I/Q 符号切片之前，对滤波 IQ 计算相邻样本相位增量的正负，直接保留 BlueBee GFSK 实际承载的信息，避免相干 O-QPSK 模型把相位增量错误解释为 I/Q 符号。
+2. **单路传输、主机五相位拆分**：GNU Radio 只在 55556 发布一条 10 Msample/s packed bit 流；Python 按全局样本位置模 5 拆成五路 2 Mchip/s 候选。模 5 状态跨 ZMQ 消息和批次连续保存，避免消息长度不为 5 的整数倍时发生相位漂移，也避免为 standard 建立五个额外 ZMQ 端口。
+3. **恢复标准 ZigBee 判决口径**：五路候选都使用 IEEE 802.15.4 `CHIP_MAP` 做最近距离解扩。发射端 optimized map 只用于生成 BlueBee 波形，不再用于 standard 验收，因此有效 FCS 表示标准 DSSS 码本确实恢复了原始 payload。
+4. **使用已知帧长快速搜索**：利用 4 字节 preamble 等价于 8 个相同 symbol 的结构，用一次 32-chip 相关和 8 路移位累加代替 32 次全缓存 alignment 解码；只对少量局部候选执行完整帧判决。前缀门限设为平均 10 chips/symbol，覆盖每 symbol 8 chips 的映射固有距离并保留 2 chips 的无线误差余量。
+5. **极性锁定和跨 offset 选优**：未锁定时逐轮尝试 normal/inverted，首次有效 FCS 后锁定。五个 offset 按有效 FCS、前缀符号错误、preamble distance 和 frame distance 选择一个结果，并统一消费对应时间窗，使同一物理突发只计一次；之后再次收到同一 Sequence 才计 duplicate。
+6. **把性能和正确性同时纳入回归**：JSON 记录逐 offset candidates/FCS 和包含 ZMQ 接收、解包、拆相、搜索在内的完整处理耗时；单元测试覆盖跨消息拆相、五相位、反相、跨 offset 去重、真实 duplicate、坏 FCS 选优以及 10/46 字节 payload。
+
+run 1243 的 exadv standard auto 实测结果为：
+
+```text
+unique=11
+duplicate=0
+out_of_order=0
+crc_failure=0
+received_sequence=0--8,10,11
+missing_sequence=9
+processing_avg=10.194 ms
+processing_max=20.686 ms
+buffer_span=24.000 ms
+```
+
+五个 offset 都产生过有效 FCS，且不同包最终选择的最佳 offset 不固定，证明五相位 auto 是必要的。处理最大耗时仍小于缓存跨度，当前没有证据表明 Sequence 9 因 Python 扫描持续积压而丢失；它在五个 offset 上都没有形成可提交候选，而不是已记录的 CRC failure。接收 JSON 仍为 `board=null`，因此只有在同一 Run ID 的板端确认 `tx_completed=12` 后，才能把本轮无线 PRR 正式写为 `11/12 = 91.67%`。该结果解决了旧 standard 完全零候选的问题，但尚未达到不低于 99% 的稳定点；下一步应先用新 Run ID 重复同参数至少三轮，再决定是否放宽门限或继续定位 RF/突发捕获。

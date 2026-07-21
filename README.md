@@ -178,12 +178,16 @@ deadline_miss=0 dma_timeout=0
 
 性能接收入口为 `python/perf_test/zigbee_perf_rx.py`：
 
-- `--chip-source standard` 使用正式验收链 ZMQ 55556。
+- `--chip-source standard` 使用正式验收链 ZMQ 55556；该端口输出单路 10 Msample/s 差分相位 bit 流，Python 按模 5 拆成五个 2 Mchip/s 采样相位。
 - `--chip-source phase` 使用 BlueBee 相位差诊断链；offset 0--4 对应 55557--55561。
 - `--phase-keep-offset auto` 同时比较五相位，固定值 `0`--`4` 只订阅指定相位。
 - 有效帧必须通过 ZigBee FCS、测试头、Run ID、Sequence 和确定性填充校验。
-- CSV 保存每个候选；JSON 保存接收计数、每相位候选数、扫描耗时和板端合并后的比率。
+- CSV 保存每个最终提交的候选及所选 offset、极性和距离；JSON 保存接收计数、逐 offset candidates/FCS、完整处理耗时和板端合并后的比率。
 - 使用 `--board-stats <serial.log>` 合并同一 Run ID 的最终 `PERF_STATS`，才能正式计算无线 PRR 和端到端接收率。
+- standard 模式提供 `--payload-len` 时启用已知长度快速检测：使用一次 32-chip 相关与 8 路移位累加定位 preamble，只对少量局部候选解完整帧。五相位 48k-chip 合成缓存平均约 13.10 ms、最大约 16.13 ms，低于 24 ms 缓存跨度；JSON 的 `receiver.processing_timing` 记录包含 ZMQ 接收、解包、模 5 拆相和搜索的完整迭代耗时。
+- standard 默认使用 `--standard-keep-offset auto` 同时比较五个采样相位，并使用标准 IEEE 802.15.4 `CHIP_MAP` 解扩；`--standard-ambiguity auto` 在未锁定前轮换差分极性，首次有效 FCS 后锁定。逐 offset 候选/FCS 统计写入 JSON `standard_offset_stats`。
+- 模 5 拆相状态跨 ZMQ 消息和接收批次连续保存；同一突发被多个 offset 解出时只提交一次，之后再次收到相同 Sequence 才计为 duplicate。
+- 修正后的原生相干 O-QPSK 链保留在 ZMQ 55566，仅用于接收机正向校验；它不再作为 BlueBee PRR 的正式输入。
 
 one-shot phase 漏检的根因曾是 Python 五相位扫描约需 622 ms，而缓存只保留 6 ms。接收器已使用 NumPy 批量 Hamming distance、两 symbol 短前缀相关、局部完整帧解码和极性轮换/锁定；固定 offset 0 的 run 1238 在 12 ms 缓存下实测扫描平均 2.21 ms、最大 5.01 ms，板端发送 12 包并收到连续 Sequence 0--11。
 
@@ -201,7 +205,22 @@ python3 python/perf_test/zigbee_perf_rx.py \
   --output-prefix python/perf_test/pure-1238-phase0
 ```
 
-五相位 auto 会增加 GNU Radio 分支、ZMQ 和 Python 扫描开销；当前流图即使固定 offset 也仍会发布全部五路。正式 standard 验收应关注主机负载，phase 只作为诊断结果，最终 PRR 以 55556 和板端最终统计为准。
+正式 standard 五相位验收示例：
+
+```bash
+python3 python/perf_test/zigbee_perf_rx.py \
+  --chip-source standard \
+  --standard-keep-offset auto \
+  --standard-ambiguity auto \
+  --duration 70 \
+  --run-id 1248 \
+  --payload-len 10 \
+  --output-prefix python/perf_test/exadv-1248-standard-auto
+```
+
+run 1243 首次使用该链路进行 exadv 实测，收到 Sequence `0--8、10、11`，结果为 `unique=11`、`crc_failure=0`、`duplicate=0`；完整处理平均 10.194 ms、最大 20.686 ms，仍小于 24 ms 缓存跨度。该结果证明旧 standard 零候选问题已解决，但 JSON 中 `board=null`；只有同 Run ID 板端确认 `tx_completed=12` 后才能正式写为 `11/12 = 91.67%`，且该点尚不满足 99% 稳定性要求。
+
+五相位 phase auto 会增加 GNU Radio 分支、ZMQ 和 Python 扫描开销；当前流图即使固定 phase offset 也仍会发布全部五路。standard 的五相位则由 55556 单路全采样数据在 Python 中拆分，不需要五个 standard ZMQ 端口。phase 只作为诊断结果，最终 PRR 以 55556 和板端最终统计为准。
 
 ## Windows下复原vivado工程
 

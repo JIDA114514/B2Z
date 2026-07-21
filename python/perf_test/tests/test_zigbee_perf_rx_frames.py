@@ -53,6 +53,30 @@ class VariableFrameTests(unittest.TestCase):
             expected,
         )
 
+    def test_standard_full_rate_deinterleave_preserves_phase_across_batches(self):
+        raw = zigbee_perf_rx.np.asarray(
+            [(index * 7 + 3) & 1 for index in range(173)],
+            dtype=zigbee_perf_rx.np.uint8,
+        )
+        outputs = {offset: "" for offset in range(5)}
+        stream_phase = 0
+        boundaries = (0, 13, 71, 80, 129, len(raw))
+
+        for start, end in zip(boundaries, boundaries[1:]):
+            streams, stream_phase = (
+                zigbee_perf_rx.deinterleave_standard_phase_values(
+                    raw[start:end],
+                    stream_phase,
+                )
+            )
+            for offset, chips in streams.items():
+                outputs[offset] += chips
+
+        for offset in range(5):
+            expected = "".join(str(int(bit)) for bit in raw[offset::5])
+            self.assertEqual(outputs[offset], expected)
+        self.assertEqual(stream_phase, len(raw) % 5)
+
     def test_minimum_and_maximum_payload(self):
         for payload_len in (10, 16, 46):
             with self.subTest(payload_len=payload_len):
@@ -64,6 +88,169 @@ class VariableFrameTests(unittest.TestCase):
                 self.assertEqual(position, 5)
                 self.assertTrue(fcs_ok)
                 self.assertEqual(bytes(decoded_payload), payload)
+
+    def test_fast_standard_detector_handles_all_chip_alignments(self):
+        for payload_len in (10, 46):
+            payload = build_test_payload(payload_len, 0x1234, payload_len)
+            frame_chips = bits_to_chips(bytes_to_bits(build_frame(payload)))
+            for alignment in range(32):
+                with self.subTest(
+                    payload_len=payload_len,
+                    alignment=alignment,
+                ):
+                    chips = ("10" * 16)[:alignment] + frame_chips + "0101"
+                    candidate = (
+                        zigbee_perf_rx.find_standard_frame_candidate_fast(
+                            chips,
+                            payload_len,
+                        )
+                    )
+                    self.assertIsNotNone(candidate)
+                    self.assertEqual(candidate["chip_pos"], alignment)
+                    fcs_ok, decoded_payload = zigbee_perf_rx.validate_frame(
+                        candidate["frame"]
+                    )
+                    self.assertTrue(fcs_ok)
+                    self.assertEqual(bytes(decoded_payload), payload)
+
+    def test_bluebee_projection_decodes_with_standard_chip_map(self):
+        for payload_len in (10, 46):
+            with self.subTest(payload_len=payload_len):
+                payload = build_test_payload(payload_len, 0x1234, 104)
+                projected = bluebee_bits_to_chips(
+                    bytes_to_bits(build_frame(payload))
+                )
+                candidate = (
+                    zigbee_perf_rx.find_standard_frame_candidate_fast(
+                        projected,
+                        payload_len,
+                        sample_offset=2,
+                    )
+                )
+                self.assertIsNotNone(candidate)
+                fcs_ok, decoded_payload = zigbee_perf_rx.validate_frame(
+                    candidate["frame"]
+                )
+                self.assertTrue(fcs_ok)
+                self.assertEqual(bytes(decoded_payload), payload)
+                self.assertEqual(candidate["phase_offset"], 2)
+                self.assertGreater(candidate["frame_distance"], 0)
+
+    def test_standard_auto_counts_cross_offset_burst_once_and_retransmit(self):
+        payload = build_test_payload(10, 0x1234, 105)
+        projected = bluebee_bits_to_chips(
+            bytes_to_bits(build_frame(payload))
+        )
+        tracker = SequenceTracker(
+            expected_run_id=0x1234,
+            expected_payload_len=10,
+        )
+
+        for expected_result in ("unique", "duplicate"):
+            candidates = [
+                zigbee_perf_rx.find_standard_frame_candidate_fast(
+                    projected,
+                    10,
+                    sample_offset=offset,
+                )
+                for offset in range(5)
+            ]
+            selected = zigbee_perf_rx.choose_standard_candidate(candidates)
+            fcs_ok, decoded_payload = zigbee_perf_rx.validate_frame(
+                selected["frame"]
+            )
+            _, result = tracker.observe(decoded_payload)
+            self.assertTrue(fcs_ok)
+            self.assertEqual(result, expected_result)
+
+        self.assertEqual(tracker.unique, 1)
+        self.assertEqual(tracker.duplicate, 1)
+
+    def test_standard_auto_prefers_valid_fcs_and_handles_inversion(self):
+        payload = build_test_payload(10, 0x1234, 106)
+        good_frame = build_frame(payload)
+        bad_frame = good_frame[:-1] + bytes((good_frame[-1] ^ 0x01,))
+        good_inverted = zigbee_perf_rx.invert_chips(
+            bluebee_bits_to_chips(bytes_to_bits(good_frame))
+        )
+        good = zigbee_perf_rx.find_standard_frame_candidate_fast(
+            good_inverted,
+            10,
+            ambiguities=("inverted",),
+            sample_offset=4,
+        )
+        bad = zigbee_perf_rx.find_standard_frame_candidate_fast(
+            bluebee_bits_to_chips(bytes_to_bits(bad_frame)),
+            10,
+            sample_offset=0,
+        )
+
+        self.assertFalse(zigbee_perf_rx.validate_frame(bad["frame"])[0])
+        selected = zigbee_perf_rx.choose_standard_candidate([bad, good])
+        self.assertEqual(selected["phase_offset"], 4)
+        self.assertEqual(selected["standard_ambiguity"], "inverted")
+        self.assertTrue(zigbee_perf_rx.validate_frame(selected["frame"])[0])
+
+    def test_fast_standard_detector_reports_fcs_failure(self):
+        payload = build_test_payload(10, 0x1234, 100)
+        frame = build_frame(payload)
+        bad_frame = frame[:-1] + bytes((frame[-1] ^ 0x01,))
+        candidate = zigbee_perf_rx.find_standard_frame_candidate_fast(
+            bits_to_chips(bytes_to_bits(bad_frame)),
+            10,
+        )
+
+        self.assertIsNotNone(candidate)
+        self.assertFalse(zigbee_perf_rx.validate_frame(candidate["frame"])[0])
+
+    def test_fast_standard_detector_resolves_costas_iq_ambiguities(self):
+        payload = build_test_payload(10, 0x1234, 103)
+        frame_chips = bits_to_chips(bytes_to_bits(build_frame(payload)))
+
+        for ambiguity in zigbee_perf_rx.STANDARD_AMBIGUITIES:
+            with self.subTest(ambiguity=ambiguity):
+                received = zigbee_perf_rx.transform_standard_chips(
+                    frame_chips,
+                    ambiguity,
+                )
+                candidate = (
+                    zigbee_perf_rx.find_standard_frame_candidate_fast(
+                        received,
+                        10,
+                        ambiguities=zigbee_perf_rx.STANDARD_AMBIGUITIES,
+                    )
+                )
+                self.assertIsNotNone(candidate)
+                fcs_ok, decoded_payload = zigbee_perf_rx.validate_frame(
+                    candidate["frame"]
+                )
+                self.assertTrue(fcs_ok)
+                self.assertEqual(bytes(decoded_payload), payload)
+                self.assertIn(
+                    candidate["standard_ambiguity"],
+                    zigbee_perf_rx.STANDARD_AMBIGUITIES,
+                )
+
+    def test_fast_standard_detector_keeps_frame_order(self):
+        first_payload = build_test_payload(10, 0x1234, 101)
+        first_frame = build_frame(first_payload)
+        bad_first_frame = first_frame[:-1] + bytes((first_frame[-1] ^ 0x01,))
+        second_payload = build_test_payload(10, 0x1234, 102)
+        gap = "10" * 20
+        chips = (
+            bits_to_chips(bytes_to_bits(bad_first_frame))
+            + gap
+            + bits_to_chips(bytes_to_bits(build_frame(second_payload)))
+        )
+
+        candidate = zigbee_perf_rx.find_standard_frame_candidate_fast(
+            chips,
+            10,
+        )
+
+        self.assertIsNotNone(candidate)
+        self.assertEqual(candidate["chip_pos"], 0)
+        self.assertFalse(zigbee_perf_rx.validate_frame(candidate["frame"])[0])
 
     def test_bluebee_approximate_chips_with_errors(self):
         payload = build_test_payload(10, 0x1234, 7)

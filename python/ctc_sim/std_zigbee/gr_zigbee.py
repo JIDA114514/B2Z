@@ -42,23 +42,34 @@ class gr_zigbee(gr.top_block):
         self.freq_offset = freq_offset = 0
         self.freq = freq = zigbee_base_freq + (zigbee_channel_spacing * (zigbee_channel - 11))
         self.demod_sps = demod_sps = int(sample_rate / chip_rate)
-        self.demod_delay = demod_delay = demod_sps // 2
-        # keep 1 out of every (2 * sps), starting at offset sps + sps//2
-        self.demod_keep_n = demod_keep_n = demod_sps
-        self.demod_keep_offset = demod_keep_offset = 0  # 0-4, tune for best symbol dist
+        # Each I/Q arm carries every other chip.  Its symbol period and the
+        # half-sine pulse therefore span two chip periods.
+        self.demod_delay = demod_delay = demod_sps
+        self.demod_keep_n = demod_keep_n = 2 * demod_sps
+        self.demod_keep_offset = demod_keep_offset = demod_keep_n - 1
         self.phase_keep_offset = phase_keep_offset = 0  # 0-4, phase-diff BlueBee chip sampler
 
         # Half-sine pulse for OQPSK matched filter
         self.pulse_taps = pulse_taps = [
-            numpy.sin(numpy.pi * (n + 0.5) / demod_sps) for n in range(demod_sps)
+            numpy.sin(numpy.pi * (n + 0.5) / demod_keep_n)
+            for n in range(demod_keep_n)
         ]
 
         ##################################################
         # Blocks
         ##################################################
 
+        # Formal standard input: one packed 10 Msample/s differential stream.
+        # The Python receiver deinterleaves all five 2 Mchip/s timing phases and
+        # performs normal IEEE 802.15.4 CHIP_MAP despreading.
         self.zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_char, 1, 'tcp://127.0.0.1:55556', 100, False, (20), '', True, True)
         self.unpacked_to_packed = blocks.unpacked_to_packed_bb(1, gr.GR_LSB_FIRST)
+        self.standard_phase_slicer = digital.binary_slicer_fb()
+
+        # Corrected coherent OQPSK reference path.  It is retained on a
+        # diagnostic-only endpoint and is no longer the formal BlueBee input.
+        self.coherent_zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_char, 1, 'tcp://127.0.0.1:55566', 100, False, (20), '', True, True)
+        self.coherent_unpacked_to_packed = blocks.unpacked_to_packed_bb(1, gr.GR_LSB_FIRST)
         self.phase_zeromq_pub_sinks = [
             zeromq.pub_sink(
                 gr.sizeof_char, 1, f'tcp://127.0.0.1:{55557 + offset}',
@@ -97,7 +108,7 @@ class gr_zigbee(gr.top_block):
         self.phase_multiply = blocks.multiply_vcc(1)
         self.phase_arg = blocks.complex_to_arg(1)
         self.phase_keeps = [
-            blocks.keep_m_in_n(gr.sizeof_float, 1, demod_keep_n, offset)
+            blocks.keep_m_in_n(gr.sizeof_float, 1, demod_sps, offset)
             for offset in range(demod_sps)
         ]
         self.phase_slicers = [
@@ -146,8 +157,8 @@ class gr_zigbee(gr.top_block):
         self.skip_head = blocks.skiphead(gr.sizeof_float, 2)
         self.connect((self.interleave, 0), (self.skip_head, 0))
         self.connect((self.skip_head, 0), (self.binary_slicer, 0))
-        self.connect((self.binary_slicer, 0), (self.unpacked_to_packed, 0))
-        self.connect((self.unpacked_to_packed, 0), (self.zeromq_pub_sink, 0))
+        self.connect((self.binary_slicer, 0), (self.coherent_unpacked_to_packed, 0))
+        self.connect((self.coherent_unpacked_to_packed, 0), (self.coherent_zeromq_pub_sink, 0))
 
         # Recording: FILTERED IQ (DC offset removed by filter)
         self.connect((self.freq_xlating_fir_filter_lp, 0), (self.blocks_file_sink_0, 0))
@@ -158,6 +169,9 @@ class gr_zigbee(gr.top_block):
         self.connect((self.phase_delay, 0), (self.phase_conj, 0))
         self.connect((self.phase_conj, 0), (self.phase_multiply, 1))
         self.connect((self.phase_multiply, 0), (self.phase_arg, 0))
+        self.connect((self.phase_arg, 0), (self.standard_phase_slicer, 0))
+        self.connect((self.standard_phase_slicer, 0), (self.unpacked_to_packed, 0))
+        self.connect((self.unpacked_to_packed, 0), (self.zeromq_pub_sink, 0))
         for offset in range(demod_sps):
             self.connect((self.phase_arg, 0), (self.phase_keeps[offset], 0))
             self.connect((self.phase_keeps[offset], 0), (self.phase_slicers[offset], 0))
@@ -253,10 +267,25 @@ class gr_zigbee(gr.top_block):
 
     def set_demod_sps(self, demod_sps):
         self.demod_sps = demod_sps
+        self.demod_delay = self.demod_sps
+        self.demod_keep_n = 2 * self.demod_sps
+        self.demod_keep_offset %= self.demod_keep_n
+        self.pulse_taps = [
+            numpy.sin(numpy.pi * (n + 0.5) / self.demod_keep_n)
+            for n in range(self.demod_keep_n)
+        ]
+        if hasattr(self, 'i_delay'):
+            self.i_delay.set_dly(self.demod_delay)
+        if hasattr(self, 'i_matched'):
+            self.i_matched.set_taps(self.pulse_taps)
+        if hasattr(self, 'q_matched'):
+            self.q_matched.set_taps(self.pulse_taps)
         if hasattr(self, 'i_keep'):
-            self.i_keep.set_n(self.demod_sps)
+            self.i_keep.set_n(self.demod_keep_n)
+            self.i_keep.set_offset(self.demod_keep_offset)
         if hasattr(self, 'q_keep'):
-            self.q_keep.set_n(self.demod_sps)
+            self.q_keep.set_n(self.demod_keep_n)
+            self.q_keep.set_offset(self.demod_keep_offset)
         if hasattr(self, 'phase_keeps'):
             for keep in self.phase_keeps:
                 keep.set_n(self.demod_sps)
@@ -265,7 +294,7 @@ class gr_zigbee(gr.top_block):
         return self.demod_keep_offset
 
     def set_demod_keep_offset(self, demod_keep_offset):
-        self.demod_keep_offset = int(demod_keep_offset) % self.demod_sps
+        self.demod_keep_offset = int(demod_keep_offset) % self.demod_keep_n
         if hasattr(self, 'i_keep'):
             self.i_keep.set_offset(self.demod_keep_offset)
         if hasattr(self, 'q_keep'):

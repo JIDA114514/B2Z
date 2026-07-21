@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # coding=utf-8
-"""Standard ZigBee OQPSK receiver with BlueBee Phase-1 PRR accounting."""
+"""BlueBee differential receiver with standard ZigBee DSSS PRR accounting."""
 
 import argparse
 import csv
@@ -38,6 +38,23 @@ PHASE_MAX_AVG_SYMBOL_DISTANCE = 4
 PHASE_FAST_PREFIX_SYMBOLS = 2
 PHASE_PREFIX_MAX_DISTANCE = (
     PHASE_FAST_PREFIX_SYMBOLS * PHASE_MAX_AVG_SYMBOL_DISTANCE
+)
+STANDARD_FAST_PREFIX_SYMBOLS = PREAMBLE_SYMBOLS
+STANDARD_MAX_AVG_PREFIX_DISTANCE = 10
+STANDARD_PREFIX_MAX_DISTANCE = (
+    STANDARD_FAST_PREFIX_SYMBOLS * STANDARD_MAX_AVG_PREFIX_DISTANCE
+)
+STANDARD_MAX_PREFIX_CANDIDATES = 16
+STANDARD_PHASE_COUNT = 5
+STANDARD_AMBIGUITIES = (
+    "normal",
+    "inverted",
+    "even_inverted",
+    "odd_inverted",
+    "swapped",
+    "swapped_inverted",
+    "swapped_even_inverted",
+    "swapped_odd_inverted",
 )
 STANDARD_ENDPOINT = "tcp://127.0.0.1:55556"
 PHASE_ENDPOINTS = {
@@ -109,12 +126,36 @@ def unpack_bytes_to_chips(data):
 
 def unpack_messages_to_chips(messages):
     """Vectorized LSB-first unpack for one batch of ZMQ messages."""
+    bits = unpack_messages_to_chip_values(messages)
+    if not len(bits):
+        return ""
+    return (bits + ord("0")).tobytes().decode("ascii")
+
+
+def unpack_messages_to_chip_values(messages):
+    """Return one batch as a uint8 array of LSB-first unpacked bits."""
     packed = b"".join(message for message in messages if message)
     if not packed:
-        return ""
+        return np.empty(0, dtype=np.uint8)
     values = np.frombuffer(packed, dtype=np.uint8)
-    bits = np.unpackbits(values, bitorder="little")
-    return (bits + ord("0")).tobytes().decode("ascii")
+    return np.unpackbits(values, bitorder="little")
+
+
+def deinterleave_standard_phase_values(
+    chip_values,
+    stream_phase,
+    offsets=range(STANDARD_PHASE_COUNT),
+):
+    """Split the full-rate standard stream while preserving modulo-5 phase."""
+    streams = {}
+    for offset in offsets:
+        start = (int(offset) - stream_phase) % STANDARD_PHASE_COUNT
+        selected = chip_values[start::STANDARD_PHASE_COUNT]
+        streams[int(offset)] = (
+            (selected + ord("0")).astype(np.uint8).tobytes().decode("ascii")
+        )
+    next_phase = (stream_phase + len(chip_values)) % STANDARD_PHASE_COUNT
+    return streams, next_phase
 
 
 def chips_to_symbols(chips, chip_map=CHIP_MAP):
@@ -239,6 +280,185 @@ def phase_prefix_chips(expected_payload_len):
     )
 
 
+def standard_prefix_chips():
+    """Return the four-byte preamble in the standard 802.15.4 chip map."""
+    bit_string = "0" * (PREAMBLE_BYTES * 8)
+    return "".join(
+        CHIP_MAP[int(bit_string[index : index + 4], 2)]
+        for index in range(0, len(bit_string), 4)
+    )
+
+
+def prefix_distances(chip_values, prefix_values):
+    """Compute Hamming distance at every possible chip position."""
+    correlations = np.correlate(chip_values, prefix_values, mode="valid")
+    cumulative_ones = np.empty(len(chip_values) + 1, dtype=np.int64)
+    cumulative_ones[0] = 0
+    np.cumsum(chip_values, dtype=np.int64, out=cumulative_ones[1:])
+    window_ones = (
+        cumulative_ones[len(prefix_values) :]
+        - cumulative_ones[: -len(prefix_values)]
+    )
+    return window_ones + int(prefix_values.sum()) - 2 * correlations
+
+
+def repeated_symbol_prefix_distances(chip_values, symbol_values, repetitions):
+    """Correlate a repeated 32-chip symbol without a long convolution."""
+    symbol_distances = prefix_distances(chip_values, symbol_values)
+    prefix_len = len(symbol_values) * repetitions
+    output_len = len(chip_values) - prefix_len + 1
+    distances = np.zeros(output_len, dtype=symbol_distances.dtype)
+    for repetition in range(repetitions):
+        start = repetition * len(symbol_values)
+        distances += symbol_distances[start : start + output_len]
+    return distances
+
+
+def transform_standard_chip_values(chip_values, ambiguity):
+    """Undo one Costas quadrant or I/Q polarity ambiguity."""
+    if ambiguity not in STANDARD_AMBIGUITIES:
+        raise ValueError(f"unsupported standard ambiguity: {ambiguity}")
+
+    work_values = chip_values.copy()
+    if ambiguity.startswith("swapped"):
+        paired = (len(work_values) // 2) * 2
+        work_values[:paired] = (
+            work_values[:paired].reshape(-1, 2)[:, ::-1].reshape(-1)
+        )
+
+    if ambiguity in ("inverted", "swapped_inverted"):
+        work_values = 1 - work_values
+    elif ambiguity in ("even_inverted", "swapped_even_inverted"):
+        work_values[0::2] = 1 - work_values[0::2]
+    elif ambiguity in ("odd_inverted", "swapped_odd_inverted"):
+        work_values[1::2] = 1 - work_values[1::2]
+    return work_values
+
+
+def transform_standard_chips(chips, ambiguity):
+    """String wrapper used by tests and offline diagnostics."""
+    chip_values = (
+        np.frombuffer(chips.encode("ascii"), dtype=np.uint8) - ord("0")
+    ).astype(np.uint8)
+    transformed = transform_standard_chip_values(chip_values, ambiguity)
+    return (transformed + ord("0")).astype(np.uint8).tobytes().decode("ascii")
+
+
+def select_prefix_positions(
+    distances,
+    max_distance,
+    frame_chip_count,
+    available_chips,
+    max_candidates,
+):
+    """Select the strongest non-overlapping symbol-aligned candidates."""
+    positions = np.flatnonzero(distances <= max_distance)
+    if not len(positions):
+        return []
+
+    ordered = positions[np.argsort(distances[positions])]
+    selected = []
+    for position in ordered:
+        position = int(position)
+        if position + frame_chip_count > available_chips:
+            continue
+        if any(abs(position - previous) < 32 for previous in selected):
+            continue
+        selected.append(position)
+        if len(selected) >= max_candidates:
+            break
+    return selected
+
+
+def find_standard_frame_candidate_fast(
+    chips,
+    expected_payload_len,
+    ambiguities=("normal",),
+    sample_offset=None,
+):
+    """Find a known-length standard frame without 32 full-buffer decodes."""
+    frame_len = PREAMBLE_BYTES + 2 + expected_payload_len + 2
+    frame_chip_count = frame_len * 2 * 32
+    if len(chips) < frame_chip_count:
+        return None
+
+    preamble_symbol = standard_prefix_chips()[:32]
+    symbol_values = (
+        np.frombuffer(preamble_symbol.encode("ascii"), dtype=np.uint8)
+        - ord("0")
+    ).astype(np.int16)
+    chip_values = (
+        np.frombuffer(chips.encode("ascii"), dtype=np.uint8) - ord("0")
+    ).astype(np.int16)
+    expected_prefix = [0x00] * PREAMBLE_BYTES + [SFD]
+    expected_phr = expected_payload_len + 2
+    best = None
+    for ambiguity in ambiguities:
+        work_values = transform_standard_chip_values(chip_values, ambiguity)
+        distances = repeated_symbol_prefix_distances(
+            work_values,
+            symbol_values,
+            STANDARD_FAST_PREFIX_SYMBOLS,
+        )
+        positions = select_prefix_positions(
+            distances,
+            STANDARD_PREFIX_MAX_DISTANCE,
+            frame_chip_count,
+            len(work_values),
+            STANDARD_MAX_PREFIX_CANDIDATES,
+        )
+
+        for position in positions:
+            frame_values = work_values[position : position + frame_chip_count]
+            frame_chips = (frame_values + ord("0")).astype(
+                np.uint8
+            ).tobytes().decode("ascii")
+            symbols = chips_to_symbols(frame_chips, CHIP_MAP)
+            frame = bits_to_bytes_lsb(symbols_to_bits(symbols))
+            if len(frame) != frame_len:
+                continue
+            if frame[PREAMBLE_BYTES + 1] != expected_phr:
+                continue
+
+            prefix_symbol_errors = 0
+            for actual, expected in zip(
+                frame[: PREAMBLE_BYTES + 1], expected_prefix
+            ):
+                difference = actual ^ expected
+                prefix_symbol_errors += int((difference & 0x0F) != 0)
+                prefix_symbol_errors += int((difference & 0xF0) != 0)
+            fcs_ok, _ = validate_frame(frame)
+            preamble_distance = sum(
+                distance for _, distance in symbols[: PREAMBLE_SYMBOLS + 4]
+            )
+            frame_distance = sum(distance for _, distance in symbols)
+            rank = (
+                position,
+                0 if fcs_ok else 1,
+                prefix_symbol_errors,
+                preamble_distance,
+                frame_distance,
+                "standard-fast",
+                ambiguity,
+            )
+            candidate = {
+                "rank": rank,
+                "frame": frame,
+                "chip_pos": position,
+                "symbols": symbols,
+                "symbol_pos": 0,
+                "prefix_symbol_errors": prefix_symbol_errors,
+                "preamble_distance": preamble_distance,
+                "frame_distance": frame_distance,
+                "phase_offset": sample_offset,
+                "polarity": "normal",
+                "standard_ambiguity": ambiguity,
+            }
+            if best is None or rank < best["rank"]:
+                best = candidate
+    return best
+
+
 def find_phase_frame_candidate_fast(
     chips,
     expected_payload_len,
@@ -261,37 +481,16 @@ def find_phase_frame_candidate_fast(
         return None
 
     best = None
-    prefix_ones = int(prefix_values.sum())
     for polarity in polarities:
         work_values = chip_values if polarity == "normal" else 1 - chip_values
-        correlations = np.correlate(work_values, prefix_values, mode="valid")
-        cumulative_ones = np.empty(len(work_values) + 1, dtype=np.int64)
-        cumulative_ones[0] = 0
-        np.cumsum(
-            work_values,
-            dtype=np.int64,
-            out=cumulative_ones[1:],
+        distances = prefix_distances(work_values, prefix_values)
+        selected_positions = select_prefix_positions(
+            distances,
+            PHASE_PREFIX_MAX_DISTANCE,
+            frame_chip_count,
+            len(work_values),
+            16,
         )
-        window_ones = (
-            cumulative_ones[len(prefix_values) :]
-            - cumulative_ones[: -len(prefix_values)]
-        )
-        distances = window_ones + prefix_ones - 2 * correlations
-        positions = np.flatnonzero(distances <= PHASE_PREFIX_MAX_DISTANCE)
-        if not len(positions):
-            continue
-
-        ordered = positions[np.argsort(distances[positions])]
-        selected_positions = []
-        for position in ordered:
-            position = int(position)
-            if position + frame_chip_count > len(work_values):
-                continue
-            if any(abs(position - previous) < 32 for previous in selected_positions):
-                continue
-            selected_positions.append(position)
-            if len(selected_positions) >= 16:
-                break
 
         for position in selected_positions:
             frame_values = work_values[
@@ -469,6 +668,26 @@ def choose_phase_candidate(candidates):
     return min(usable, key=lambda candidate: candidate["rank"]) if usable else None
 
 
+def choose_standard_candidate(candidates):
+    """Choose one physical burst across differential timing phases."""
+    usable = [candidate for candidate in candidates if candidate is not None]
+    if not usable:
+        return None
+
+    def quality(candidate):
+        fcs_ok, _ = validate_frame(candidate["frame"])
+        return (
+            0 if fcs_ok else 1,
+            candidate["prefix_symbol_errors"],
+            candidate["preamble_distance"],
+            candidate["frame_distance"],
+            candidate["chip_pos"],
+            candidate["phase_offset"],
+        )
+
+    return min(usable, key=quality)
+
+
 def validate_frame(frame):
     phr_len = frame[PREAMBLE_BYTES + 1]
     if phr_len < 2 or len(frame) != PREAMBLE_BYTES + 2 + phr_len:
@@ -565,6 +784,19 @@ def build_summary(
         "receiver": {
             "chip_source": args.chip_source,
             "chip_zmq": args.chip_zmq,
+            "standard_keep_offset": args.standard_keep_offset,
+            "standard_ambiguity": args.standard_ambiguity,
+            "standard_ambiguity_stats": getattr(
+                args, "standard_ambiguity_stats", None
+            ),
+            "standard_offset_stats": getattr(
+                args, "standard_offset_stats", None
+            ),
+            "standard_stream": (
+                "full-rate differential phase bits; modulo-5 deinterleaved"
+                if args.chip_source == "standard"
+                else None
+            ),
             "phase_keep_offset": args.phase_keep_offset,
             "phase_endpoints": getattr(args, "phase_endpoints", None),
             "freq_offset_hz": args.freq_offset,
@@ -586,6 +818,9 @@ def build_summary(
             "phase_zmq_messages": getattr(args, "phase_zmq_messages", None),
             "phase_candidate_stats": getattr(
                 args, "phase_candidate_stats", None
+            ),
+            "processing_timing": getattr(
+                args, "receiver_processing_timing", None
             ),
             "phase_scan_timing": getattr(args, "phase_scan_timing", None),
         },
@@ -646,7 +881,10 @@ def print_summary(summary, json_path):
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Known-good standard ZigBee OQPSK receiver with BlueBee PRR statistics"
+        description=(
+            "BlueBee differential receiver with standard ZigBee DSSS "
+            "validation and PRR statistics"
+        )
     )
     parser.add_argument("--channel", type=int, default=26, help="ZigBee channel (default: 26)")
     parser.add_argument(
@@ -654,7 +892,8 @@ def parse_args():
         choices=("standard", "phase"),
         default="standard",
         help=(
-            "Chip stream: standard OQPSK on ZMQ 55556 (default) or "
+            "Chip stream: full-rate differential standard stream on ZMQ "
+            "55556 (default) or "
             "five-phase diagnostic on ZMQ 55557..55561"
         ),
     )
@@ -672,6 +911,24 @@ def parse_args():
         help=(
             "Phase sampler endpoint: auto (default for phase source) or fixed "
             "offset 0..4"
+        ),
+    )
+    parser.add_argument(
+        "--standard-keep-offset",
+        choices=("auto", "0", "1", "2", "3", "4"),
+        default="auto",
+        help=(
+            "Differential standard sampler: auto (default) or fixed "
+            "modulo-5 offset 0..4"
+        ),
+    )
+    parser.add_argument(
+        "--standard-ambiguity",
+        choices=("auto",) + STANDARD_AMBIGUITIES,
+        default="auto",
+        help=(
+            "Differential-chip polarity for standard; auto alternates normal "
+            "and inverted until FCS lock (default: auto)"
         ),
     )
     parser.add_argument(
@@ -698,6 +955,8 @@ def parse_args():
     if args.chip_source == "standard":
         args.chip_zmq = args.chip_zmq or STANDARD_ENDPOINT
         args.phase_endpoints = None
+        if args.standard_keep_offset != "auto":
+            args.standard_keep_offset = int(args.standard_keep_offset)
     elif args.phase_keep_offset == "auto":
         if args.chip_zmq is not None:
             parser.error(
@@ -730,6 +989,7 @@ def main():
         "payload_len",
         "phase_offset",
         "phase_polarity",
+        "standard_ambiguity",
         "prefix_symbol_errors",
         "preamble_distance",
         "frame_distance",
@@ -754,10 +1014,13 @@ def main():
         )
     )
     print(
-        f"RX (OQPSK): ch{args.channel} {gr_block_obj.get_freq()/1e6:.1f} MHz "
+        f"RX (BlueBee differential/standard DSSS): ch{args.channel} "
+        f"{gr_block_obj.get_freq()/1e6:.1f} MHz "
         f"sr={gr_block_obj.get_sample_rate()/1e6:.1f} MHz "
         f"chip_source={args.chip_source} zmq={endpoint_label} "
         f"phase_offset={args.phase_keep_offset} "
+        f"standard_offset={args.standard_keep_offset} "
+        f"standard_ambiguity={args.standard_ambiguity} "
         f"freq_offset={args.freq_offset:g}"
     )
     print(f"Raw CSV: {csv_path}")
@@ -771,12 +1034,34 @@ def main():
         offset: ZMQSubscriber(addr=endpoint)
         for offset, endpoint in endpoint_map.items()
     }
-    chip_buffers = {offset: "" for offset in subscribers}
+    standard_offsets = (
+        tuple(range(STANDARD_PHASE_COUNT))
+        if args.chip_source == "standard"
+        and args.standard_keep_offset == "auto"
+        else (
+            (args.standard_keep_offset,)
+            if args.chip_source == "standard"
+            else ()
+        )
+    )
+    chip_buffers = (
+        {offset: "" for offset in standard_offsets}
+        if args.chip_source == "standard"
+        else {offset: "" for offset in subscribers}
+    )
     zmq_msgs_by_offset = {offset: 0 for offset in subscribers}
     phase_candidate_stats = {
         offset: {"candidates": 0, "fcs_ok": 0, "fcs_failure": 0}
         for offset in subscribers
         if offset is not None
+    }
+    standard_ambiguity_stats = {
+        ambiguity: {"candidates": 0, "fcs_ok": 0, "fcs_failure": 0}
+        for ambiguity in STANDARD_AMBIGUITIES
+    }
+    standard_offset_stats = {
+        offset: {"candidates": 0, "fcs_ok": 0, "fcs_failure": 0}
+        for offset in standard_offsets
     }
     zmq_msgs = 0
     crc_ok_packets = 0
@@ -787,15 +1072,22 @@ def main():
     pending_scan = False
     phase_polarity_hint = None
     phase_scan_polarity = "normal"
-    phase_scan_count = 0
-    phase_scan_sum_s = 0.0
-    phase_scan_max_s = 0.0
+    standard_polarity_hint = None
+    standard_scan_polarity = "normal"
+    standard_stream_phase = 0
+    processing_count = 0
+    processing_sum_s = 0.0
+    processing_max_s = 0.0
 
     try:
         while True:
             processing_start = time.perf_counter()
             received_any = False
-            poll_ms = 10 if len(subscribers) == 1 else 2
+            # A decoded frame may leave more complete frames in the retained
+            # buffer.  Drain those without adding one blocking poll per frame.
+            poll_ms = 0 if pending_scan else (
+                10 if len(subscribers) == 1 else 2
+            )
             for offset, subscriber in subscribers.items():
                 raw_messages = subscriber.read_available(
                     poll_timeout_ms=poll_ms
@@ -806,9 +1098,27 @@ def main():
                 message_count = len(raw_messages)
                 zmq_msgs += message_count
                 zmq_msgs_by_offset[offset] += message_count
-                chip_buffers[offset] += unpack_messages_to_chips(raw_messages)
-                if len(chip_buffers[offset]) > MAX_CHIPS:
-                    chip_buffers[offset] = chip_buffers[offset][-MAX_CHIPS:]
+                if args.chip_source == "standard":
+                    chip_values = unpack_messages_to_chip_values(raw_messages)
+                    streams, standard_stream_phase = (
+                        deinterleave_standard_phase_values(
+                            chip_values,
+                            standard_stream_phase,
+                            standard_offsets,
+                        )
+                    )
+                    for sample_offset, chips in streams.items():
+                        chip_buffers[sample_offset] += chips
+                        if len(chip_buffers[sample_offset]) > MAX_CHIPS:
+                            chip_buffers[sample_offset] = chip_buffers[
+                                sample_offset
+                            ][-MAX_CHIPS:]
+                else:
+                    chip_buffers[offset] += unpack_messages_to_chips(
+                        raw_messages
+                    )
+                    if len(chip_buffers[offset]) > MAX_CHIPS:
+                        chip_buffers[offset] = chip_buffers[offset][-MAX_CHIPS:]
 
             if received_any or pending_scan:
                 candidates = {}
@@ -816,6 +1126,23 @@ def main():
                     if len(chip_buffer) < MIN_FRAME_CHIPS:
                         continue
                     if (
+                        args.chip_source == "standard"
+                        and args.payload_len is not None
+                    ):
+                        candidate = find_standard_frame_candidate_fast(
+                            chip_buffer,
+                            args.payload_len,
+                            ambiguities=(
+                                (
+                                    standard_polarity_hint
+                                    or standard_scan_polarity,
+                                )
+                                if args.standard_ambiguity == "auto"
+                                else (args.standard_ambiguity,)
+                            ),
+                            sample_offset=offset,
+                        )
+                    elif (
                         args.chip_source == "phase"
                         and args.payload_len is not None
                     ):
@@ -827,6 +1154,22 @@ def main():
                                 phase_polarity_hint or phase_scan_polarity,
                             ),
                         )
+                    elif args.chip_source == "standard":
+                        ambiguity = (
+                            standard_polarity_hint or standard_scan_polarity
+                            if args.standard_ambiguity == "auto"
+                            else args.standard_ambiguity
+                        )
+                        candidate = find_frame_candidate(
+                            transform_standard_chips(
+                                chip_buffer,
+                                ambiguity,
+                            ),
+                            "standard",
+                            phase_offset=offset,
+                        )
+                        if candidate is not None:
+                            candidate["standard_ambiguity"] = ambiguity
                     else:
                         candidate = find_frame_candidate(
                             chip_buffer,
@@ -839,7 +1182,27 @@ def main():
                         )
                     if candidate is not None:
                         candidates[offset] = candidate
-                        if offset is not None:
+                        if args.chip_source == "standard":
+                            ambiguity = candidate["standard_ambiguity"]
+                            standard_ambiguity_stats[ambiguity][
+                                "candidates"
+                            ] += 1
+                            if validate_frame(candidate["frame"])[0]:
+                                standard_ambiguity_stats[ambiguity][
+                                    "fcs_ok"
+                                ] += 1
+                            else:
+                                standard_ambiguity_stats[ambiguity][
+                                    "fcs_failure"
+                                ] += 1
+                            standard_offset_stats[offset]["candidates"] += 1
+                            if validate_frame(candidate["frame"])[0]:
+                                standard_offset_stats[offset]["fcs_ok"] += 1
+                            else:
+                                standard_offset_stats[offset][
+                                    "fcs_failure"
+                                ] += 1
+                        if args.chip_source == "phase" and offset is not None:
                             phase_candidate_stats[offset]["candidates"] += 1
                             if validate_frame(candidate["frame"])[0]:
                                 phase_candidate_stats[offset]["fcs_ok"] += 1
@@ -848,19 +1211,17 @@ def main():
                                     "fcs_failure"
                                 ] += 1
 
-                if args.chip_source == "phase":
-                    # Include ZMQ receive and packed-bit expansion.  These
-                    # dominated auto mode even when candidate search alone
-                    # appeared to fit inside the retained chip window.
-                    scan_elapsed = time.perf_counter() - processing_start
-                    phase_scan_count += 1
-                    phase_scan_sum_s += scan_elapsed
-                    phase_scan_max_s = max(phase_scan_max_s, scan_elapsed)
+                # Include ZMQ receive and packed-bit expansion so the timing
+                # reflects the whole receiver iteration, not only correlation.
+                scan_elapsed = time.perf_counter() - processing_start
+                processing_count += 1
+                processing_sum_s += scan_elapsed
+                processing_max_s = max(processing_max_s, scan_elapsed)
 
                 selected = (
                     choose_phase_candidate(candidates.values())
                     if args.chip_source == "phase"
-                    else next(iter(candidates.values()), None)
+                    else choose_standard_candidate(candidates.values())
                 )
                 if selected is not None:
                     frame = selected["frame"]
@@ -878,6 +1239,11 @@ def main():
                             phase_polarity_hint = selected.get(
                                 "polarity", phase_scan_polarity
                             )
+                        elif args.chip_source == "standard":
+                            standard_polarity_hint = selected.get(
+                                "standard_ambiguity",
+                                standard_scan_polarity,
+                            )
                         parsed, result = tracker.observe(payload)
                         if parsed.reason == "magic":
                             non_test_packets += 1
@@ -894,6 +1260,9 @@ def main():
                         "payload_len": len(payload),
                         "phase_offset": "" if phase_offset is None else phase_offset,
                         "phase_polarity": selected.get("polarity", ""),
+                        "standard_ambiguity": selected.get(
+                            "standard_ambiguity", ""
+                        ),
                         "prefix_symbol_errors": selected[
                             "prefix_symbol_errors"
                         ],
@@ -914,6 +1283,7 @@ def main():
                     if args.verbose_packets or not fcs_ok or result not in ("unique",):
                         print(
                             f"packet chip={chip_pos} phase={record['phase_offset']} "
+                            f"ambiguity={record['standard_ambiguity']} "
                             f"FCS={'OK' if fcs_ok else 'FAIL'} "
                             f"result={result} run_id={record['run_id']} "
                             f"sequence={record['sequence']} payload_len={len(payload)}"
@@ -930,10 +1300,18 @@ def main():
                     # Consume every same-iteration phase candidate.  Even when
                     # several offsets decoded the burst, it was observed once
                     # above and therefore cannot inflate duplicate accounting.
-                    for offset, candidate in candidates.items():
+                    consume_offsets = (
+                        chip_buffers.keys()
+                        if args.chip_source == "standard"
+                        else candidates.keys()
+                    )
+                    for offset in consume_offsets:
+                        candidate = candidates.get(offset)
                         frame_end_chip = (
                             candidate["chip_pos"]
                             + len(candidate["frame"]) * 2 * 32
+                            if candidate is not None
+                            else chip_pos + len(frame) * 2 * 32
                         )
                         chip_buffers[offset] = chip_buffers[offset][
                             frame_end_chip:
@@ -949,6 +1327,16 @@ def main():
                 phase_scan_polarity = (
                     "inverted"
                     if phase_scan_polarity == "normal"
+                    else "normal"
+                )
+            if (
+                args.chip_source == "standard"
+                and args.standard_ambiguity == "auto"
+                and standard_polarity_hint is None
+            ):
+                standard_scan_polarity = (
+                    "inverted"
+                    if standard_scan_polarity == "normal"
                     else "normal"
                 )
 
@@ -995,15 +1383,33 @@ def main():
             if args.chip_source == "phase"
             else None
         )
+        args.standard_ambiguity_stats = (
+            standard_ambiguity_stats
+            if args.chip_source == "standard"
+            else None
+        )
+        args.standard_offset_stats = (
+            {
+                str(offset): stats
+                for offset, stats in standard_offset_stats.items()
+            }
+            if args.chip_source == "standard"
+            else None
+        )
+        args.receiver_processing_timing = {
+            "samples": processing_count,
+            "avg_ms": (
+                processing_sum_s * 1000.0 / processing_count
+                if processing_count
+                else 0.0
+            ),
+            "max_ms": processing_max_s * 1000.0,
+            "buffer_chips": MAX_CHIPS,
+            "includes_zmq_receive": True,
+        }
         args.phase_scan_timing = (
             {
-                "samples": phase_scan_count,
-                "avg_ms": (
-                    phase_scan_sum_s * 1000.0 / phase_scan_count
-                    if phase_scan_count
-                    else 0.0
-                ),
-                "max_ms": phase_scan_max_s * 1000.0,
+                **args.receiver_processing_timing,
                 "buffer_span_ms": MAX_CHIPS / 2000.0,
             }
             if args.chip_source == "phase"

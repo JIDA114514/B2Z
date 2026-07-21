@@ -57,9 +57,10 @@ python3 python/perf_test/zigbee_perf_rx.py --help
 
 | 数据流 | ZMQ | 用途 |
 |---|---:|---|
-| standard | 55556 | 正式 ZigBee OQPSK 验收 |
+| standard | 55556 | 单路全采样差分相位 bit；正式 BlueBee/ZigBee 验收 |
 | phase offset 0 | 55557 | BlueBee 相位差诊断 |
 | phase offset 1--4 | 55558--55561 | 其余四个 5 倍采样相位 |
+| coherent reference | 55566 | 修正后的原生相干 O-QPSK 正向校验，不计正式 PRR |
 
 phase 模式支持：
 
@@ -85,9 +86,19 @@ phase 模式支持：
 6. prefix distance 只保留一次相关运算，滑窗中“1”的数量改用 `cumsum` 求区间和，检测结果不变。
 7. JSON 的 `phase_scan_timing` 记录 samples、avg_ms、max_ms 和 buffer_span_ms，并包含 ZMQ 读取、packed-bit 展开和候选搜索的完整时间。
 
+standard 正式验收链也已增加已知长度快速路径。GNU Radio 在 55556 发布单路 10 Msample/s 差分相位 bit，Python 用连续的全局模 5 位置拆成五个 2 Mchip/s 相位；拆相状态跨 ZMQ 消息和接收批次保存，不受消息边界影响。`--standard-keep-offset auto` 同时搜索五相位，固定值 `0..4` 仅搜索指定相位。同一物理突发在多个相位形成候选时只提交一次，后续真正重发才计 duplicate。
+
+提供 `--payload-len` 时，接收器利用 4 字节 preamble 为 8 个相同 ZigBee symbol 的结构，执行一次 32-chip 向量相关和 8 路移位求和，再只对最多 16 个局部候选做完整标准 `CHIP_MAP` 判决。BlueBee optimized 映射投影到标准 DSSS 码时，每 symbol 理想固有距离为 8 chips，因此 standard 前缀门限设为平均 10 chips/symbol，给无线误差保留 2 chips/symbol 余量。五相位 48k-chip 合成基准平均约 13.10 ms、最大约 16.13 ms，低于 24 ms 缓存跨度。JSON 的 `receiver.processing_timing` 记录完整迭代耗时，`standard_offset_stats` 记录逐相位 candidates/FCS。
+
+旧相干链的 8 种 Costas/IQ 交换与反相扫描证明无法恢复当前 BlueBee GFSK 波形，已退出正式路径。`--standard-ambiguity auto` 现在只在 normal/inverted 差分极性之间逐轮切换，首次有效 FCS 后锁定；旧变换函数仅为离线兼容诊断保留。原生 O-QPSK 的匹配滤波参数也已修正为每支路 10 sample 半正弦、I/Q 一 chip（5 sample）错位和 10:1 抽取，其输出迁移到 55566 作为正向校验。
+
+standard 的跨 offset 合并以一次物理突发为统计单位。五路同时形成候选时，先按有效 FCS、前缀符号错误、preamble distance 和 frame distance 选出一个结果，再消费五路对应时间窗，因此一次突发不会虚增 duplicate；后续再次收到同一 Sequence 才是协议意义上的真正 duplicate。CSV 记录最终所选 offset、极性和距离，JSON 的 `standard_offset_stats` 记录每个 offset 的 candidates、`fcs_ok` 和 `fcs_failure`。
+
 第一阶段优化后的五相位候选搜索约 9 ms；固定 offset 0 的 run 1238 实测平均 2.21 ms、最大 5.01 ms，均低于当时的 12 ms 缓存窗口。板端发送 12 包，接收端得到 Sequence 0--11 的 12 unique、0 duplicate、0 out-of-order。
 
 exadv run 1240 的 auto 复测仅得到 3 unique，并显示完整扫描平均 11.11 ms、最大 15.40 ms，最大值已超过 12 ms；五路共处理约 116 万条 ZMQ 小消息，说明逐消息 bit 展开仍会形成积压。二次优化后，单路 500 条消息解包由约 23.66 ms 降至 0.76 ms；24 ms 缓存下的 5×500 消息解包和五相位扫描合成基准约 14.65 ms。该数值不包含真实 ZMQ 调度抖动，必须通过下一轮板上实验验证。
+
+standard 重构后的 exadv run 1243 收到 11 个有效包，Sequence 为 `0--8、10、11`，缺少 Sequence 9；`crc_failure=0`、`duplicate=0`、`out_of_order=0`。五个 offset 都产生过有效 FCS，最终最佳 offset 随突发变化，说明 auto 不能替换为某个固定 offset。完整处理平均 10.194 ms、最大 20.686 ms，低于 24 ms 缓存跨度，当前没有持续扫描积压的证据。该 JSON 为 `board=null`；若同 Run ID 板端最终确认 `tx_completed=12`，本轮无线 PRR 才可正式记为 `11/12 = 91.67%`。
 
 ### 运行和结果合并
 
@@ -103,13 +114,26 @@ python3 python/perf_test/zigbee_perf_rx.py \
   --output-prefix python/perf_test/pure-1238-phase0
 ```
 
-五相位诊断时将 offset 改为 `auto`。正式验收使用 `--chip-source standard`，并通过：
+五相位诊断时将 phase offset 改为 `auto`。正式验收使用 `--chip-source standard --standard-keep-offset auto --standard-ambiguity auto`，并通过：
 
 ```text
 --board-stats <serial.log>
 ```
 
 读取同一 Run ID 的最终 `PERF_STATS`。只有合并板端 `scheduled`/`tx_completed` 后，JSON 中的调度完成率、无线 PRR 和端到端接收率才具有正式统计意义。
+
+正式 standard 命令示例：
+
+```bash
+python3 python/perf_test/zigbee_perf_rx.py \
+  --chip-source standard \
+  --standard-keep-offset auto \
+  --standard-ambiguity auto \
+  --duration 70 \
+  --run-id 1248 \
+  --payload-len 10 \
+  --output-prefix python/perf_test/exadv-1248-standard-auto
+```
 
 ## BLE 协议概述
 

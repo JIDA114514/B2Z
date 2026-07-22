@@ -142,6 +142,62 @@ class SequenceTracker:
             previous = sequence
         return max(longest, last - previous)
 
+    def planned_range(self, expected_packets):
+        """Summarize received sequences against a bounded planned run.
+
+        Missing ranges are built from the sorted received set, so even a long
+        run with a large absent tail does not allocate one entry per planned
+        packet. Out-of-range values are retained explicitly because they are
+        useful evidence of a stale transmitter run or an overlapping receive
+        window.
+        """
+        if expected_packets is None:
+            return None
+        if expected_packets < 0:
+            raise ValueError("expected_packets must be non-negative")
+
+        in_range = sorted(
+            sequence
+            for sequence in self.sequences
+            if 0 <= sequence < expected_packets
+        )
+        out_of_range = sorted(
+            sequence
+            for sequence in self.sequences
+            if sequence < 0 or sequence >= expected_packets
+        )
+        missing_ranges = []
+        next_expected = 0
+        for sequence in in_range:
+            if sequence > next_expected:
+                missing_ranges.append(
+                    {
+                        "start": next_expected,
+                        "end": sequence - 1,
+                        "count": sequence - next_expected,
+                    }
+                )
+            next_expected = sequence + 1
+        if next_expected < expected_packets:
+            missing_ranges.append(
+                {
+                    "start": next_expected,
+                    "end": expected_packets - 1,
+                    "count": expected_packets - next_expected,
+                }
+            )
+
+        return {
+            "expected_packets": expected_packets,
+            "range_start": 0 if expected_packets else None,
+            "range_end": expected_packets - 1 if expected_packets else None,
+            "in_range_unique": len(in_range),
+            "missing": expected_packets - len(in_range),
+            "missing_ranges": missing_ranges,
+            "out_of_range_count": len(out_of_range),
+            "out_of_range_sequences": out_of_range,
+        }
+
 
 _KEY_VALUE_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)=([^\s]+)")
 _INTEGER_KEYS = {

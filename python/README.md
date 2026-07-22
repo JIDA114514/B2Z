@@ -86,13 +86,27 @@ phase 模式支持：
 6. prefix distance 只保留一次相关运算，滑窗中“1”的数量改用 `cumsum` 求区间和，检测结果不变。
 7. JSON 的 `phase_scan_timing` 记录 samples、avg_ms、max_ms 和 buffer_span_ms，并包含 ZMQ 读取、packed-bit 展开和候选搜索的完整时间。
 
-standard 正式验收链也已增加已知长度快速路径。GNU Radio 在 55556 发布单路 10 Msample/s 差分相位 bit，Python 用连续的全局模 5 位置拆成五个 2 Mchip/s 相位；拆相状态跨 ZMQ 消息和接收批次保存，不受消息边界影响。`--standard-keep-offset auto` 同时搜索五相位，固定值 `0..4` 仅搜索指定相位。同一物理突发在多个相位形成候选时只提交一次，后续真正重发才计 duplicate。
+standard 正式链从 ZMQ 55556 的单路 10 Msample/s 差分相位 bit 流连续拆出五个 2 Mchip/s offset，拆相状态跨 ZMQ 消息保存。提供 `--payload-len` 时，五个 offset 先只做 8-symbol preamble 评分；默认 `--standard-offset-policy adaptive` 按评分依次执行完整标准 `CHIP_MAP` 判决，找到有效 FCS 立即停止，前两个失败时继续尝试第 3--5 名。旧的“最多两个”策略保留为 `--standard-offset-policy ranked2`，仅用于 A/B。固定 `--standard-keep-offset 0..4` 仍保留为诊断入口。
 
-提供 `--payload-len` 时，接收器利用 4 字节 preamble 为 8 个相同 ZigBee symbol 的结构，执行一次 32-chip 向量相关和 8 路移位求和，再只对最多 16 个局部候选做完整标准 `CHIP_MAP` 判决。BlueBee optimized 映射投影到标准 DSSS 码时，每 symbol 理想固有距离为 8 chips，因此 standard 前缀门限设为平均 10 chips/symbol，给无线误差保留 2 chips/symbol 余量。五相位 48k-chip 合成基准平均约 13.10 ms、最大约 16.13 ms，低于 24 ms 缓存跨度。JSON 的 `receiver.processing_timing` 记录完整迭代耗时，`standard_offset_stats` 记录逐相位 candidates/FCS。
+BlueBee optimized 映射投影到标准 DSSS 码时，每 symbol 理想固有距离为 8 chips，因此前缀门限保留平均 10 chips/symbol。首次有效 FCS 后锁定 normal/inverted 差分极性；旧 Costas/IQ 变换只保留作离线诊断。跨 offset 合并仍以一次物理突发为单位，之后再次收到同一 Sequence 才计 duplicate。
 
-旧相干链的 8 种 Costas/IQ 交换与反相扫描证明无法恢复当前 BlueBee GFSK 波形，已退出正式路径。`--standard-ambiguity auto` 现在只在 normal/inverted 差分极性之间逐轮切换，首次有效 FCS 后锁定；旧变换函数仅为离线兼容诊断保留。原生 O-QPSK 的匹配滤波参数也已修正为每支路 10 sample 半正弦、I/Q 一 chip（5 sample）错位和 10:1 抽取，其输出迁移到 55566 作为正向校验。
+JSON 的 `receiver.processing_timing` 记录 avg/max 以及 p50/p95/p99；`standard_offset_ranking` 记录最佳/次优 offset distance、无候选时的最小 preamble distance、完整解码次数以及 `fcs_success_by_rank`，可直接判断第 3--5 名是否挽回了包；`buffer_critical` 记录 90% 容量临界事件及实际截断次数。
 
-standard 的跨 offset 合并以一次物理突发为统计单位。五路同时形成候选时，先按有效 FCS、前缀符号错误、preamble distance 和 frame distance 选出一个结果，再消费五路对应时间窗，因此一次突发不会虚增 duplicate；后续再次收到同一 Sequence 才是协议意义上的真正 duplicate。CSV 记录最终所选 offset、极性和距离，JSON 的 `standard_offset_stats` 记录每个 offset 的 candidates、`fcs_ok` 和 `fcs_failure`。
+HackRF 接收校准参数已与吞吐统计参数分离：`--rf-gain`、`--if-gain` 和 `--bb-gain` 会实际下发到设备；默认从低失真基线 RF=0、IF=16、BB=16 开始，避免旧流图 RF=50、IF=89 被驱动钳位或造成前级过载。`--cfo-correction-hz` 只改变数字平移中心，用于消除发射机/接收机残余 CFO。原有 `--freq-offset` 同时移动硬件 LO 并在数字域移回，只用于避开 DC spur，不应再当作 CFO 补偿。每轮 JSON 保存实际增益、LO offset 和 CFO correction。
+
+接收率优化应保持板端 realtime 和宽松间隔，先固定增益，仅扫描 CFO；再固定最佳 CFO，一次只改变一个增益参数。例如：
+
+```bash
+python3 python/perf_test/zigbee_perf_rx.py \
+  --standard-offset-policy adaptive \
+  --rf-gain 0 --if-gain 16 --bb-gain 16 \
+  --cfo-correction-hz -25000 \
+  --tx-duration-s 65 --tx-interval-us 5000000 \
+  --run-id 21100 --payload-len 46 \
+  --output-prefix python/perf_test/rx-cal-p46-r21100
+```
+
+先用不同 Run ID 对 `--cfo-correction-hz` 做对称小步扫描；找到峰值后再调整 RF/IF gain。每个候选点至少重复 3 轮。正式缩短 interval 前仍要求 standard 链计划接收率不低于 99%、`p99 < 12 ms`、`max < 24 ms`。
 
 第一阶段优化后的五相位候选搜索约 9 ms；固定 offset 0 的 run 1238 实测平均 2.21 ms、最大 5.01 ms，均低于当时的 12 ms 缓存窗口。板端发送 12 包，接收端得到 Sequence 0--11 的 12 unique、0 duplicate、0 out-of-order。
 
@@ -100,41 +114,57 @@ exadv run 1240 的 auto 复测仅得到 3 unique，并显示完整扫描平均 1
 
 standard 重构后的 exadv run 1243 收到 11 个有效包，Sequence 为 `0--8、10、11`，缺少 Sequence 9；`crc_failure=0`、`duplicate=0`、`out_of_order=0`。五个 offset 都产生过有效 FCS，最终最佳 offset 随突发变化，说明 auto 不能替换为某个固定 offset。完整处理平均 10.194 ms、最大 20.686 ms，低于 24 ms 缓存跨度，当前没有持续扫描积压的证据。该 JSON 为 `board=null`；若同 Run ID 板端最终确认 `tx_completed=12`，本轮无线 PRR 才可正式记为 `11/12 = 91.67%`。
 
-### 运行和结果合并
+### 不依赖板端日志的有界实验
 
-固定相位诊断示例：
-
-```bash
-python3 python/perf_test/zigbee_perf_rx.py \
-  --chip-source phase \
-  --phase-keep-offset 0 \
-  --duration 80 \
-  --run-id 1238 \
-  --payload-len 10 \
-  --output-prefix python/perf_test/pure-1238-phase0
-```
-
-五相位诊断时将 phase offset 改为 `auto`。正式验收使用 `--chip-source standard --standard-keep-offset auto --standard-ambiguity auto`，并通过：
-
-```text
---board-stats <serial.log>
-```
-
-读取同一 Run ID 的最终 `PERF_STATS`。只有合并板端 `scheduled`/`tx_completed` 后，JSON 中的调度完成率、无线 PRR 和端到端接收率才具有正式统计意义。
-
-正式 standard 命令示例：
+当前吞吐基线不读取串口日志。接收器必须先启动，再在约 5 秒内执行板端有界命令。下面的接收命令未显式给 `--duration`，因此自动运行 `tx_duration_s + 10 s`：
 
 ```bash
 python3 python/perf_test/zigbee_perf_rx.py \
   --chip-source standard \
   --standard-keep-offset auto \
   --standard-ambiguity auto \
-  --duration 70 \
+  --tx-duration-s 60 \
+  --tx-interval-us 100000 \
   --run-id 1248 \
-  --payload-len 10 \
+  --payload-len 46 \
   --output-prefix python/perf_test/exadv-1248-standard-auto
 ```
 
+随后执行：
+
+```text
+bluebee_exadv_perf_start? 46 100000 60 1248 2
+```
+
+`--tx-duration-s` 与 `--tx-interval-us` 必须同时提供。接收器计算 `expected_packets=floor(duration_s*1000000/interval_us)`，固定检查 Sequence `0..expected_packets-1`，并报告范围内 unique、缺失区间、越界 Sequence 和 `planned_end_to_end_receive`。吞吐时间分母固定为计划发射时长，JSON 标记 `time_basis=planned_tx_duration`。没有板端 `tx_completed` 时 `wireless_prr` 必须为 `N/A`；该阶段不能区分板端漏发和无线丢包。
+
+历史兼容参数 `--board-stats <serial.log>` 仍可人工使用，但当前扫描工具不传入该参数，也不以 `PERF_STATS` 判断接收观察是否完成。
+
+### pure/exadv 扫描工具
+
+先生成包含唯一 Run ID、接收命令、板端命令和结果文件名的清单：
+
+```bash
+python3 python/perf_test/bluebee_throughput_scan.py plan \
+  --test both --mode both \
+  --payloads 10,16,24,32,40,46 \
+  --intervals-us 100000,75000,50000 \
+  --tx-duration-s 60
+```
+
+逐项运行时，工具先启动接收器并立即显示需要人工执行的板端命令：
+
+```bash
+python3 python/perf_test/bluebee_throughput_scan.py run \
+  bluebee_scan_results/scan_manifest.json 0
+```
+
+所有已完成 case 汇总为完整 planned-rate/goodput 曲线；未达到 99% 的配置也不会被丢弃：
+
+```bash
+python3 python/perf_test/bluebee_throughput_scan.py report \
+  bluebee_scan_results/scan_manifest.json
+```
 ## BLE 协议概述
 
 BLE（Bluetooth Low Energy）工作在 2.4 GHz ISM 频段，共有 40 个信道（37/38/39 为 advertising channel，0~36 为 data channel），信道间隔 2 MHz。本项目的 cross-technology communication（CTC）方案利用 BLE physical layer 的 GFSK 调制来承载 ZigBee 的 DSSS chip 序列，因此必须从物理层角度理解 BLE 的帧结构、调制方式和数据完整性机制。

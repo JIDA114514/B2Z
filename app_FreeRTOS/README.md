@@ -511,7 +511,9 @@ bluebee_perf_status?
 bluebee_perf_stop?
 ```
 
-`payload_len` 为 10--46，`duration_s` 为 0--600，参数只接受十进制整数。当前 Phase 1 只实现 `mode=0` realtime；`mode=1` batch 和 `mode=2` double 仅保留参数协议，使用时会返回 `PERF_ERROR`。
+`payload_len` 为 10--46，`duration_s` 为 0--600，参数只接受十进制整数。三种模式均已实现：`mode=0` realtime 逐包生成；`mode=2` double 使用两个独立 IQ 缓冲，在 DMA 读取当前包时生成下一 Sequence；`mode=1` batch 在实验计时前预生成首批，后续批次继续生成新的 Sequence 波形，绝不循环复用旧波形。
+
+batch 未提供 `batch_size` 时默认为 4，最大为 8。arena 为 64 字节对齐的静态 DDR BSS，最大约 7.4 MB，不占用 1 MB FreeRTOS heap；double 只使用 slot 0/1。
 
 ### 14.2 时隙、DMA 和统计
 
@@ -571,7 +573,7 @@ hdl/projects/antsdre310/antsdre310.sdk/app/src/app/
 | [drivers/console.c](drivers/console.c) | Console 互斥锁、非阻塞 UART 读取 |
 | [app/command.c](app/command.c) | 统一命令分发、文本参数解析、BLE 请求队列和 `BLE_CTRL` 任务 |
 | [app/ble_tx_adv.c](app/ble_tx_adv.c) | BLE advertising 波形生成与 `BLE_TX_ADV` 发送任务 |
-| [app/bluebee_perf.c](app/bluebee_perf.c) | 测试 payload、时隙调度、pure/exadv realtime 发送、DMA 轮询和性能统计 |
+| [app/bluebee_perf.c](app/bluebee_perf.c) | 测试 payload、时隙调度、pure/exadv realtime/double/batch、DMA 轮询和性能统计 |
 | [app/bluebee_gen.c](app/bluebee_gen.c) | pure BlueBee frame/mapping/GFSK 生成和 Gaussian 前缀和优化 |
 | [app/ble_exadv_secondary_gen.c](app/ble_exadv_secondary_gen.c) | exadv secondary/BlueBee 波形生成和分阶段耗时元数据 |
 | [drivers/delay.c](drivers/delay.c) | 调度感知的 `no_os_mdelay()` |

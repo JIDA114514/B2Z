@@ -1625,3 +1625,86 @@ buffer_span=24.000 ms
 ```
 
 五个 offset 都产生过有效 FCS，且不同包最终选择的最佳 offset 不固定，证明五相位 auto 是必要的。处理最大耗时仍小于缓存跨度，当前没有证据表明 Sequence 9 因 Python 扫描持续积压而丢失；它在五个 offset 上都没有形成可提交候选，而不是已记录的 CRC failure。接收 JSON 仍为 `board=null`，因此只有在同一 Run ID 的板端确认 `tx_completed=12` 后，才能把本轮无线 PRR 正式写为 `11/12 = 91.67%`。该结果解决了旧 standard 完全零候选的问题，但尚未达到不低于 99% 的稳定点；下一步应先用新 Run ID 重复同参数至少三轮，再决定是否放宽门限或继续定位 RF/突发捕获。
+
+### 17.16 runs 21001--21101 接收率复测与接收前端校准
+
+为避免尚未稳定的板端 double/batch 改动干扰结论，本阶段由用户保持板端为修改前版本，只使用 pure realtime。接收端仍按发射命令中的计划时长和 interval 计算 `expected_packets`；以下比率均为 planned end-to-end receive rate，不是正式无线 PRR。各轮 JSON 均为 `board=null`，因此还不能确认计划包是否全部完成 DMA 发射。
+
+#### 实验结果汇总
+
+| Run ID | 接收链 | Payload | Interval | Expected | Unique | Planned rate | CRC failure | p99 / max |
+|---:|---|---:|---:|---:|---:|---:|---:|---:|
+| 21001 | standard auto，旧 ranked2 | 46 B | 5 s | 13 | 0 | 0.00% | 9 | 14.252 / 19.765 ms |
+| 21002 | standard auto，旧 ranked2 | 10 B | 5 s | 13 | 7 | 53.85% | 3 | 14.213 / 20.592 ms |
+| 21003 | standard auto，旧 ranked2 | 46 B | 5 s | 13 | 0 | 0.00% | 9 | 14.270 / 18.659 ms |
+| 21004 | phase auto | 46 B | 5 s | 13 | 6 | 46.15% | 15 | 20.530 / 28.805 ms |
+| 21005 | phase fixed offset 3 | 46 B | 5 s | 13 | 7 | 53.85% | 10 | 8.441 / 10.914 ms |
+| 21006 | standard auto，旧 ranked2 | 10 B | 500 ms | 130 | 33 | 25.38% | 63 | 11.380 / 15.785 ms |
+| 21101 | standard auto，adaptive | 10 B | 500 ms | 130 | 27 | 20.77% | 44 | 13.441 / 21.927 ms |
+
+run 21003 原计划作为 phase 46 B 对照，但结果 JSON 明确记录 `chip_source=standard`、endpoint 55556 和 `phase_candidate_stats=null`，因此不能据此判断 phase。输出文件名中的 `p10` 也只是命名遗留；JSON 的 `expected_payload_len` 才是本表采用的实际配置。run 21004 才是真正的 phase auto 46 B 测试。
+
+run 21001 的多个失败帧已恢复正确 PHR、Run ID 和大部分 Sequence。Sequence 0 只出现 2 个 payload bit 错误，Sequence 5 只出现 1 个 payload bit 错误，而接收 FCS 与理论 FCS 一致。这说明板端构帧和 FCS 基本正确，失败发生在接收判决后的少量 bit 翻转；46 B 长帧只要存在一个错误就不能通过 FCS。
+
+run 21004 的 phase auto 同时处理五个 ZMQ endpoint，`max=28.805 ms` 已超过 24 ms 缓存跨度，存在接收器自身漏掉突发的可能。固定 offset 后，run 21005 的 `p99=8.441 ms`、`max=10.914 ms` 均满足接收性能门限，但 unique 只从 6 增至 7。因此 phase auto 的 CPU 压力确实存在，却不是当前低接收率的主因。run 21005 的有效 Sequence 为 `0、1、5、6、9、10、11`；约 5 个计划帧形成可信候选后 FCS 失败，另有 1 个未形成候选，其余 CRC 记录包含噪声伪候选。
+
+run 21006 在 500 ms interval 下已达到 `p99 < 12 ms`、`max < 24 ms`，但只有 `33/130`。这排除了“只有缩短 interval 后 Python 扫描持续追不上输入”的单一解释。由于没有板端最终统计，仍需人工确认该轮是否满足：
+
+```text
+scheduled=130 generated=130 tx_started=130 tx_completed=130
+deadline_miss=0 dma_timeout=0
+```
+
+#### adaptive offset 回退验证
+
+为排除吞吐优化中“最多只完整解码最佳/次优 offset”降低接收率的问题，standard 默认策略改为 `--standard-offset-policy adaptive`：五个 offset 先做短 preamble 评分，再按排名逐个完整解码，找到有效 FCS 立即停止。旧行为保留为 `ranked2` 用于 A/B。
+
+run 21101 的 FCS 成功排名为：
+
+```text
+rank 1: 16 packets
+rank 2:  4 packets
+rank 3:  6 packets
+rank 4:  1 packet
+```
+
+因此 adaptive 在同一轮中从第 3/4 名额外挽回 7 包；若仍使用 ranked2，该轮最多只能得到 20 个有效包。run 21101 总 unique 低于 run 21006 不能解释为 adaptive 退化，因为两轮无线条件不同，且 run 21101 出现 Sequence 13--67 连续 55 包无有效 FCS的长缺失。该时段仍间歇形成高可信候选，但全部 FCS 失败；Sequence 68 后又恢复有效接收，说明还有接收前端失真、干扰或残余频偏需要处理。
+
+adaptive 的离线 46 B 候选基准为：首选 FCS 成功时 p99 约 0.42 ms，五 offset 全部失败并完整回退时 p99 约 2.50 ms。run 21101 的整体 `p99=13.441 ms` 略高于 12 ms目标，但 `max=21.927 ms` 仍低于 24 ms缓存跨度。后续必须同时观察接收率和处理分位数，不能为了多offset回退重新造成持续积压。
+
+#### HackRF 增益与 CFO 接口修正
+
+检查 GNU Radio 流图发现旧默认值为：
+
+```text
+RF gain=50
+IF gain=89
+BB gain=0
+manual gain, no AGC
+```
+
+这些值不符合 HackRF 接收增益级的有效范围，驱动很可能静默钳位，且前级可能过载。HackRF 官方文档给出的接收级为 RF amp 开/关、IF 0--40 dB（8 dB步进）和 baseband 0--62 dB（2 dB步进），并建议从 RF关闭、IF=16、BB=16开始：<https://hackrf.readthedocs.io/en/latest/setting_gain.html>。
+
+接收端已完成以下修正：
+
+1. `--rf-gain`、`--if-gain` 和新增的 `--bb-gain` 会真正调用 osmosdr source setter，不再只修改 Python 成员。
+2. 默认值改为 RF=0、IF=16、BB=16，先建立低失真基线。
+3. 新增 `--cfo-correction-hz`，只改变数字平移中心，正值表示实际接收载波高于标称中心。
+4. 原 `--freq-offset` 明确为硬件 LO/DC-spur offset；硬件调谐后会在数字域反向移回，不能继续当作残余 CFO 补偿。
+5. JSON 保存实际 RF/IF/BB gain、LO offset、CFO correction 和 `fcs_success_by_rank`；CSV 保存最终 `standard_offset_rank`。
+6. 合成 GNU Radio 正频偏音调已验证 CFO correction 的符号方向；完整 Python 测试为 37 项，全部通过。
+
+上述新增益默认值在本节记录结束时尚未上板验证，不能提前声称接收率已经提高。下一轮 run 21102 应固定其他条件，只验证低失真增益基线：
+
+```bash
+python3 python/perf_test/zigbee_perf_rx.py \
+  --standard-offset-policy adaptive \
+  --rf-gain 0 --if-gain 16 --bb-gain 16 \
+  --cfo-correction-hz 0 \
+  --tx-duration-s 65 --tx-interval-us 500000 \
+  --run-id 21102 --payload-len 10 \
+  --output-prefix python/perf_test/pure-rt-p10-r21102 \
+  --duration 70
+```
+
+若信号过弱，再分别测试 RF=0/IF=24/BB=24 和 RF=0/IF=32/BB=32；一次只改变增益并使用新 Run ID。找到最佳增益后再固定增益扫描 `--cfo-correction-hz`。在 standard 链尚未以宽松 interval 重复达到不低于 99% 前，不进入正式吞吐扫描；10 B payload只包含测试头，application goodput 始终为 0，它只用于建立接收稳定性基线。

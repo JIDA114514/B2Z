@@ -16,7 +16,10 @@
       "Bash(grep -A20 '_freertos_vector_table' /home/jida/Desktop/antsdr/FreeRTOS-Kernel/portable/RVDS/ARM_CA9/portASM.s | head -30)",
       "Read(//home/jida/Desktop/antsdr/FreeRTOS-Kernel/portable/RVDS/ARM_CA9/**)",
       "Bash(grep -n '_freertos_vector_table\\\\|FreeRTOS.*Handler\\\\|vector_table\\\\|VBAR' /home/jida/Desktop/antsdr/FreeRTOS-Kernel/portable/RVDS/ARM_CA9/portASM.s | head -20)",
-      "Bash(git mv *)"
+      "Bash(git mv *)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ],
     "additionalDirectories": [
       "/home/jida/Desktop/antsdr/B2Z/app_FreeRTOS/include",

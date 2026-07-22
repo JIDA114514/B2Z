@@ -36,10 +36,13 @@ class gr_zigbee(gr.top_block):
         self.zigbee_channel_spacing = zigbee_channel_spacing = 5e6
         self.zigbee_base_freq = zigbee_base_freq = 2405e6
         self.squelch_threshold = squelch_threshold = -25
-        self.rf_gain = rf_gain = 50
+        self.rf_gain = rf_gain = 0
+        self.if_gain = if_gain = 16
+        self.bb_gain = bb_gain = 16
         self.lowpass_filter = lowpass_filter = firdes.low_pass(1, sample_rate, cutoff_freq, transition_width)
         self.iq_output = iq_output = "/dev/null"
         self.freq_offset = freq_offset = 0
+        self.cfo_correction = cfo_correction = 0
         self.freq = freq = zigbee_base_freq + (zigbee_channel_spacing * (zigbee_channel - 11))
         self.demod_sps = demod_sps = int(sample_rate / chip_rate)
         # Each I/Q arm carries every other chip.  Its symbol period and the
@@ -93,12 +96,12 @@ class gr_zigbee(gr.top_block):
         self.rtlsdr_source_0.set_iq_balance_mode(0, 0)
         self.rtlsdr_source_0.set_gain_mode(False, 0)
         self.rtlsdr_source_0.set_gain(rf_gain, 0)
-        self.rtlsdr_source_0.set_if_gain(89, 0)
-        self.rtlsdr_source_0.set_bb_gain(0, 0)
+        self.rtlsdr_source_0.set_if_gain(if_gain, 0)
+        self.rtlsdr_source_0.set_bb_gain(bb_gain, 0)
         self.rtlsdr_source_0.set_antenna('', 0)
         self.rtlsdr_source_0.set_bandwidth(0, 0)
 
-        self.freq_xlating_fir_filter_lp = filter.freq_xlating_fir_filter_ccc(1, lowpass_filter, (-freq_offset), sample_rate)
+        self.freq_xlating_fir_filter_lp = filter.freq_xlating_fir_filter_ccc(1, lowpass_filter, (cfo_correction - freq_offset), sample_rate)
 
         self.costas_loop = digital.costas_loop_cc(0.02, 4, False)
 
@@ -247,6 +250,21 @@ class gr_zigbee(gr.top_block):
 
     def set_rf_gain(self, rf_gain):
         self.rf_gain = rf_gain
+        self.rtlsdr_source_0.set_gain(self.rf_gain, 0)
+
+    def get_if_gain(self):
+        return self.if_gain
+
+    def set_if_gain(self, if_gain):
+        self.if_gain = if_gain
+        self.rtlsdr_source_0.set_if_gain(self.if_gain, 0)
+
+    def get_bb_gain(self):
+        return self.bb_gain
+
+    def set_bb_gain(self, bb_gain):
+        self.bb_gain = bb_gain
+        self.rtlsdr_source_0.set_bb_gain(self.bb_gain, 0)
 
     def get_lowpass_filter(self):
         return self.lowpass_filter
@@ -313,8 +331,15 @@ class gr_zigbee(gr.top_block):
 
     def set_freq_offset(self, freq_offset):
         self.freq_offset = freq_offset
-        self.freq_xlating_fir_filter_lp.set_center_freq((-self.freq_offset))
+        self.freq_xlating_fir_filter_lp.set_center_freq((self.cfo_correction - self.freq_offset))
         self.rtlsdr_source_0.set_center_freq((self.freq + self.freq_offset), 0)
+
+    def get_cfo_correction(self):
+        return self.cfo_correction
+
+    def set_cfo_correction(self, cfo_correction):
+        self.cfo_correction = cfo_correction
+        self.freq_xlating_fir_filter_lp.set_center_freq((self.cfo_correction - self.freq_offset))
 
     def get_freq(self):
         return self.freq

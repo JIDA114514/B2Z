@@ -314,6 +314,174 @@ def repeated_symbol_prefix_distances(chip_values, symbol_values, repetitions):
     return distances
 
 
+def score_standard_offset(
+    chips,
+    expected_payload_len,
+    ambiguity="normal",
+    sample_offset=None,
+):
+    """Score one modulo-5 stream using only the repeated preamble symbol.
+
+    The returned work array and candidate positions let the selected offset be
+    decoded without repeating correlation. Full CHIP_MAP symbol decoding is
+    deliberately deferred until offsets have been ranked.
+    """
+    frame_len = PREAMBLE_BYTES + 2 + expected_payload_len + 2
+    frame_chip_count = frame_len * 2 * 32
+    if len(chips) < frame_chip_count:
+        return None
+
+    preamble_symbol = standard_prefix_chips()[:32]
+    symbol_values = (
+        np.frombuffer(preamble_symbol.encode("ascii"), dtype=np.uint8)
+        - ord("0")
+    ).astype(np.int16)
+    chip_values = (
+        np.frombuffer(chips.encode("ascii"), dtype=np.uint8) - ord("0")
+    ).astype(np.int16)
+    work_values = transform_standard_chip_values(chip_values, ambiguity)
+    distances = repeated_symbol_prefix_distances(
+        work_values,
+        symbol_values,
+        STANDARD_FAST_PREFIX_SYMBOLS,
+    )
+    if not len(distances):
+        return None
+    positions = select_prefix_positions(
+        distances,
+        STANDARD_PREFIX_MAX_DISTANCE,
+        frame_chip_count,
+        len(work_values),
+        STANDARD_MAX_PREFIX_CANDIDATES,
+    )
+    minimum_distance = int(distances.min())
+    return {
+        "sample_offset": sample_offset,
+        "ambiguity": ambiguity,
+        "frame_chip_count": frame_chip_count,
+        "work_values": work_values,
+        "positions": positions,
+        "minimum_distance": minimum_distance,
+        "best_distance": (
+            min(int(distances[position]) for position in positions)
+            if positions
+            else None
+        ),
+        "best_position": (
+            min(
+                positions,
+                key=lambda position: (int(distances[position]), position),
+            )
+            if positions
+            else None
+        ),
+    }
+
+
+def decode_standard_offset_score(score, expected_payload_len):
+    """Run full CHIP_MAP decoding for one previously scored offset."""
+    if score is None or not score["positions"]:
+        return None
+
+    frame_len = PREAMBLE_BYTES + 2 + expected_payload_len + 2
+    expected_prefix = [0x00] * PREAMBLE_BYTES + [SFD]
+    expected_phr = expected_payload_len + 2
+    best = None
+    for position in score["positions"]:
+        frame_values = score["work_values"][
+            position : position + score["frame_chip_count"]
+        ]
+        frame_chips = (frame_values + ord("0")).astype(
+            np.uint8
+        ).tobytes().decode("ascii")
+        symbols = chips_to_symbols(frame_chips, CHIP_MAP)
+        frame = bits_to_bytes_lsb(symbols_to_bits(symbols))
+        if len(frame) != frame_len:
+            continue
+        if frame[PREAMBLE_BYTES + 1] != expected_phr:
+            continue
+
+        prefix_symbol_errors = 0
+        for actual, expected in zip(
+            frame[: PREAMBLE_BYTES + 1], expected_prefix
+        ):
+            difference = actual ^ expected
+            prefix_symbol_errors += int((difference & 0x0F) != 0)
+            prefix_symbol_errors += int((difference & 0xF0) != 0)
+        fcs_ok, _ = validate_frame(frame)
+        preamble_distance = sum(
+            distance for _, distance in symbols[: PREAMBLE_SYMBOLS + 4]
+        )
+        frame_distance = sum(distance for _, distance in symbols)
+        rank = (
+            position,
+            0 if fcs_ok else 1,
+            prefix_symbol_errors,
+            preamble_distance,
+            frame_distance,
+            "standard-fast",
+            score["ambiguity"],
+        )
+        candidate = {
+            "rank": rank,
+            "frame": frame,
+            "chip_pos": position,
+            "symbols": symbols,
+            "symbol_pos": 0,
+            "prefix_symbol_errors": prefix_symbol_errors,
+            "preamble_distance": preamble_distance,
+            "frame_distance": frame_distance,
+            "phase_offset": score["sample_offset"],
+            "polarity": "normal",
+            "standard_ambiguity": score["ambiguity"],
+            "offset_prefix_distance": score["best_distance"],
+        }
+        if best is None or rank < best["rank"]:
+            best = candidate
+    return best
+
+
+def rank_standard_offset_scores(scores):
+    """Return offsets with viable preambles, best score first."""
+    return sorted(
+        (score for score in scores if score and score["positions"]),
+        key=lambda score: (
+            score["best_distance"],
+            score["best_position"],
+            -1 if score["sample_offset"] is None else score["sample_offset"],
+        ),
+    )
+
+
+def decode_ranked_standard_offsets(
+    scores,
+    expected_payload_len,
+    max_offsets=None,
+):
+    """Decode ranked offsets until FCS succeeds or the policy limit is hit.
+
+    ``max_offsets=None`` is the reception-first policy: it normally decodes
+    only the best offset, but keeps trying lower-ranked offsets after an FCS
+    failure.  A finite limit retains the earlier bounded-work policy for A/B
+    measurements.
+    """
+    if max_offsets is not None and max_offsets <= 0:
+        raise ValueError("max_offsets must be positive or None")
+    ranked = rank_standard_offset_scores(scores)
+    decoded = []
+    attempted = 0
+    decode_scores = ranked if max_offsets is None else ranked[:max_offsets]
+    for offset_rank, score in enumerate(decode_scores, start=1):
+        attempted += 1
+        candidate = decode_standard_offset_score(score, expected_payload_len)
+        if candidate is not None:
+            candidate["offset_rank"] = offset_rank
+            decoded.append(candidate)
+            if validate_frame(candidate["frame"])[0]:
+                break
+    return choose_standard_candidate(decoded), decoded, ranked, attempted
+
+
 def transform_standard_chip_values(chip_values, ambiguity):
     """Undo one Costas quadrant or I/Q polarity ambiguity."""
     if ambiguity not in STANDARD_AMBIGUITIES:
@@ -376,86 +544,20 @@ def find_standard_frame_candidate_fast(
     ambiguities=("normal",),
     sample_offset=None,
 ):
-    """Find a known-length standard frame without 32 full-buffer decodes."""
-    frame_len = PREAMBLE_BYTES + 2 + expected_payload_len + 2
-    frame_chip_count = frame_len * 2 * 32
-    if len(chips) < frame_chip_count:
-        return None
-
-    preamble_symbol = standard_prefix_chips()[:32]
-    symbol_values = (
-        np.frombuffer(preamble_symbol.encode("ascii"), dtype=np.uint8)
-        - ord("0")
-    ).astype(np.int16)
-    chip_values = (
-        np.frombuffer(chips.encode("ascii"), dtype=np.uint8) - ord("0")
-    ).astype(np.int16)
-    expected_prefix = [0x00] * PREAMBLE_BYTES + [SFD]
-    expected_phr = expected_payload_len + 2
+    """Find a known-length standard frame using preamble-first scoring."""
     best = None
     for ambiguity in ambiguities:
-        work_values = transform_standard_chip_values(chip_values, ambiguity)
-        distances = repeated_symbol_prefix_distances(
-            work_values,
-            symbol_values,
-            STANDARD_FAST_PREFIX_SYMBOLS,
+        score = score_standard_offset(
+            chips,
+            expected_payload_len,
+            ambiguity=ambiguity,
+            sample_offset=sample_offset,
         )
-        positions = select_prefix_positions(
-            distances,
-            STANDARD_PREFIX_MAX_DISTANCE,
-            frame_chip_count,
-            len(work_values),
-            STANDARD_MAX_PREFIX_CANDIDATES,
-        )
-
-        for position in positions:
-            frame_values = work_values[position : position + frame_chip_count]
-            frame_chips = (frame_values + ord("0")).astype(
-                np.uint8
-            ).tobytes().decode("ascii")
-            symbols = chips_to_symbols(frame_chips, CHIP_MAP)
-            frame = bits_to_bytes_lsb(symbols_to_bits(symbols))
-            if len(frame) != frame_len:
-                continue
-            if frame[PREAMBLE_BYTES + 1] != expected_phr:
-                continue
-
-            prefix_symbol_errors = 0
-            for actual, expected in zip(
-                frame[: PREAMBLE_BYTES + 1], expected_prefix
-            ):
-                difference = actual ^ expected
-                prefix_symbol_errors += int((difference & 0x0F) != 0)
-                prefix_symbol_errors += int((difference & 0xF0) != 0)
-            fcs_ok, _ = validate_frame(frame)
-            preamble_distance = sum(
-                distance for _, distance in symbols[: PREAMBLE_SYMBOLS + 4]
-            )
-            frame_distance = sum(distance for _, distance in symbols)
-            rank = (
-                position,
-                0 if fcs_ok else 1,
-                prefix_symbol_errors,
-                preamble_distance,
-                frame_distance,
-                "standard-fast",
-                ambiguity,
-            )
-            candidate = {
-                "rank": rank,
-                "frame": frame,
-                "chip_pos": position,
-                "symbols": symbols,
-                "symbol_pos": 0,
-                "prefix_symbol_errors": prefix_symbol_errors,
-                "preamble_distance": preamble_distance,
-                "frame_distance": frame_distance,
-                "phase_offset": sample_offset,
-                "polarity": "normal",
-                "standard_ambiguity": ambiguity,
-            }
-            if best is None or rank < best["rank"]:
-                best = candidate
+        candidate = decode_standard_offset_score(score, expected_payload_len)
+        if candidate is not None and (
+            best is None or candidate["rank"] < best["rank"]
+        ):
+            best = candidate
     return best
 
 
@@ -704,6 +806,30 @@ def utc_iso(epoch_seconds):
     return datetime.fromtimestamp(epoch_seconds, timezone.utc).isoformat()
 
 
+def summarize_numeric_samples(samples, scale=1.0):
+    """Return compact distribution statistics for JSON diagnostics."""
+    if not samples:
+        return {
+            "samples": 0,
+            "min": None,
+            "p50": None,
+            "p95": None,
+            "p99": None,
+            "max": None,
+            "avg": None,
+        }
+    values = np.asarray(samples, dtype=np.float64) * scale
+    return {
+        "samples": len(values),
+        "min": float(values.min()),
+        "p50": float(np.percentile(values, 50)),
+        "p95": float(np.percentile(values, 95)),
+        "p99": float(np.percentile(values, 99)),
+        "max": float(values.max()),
+        "avg": float(values.mean()),
+    }
+
+
 def format_ratio(label, item):
     numerator = item["numerator"]
     denominator = item["denominator"]
@@ -736,14 +862,28 @@ def build_summary(
     csv_path,
 ):
     elapsed = max(0.0, end_epoch - start_epoch)
+    planned = tracker.planned_range(args.expected_packets)
     scheduled = board_stats.get("scheduled") if board_stats else None
     tx_completed = board_stats.get("tx_completed") if board_stats else None
     completion = ratio(
         tx_completed if tx_completed is not None else 0,
         scheduled,
     )
-    wireless_prr = ratio(tracker.unique, tx_completed)
+    wireless_numerator = (
+        planned["in_range_unique"] if planned is not None else tracker.unique
+    )
+    wireless_prr = ratio(wireless_numerator, tx_completed)
+    if tx_completed is None:
+        wireless_prr["reason"] = "board tx_completed was not provided"
     end_to_end = ratio(tracker.unique, scheduled)
+    planned_end_to_end = ratio(
+        planned["in_range_unique"] if planned is not None else 0,
+        planned["expected_packets"] if planned is not None else None,
+    )
+    if planned is None:
+        planned_end_to_end["reason"] = (
+            "provide --tx-duration-s and --tx-interval-us together"
+        )
 
     payload_len = None
     if len(tracker.payload_lengths) == 1:
@@ -753,15 +893,28 @@ def build_summary(
 
     throughput = {
         "payload_len": payload_len,
+        "time_basis": None,
+        "time_s": None,
+        "unique_basis": None,
         "gross_bit_s": None,
         "gross_byte_s": None,
         "application_bit_s": None,
         "application_byte_s": None,
     }
-    if elapsed > 0 and payload_len is not None:
-        gross_bytes = tracker.unique * payload_len / elapsed
-        app_bytes = tracker.unique * (payload_len - 10) / elapsed
+    throughput_time = args.tx_duration_s if args.tx_duration_s else elapsed
+    throughput_unique = (
+        planned["in_range_unique"] if planned is not None else tracker.unique
+    )
+    if throughput_time > 0 and payload_len is not None:
+        gross_bytes = throughput_unique * payload_len / throughput_time
+        app_bytes = throughput_unique * (payload_len - 10) / throughput_time
         throughput.update(
+            time_basis=(
+                "planned_tx_duration" if planned is not None
+                else "receiver_observation_duration"
+            ),
+            time_s=throughput_time,
+            unique_basis=throughput_unique,
             gross_bit_s=gross_bytes * 8,
             gross_byte_s=gross_bytes,
             application_bit_s=app_bytes * 8,
@@ -769,7 +922,7 @@ def build_summary(
         )
 
     return {
-        "schema": "bluebee-perf-rx-v1",
+        "schema": "bluebee-perf-rx-v2",
         "run_id": tracker.locked_run_id,
         "expected_run_id": args.run_id,
         "expected_payload_len": args.payload_len,
@@ -781,10 +934,21 @@ def build_summary(
             "duration_s": elapsed,
             "scope": "receiver process start through receiver stop",
         },
+        "tx_plan": {
+            "duration_s": args.tx_duration_s,
+            "interval_us": args.tx_interval_us,
+            "expected_packets": args.expected_packets,
+            "sequence_scope": (
+                f"0..{args.expected_packets - 1}"
+                if args.expected_packets else None
+            ),
+        },
+        "planned_sequences": planned,
         "receiver": {
             "chip_source": args.chip_source,
             "chip_zmq": args.chip_zmq,
             "standard_keep_offset": args.standard_keep_offset,
+            "standard_offset_policy": args.standard_offset_policy,
             "standard_ambiguity": args.standard_ambiguity,
             "standard_ambiguity_stats": getattr(
                 args, "standard_ambiguity_stats", None
@@ -800,15 +964,28 @@ def build_summary(
             "phase_keep_offset": args.phase_keep_offset,
             "phase_endpoints": getattr(args, "phase_endpoints", None),
             "freq_offset_hz": args.freq_offset,
+            "cfo_correction_hz": args.cfo_correction_hz,
+            "rf_gain": args.rf_gain,
+            "if_gain": args.if_gain,
+            "bb_gain": args.bb_gain,
             "unique": tracker.unique,
             "duplicate": tracker.duplicate,
             "out_of_order": tracker.out_of_order,
             "crc_failure": crc_failure,
-            "longest_loss_burst": tracker.longest_loss_burst(scheduled),
+            "longest_loss_burst": tracker.longest_loss_burst(
+                args.expected_packets
+                if args.expected_packets is not None
+                else scheduled
+            ),
             "loss_scope": (
                 f"sequence 0..{scheduled - 1} from board scheduled"
                 if scheduled is not None and scheduled > 0
-                else "minimum through maximum valid received sequence"
+                else (
+                    f"planned sequence 0..{args.expected_packets - 1}"
+                    if args.expected_packets is not None
+                    and args.expected_packets > 0
+                    else "minimum through maximum valid received sequence"
+                )
             ),
             "payload_failure": tracker.payload_failure,
             "run_id_mismatch": tracker.run_id_mismatch,
@@ -823,12 +1000,17 @@ def build_summary(
                 args, "receiver_processing_timing", None
             ),
             "phase_scan_timing": getattr(args, "phase_scan_timing", None),
+            "standard_offset_ranking": getattr(
+                args, "standard_offset_ranking", None
+            ),
+            "buffer_critical": getattr(args, "buffer_critical", None),
         },
         "board": board_stats,
         "ratios": {
             "scheduling_completion": completion,
             "wireless_prr": wireless_prr,
             "end_to_end_receive": end_to_end,
+            "planned_end_to_end_receive": planned_end_to_end,
         },
         "throughput": throughput,
         "raw_csv": str(csv_path),
@@ -850,6 +1032,17 @@ def print_summary(summary, json_path):
     print(f"  Observation start:       {observation['start_utc']}")
     print(f"  Observation end:         {observation['end_utc']}")
     print(f"  Observation duration:    {observation['duration_s']:.3f} s")
+    tx_plan = summary["tx_plan"]
+    if tx_plan["expected_packets"] is not None:
+        planned = summary["planned_sequences"]
+        print(
+            f"  Planned TX duration:     {tx_plan['duration_s']} s "
+            f"at {tx_plan['interval_us']} us"
+        )
+        print(f"  Expected packets:        {tx_plan['expected_packets']}")
+        print(f"  In-range unique:         {planned['in_range_unique']}")
+        print(f"  Missing in range:        {planned['missing']}")
+        print(f"  Out-of-range sequences:  {planned['out_of_range_count']}")
     print(f"  Unique:                  {receiver['unique']}")
     print(f"  Duplicate:               {receiver['duplicate']}")
     print(f"  Out of order:            {receiver['out_of_order']}")
@@ -869,9 +1062,19 @@ def print_summary(summary, json_path):
             f"  Application goodput:     {throughput['application_bit_s']:.3f} bit/s "
             f"({throughput['application_byte_s']:.3f} byte/s)"
         )
+        print(
+            f"  Throughput time basis:   {throughput['time_basis']} "
+            f"({throughput['time_s']:.3f} s)"
+        )
     else:
         print("  Gross throughput:        N/A")
         print("  Application goodput:     N/A")
+    print(
+        format_ratio(
+            "Planned end-to-end:",
+            summary["ratios"]["planned_end_to_end_receive"],
+        )
+    )
     if summary["board"] is None:
         print("  Board merge:             N/A (provide --board-stats serial.log)")
     print(f"  Raw CSV:                 {summary['raw_csv']}")
@@ -932,12 +1135,65 @@ def parse_args():
         ),
     )
     parser.add_argument(
+        "--standard-offset-policy",
+        choices=("adaptive", "ranked2"),
+        default="adaptive",
+        help=(
+            "Full-decode ranked standard offsets until FCS succeeds "
+            "(adaptive, default), or stop after the best two (ranked2)"
+        ),
+    )
+    parser.add_argument(
         "--freq-offset",
         type=float,
         default=0.0,
-        help="Optional receiver frequency correction in Hz",
+        help=(
+            "Hardware LO offset in Hz for DC-spur avoidance; this is "
+            "digitally translated back and is not residual-CFO correction"
+        ),
     )
-    parser.add_argument("--duration", type=float, default=0.0, help="Run for N seconds (0 = forever)")
+    parser.add_argument(
+        "--cfo-correction-hz",
+        type=float,
+        default=0.0,
+        help=(
+            "Digital residual CFO correction in Hz; positive means the "
+            "received carrier is above the nominal channel center"
+        ),
+    )
+    parser.add_argument(
+        "--rf-gain",
+        type=float,
+        help="HackRF RF gain; omit to retain the flow-graph default",
+    )
+    parser.add_argument(
+        "--if-gain",
+        type=float,
+        help="HackRF IF gain; omit to retain the flow-graph default",
+    )
+    parser.add_argument(
+        "--bb-gain",
+        type=float,
+        help="HackRF baseband gain; omit to retain the flow-graph default",
+    )
+    parser.add_argument(
+        "--duration",
+        type=float,
+        help=(
+            "Receiver run time in seconds; defaults to TX duration + 10 s "
+            "for a bounded TX plan, otherwise runs forever"
+        ),
+    )
+    parser.add_argument(
+        "--tx-duration-s",
+        type=int,
+        help="Bounded board command duration used only for planned accounting",
+    )
+    parser.add_argument(
+        "--tx-interval-us",
+        type=int,
+        help="Bounded board command interval used only for planned accounting",
+    )
     parser.add_argument("--run-id", type=int, help="Expected decimal 16-bit Run ID")
     parser.add_argument("--payload-len", type=int, help="Expected payload length, 10-46 bytes")
     parser.add_argument("--board-stats", help="Serial log containing a matching final PERF_STATS line")
@@ -946,6 +1202,22 @@ def parse_args():
     parser.add_argument("--json-out", help="Final summary JSON path")
     parser.add_argument("--verbose-packets", action="store_true", help="Print every decoded packet")
     args = parser.parse_args()
+    if (args.tx_duration_s is None) != (args.tx_interval_us is None):
+        parser.error("--tx-duration-s and --tx-interval-us must be provided together")
+    if args.tx_duration_s is not None:
+        if not 1 <= args.tx_duration_s <= 600:
+            parser.error("--tx-duration-s must be in [1, 600]")
+        if args.tx_interval_us <= 0:
+            parser.error("--tx-interval-us must be positive")
+        args.expected_packets = (
+            args.tx_duration_s * 1_000_000 // args.tx_interval_us
+        )
+    else:
+        args.expected_packets = None
+    if args.duration is None:
+        args.duration = (
+            args.tx_duration_s + 10.0 if args.tx_duration_s is not None else 0.0
+        )
     if args.duration < 0:
         parser.error("--duration must be non-negative")
     if args.run_id is not None and not 0 <= args.run_id <= 0xFFFF:
@@ -990,6 +1262,7 @@ def main():
         "phase_offset",
         "phase_polarity",
         "standard_ambiguity",
+        "standard_offset_rank",
         "prefix_symbol_errors",
         "preamble_distance",
         "frame_distance",
@@ -1004,6 +1277,20 @@ def main():
     gr_block_obj.set_zigbee_channel(args.channel)
     if args.freq_offset:
         gr_block_obj.set_freq_offset(args.freq_offset)
+    if args.cfo_correction_hz:
+        gr_block_obj.set_cfo_correction(args.cfo_correction_hz)
+    if args.rf_gain is not None:
+        gr_block_obj.set_rf_gain(args.rf_gain)
+    else:
+        args.rf_gain = gr_block_obj.get_rf_gain()
+    if args.if_gain is not None:
+        gr_block_obj.set_if_gain(args.if_gain)
+    else:
+        args.if_gain = gr_block_obj.get_if_gain()
+    if args.bb_gain is not None:
+        gr_block_obj.set_bb_gain(args.bb_gain)
+    else:
+        args.bb_gain = gr_block_obj.get_bb_gain()
     gr_block_obj.start()
     endpoint_label = (
         args.chip_zmq
@@ -1020,8 +1307,12 @@ def main():
         f"chip_source={args.chip_source} zmq={endpoint_label} "
         f"phase_offset={args.phase_keep_offset} "
         f"standard_offset={args.standard_keep_offset} "
+        f"standard_policy={args.standard_offset_policy} "
         f"standard_ambiguity={args.standard_ambiguity} "
-        f"freq_offset={args.freq_offset:g}"
+        f"lo_offset={args.freq_offset:g} "
+        f"cfo_correction={args.cfo_correction_hz:g} "
+        f"rf_gain={args.rf_gain:g} if_gain={args.if_gain:g} "
+        f"bb_gain={args.bb_gain:g}"
     )
     print(f"Raw CSV: {csv_path}")
 
@@ -1078,6 +1369,16 @@ def main():
     processing_count = 0
     processing_sum_s = 0.0
     processing_max_s = 0.0
+    processing_samples_s = []
+    standard_best_offset_distances = []
+    standard_second_offset_distances = []
+    standard_no_candidate_min_distances = []
+    standard_full_decode_attempts = 0
+    standard_fcs_success_ranks = []
+    standard_no_fcs_scans = 0
+    buffer_critical_events = {offset: 0 for offset in chip_buffers}
+    buffer_truncations = {offset: 0 for offset in chip_buffers}
+    buffer_critical_threshold = int(MAX_CHIPS * 0.9)
 
     try:
         while True:
@@ -1109,7 +1410,10 @@ def main():
                     )
                     for sample_offset, chips in streams.items():
                         chip_buffers[sample_offset] += chips
+                        if len(chip_buffers[sample_offset]) >= buffer_critical_threshold:
+                            buffer_critical_events[sample_offset] += 1
                         if len(chip_buffers[sample_offset]) > MAX_CHIPS:
+                            buffer_truncations[sample_offset] += 1
                             chip_buffers[sample_offset] = chip_buffers[
                                 sample_offset
                             ][-MAX_CHIPS:]
@@ -1117,11 +1421,84 @@ def main():
                     chip_buffers[offset] += unpack_messages_to_chips(
                         raw_messages
                     )
+                    if len(chip_buffers[offset]) >= buffer_critical_threshold:
+                        buffer_critical_events[offset] += 1
                     if len(chip_buffers[offset]) > MAX_CHIPS:
+                        buffer_truncations[offset] += 1
                         chip_buffers[offset] = chip_buffers[offset][-MAX_CHIPS:]
 
             if received_any or pending_scan:
                 candidates = {}
+                predecoded_standard = {}
+                if (
+                    args.chip_source == "standard"
+                    and args.payload_len is not None
+                ):
+                    ambiguity = (
+                        standard_polarity_hint or standard_scan_polarity
+                        if args.standard_ambiguity == "auto"
+                        else args.standard_ambiguity
+                    )
+                    standard_scores = [
+                        score_standard_offset(
+                            chip_buffer,
+                            args.payload_len,
+                            ambiguity=ambiguity,
+                            sample_offset=offset,
+                        )
+                        for offset, chip_buffer in chip_buffers.items()
+                    ]
+                    (
+                        _,
+                        decoded,
+                        ranked_scores,
+                        decode_attempts,
+                    ) = decode_ranked_standard_offsets(
+                        standard_scores,
+                        args.payload_len,
+                        max_offsets=(
+                            2
+                            if args.standard_offset_policy == "ranked2"
+                            else None
+                        ),
+                    )
+                    standard_full_decode_attempts += decode_attempts
+                    successful = next(
+                        (
+                            candidate
+                            for candidate in decoded
+                            if validate_frame(candidate["frame"])[0]
+                        ),
+                        None,
+                    )
+                    if successful is not None:
+                        standard_fcs_success_ranks.append(
+                            successful["offset_rank"]
+                        )
+                    elif decoded:
+                        standard_no_fcs_scans += 1
+                    predecoded_standard = {
+                        candidate["phase_offset"]: candidate
+                        for candidate in decoded
+                    }
+                    if ranked_scores:
+                        standard_best_offset_distances.append(
+                            ranked_scores[0]["best_distance"]
+                        )
+                        if len(ranked_scores) > 1:
+                            standard_second_offset_distances.append(
+                                ranked_scores[1]["best_distance"]
+                            )
+                    else:
+                        minimums = [
+                            score["minimum_distance"]
+                            for score in standard_scores
+                            if score is not None
+                        ]
+                        if minimums:
+                            standard_no_candidate_min_distances.append(
+                                min(minimums)
+                            )
                 for offset, chip_buffer in chip_buffers.items():
                     if len(chip_buffer) < MIN_FRAME_CHIPS:
                         continue
@@ -1129,19 +1506,7 @@ def main():
                         args.chip_source == "standard"
                         and args.payload_len is not None
                     ):
-                        candidate = find_standard_frame_candidate_fast(
-                            chip_buffer,
-                            args.payload_len,
-                            ambiguities=(
-                                (
-                                    standard_polarity_hint
-                                    or standard_scan_polarity,
-                                )
-                                if args.standard_ambiguity == "auto"
-                                else (args.standard_ambiguity,)
-                            ),
-                            sample_offset=offset,
-                        )
+                        candidate = predecoded_standard.get(offset)
                     elif (
                         args.chip_source == "phase"
                         and args.payload_len is not None
@@ -1217,6 +1582,7 @@ def main():
                 processing_count += 1
                 processing_sum_s += scan_elapsed
                 processing_max_s = max(processing_max_s, scan_elapsed)
+                processing_samples_s.append(scan_elapsed)
 
                 selected = (
                     choose_phase_candidate(candidates.values())
@@ -1262,6 +1628,9 @@ def main():
                         "phase_polarity": selected.get("polarity", ""),
                         "standard_ambiguity": selected.get(
                             "standard_ambiguity", ""
+                        ),
+                        "standard_offset_rank": selected.get(
+                            "offset_rank", ""
                         ),
                         "prefix_symbol_errors": selected[
                             "prefix_symbol_errors"
@@ -1396,6 +1765,7 @@ def main():
             if args.chip_source == "standard"
             else None
         )
+        processing_distribution = summarize_numeric_samples(processing_samples_s, 1000.0)
         args.receiver_processing_timing = {
             "samples": processing_count,
             "avg_ms": (
@@ -1403,9 +1773,59 @@ def main():
                 if processing_count
                 else 0.0
             ),
+            "p50_ms": processing_distribution["p50"],
+            "p95_ms": processing_distribution["p95"],
+            "p99_ms": processing_distribution["p99"],
             "max_ms": processing_max_s * 1000.0,
             "buffer_chips": MAX_CHIPS,
             "includes_zmq_receive": True,
+        }
+        args.standard_offset_ranking = (
+            {
+                "strategy": (
+                    "score all offsets; decode in rank order until FCS "
+                    + (
+                        "success"
+                        if args.standard_offset_policy == "adaptive"
+                        else "success or two offsets have been tried"
+                    )
+                ),
+                "policy": args.standard_offset_policy,
+                "scans": (
+                    len(standard_best_offset_distances)
+                    + len(standard_no_candidate_min_distances)
+                ),
+                "full_decode_attempts": standard_full_decode_attempts,
+                "fcs_success_by_rank": {
+                    str(rank): standard_fcs_success_ranks.count(rank)
+                    for rank in sorted(set(standard_fcs_success_ranks))
+                },
+                "no_fcs_after_decode_scans": standard_no_fcs_scans,
+                "best_offset_distance": summarize_numeric_samples(
+                    standard_best_offset_distances
+                ),
+                "second_offset_distance": summarize_numeric_samples(
+                    standard_second_offset_distances
+                ),
+                "no_candidate_min_preamble_distance": summarize_numeric_samples(
+                    standard_no_candidate_min_distances
+                ),
+            }
+            if args.chip_source == "standard"
+            else None
+        )
+        args.buffer_critical = {
+            "capacity_chips_per_offset": MAX_CHIPS,
+            "critical_threshold_chips": buffer_critical_threshold,
+            "critical_events": sum(buffer_critical_events.values()),
+            "truncations": sum(buffer_truncations.values()),
+            "by_offset": {
+                str(offset): {
+                    "critical_events": buffer_critical_events[offset],
+                    "truncations": buffer_truncations[offset],
+                }
+                for offset in chip_buffers
+            },
         }
         args.phase_scan_timing = (
             {

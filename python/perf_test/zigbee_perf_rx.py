@@ -32,6 +32,7 @@ MAX_FRAME_LEN = PREAMBLE_BYTES + 1 + 1 + MAX_PAYLOAD_LEN + 2
 PREAMBLE_SYMBOLS = PREAMBLE_BYTES * 2
 MIN_FRAME_CHIPS = MIN_FRAME_LEN * 2 * 32
 MAX_CHIPS = 48000
+SOFT_MAX_CHIPS = 96000
 STATS_PERIOD = 2.0
 DIAG_SCAN_CHIPS = 4096
 PHASE_MAX_AVG_SYMBOL_DISTANCE = 4
@@ -57,10 +58,20 @@ STANDARD_AMBIGUITIES = (
     "swapped_odd_inverted",
 )
 STANDARD_ENDPOINT = "tcp://127.0.0.1:55556"
+STANDARD_SOFT_ENDPOINT = "tcp://127.0.0.1:55562"
+STANDARD_SOFT_SCALE = 40.0
+STANDARD_SOFT_ALIGNMENT_CHIPS = 64
 PHASE_ENDPOINTS = {
     offset: f"tcp://127.0.0.1:{55557 + offset}" for offset in range(5)
 }
 POPCOUNT8 = np.asarray([value.bit_count() for value in range(256)], dtype=np.uint8)
+STANDARD_SOFT_REFERENCES = np.asarray(
+    [
+        [1 if chip == "1" else -1 for chip in reference]
+        for reference in CHIP_MAP
+    ],
+    dtype=np.float32,
+)
 
 
 # These are the 16 BLE GFSK bit patterns used by the board-side optimized
@@ -155,6 +166,20 @@ def deinterleave_standard_phase_values(
             (selected + ord("0")).astype(np.uint8).tobytes().decode("ascii")
         )
     next_phase = (stream_phase + len(chip_values)) % STANDARD_PHASE_COUNT
+    return streams, next_phase
+
+
+def deinterleave_standard_soft_values(
+    soft_values,
+    stream_phase,
+    offsets=range(STANDARD_PHASE_COUNT),
+):
+    """Split the quantized full-rate phase-difference stream by timing phase."""
+    streams = {}
+    for offset in offsets:
+        start = (int(offset) - stream_phase) % STANDARD_PHASE_COUNT
+        streams[int(offset)] = soft_values[start::STANDARD_PHASE_COUNT].tobytes()
+    next_phase = (stream_phase + len(soft_values)) % STANDARD_PHASE_COUNT
     return streams, next_phase
 
 
@@ -425,6 +450,7 @@ def decode_standard_offset_score(score, expected_payload_len):
         candidate = {
             "rank": rank,
             "frame": frame,
+            "hard_frame_values": frame_values.astype(np.uint8, copy=True),
             "chip_pos": position,
             "symbols": symbols,
             "symbol_pos": 0,
@@ -435,6 +461,7 @@ def decode_standard_offset_score(score, expected_payload_len):
             "polarity": "normal",
             "standard_ambiguity": score["ambiguity"],
             "offset_prefix_distance": score["best_distance"],
+            "decode_method": "hard",
         }
         if best is None or rank < best["rank"]:
             best = candidate
@@ -510,6 +537,223 @@ def transform_standard_chips(chips, ambiguity):
     ).astype(np.uint8)
     transformed = transform_standard_chip_values(chip_values, ambiguity)
     return (transformed + ord("0")).astype(np.uint8).tobytes().decode("ascii")
+
+
+def transform_standard_soft_values(soft_values, ambiguity):
+    """Apply the hard decoder's ambiguity transform to signed soft chips."""
+    if ambiguity not in STANDARD_AMBIGUITIES:
+        raise ValueError(f"unsupported standard ambiguity: {ambiguity}")
+
+    work_values = np.asarray(soft_values, dtype=np.int16).copy()
+    if ambiguity.startswith("swapped"):
+        paired = (len(work_values) // 2) * 2
+        work_values[:paired] = (
+            work_values[:paired].reshape(-1, 2)[:, ::-1].reshape(-1)
+        )
+
+    if ambiguity in ("inverted", "swapped_inverted"):
+        work_values = -work_values
+    elif ambiguity in ("even_inverted", "swapped_even_inverted"):
+        work_values[0::2] = -work_values[0::2]
+    elif ambiguity in ("odd_inverted", "swapped_odd_inverted"):
+        work_values[1::2] = -work_values[1::2]
+    return work_values
+
+
+def soft_chips_to_symbols(soft_values):
+    """Decode 32-chip symbols using phase magnitude as confidence."""
+    usable = (len(soft_values) // 32) * 32
+    if usable == 0:
+        return [], np.empty(0, dtype=np.float32)
+
+    chunks = np.asarray(soft_values[:usable], dtype=np.float32).reshape(-1, 32)
+    correlations = chunks @ STANDARD_SOFT_REFERENCES.T
+    best_symbols = np.argmax(correlations, axis=1)
+    best_correlations = correlations[np.arange(len(chunks)), best_symbols]
+    second_correlations = np.partition(correlations, -2, axis=1)[:, -2]
+    margins = best_correlations - second_correlations
+
+    hard_values = (chunks > 0).astype(np.uint8)
+    chosen_references = (STANDARD_SOFT_REFERENCES[best_symbols] > 0).astype(
+        np.uint8
+    )
+    hard_distances = np.count_nonzero(
+        hard_values != chosen_references,
+        axis=1,
+    )
+    symbols = list(zip(best_symbols.tolist(), hard_distances.tolist()))
+    return symbols, margins
+
+
+def decode_standard_soft_frame(
+    soft_frame_values,
+    expected_payload_len,
+    hard_candidate,
+    soft_phase_offset,
+    alignment_mismatches,
+):
+    """Soft-decode one frame window already acquired by the hard path."""
+    frame_len = PREAMBLE_BYTES + 2 + expected_payload_len + 2
+    frame_chip_count = frame_len * 2 * 32
+    if len(soft_frame_values) != frame_chip_count:
+        return None
+
+    centered = np.asarray(soft_frame_values, dtype=np.float32).copy()
+    phase_bias = float(centered[: PREAMBLE_SYMBOLS * 32].mean())
+    centered -= phase_bias
+    symbols, margins = soft_chips_to_symbols(centered)
+    frame = bits_to_bytes_lsb(symbols_to_bits(symbols))
+    expected_prefix = bytes([0x00] * PREAMBLE_BYTES + [SFD])
+    if len(frame) != frame_len:
+        return None
+    if bytes(frame[: PREAMBLE_BYTES + 1]) != expected_prefix:
+        return None
+    if frame[PREAMBLE_BYTES + 1] != expected_payload_len + 2:
+        return None
+    if not validate_frame(frame)[0]:
+        return None
+
+    recovered = dict(hard_candidate)
+    recovered.update(
+        frame=frame,
+        symbols=symbols,
+        symbol_pos=0,
+        prefix_symbol_errors=0,
+        preamble_distance=sum(
+            distance for _, distance in symbols[: PREAMBLE_SYMBOLS + 4]
+        ),
+        frame_distance=sum(distance for _, distance in symbols),
+        decode_method="soft_retry",
+        hard_frame=hard_candidate["frame"],
+        soft_phase_offset=soft_phase_offset,
+        soft_phase_bias=phase_bias,
+        soft_min_symbol_margin=(float(margins.min()) if len(margins) else None),
+        soft_alignment_mismatches=int(alignment_mismatches),
+    )
+    return recovered
+
+
+def align_soft_frame(
+    hard_candidate,
+    soft_buffers,
+    expected_payload_len,
+    preferred_soft_offset=None,
+):
+    """Locate a hard candidate in independently buffered soft timing streams.
+
+    Hard and soft ZMQ message boundaries need not match.  Their decisions come
+    from the same ``phase_arg`` samples, so short exact sign runs identify the
+    corresponding soft window without changing the established hard path.
+    """
+    hard_values = hard_candidate.get("hard_frame_values")
+    if hard_values is None:
+        return None
+    frame_len = PREAMBLE_BYTES + 2 + expected_payload_len + 2
+    frame_chip_count = frame_len * 2 * 32
+    if len(hard_values) != frame_chip_count:
+        return None
+
+    hard_values = np.asarray(hard_values, dtype=np.uint8)
+    ambiguity = hard_candidate.get("standard_ambiguity", "normal")
+    # Avoid the repeated preamble when selecting alignment signatures.
+    starts = [
+        PREAMBLE_SYMBOLS * 32,
+        min(PREAMBLE_SYMBOLS * 32 + 128, frame_chip_count - 64),
+        max(PREAMBLE_SYMBOLS * 32, frame_chip_count - 128),
+    ]
+    ordered_offsets = list(soft_buffers)
+    if preferred_soft_offset in soft_buffers:
+        ordered_offsets.remove(preferred_soft_offset)
+        ordered_offsets.insert(0, preferred_soft_offset)
+    for soft_phase_offset in ordered_offsets:
+        raw_buffer = soft_buffers[soft_phase_offset]
+        raw_values = np.frombuffer(raw_buffer, dtype=np.int8)
+        if len(raw_values) < frame_chip_count:
+            continue
+        work_values = transform_standard_soft_values(raw_values, ambiguity)
+        signs = (work_values > 0).astype(np.uint8)
+        signs_bytes = signs.tobytes()
+        possible_starts = set()
+        for signature_start in starts:
+            signature = hard_values[
+                signature_start : signature_start + STANDARD_SOFT_ALIGNMENT_CHIPS
+            ].tobytes()
+            found = signs_bytes.rfind(signature)
+            if found >= signature_start:
+                possible_starts.add(found - signature_start)
+
+        best_for_offset = None
+        for frame_start in possible_starts:
+            frame_end = frame_start + frame_chip_count
+            if frame_end > len(work_values):
+                continue
+            mismatches = int(
+                np.count_nonzero(signs[frame_start:frame_end] != hard_values)
+            )
+            rank = (mismatches, -frame_start, soft_phase_offset)
+            if best_for_offset is None or rank < best_for_offset[0]:
+                best_for_offset = (
+                    rank,
+                    work_values[frame_start:frame_end].copy(),
+                    soft_phase_offset,
+                    mismatches,
+                )
+        # A matching 64-chip signature is effectively unique in the retained
+        # window.  Returning here avoids scanning four unnecessary phases.
+        if best_for_offset is not None:
+            return best_for_offset[1], best_for_offset[2], best_for_offset[3]
+    return None
+
+
+def retry_standard_candidates_with_soft(
+    candidates,
+    soft_buffers,
+    expected_payload_len,
+    preferred_phase_delta=None,
+):
+    """Try soft decoding only after every hard candidate failed FCS."""
+    attempts = 0
+    aligned = 0
+    observed_phase_delta = preferred_phase_delta
+    ordered = sorted(
+        (candidate for candidate in candidates if candidate is not None),
+        key=lambda candidate: candidate.get("offset_rank", 999),
+    )
+    for candidate in ordered:
+        if validate_frame(candidate["frame"])[0]:
+            continue
+        attempts += 1
+        hard_phase_offset = candidate.get("phase_offset")
+        preferred_soft_offset = (
+            (hard_phase_offset + observed_phase_delta) % STANDARD_PHASE_COUNT
+            if hard_phase_offset is not None
+            and observed_phase_delta is not None
+            else None
+        )
+        alignment = align_soft_frame(
+            candidate,
+            soft_buffers,
+            expected_payload_len,
+            preferred_soft_offset=preferred_soft_offset,
+        )
+        if alignment is None:
+            continue
+        aligned += 1
+        soft_values, soft_phase_offset, mismatches = alignment
+        if hard_phase_offset is not None:
+            observed_phase_delta = (
+                soft_phase_offset - hard_phase_offset
+            ) % STANDARD_PHASE_COUNT
+        recovered = decode_standard_soft_frame(
+            soft_values,
+            expected_payload_len,
+            candidate,
+            soft_phase_offset,
+            mismatches,
+        )
+        if recovered is not None:
+            return recovered, attempts, aligned, observed_phase_delta
+    return None, attempts, aligned, observed_phase_delta
 
 
 def select_prefix_positions(
@@ -972,6 +1216,12 @@ def build_summary(
             "duplicate": tracker.duplicate,
             "out_of_order": tracker.out_of_order,
             "crc_failure": crc_failure,
+            "hard_crc_failure_before_soft_retry": getattr(
+                args, "hard_crc_failure", crc_failure
+            ),
+            "standard_soft_retry": getattr(
+                args, "standard_soft_retry_stats", None
+            ),
             "longest_loss_burst": tracker.longest_loss_burst(
                 args.expected_packets
                 if args.expected_packets is not None
@@ -1047,6 +1297,13 @@ def print_summary(summary, json_path):
     print(f"  Duplicate:               {receiver['duplicate']}")
     print(f"  Out of order:            {receiver['out_of_order']}")
     print(f"  CRC/FCS failures:        {receiver['crc_failure']}")
+    soft_retry = receiver.get("standard_soft_retry")
+    if soft_retry and soft_retry["enabled"]:
+        print(
+            f"  Hard CRC failures:       "
+            f"{receiver['hard_crc_failure_before_soft_retry']}"
+        )
+        print(f"  Soft-retry recovered:    {soft_retry['recovered']}")
     print(f"  Payload failures:        {receiver['payload_failure']}")
     print(f"  Run-ID mismatches:       {receiver['run_id_mismatch']}")
     print(f"  Longest loss burst:      {receiver['longest_loss_burst']}")
@@ -1144,6 +1401,23 @@ def parse_args():
         ),
     )
     parser.add_argument(
+        "--standard-soft-retry",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help=(
+            "Retry hard CRC failures with the parallel quantized soft-phase "
+            "stream (default: enabled; disable with --no-standard-soft-retry)"
+        ),
+    )
+    parser.add_argument(
+        "--soft-zmq",
+        default=STANDARD_SOFT_ENDPOINT,
+        help=(
+            "Parallel int8 phase-difference endpoint used only for standard "
+            f"CRC retry (default: {STANDARD_SOFT_ENDPOINT})"
+        ),
+    )
+    parser.add_argument(
         "--freq-offset",
         type=float,
         default=0.0,
@@ -1164,17 +1438,20 @@ def parse_args():
     parser.add_argument(
         "--rf-gain",
         type=float,
-        help="HackRF RF gain; omit to retain the flow-graph default",
+        default=0.0,
+        help="HackRF RF gain (default: 0)",
     )
     parser.add_argument(
         "--if-gain",
         type=float,
-        help="HackRF IF gain; omit to retain the flow-graph default",
+        default=32.0,
+        help="HackRF IF gain (default: 32)",
     )
     parser.add_argument(
         "--bb-gain",
         type=float,
-        help="HackRF baseband gain; omit to retain the flow-graph default",
+        default=40.0,
+        help="HackRF baseband gain (default: 40)",
     )
     parser.add_argument(
         "--duration",
@@ -1241,6 +1518,10 @@ def parse_args():
         args.phase_keep_offset = offset
         args.chip_zmq = args.chip_zmq or PHASE_ENDPOINTS[offset]
         args.phase_endpoints = {offset: args.chip_zmq}
+    if args.chip_source != "standard" or args.payload_len is None:
+        args.standard_soft_retry = False
+    if not args.standard_soft_retry:
+        args.soft_zmq = None
     return args
 
 
@@ -1263,17 +1544,23 @@ def main():
         "phase_polarity",
         "standard_ambiguity",
         "standard_offset_rank",
+        "decode_method",
+        "soft_phase_offset",
+        "soft_phase_bias",
+        "soft_min_symbol_margin",
+        "soft_alignment_mismatches",
         "prefix_symbol_errors",
         "preamble_distance",
         "frame_distance",
         "phase_candidate_offsets",
+        "hard_frame_hex",
         "frame_hex",
     ]
     csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
     csv_writer.writeheader()
     csv_file.flush()
 
-    gr_block_obj = gr_block()
+    gr_block_obj = gr_block(enable_standard_soft=args.standard_soft_retry)
     gr_block_obj.set_zigbee_channel(args.channel)
     if args.freq_offset:
         gr_block_obj.set_freq_offset(args.freq_offset)
@@ -1309,6 +1596,8 @@ def main():
         f"standard_offset={args.standard_keep_offset} "
         f"standard_policy={args.standard_offset_policy} "
         f"standard_ambiguity={args.standard_ambiguity} "
+        f"soft_retry={'on' if args.standard_soft_retry else 'off'} "
+        f"soft_zmq={args.soft_zmq or 'N/A'} "
         f"lo_offset={args.freq_offset:g} "
         f"cfo_correction={args.cfo_correction_hz:g} "
         f"rf_gain={args.rf_gain:g} if_gain={args.if_gain:g} "
@@ -1325,6 +1614,11 @@ def main():
         offset: ZMQSubscriber(addr=endpoint)
         for offset, endpoint in endpoint_map.items()
     }
+    soft_subscriber = (
+        ZMQSubscriber(addr=args.soft_zmq)
+        if args.standard_soft_retry
+        else None
+    )
     standard_offsets = (
         tuple(range(STANDARD_PHASE_COUNT))
         if args.chip_source == "standard"
@@ -1340,6 +1634,9 @@ def main():
         if args.chip_source == "standard"
         else {offset: "" for offset in subscribers}
     )
+    soft_buffers = {
+        offset: bytearray() for offset in range(STANDARD_PHASE_COUNT)
+    }
     zmq_msgs_by_offset = {offset: 0 for offset in subscribers}
     phase_candidate_stats = {
         offset: {"candidates": 0, "fcs_ok": 0, "fcs_failure": 0}
@@ -1366,6 +1663,19 @@ def main():
     standard_polarity_hint = None
     standard_scan_polarity = "normal"
     standard_stream_phase = 0
+    soft_stream_phase = 0
+    soft_zmq_messages = 0
+    soft_samples = 0
+    soft_buffer_truncations = 0
+    hard_crc_failure = 0
+    soft_retry_bursts = 0
+    soft_candidate_attempts = 0
+    soft_aligned_candidates = 0
+    soft_alignment_misses = 0
+    soft_decode_failures = 0
+    soft_recovered = 0
+    soft_retry_times_s = []
+    soft_phase_delta = None
     processing_count = 0
     processing_sum_s = 0.0
     processing_max_s = 0.0
@@ -1426,6 +1736,32 @@ def main():
                     if len(chip_buffers[offset]) > MAX_CHIPS:
                         buffer_truncations[offset] += 1
                         chip_buffers[offset] = chip_buffers[offset][-MAX_CHIPS:]
+
+            if soft_subscriber is not None:
+                soft_messages = soft_subscriber.read_available(
+                    poll_timeout_ms=0
+                )
+                if soft_messages:
+                    soft_zmq_messages += len(soft_messages)
+                    packed_soft = b"".join(
+                        message for message in soft_messages if message
+                    )
+                    soft_values = np.frombuffer(packed_soft, dtype=np.int8)
+                    soft_samples += len(soft_values)
+                    soft_streams, soft_stream_phase = (
+                        deinterleave_standard_soft_values(
+                            soft_values,
+                            soft_stream_phase,
+                        )
+                    )
+                    for sample_offset, values in soft_streams.items():
+                        soft_buffers[sample_offset].extend(values)
+                        excess = (
+                            len(soft_buffers[sample_offset]) - SOFT_MAX_CHIPS
+                        )
+                        if excess > 0:
+                            del soft_buffers[sample_offset][:excess]
+                            soft_buffer_truncations += 1
 
             if received_any or pending_scan:
                 candidates = {}
@@ -1590,6 +1926,34 @@ def main():
                     else choose_standard_candidate(candidates.values())
                 )
                 if selected is not None:
+                    hard_fcs_ok = validate_frame(selected["frame"])[0]
+                    if args.chip_source == "standard" and not hard_fcs_ok:
+                        hard_crc_failure += 1
+                        if args.standard_soft_retry:
+                            soft_retry_bursts += 1
+                            soft_retry_start = time.perf_counter()
+                            recovered, attempted, aligned, observed_delta = (
+                                retry_standard_candidates_with_soft(
+                                    candidates.values(),
+                                    soft_buffers,
+                                    args.payload_len,
+                                    preferred_phase_delta=soft_phase_delta,
+                                )
+                            )
+                            if observed_delta is not None:
+                                soft_phase_delta = observed_delta
+                            soft_retry_times_s.append(
+                                time.perf_counter() - soft_retry_start
+                            )
+                            soft_candidate_attempts += attempted
+                            soft_aligned_candidates += aligned
+                            if aligned == 0:
+                                soft_alignment_misses += 1
+                            elif recovered is None:
+                                soft_decode_failures += 1
+                            if recovered is not None:
+                                selected = recovered
+                                soft_recovered += 1
                     frame = selected["frame"]
                     chip_pos = selected["chip_pos"]
                     symbols = selected["symbols"]
@@ -1632,6 +1996,21 @@ def main():
                         "standard_offset_rank": selected.get(
                             "offset_rank", ""
                         ),
+                        "decode_method": selected.get(
+                            "decode_method", "hard"
+                        ),
+                        "soft_phase_offset": selected.get(
+                            "soft_phase_offset", ""
+                        ),
+                        "soft_phase_bias": selected.get(
+                            "soft_phase_bias", ""
+                        ),
+                        "soft_min_symbol_margin": selected.get(
+                            "soft_min_symbol_margin", ""
+                        ),
+                        "soft_alignment_mismatches": selected.get(
+                            "soft_alignment_mismatches", ""
+                        ),
                         "prefix_symbol_errors": selected[
                             "prefix_symbol_errors"
                         ],
@@ -1644,6 +2023,10 @@ def main():
                                 if candidate_offset is not None
                             )
                         ),
+                        "hard_frame_hex": " ".join(
+                            f"{byte:02X}"
+                            for byte in selected.get("hard_frame", ())
+                        ),
                         "frame_hex": " ".join(f"{byte:02X}" for byte in frame),
                     }
                     csv_writer.writerow(record)
@@ -1653,6 +2036,7 @@ def main():
                         print(
                             f"packet chip={chip_pos} phase={record['phase_offset']} "
                             f"ambiguity={record['standard_ambiguity']} "
+                            f"decode={record['decode_method']} "
                             f"FCS={'OK' if fcs_ok else 'FAIL'} "
                             f"result={result} run_id={record['run_id']} "
                             f"sequence={record['sequence']} payload_len={len(payload)}"
@@ -1716,7 +2100,8 @@ def main():
                 print(
                     f"[elapsed:{now-start_epoch:.1f}s unique:{tracker.unique} "
                     f"duplicate:{tracker.duplicate} out_of_order:{tracker.out_of_order} "
-                    f"crc_failure:{crc_failure} payload_failure:{tracker.payload_failure} "
+                    f"crc_failure:{crc_failure} soft_recovered:{soft_recovered} "
+                    f"payload_failure:{tracker.payload_failure} "
                     f"zmq:{zmq_msgs} chips:{sum(map(len, chip_buffers.values()))} "
                     f"ones:{ones:.3f} transitions:{transitions:.3f}]"
                 )
@@ -1731,6 +2116,8 @@ def main():
         end_epoch = time.time()
         for subscriber in subscribers.values():
             subscriber.close()
+        if soft_subscriber is not None:
+            soft_subscriber.close()
         gr_block_obj.stop()
         gr_block_obj.wait()
         csv_file.close()
@@ -1765,6 +2152,34 @@ def main():
             if args.chip_source == "standard"
             else None
         )
+        args.hard_crc_failure = hard_crc_failure
+        soft_retry_timing = summarize_numeric_samples(
+            soft_retry_times_s,
+            1000.0,
+        )
+        args.standard_soft_retry_stats = (
+            {
+                "enabled": args.standard_soft_retry,
+                "scope": "hard CRC failures only",
+                "endpoint": args.soft_zmq,
+                "format": "signed int8 quantized phase difference",
+                "quantization_scale": STANDARD_SOFT_SCALE,
+                "buffer_chips_per_offset": SOFT_MAX_CHIPS,
+                "zmq_messages": soft_zmq_messages,
+                "samples": soft_samples,
+                "buffer_truncations": soft_buffer_truncations,
+                "hard_failure_bursts_attempted": soft_retry_bursts,
+                "candidate_attempts": soft_candidate_attempts,
+                "aligned_candidates": soft_aligned_candidates,
+                "alignment_miss_bursts": soft_alignment_misses,
+                "aligned_but_not_recovered": soft_decode_failures,
+                "recovered": soft_recovered,
+                "phase_offset_delta": soft_phase_delta,
+                "retry_timing_ms": soft_retry_timing,
+            }
+            if args.chip_source == "standard"
+            else None
+        )
         processing_distribution = summarize_numeric_samples(processing_samples_s, 1000.0)
         args.receiver_processing_timing = {
             "samples": processing_count,
@@ -1779,6 +2194,7 @@ def main():
             "max_ms": processing_max_s * 1000.0,
             "buffer_chips": MAX_CHIPS,
             "includes_zmq_receive": True,
+            "includes_soft_retry": False,
         }
         args.standard_offset_ranking = (
             {

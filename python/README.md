@@ -58,6 +58,7 @@ python3 python/perf_test/zigbee_perf_rx.py --help
 | 数据流 | ZMQ | 用途 |
 |---|---:|---|
 | standard | 55556 | 单路全采样差分相位 bit；正式 BlueBee/ZigBee 验收 |
+| standard soft retry | 55562 | 单路全采样 `int8` 相位差软值；仅在硬判决 FCS 失败后回退 |
 | phase offset 0 | 55557 | BlueBee 相位差诊断 |
 | phase offset 1--4 | 55558--55561 | 其余四个 5 倍采样相位 |
 | coherent reference | 55566 | 修正后的原生相干 O-QPSK 正向校验，不计正式 PRR |
@@ -88,25 +89,27 @@ phase 模式支持：
 
 standard 正式链从 ZMQ 55556 的单路 10 Msample/s 差分相位 bit 流连续拆出五个 2 Mchip/s offset，拆相状态跨 ZMQ 消息保存。提供 `--payload-len` 时，五个 offset 先只做 8-symbol preamble 评分；默认 `--standard-offset-policy adaptive` 按评分依次执行完整标准 `CHIP_MAP` 判决，找到有效 FCS 立即停止，前两个失败时继续尝试第 3--5 名。旧的“最多两个”策略保留为 `--standard-offset-policy ranked2`，仅用于 A/B。固定 `--standard-keep-offset 0..4` 仍保留为诊断入口。
 
+当前软值试验不改变上述捕获和硬判决成功路径。GNU Radio 在 55562 并行发布按 40 倍缩放的有符号 `int8` 相位差；只有同一突发的全部硬候选未通过 FCS 时，接收器才用硬候选片段对齐软缓存，减去前导区间的局部相位偏置，并以软相关重新执行标准 `CHIP_MAP` symbol 判决。默认启用，可用 `--no-standard-soft-retry` 关闭做同参数 A/B。JSON 的 `standard_soft_retry` 和 CSV 的 `decode_method` 分别记录尝试、对齐、恢复数量及每包最终使用的判决路径。
+
 BlueBee optimized 映射投影到标准 DSSS 码时，每 symbol 理想固有距离为 8 chips，因此前缀门限保留平均 10 chips/symbol。首次有效 FCS 后锁定 normal/inverted 差分极性；旧 Costas/IQ 变换只保留作离线诊断。跨 offset 合并仍以一次物理突发为单位，之后再次收到同一 Sequence 才计 duplicate。
 
 JSON 的 `receiver.processing_timing` 记录 avg/max 以及 p50/p95/p99；`standard_offset_ranking` 记录最佳/次优 offset distance、无候选时的最小 preamble distance、完整解码次数以及 `fcs_success_by_rank`，可直接判断第 3--5 名是否挽回了包；`buffer_critical` 记录 90% 容量临界事件及实际截断次数。
 
-HackRF 接收校准参数已与吞吐统计参数分离：`--rf-gain`、`--if-gain` 和 `--bb-gain` 会实际下发到设备；默认从低失真基线 RF=0、IF=16、BB=16 开始，避免旧流图 RF=50、IF=89 被驱动钳位或造成前级过载。`--cfo-correction-hz` 只改变数字平移中心，用于消除发射机/接收机残余 CFO。原有 `--freq-offset` 同时移动硬件 LO 并在数字域移回，只用于避开 DC spur，不应再当作 CFO 补偿。每轮 JSON 保存实际增益、LO offset 和 CFO correction。
+HackRF 接收校准参数已与吞吐统计参数分离：`--rf-gain`、`--if-gain` 和 `--bb-gain` 会实际下发到设备；根据 runs 21117/21118 的可重复约 80% 计划端到端接收率，当前默认值固定为 RF=0、IF=32、BB=40，CFO correction=0。`--cfo-correction-hz` 只改变数字平移中心，用于消除发射机/接收机残余 CFO。原有 `--freq-offset` 同时移动硬件 LO 并在数字域移回，只用于避开 DC spur，不应再当作 CFO 补偿。每轮 JSON 保存实际增益、LO offset 和 CFO correction。
 
 接收率优化应保持板端 realtime 和宽松间隔，先固定增益，仅扫描 CFO；再固定最佳 CFO，一次只改变一个增益参数。例如：
 
 ```bash
 python3 python/perf_test/zigbee_perf_rx.py \
   --standard-offset-policy adaptive \
-  --rf-gain 0 --if-gain 16 --bb-gain 16 \
-  --cfo-correction-hz -25000 \
+  --rf-gain 0 --if-gain 32 --bb-gain 40 \
+  --cfo-correction-hz 0 \
   --tx-duration-s 65 --tx-interval-us 5000000 \
   --run-id 21100 --payload-len 46 \
   --output-prefix python/perf_test/rx-cal-p46-r21100
 ```
 
-先用不同 Run ID 对 `--cfo-correction-hz` 做对称小步扫描；找到峰值后再调整 RF/IF gain。每个候选点至少重复 3 轮。正式缩短 interval 前仍要求 standard 链计划接收率不低于 99%、`p99 < 12 ms`、`max < 24 ms`。
+当前先固定已复现的最佳增益/CFO验证软回退，不继续扫描射频参数。每个软/硬候选点至少重复 3 轮。正式缩短 interval 前仍要求 standard 链计划接收率不低于 99%、`p99 < 12 ms`、`max < 24 ms`。
 
 第一阶段优化后的五相位候选搜索约 9 ms；固定 offset 0 的 run 1238 实测平均 2.21 ms、最大 5.01 ms，均低于当时的 12 ms 缓存窗口。板端发送 12 包，接收端得到 Sequence 0--11 的 12 unique、0 duplicate、0 out-of-order。
 

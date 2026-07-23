@@ -22,7 +22,7 @@ from gnuradio import zeromq
 
 class gr_zigbee(gr.top_block):
 
-    def __init__(self):
+    def __init__(self, enable_standard_soft=False):
         gr.top_block.__init__(self, "ZigBee OQPSK Receiver", catch_exceptions=True)
 
         ##################################################
@@ -37,8 +37,8 @@ class gr_zigbee(gr.top_block):
         self.zigbee_base_freq = zigbee_base_freq = 2405e6
         self.squelch_threshold = squelch_threshold = -25
         self.rf_gain = rf_gain = 0
-        self.if_gain = if_gain = 16
-        self.bb_gain = bb_gain = 16
+        self.if_gain = if_gain = 32
+        self.bb_gain = bb_gain = 40
         self.lowpass_filter = lowpass_filter = firdes.low_pass(1, sample_rate, cutoff_freq, transition_width)
         self.iq_output = iq_output = "/dev/null"
         self.freq_offset = freq_offset = 0
@@ -51,6 +51,10 @@ class gr_zigbee(gr.top_block):
         self.demod_keep_n = demod_keep_n = 2 * demod_sps
         self.demod_keep_offset = demod_keep_offset = demod_keep_n - 1
         self.phase_keep_offset = phase_keep_offset = 0  # 0-4, phase-diff BlueBee chip sampler
+        # Keep the existing packed hard-decision endpoint unchanged.  The
+        # parallel int8 stream preserves phase-difference magnitude for an
+        # optional CRC-failure retry without carrying float32 over ZMQ.
+        self.standard_soft_scale = standard_soft_scale = 40.0
 
         # Half-sine pulse for OQPSK matched filter
         self.pulse_taps = pulse_taps = [
@@ -68,6 +72,11 @@ class gr_zigbee(gr.top_block):
         self.zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_char, 1, 'tcp://127.0.0.1:55556', 100, False, (20), '', True, True)
         self.unpacked_to_packed = blocks.unpacked_to_packed_bb(1, gr.GR_LSB_FIRST)
         self.standard_phase_slicer = digital.binary_slicer_fb()
+        self.standard_soft_quantizer = None
+        self.standard_soft_zeromq_pub_sink = None
+        if enable_standard_soft:
+            self.standard_soft_quantizer = blocks.float_to_char(1, standard_soft_scale)
+            self.standard_soft_zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_char, 1, 'tcp://127.0.0.1:55562', 100, False, (20), '', True, True)
 
         # Corrected coherent OQPSK reference path.  It is retained on a
         # diagnostic-only endpoint and is no longer the formal BlueBee input.
@@ -175,6 +184,9 @@ class gr_zigbee(gr.top_block):
         self.connect((self.phase_arg, 0), (self.standard_phase_slicer, 0))
         self.connect((self.standard_phase_slicer, 0), (self.unpacked_to_packed, 0))
         self.connect((self.unpacked_to_packed, 0), (self.zeromq_pub_sink, 0))
+        if self.standard_soft_quantizer is not None:
+            self.connect((self.phase_arg, 0), (self.standard_soft_quantizer, 0))
+            self.connect((self.standard_soft_quantizer, 0), (self.standard_soft_zeromq_pub_sink, 0))
         for offset in range(demod_sps):
             self.connect((self.phase_arg, 0), (self.phase_keeps[offset], 0))
             self.connect((self.phase_keeps[offset], 0), (self.phase_slicers[offset], 0))

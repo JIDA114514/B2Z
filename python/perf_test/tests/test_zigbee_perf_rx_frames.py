@@ -3,6 +3,7 @@
 from pathlib import Path
 import sys
 import unittest
+from unittest import mock
 
 
 MODULE_DIR = Path(__file__).resolve().parents[1]
@@ -38,6 +39,21 @@ def bluebee_bits_to_chips(bit_string):
 
 
 class VariableFrameTests(unittest.TestCase):
+    def test_receiver_defaults_use_repeated_best_gain_and_soft_retry(self):
+        with mock.patch.object(
+            sys,
+            "argv",
+            ["zigbee_perf_rx.py", "--payload-len", "10"],
+        ):
+            args = zigbee_perf_rx.parse_args()
+
+        self.assertEqual(args.rf_gain, 0.0)
+        self.assertEqual(args.if_gain, 32.0)
+        self.assertEqual(args.bb_gain, 40.0)
+        self.assertEqual(args.cfo_correction_hz, 0.0)
+        self.assertTrue(args.standard_soft_retry)
+        self.assertEqual(args.soft_zmq, zigbee_perf_rx.STANDARD_SOFT_ENDPOINT)
+
     def test_vectorized_message_unpack_matches_scalar_lsb_order(self):
         messages = [
             bytes((0x00, 0x01, 0x80, 0xFF)),
@@ -75,6 +91,36 @@ class VariableFrameTests(unittest.TestCase):
         for offset in range(5):
             expected = "".join(str(int(bit)) for bit in raw[offset::5])
             self.assertEqual(outputs[offset], expected)
+        self.assertEqual(stream_phase, len(raw) % 5)
+
+    def test_standard_soft_deinterleave_preserves_signed_values(self):
+        raw = zigbee_perf_rx.np.asarray(
+            [((index * 19) % 251) - 125 for index in range(173)],
+            dtype=zigbee_perf_rx.np.int8,
+        )
+        outputs = {offset: bytearray() for offset in range(5)}
+        stream_phase = 0
+        boundaries = (0, 13, 71, 80, 129, len(raw))
+
+        for start, end in zip(boundaries, boundaries[1:]):
+            streams, stream_phase = (
+                zigbee_perf_rx.deinterleave_standard_soft_values(
+                    raw[start:end],
+                    stream_phase,
+                )
+            )
+            for offset, values in streams.items():
+                outputs[offset].extend(values)
+
+        for offset in range(5):
+            actual = zigbee_perf_rx.np.frombuffer(
+                outputs[offset],
+                dtype=zigbee_perf_rx.np.int8,
+            )
+            zigbee_perf_rx.np.testing.assert_array_equal(
+                actual,
+                raw[offset::5],
+            )
         self.assertEqual(stream_phase, len(raw) % 5)
 
     def test_minimum_and_maximum_payload(self):
@@ -502,6 +548,80 @@ class VariableFrameTests(unittest.TestCase):
         )
         self.assertEqual(limited_attempted, 2)
         self.assertFalse(zigbee_perf_rx.validate_frame(limited["frame"])[0])
+
+    def test_soft_retry_recovers_hard_crc_failure_without_new_acquisition(self):
+        payload = build_test_payload(10, 0x1234, 17)
+        frame = build_frame(payload)
+        true_chips = bits_to_chips(bytes_to_bits(frame))
+        hard_chips = list(true_chips)
+        soft_values = zigbee_perf_rx.np.asarray(
+            [80 if chip == "1" else -80 for chip in true_chips],
+            dtype=zigbee_perf_rx.np.int8,
+        )
+
+        # Make one payload symbol's hard signs favor its nearest competing
+        # CHIP_MAP entry.  Give those wrong signs very low confidence so the
+        # soft correlation still selects the transmitted symbol.
+        symbol_index = 14
+        start = symbol_index * 32
+        true_symbol = true_chips[start : start + 32]
+        alternatives = [
+            (
+                sum(a != b for a, b in zip(true_symbol, reference)),
+                index,
+                reference,
+            )
+            for index, reference in enumerate(zigbee_perf_rx.CHIP_MAP)
+            if reference != true_symbol
+        ]
+        distance, _, alternate = min(alternatives)
+        differing = [
+            index
+            for index, (actual, other) in enumerate(
+                zip(true_symbol, alternate)
+            )
+            if actual != other
+        ]
+        for chip_index in differing[: distance // 2 + 1]:
+            absolute = start + chip_index
+            hard_chips[absolute] = alternate[chip_index]
+            soft_values[absolute] = (
+                1 if alternate[chip_index] == "1" else -1
+            )
+
+        candidate = zigbee_perf_rx.find_standard_frame_candidate_fast(
+            "".join(hard_chips),
+            10,
+            sample_offset=2,
+        )
+        self.assertIsNotNone(candidate)
+        self.assertFalse(zigbee_perf_rx.validate_frame(candidate["frame"])[0])
+
+        noise = zigbee_perf_rx.np.asarray(
+            [23 if index & 1 else -23 for index in range(137)],
+            dtype=zigbee_perf_rx.np.int8,
+        )
+        soft_buffers = {
+            offset: bytearray() for offset in range(5)
+        }
+        soft_buffers[4].extend(noise.tobytes())
+        soft_buffers[4].extend(soft_values.tobytes())
+        recovered, attempts, aligned, phase_delta = (
+            zigbee_perf_rx.retry_standard_candidates_with_soft(
+                [candidate],
+                soft_buffers,
+                10,
+            )
+        )
+
+        self.assertEqual(attempts, 1)
+        self.assertEqual(aligned, 1)
+        self.assertEqual(phase_delta, 2)
+        self.assertIsNotNone(recovered)
+        self.assertEqual(recovered["decode_method"], "soft_retry")
+        self.assertEqual(recovered["soft_phase_offset"], 4)
+        self.assertTrue(zigbee_perf_rx.validate_frame(recovered["frame"])[0])
+        self.assertEqual(bytes(recovered["frame"]), frame)
 
 
 if __name__ == "__main__":

@@ -179,10 +179,12 @@ deadline_miss=0 dma_timeout=0
 性能接收入口为 `python/perf_test/zigbee_perf_rx.py`：
 
 - `--chip-source standard` 使用正式验收链 ZMQ 55556；该端口输出单路 10 Msample/s 差分相位 bit 流，Python 按模 5 拆成五个 2 Mchip/s 采样相位。
+- standard 硬判决 FCS 失败时，默认从并行 ZMQ 55562 的量化 `int8` 相位差窗口执行一次软 `CHIP_MAP` 重解码；既有硬捕获和硬判决成功路径保持不变，可用 `--no-standard-soft-retry` 关闭以进行 A/B。
 - `--chip-source phase` 使用 BlueBee 相位差诊断链；offset 0--4 对应 55557--55561。
 - `--phase-keep-offset auto` 同时比较五相位，固定值 `0`--`4` 只订阅指定相位。
 - 有效帧必须通过 ZigBee FCS、测试头、Run ID、Sequence 和确定性填充校验。
 - CSV 保存每个最终提交的候选及所选 offset、极性和距离；JSON 保存接收计数、逐 offset candidates/FCS、完整处理耗时和板端合并后的比率。
+- 当前默认接收校准参数为 RF=0、IF=32、BB=40、CFO correction=0；命令行仍可逐项覆盖。
 - 使用 `--board-stats <serial.log>` 合并同一 Run ID 的最终 `PERF_STATS`，才能正式计算无线 PRR 和端到端接收率。
 - standard 模式提供 `--payload-len` 时启用已知长度快速检测：使用一次 32-chip 相关与 8 路移位累加定位 preamble，只对少量局部候选解完整帧。五相位 48k-chip 合成缓存平均约 13.10 ms、最大约 16.13 ms，低于 24 ms 缓存跨度；JSON 的 `receiver.processing_timing` 记录包含 ZMQ 接收、解包、模 5 拆相和搜索的完整迭代耗时。
 - standard 默认使用 `--standard-keep-offset auto` 同时比较五个采样相位，并使用标准 IEEE 802.15.4 `CHIP_MAP` 解扩；`--standard-ambiguity auto` 在未锁定前轮换差分极性，首次有效 FCS 后锁定。逐 offset 候选/FCS 统计写入 JSON `standard_offset_stats`。

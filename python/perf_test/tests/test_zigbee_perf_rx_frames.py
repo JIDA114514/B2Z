@@ -407,6 +407,102 @@ class VariableFrameTests(unittest.TestCase):
                 self.assertTrue(fcs_ok)
                 self.assertEqual(bytes(decoded_payload), payload)
 
+    def test_standard_ranked_offsets_decode_runner_up_after_fcs_failure(self):
+        payload = build_test_payload(10, 0x1234, 14)
+        good_frame = build_frame(payload)
+        bad_frame = good_frame[:-1] + bytes((good_frame[-1] ^ 0x01,))
+        bad_chips = bits_to_chips(bytes_to_bits(bad_frame))
+        good_chips = list(bits_to_chips(bytes_to_bits(good_frame)))
+        good_chips[0] = "0" if good_chips[0] == "1" else "1"
+
+        scores = [
+            zigbee_perf_rx.score_standard_offset(
+                bad_chips,
+                10,
+                sample_offset=0,
+            ),
+            zigbee_perf_rx.score_standard_offset(
+                "".join(good_chips),
+                10,
+                sample_offset=1,
+            ),
+            None,
+            None,
+            None,
+        ]
+        selected, decoded, ranked, attempted = (
+            zigbee_perf_rx.decode_ranked_standard_offsets(scores, 10)
+        )
+
+        self.assertEqual(ranked[0]["sample_offset"], 0)
+        self.assertEqual(ranked[1]["sample_offset"], 1)
+        self.assertEqual(len(decoded), 2)
+        self.assertEqual(attempted, 2)
+        self.assertFalse(
+            zigbee_perf_rx.validate_frame(decoded[0]["frame"])[0]
+        )
+        self.assertEqual(selected["phase_offset"], 1)
+        self.assertTrue(zigbee_perf_rx.validate_frame(selected["frame"])[0])
+
+    def test_standard_ranked_offsets_stop_after_best_fcs_success(self):
+        payload = build_test_payload(46, 0x1234, 15)
+        chips = bits_to_chips(bytes_to_bits(build_frame(payload)))
+        scores = [
+            zigbee_perf_rx.score_standard_offset(
+                chips, 46, sample_offset=offset
+            )
+            for offset in range(5)
+        ]
+        selected, decoded, ranked, attempted = (
+            zigbee_perf_rx.decode_ranked_standard_offsets(scores, 46)
+        )
+        self.assertEqual(len(ranked), 5)
+        self.assertEqual(len(decoded), 1)
+        self.assertEqual(attempted, 1)
+        self.assertTrue(zigbee_perf_rx.validate_frame(selected["frame"])[0])
+
+    def test_standard_adaptive_recovers_valid_third_rank(self):
+        payload = build_test_payload(10, 0x1234, 16)
+        good_frame = build_frame(payload)
+        bad_frame = good_frame[:-1] + bytes((good_frame[-1] ^ 0x01,))
+        best_bad = bits_to_chips(bytes_to_bits(bad_frame))
+        second_bad = list(best_bad)
+        second_bad[0] = "0" if second_bad[0] == "1" else "1"
+        third_good = list(bits_to_chips(bytes_to_bits(good_frame)))
+        third_good[0] = "0" if third_good[0] == "1" else "1"
+        third_good[1] = "0" if third_good[1] == "1" else "1"
+        scores = [
+            zigbee_perf_rx.score_standard_offset(
+                best_bad, 10, sample_offset=0
+            ),
+            zigbee_perf_rx.score_standard_offset(
+                "".join(second_bad), 10, sample_offset=1
+            ),
+            zigbee_perf_rx.score_standard_offset(
+                "".join(third_good), 10, sample_offset=2
+            ),
+        ]
+
+        selected, decoded, ranked, attempted = (
+            zigbee_perf_rx.decode_ranked_standard_offsets(scores, 10)
+        )
+
+        self.assertEqual([score["sample_offset"] for score in ranked], [0, 1, 2])
+        self.assertEqual(attempted, 3)
+        self.assertEqual(len(decoded), 3)
+        self.assertEqual(selected["offset_rank"], 3)
+        self.assertTrue(zigbee_perf_rx.validate_frame(selected["frame"])[0])
+
+        limited, _, _, limited_attempted = (
+            zigbee_perf_rx.decode_ranked_standard_offsets(
+                scores,
+                10,
+                max_offsets=2,
+            )
+        )
+        self.assertEqual(limited_attempted, 2)
+        self.assertFalse(zigbee_perf_rx.validate_frame(limited["frame"])[0])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -51,6 +51,33 @@ class SequenceTests(unittest.TestCase):
         self.assertEqual(tracker.out_of_order, 1)
         self.assertEqual(tracker.longest_loss_burst(scheduled=9), 2)
 
+    def test_planned_range_covers_edges_gaps_and_out_of_range(self):
+        tracker = SequenceTracker(expected_run_id=9, expected_payload_len=10)
+        for sequence in (1, 2, 4, 7, 10):
+            tracker.observe(build_test_payload(10, 9, sequence))
+
+        planned = tracker.planned_range(10)
+
+        self.assertEqual(planned["range_start"], 0)
+        self.assertEqual(planned["range_end"], 9)
+        self.assertEqual(planned["in_range_unique"], 4)
+        self.assertEqual(planned["missing"], 6)
+        self.assertEqual(
+            planned["missing_ranges"],
+            [
+                {"start": 0, "end": 0, "count": 1},
+                {"start": 3, "end": 3, "count": 1},
+                {"start": 5, "end": 6, "count": 2},
+                {"start": 8, "end": 9, "count": 2},
+            ],
+        )
+        self.assertEqual(planned["out_of_range_count"], 1)
+        self.assertEqual(planned["out_of_range_sequences"], [10])
+
+    def test_planned_range_is_unavailable_without_tx_plan(self):
+        tracker = SequenceTracker()
+        self.assertIsNone(tracker.planned_range(None))
+
 
 class BoardStatsTests(unittest.TestCase):
     def test_last_matching_final_line(self):

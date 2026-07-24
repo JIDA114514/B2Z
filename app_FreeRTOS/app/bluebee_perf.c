@@ -67,6 +67,10 @@ void bluebee_perf_build_payload(uint8_t *payload, uint32_t payload_len,
 #define BLUEBEE_PERF_MAX_SLEEP_MS         10u
 #define BLUEBEE_PERF_AXI_DAC_SYNC_CONTROL 0x44u
 #define BLUEBEE_PERF_AXI_DAC_SYNC         0x1u
+#define BLUEBEE_PERF_BATCH_MAX_SIZE      8u
+#define BLUEBEE_PERF_BATCH_DEFAULT_SIZE  4u
+#define BLUEBEE_PERF_IQ_WORD_CAPACITY    230000u
+
 
 enum bluebee_perf_test {
 	BLUEBEE_PERF_TEST_PURE = 0,
@@ -117,6 +121,15 @@ struct bluebee_perf_gen_timing {
 	uint32_t total_us;
 };
 
+struct bluebee_perf_prepared {
+	uint32_t *iq_words;
+	uint32_t iq_byte_count;
+	uint32_t tx_time_us;
+	uint32_t sequence;
+	struct bluebee_perf_gen_timing timing;
+	uint8_t valid;
+};
+
 struct bluebee_perf_runtime {
 	struct bluebee_perf_config config;
 	struct bluebee_perf_counters counters;
@@ -135,6 +148,11 @@ extern struct axi_dmac *tx_dmac;
 
 static struct bluebee_perf_runtime g_perf;
 static TaskHandle_t g_perf_task;
+
+/* Dedicated DDR BSS arena; independent of the 1 MB FreeRTOS heap. */
+static uint32_t
+g_perf_iq_arena[BLUEBEE_PERF_BATCH_MAX_SIZE][BLUEBEE_PERF_IQ_WORD_CAPACITY]
+	__attribute__((aligned(64)));
 
 static const char *bluebee_perf_test_name(enum bluebee_perf_test test)
 {
@@ -336,7 +354,7 @@ static void bluebee_perf_print_start_usage(enum bluebee_perf_test test)
 		      "<duration_s> [run_id] [mode] [batch_size]\r\n",
 		      (char *)bluebee_perf_test_name(test));
 	console_print("Decimal integers only; mode: 0=realtime, 1=batch, 2=double; "
-		      "Phase 1 supports mode 0 only\r\n");
+		      "batch_size defaults to 4 and is limited to 8\r\n");
 }
 
 static int32_t bluebee_perf_start_cmdline(enum bluebee_perf_test test,
@@ -382,10 +400,16 @@ static int32_t bluebee_perf_start_cmdline(enum bluebee_perf_test test,
 		bluebee_perf_print_start_usage(test);
 		return -1;
 	}
-	if (config.mode != 0u) {
-		console_print("PERF_ERROR mode=%d is reserved for Phase 2; use mode=0\r\n",
-			      (long)config.mode);
-		return -1;
+	if (config.mode == 1u) {
+		if (config.batch_size == 0u)
+			config.batch_size = BLUEBEE_PERF_BATCH_DEFAULT_SIZE;
+		if (config.batch_size > BLUEBEE_PERF_BATCH_MAX_SIZE) {
+			console_print("PERF_ERROR batch_size must be in [1, %d]\r\n",
+				      (long)BLUEBEE_PERF_BATCH_MAX_SIZE);
+			return -1;
+		}
+	} else {
+		config.batch_size = 0u;
 	}
 
 	if (config.duration_s != 0u) {
@@ -406,13 +430,16 @@ static int32_t bluebee_perf_start_cmdline(enum bluebee_perf_test test,
 	taskEXIT_CRITICAL();
 
 	console_print("PERF_START test=%s state=armed payload_len=%d interval_us=%d "
-		      "duration_s=%d run_id=%d mode=realtime mode_id=0 batch_size=0 "
+		      "duration_s=%d run_id=%d mode=%s mode_id=%d batch_size=%d "
 		      "expected_packets=%d\r\n",
 		      (char *)bluebee_perf_test_name(test),
 		      (long)config.payload_len,
 		      (long)config.interval_us,
 		      (long)config.duration_s,
 		      (long)config.run_id,
+		      (char *)bluebee_perf_mode_name(config.mode),
+		      (long)config.mode,
+		      (long)config.batch_size,
 		      (long)config.expected_packets);
 	xTaskNotifyGive(g_perf_task);
 
@@ -672,6 +699,29 @@ static int32_t bluebee_perf_dma_wait(uint32_t timeout_us)
 	}
 }
 
+static int32_t bluebee_perf_dma_wait_deadline(XTime deadline)
+{
+	for (;;) {
+		XTime now;
+
+		if (bluebee_perf_dma_complete())
+			return 0;
+		XTime_GetTime(&now);
+		if (now >= deadline) {
+			if (bluebee_perf_dma_complete())
+				return 0;
+			bluebee_perf_dma_print_timeout();
+			axi_dmac_transfer_stop(tx_dmac);
+			return -1;
+		}
+		if (bluebee_perf_ticks_to_us(deadline - now) >
+		    BLUEBEE_PERF_WAIT_SLEEP_US)
+			vTaskDelay(pdMS_TO_TICKS(1u));
+		else
+			taskYIELD();
+	}
+}
+
 static int32_t bluebee_perf_generate(enum bluebee_perf_test test,
 				     const uint8_t *payload,
 				     uint32_t payload_len,
@@ -748,6 +798,170 @@ static void bluebee_perf_record_timing(
 	taskEXIT_CRITICAL();
 }
 
+static int32_t bluebee_perf_prepare_waveform(
+	const struct bluebee_perf_config *config,
+	uint32_t sequence,
+	uint32_t arena_slot,
+	struct bluebee_perf_prepared *prepared)
+{
+	uint8_t payload[BLUEBEE_PERF_MAX_PAYLOAD];
+	const uint32_t *generated_iq = NULL;
+	uint32_t iq_byte_count = 0u;
+	uint32_t tx_time_us = 0u;
+	struct bluebee_perf_gen_timing timing;
+
+	if (!config || !prepared ||
+	    arena_slot >= BLUEBEE_PERF_BATCH_MAX_SIZE)
+		return -1;
+
+	bluebee_perf_build_payload(payload, config->payload_len,
+				    config->run_id, sequence);
+	if (bluebee_perf_generate(config->test, payload, config->payload_len,
+				  &generated_iq, &iq_byte_count, &tx_time_us,
+				  &timing) < 0)
+		return -1;
+	if (iq_byte_count >
+	    BLUEBEE_PERF_IQ_WORD_CAPACITY * sizeof(uint32_t))
+		return -1;
+
+	memcpy(g_perf_iq_arena[arena_slot], generated_iq, iq_byte_count);
+	prepared->iq_words = g_perf_iq_arena[arena_slot];
+	prepared->iq_byte_count = iq_byte_count;
+	prepared->tx_time_us = tx_time_us;
+	prepared->sequence = sequence;
+	prepared->timing = timing;
+	prepared->valid = 1u;
+	bluebee_perf_record_timing(&timing);
+	bluebee_perf_count(&g_perf.counters.generated);
+
+	return 0;
+}
+
+static int32_t bluebee_perf_start_prepared(
+	const struct bluebee_perf_config *config,
+	const struct bluebee_perf_prepared *prepared,
+	XTime *dma_deadline)
+{
+	XTime dma_start;
+
+	if (!config || !prepared || !prepared->valid || !dma_deadline)
+		return -1;
+
+	if (config->test == BLUEBEE_PERF_TEST_EXADV) {
+		XTime primary_start;
+
+		XTime_GetTime(&primary_start);
+		if (bluebee_perf_dma_start(ble_exadv_primary_iq_ch39,
+					    BLE_EXADV_PRIMARY_IQ_CH39_WORDS *
+						    sizeof(uint32_t)) < 0)
+			return -1;
+		if (bluebee_perf_dma_wait(BLUEBEE_PERF_PRIMARY_TIMEOUT_US) < 0) {
+			bluebee_perf_count(&g_perf.counters.dma_timeout);
+			return -1;
+		}
+		if (bluebee_perf_wait_until(
+			    primary_start +
+				    bluebee_perf_ticks_from_us(BLUEBEE_PERF_AUX_OFFSET_US),
+			    1u) < 0)
+			return -1;
+	}
+
+	if (bluebee_perf_stop_requested())
+		return -1;
+	if (bluebee_perf_dma_start(prepared->iq_words,
+				    prepared->iq_byte_count) < 0)
+		return -1;
+	bluebee_perf_count(&g_perf.counters.tx_started);
+	XTime_GetTime(&dma_start);
+	*dma_deadline = dma_start + bluebee_perf_ticks_from_us(
+		prepared->tx_time_us + BLUEBEE_PERF_DMA_MARGIN_US);
+
+	return 0;
+}
+
+static int32_t bluebee_perf_finish_prepared(XTime dma_deadline)
+{
+	if (bluebee_perf_dma_wait_deadline(dma_deadline) < 0) {
+		bluebee_perf_count(&g_perf.counters.dma_timeout);
+		return -1;
+	}
+	bluebee_perf_count(&g_perf.counters.tx_completed);
+
+	return 0;
+}
+
+static int32_t bluebee_perf_send_prepared(
+	const struct bluebee_perf_config *config,
+	const struct bluebee_perf_prepared *prepared)
+{
+	XTime dma_deadline;
+
+	if (bluebee_perf_start_prepared(config, prepared, &dma_deadline) < 0)
+		return -1;
+
+	return bluebee_perf_finish_prepared(dma_deadline);
+}
+
+static int32_t bluebee_perf_prepare_batch(
+	const struct bluebee_perf_config *config,
+	uint32_t first_sequence,
+	struct bluebee_perf_prepared *prepared,
+	uint32_t *prepared_count)
+{
+	uint32_t count;
+
+	if (!config || !prepared || !prepared_count ||
+	    config->mode != 1u || config->batch_size == 0u ||
+	    config->batch_size > BLUEBEE_PERF_BATCH_MAX_SIZE)
+		return -1;
+
+	count = config->batch_size;
+	if (config->duration_s != 0u) {
+		uint32_t remaining = config->expected_packets > first_sequence ?
+			config->expected_packets - first_sequence : 0u;
+
+		if (count > remaining)
+			count = remaining;
+	}
+
+	for (uint32_t i = 0u; i < count; i++) {
+		prepared[i].valid = 0u;
+		if (bluebee_perf_stop_requested())
+			return -1;
+		if (bluebee_perf_prepare_waveform(config, first_sequence + i,
+						   i, &prepared[i]) < 0)
+			return -1;
+	}
+	*prepared_count = count;
+
+	return 0;
+}
+
+static int32_t bluebee_perf_send_double(
+	const struct bluebee_perf_config *config,
+	const struct bluebee_perf_prepared *current,
+	uint32_t next_sequence,
+	uint8_t prepare_next,
+	uint32_t next_arena_slot,
+	struct bluebee_perf_prepared *next)
+{
+	XTime dma_deadline;
+	int32_t prepare_ret = 0;
+	int32_t finish_ret;
+
+	if (bluebee_perf_start_prepared(config, current, &dma_deadline) < 0)
+		return -1;
+
+	if (prepare_next) {
+		next->valid = 0u;
+		prepare_ret = bluebee_perf_prepare_waveform(
+			config, next_sequence, next_arena_slot, next);
+	}
+	finish_ret = bluebee_perf_finish_prepared(dma_deadline);
+
+	return (prepare_ret < 0 || finish_ret < 0) ? -1 : 0;
+}
+
 static void bluebee_perf_set_scheduled(uint32_t scheduled)
 {
 	taskENTER_CRITICAL();
@@ -810,27 +1024,62 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 static void bluebee_perf_run(void)
 {
 	struct bluebee_perf_config config;
+	struct bluebee_perf_prepared prepared[BLUEBEE_PERF_BATCH_MAX_SIZE];
 	XTime interval_ticks;
 	XTime experiment_end = 0;
 	uint32_t sequence = 0u;
+	uint32_t batch_first_sequence = 0u;
+	uint32_t batch_count = 0u;
+	uint32_t double_current_slot = 0u;
 	uint8_t setup_ok = 0u;
 	uint8_t stopped = 0u;
+	uint8_t run_error = 0u;
 
+	memset(prepared, 0, sizeof(prepared));
 	taskENTER_CRITICAL();
 	config = g_perf.config;
 	g_perf.state = BLUEBEE_PERF_STATE_RUNNING;
 	g_perf.stop_requested = 0u;
-	XTime_GetTime(&g_perf.start_time);
+	g_perf.start_time = 0;
 	g_perf.end_time = 0;
+	taskEXIT_CRITICAL();
+
+	if (bluebee_perf_prepare_tx() < 0) {
+		run_error = 1u;
+		goto finish;
+	}
+	setup_ok = 1u;
+
+	/*
+	 * Batch isolates RF/DMA by moving the first arena fill before the clock
+	 * starts. Double similarly prepares only Sequence 0, then prepares N+1
+	 * while DMA owns N.
+	 */
+	if (config.mode == 1u) {
+		if (bluebee_perf_prepare_batch(&config, 0u, prepared,
+					       &batch_count) < 0) {
+			if (bluebee_perf_stop_requested())
+				stopped = 1u;
+			else
+				run_error = 1u;
+			goto finish;
+		}
+	} else if (config.mode == 2u &&
+		   (config.duration_s == 0u || config.expected_packets > 0u)) {
+		if (bluebee_perf_prepare_waveform(&config, 0u, 0u,
+						   &prepared[0]) < 0) {
+			run_error = 1u;
+			goto finish;
+		}
+	}
+
+	taskENTER_CRITICAL();
+	XTime_GetTime(&g_perf.start_time);
 	taskEXIT_CRITICAL();
 	interval_ticks = bluebee_perf_ticks_from_us(config.interval_us);
 	if (config.duration_s != 0u)
 		experiment_end = g_perf.start_time +
 			(XTime)((uint64_t)COUNTS_PER_SECOND * config.duration_s);
-
-	if (bluebee_perf_prepare_tx() < 0)
-		goto finish;
-	setup_ok = 1u;
 
 	for (;;) {
 		XTime now;
@@ -878,7 +1127,55 @@ static void bluebee_perf_run(void)
 
 		deadline = g_perf.start_time +
 			(XTime)((uint64_t)interval_ticks * (sequence + 1ULL));
-		(void)bluebee_perf_send_slot(&config, sequence);
+		if (config.mode == 0u) {
+			(void)bluebee_perf_send_slot(&config, sequence);
+		} else if (config.mode == 1u) {
+			if (sequence < batch_first_sequence ||
+			    sequence >= batch_first_sequence + batch_count) {
+				batch_first_sequence = sequence;
+				if (bluebee_perf_prepare_batch(
+					    &config, batch_first_sequence, prepared,
+					    &batch_count) < 0) {
+					if (bluebee_perf_stop_requested())
+						stopped = 1u;
+					else
+						run_error = 1u;
+					break;
+				}
+			}
+			if (batch_count == 0u)
+				break;
+			(void)bluebee_perf_send_prepared(
+				&config, &prepared[sequence - batch_first_sequence]);
+		} else {
+			uint32_t sent_slot = double_current_slot;
+			uint32_t next_arena_slot = sent_slot ^ 1u;
+			uint32_t next_sequence = sequence + 1u;
+			uint8_t prepare_next =
+				(config.duration_s == 0u ||
+				 next_sequence < config.expected_packets);
+
+			if (!prepared[sent_slot].valid ||
+			    prepared[sent_slot].sequence != sequence) {
+				prepared[sent_slot].valid = 0u;
+				if (bluebee_perf_prepare_waveform(
+					    &config, sequence, sent_slot,
+					    &prepared[sent_slot]) < 0) {
+					prepared[sent_slot].valid = 0u;
+				}
+			}
+			if (prepared[sent_slot].valid) {
+				(void)bluebee_perf_send_double(
+					&config, &prepared[sent_slot], next_sequence,
+					prepare_next, next_arena_slot,
+					&prepared[next_arena_slot]);
+			}
+			prepared[sent_slot].valid = 0u;
+			if (prepared[next_arena_slot].valid &&
+			    prepared[next_arena_slot].sequence == next_sequence)
+				double_current_slot = next_arena_slot;
+		}
+
 		if (bluebee_perf_stop_requested()) {
 			stopped = 1u;
 			break;
@@ -894,7 +1191,7 @@ finish:
 		bluebee_perf_release_tx();
 	taskENTER_CRITICAL();
 	XTime_GetTime(&g_perf.end_time);
-	if (!setup_ok)
+	if (run_error || !setup_ok)
 		g_perf.state = BLUEBEE_PERF_STATE_ERROR;
 	else if (stopped || g_perf.stop_requested)
 		g_perf.state = BLUEBEE_PERF_STATE_STOPPED;

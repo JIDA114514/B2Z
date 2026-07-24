@@ -210,6 +210,29 @@ class WaveformEquivalenceTests(unittest.TestCase):
             expected_bits,
         )
 
+    def test_sequence_waveforms_remain_stable_in_independent_buffers(self):
+        payload_a = bytes(range(46))
+        payload_b = bytes(reversed(range(46)))
+
+        def generate(payload):
+            payload_array = (ctypes.c_uint8 * len(payload))(*payload)
+            self.assertEqual(
+                self.lib.bluebee_gen_build_payload(
+                    payload_array, len(payload)
+                ),
+                0,
+            )
+            meta = self.lib.bluebee_gen_get_last_meta().contents
+            return np.ctypeslib.as_array(
+                meta.iq_words, shape=(meta.iq_word_count,)
+            ).copy()
+
+        slot_a = generate(payload_a)
+        slot_b = generate(payload_b)
+        regenerated_a = generate(payload_a)
+
+        self.assertFalse(np.array_equal(slot_a, slot_b))
+        self.assertTrue(np.array_equal(slot_a, regenerated_a))
 
 if __name__ == "__main__":
     unittest.main()

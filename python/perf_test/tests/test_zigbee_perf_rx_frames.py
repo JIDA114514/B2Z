@@ -52,7 +52,39 @@ class VariableFrameTests(unittest.TestCase):
         self.assertEqual(args.bb_gain, 40.0)
         self.assertEqual(args.cfo_correction_hz, 0.0)
         self.assertTrue(args.standard_soft_retry)
+        self.assertFalse(args.standard_soft_acquire)
         self.assertEqual(args.soft_zmq, zigbee_perf_rx.STANDARD_SOFT_ENDPOINT)
+
+    def test_soft_acquire_is_explicit_and_requires_soft_retry(self):
+        with mock.patch.object(
+            sys,
+            "argv",
+            [
+                "zigbee_perf_rx.py",
+                "--payload-len",
+                "10",
+                "--standard-soft-acquire",
+            ],
+        ):
+            enabled = zigbee_perf_rx.parse_args()
+        self.assertTrue(enabled.standard_soft_retry)
+        self.assertTrue(enabled.standard_soft_acquire)
+
+        with mock.patch.object(
+            sys,
+            "argv",
+            [
+                "zigbee_perf_rx.py",
+                "--payload-len",
+                "10",
+                "--standard-soft-acquire",
+                "--no-standard-soft-retry",
+            ],
+        ):
+            hard_only = zigbee_perf_rx.parse_args()
+        self.assertFalse(hard_only.standard_soft_retry)
+        self.assertFalse(hard_only.standard_soft_acquire)
+        self.assertIsNone(hard_only.soft_zmq)
 
     def test_vectorized_message_unpack_matches_scalar_lsb_order(self):
         messages = [
@@ -622,6 +654,137 @@ class VariableFrameTests(unittest.TestCase):
         self.assertEqual(recovered["soft_phase_offset"], 4)
         self.assertTrue(zigbee_perf_rx.validate_frame(recovered["frame"])[0])
         self.assertEqual(bytes(recovered["frame"]), frame)
+
+        bad_soft_buffers = {
+            offset: bytearray() for offset in range(5)
+        }
+        bad_soft_values = zigbee_perf_rx.np.asarray(
+            [80 if chip == "1" else -80 for chip in hard_chips],
+            dtype=zigbee_perf_rx.np.int8,
+        )
+        bad_soft_buffers[4].extend(bad_soft_values.tobytes())
+        failed, _, failed_aligned, unchanged_phase_delta = (
+            zigbee_perf_rx.retry_standard_candidates_with_soft(
+                [candidate],
+                bad_soft_buffers,
+                10,
+                preferred_phase_delta=4,
+            )
+        )
+        self.assertGreaterEqual(failed_aligned, 1)
+        self.assertIsNone(failed)
+        self.assertEqual(unchanged_phase_delta, 4)
+
+    def test_scheduled_soft_acquisition_recovers_relaxed_preamble(self):
+        run_id = 0x1234
+        sequence = 18
+        payload = build_test_payload(10, run_id, sequence)
+        frame = build_frame(payload)
+        true_chips = bits_to_chips(bytes_to_bits(frame))
+        hard_chips = list(true_chips)
+        soft_values = zigbee_perf_rx.np.asarray(
+            [80 if chip == "1" else -80 for chip in true_chips],
+            dtype=zigbee_perf_rx.np.int8,
+        )
+
+        # Push the hard preamble beyond both the normal distance-80 and relaxed
+        # distance-96 gates.  Known Run-ID/Sequence payload segments must now
+        # acquire the frame without weakening final validation.
+        reference = zigbee_perf_rx.CHIP_MAP[0]
+        for symbol_index in range(zigbee_perf_rx.PREAMBLE_SYMBOLS):
+            start = symbol_index * 32
+            for chip_index in range(13):
+                absolute = start + chip_index
+                hard_chips[absolute] = (
+                    "0" if reference[chip_index] == "1" else "1"
+                )
+                soft_values[absolute] = (
+                    1 if hard_chips[absolute] == "1" else -1
+                )
+
+        hard_stream = "".join(hard_chips)
+        score = zigbee_perf_rx.score_standard_offset(
+            hard_stream,
+            10,
+            sample_offset=1,
+        )
+        self.assertEqual(int(score["prefix_distances"][0]), 104)
+        self.assertEqual(score["positions"], [])
+
+        soft_buffers = {
+            offset: bytearray() for offset in range(5)
+        }
+        soft_buffers[3].extend(soft_values.tobytes())
+        recovered, attempts, aligned, phase_delta, diagnostics = (
+            zigbee_perf_rx.acquire_scheduled_standard_frame_with_soft(
+                [score],
+                soft_buffers,
+                10,
+                run_id,
+                sequence,
+            )
+        )
+
+        self.assertGreaterEqual(attempts, 1)
+        self.assertGreaterEqual(aligned, 1)
+        self.assertEqual(phase_delta, 2)
+        self.assertGreater(
+            diagnostics["attempts_by_source"]["known_payload"],
+            0,
+        )
+        self.assertIsNotNone(recovered)
+        self.assertEqual(recovered["decode_method"], "soft_acquire")
+        self.assertEqual(recovered["soft_acquire_source"], "known_payload")
+        self.assertEqual(bytes(recovered["frame"]), frame)
+
+        (
+            wrong_recovered,
+            _,
+            wrong_aligned,
+            unchanged_phase_delta,
+            _,
+        ) = zigbee_perf_rx.acquire_scheduled_standard_frame_with_soft(
+            [score],
+            soft_buffers,
+            10,
+            run_id,
+            sequence + 1,
+            preferred_phase_delta=4,
+        )
+        self.assertGreaterEqual(wrong_aligned, 1)
+        self.assertIsNone(wrong_recovered)
+        self.assertEqual(unchanged_phase_delta, 4)
+
+    def test_planned_soft_acquisition_is_limited_to_missing_due_slot(self):
+        common = dict(
+            anchor_epochs=[1.0],
+            interval_s=0.5,
+            expected_packets=4,
+            attempt_counts={},
+            last_attempt_times={},
+        )
+        self.assertEqual(
+            zigbee_perf_rx.planned_soft_acquire_slot(
+                1.506,
+                received_sequences=set(),
+                **common,
+            ),
+            1,
+        )
+        self.assertIsNone(
+            zigbee_perf_rx.planned_soft_acquire_slot(
+                1.506,
+                received_sequences={1},
+                **common,
+            )
+        )
+        self.assertIsNone(
+            zigbee_perf_rx.planned_soft_acquire_slot(
+                1.550,
+                received_sequences=set(),
+                **common,
+            )
+        )
 
 
 if __name__ == "__main__":

@@ -179,7 +179,7 @@ deadline_miss=0 dma_timeout=0
 性能接收入口为 `python/perf_test/zigbee_perf_rx.py`：
 
 - `--chip-source standard` 使用正式验收链 ZMQ 55556；该端口输出单路 10 Msample/s 差分相位 bit 流，Python 按模 5 拆成五个 2 Mchip/s 采样相位。
-- standard 硬判决 FCS 失败时，默认从并行 ZMQ 55562 的量化 `int8` 相位差窗口执行一次软 `CHIP_MAP` 重解码；既有硬捕获和硬判决成功路径保持不变，可用 `--no-standard-soft-retry` 关闭以进行 A/B。
+- standard 默认使用“硬判决成功直通、FCS失败才软重试”的 retry-only 模式，从并行 ZMQ 55562 的量化 `int8` 相位差窗口执行软 `CHIP_MAP` 重解码。实验性的 `--standard-soft-acquire` 会在已锁定的缺失计划时隙中，结合确定性 Run ID/Sequence 片段和放宽的preamble探针尝试恢复无硬候选帧；失败探针不会更新CRC重试使用的相位提示。`--no-standard-soft-retry`关闭整个软分支。
 - `--chip-source phase` 使用 BlueBee 相位差诊断链；offset 0--4 对应 55557--55561。
 - `--phase-keep-offset auto` 同时比较五相位，固定值 `0`--`4` 只订阅指定相位。
 - 有效帧必须通过 ZigBee FCS、测试头、Run ID、Sequence 和确定性填充校验。

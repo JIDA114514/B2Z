@@ -21,10 +21,19 @@ from bluebee_perf_protocol import (
     MAX_PAYLOAD_LEN,
     MIN_PAYLOAD_LEN,
     SequenceTracker,
+    build_test_payload,
     parse_board_stats_text,
+    parse_test_payload,
     ratio,
 )
-from zigbee_mod import CHIP_MAP, PREAMBLE_BYTES, SFD, crc16_ccitt
+from zigbee_mod import (
+    CHIP_MAP,
+    PREAMBLE_BYTES,
+    SFD,
+    bits_to_chips,
+    bytes_to_bits,
+    crc16_ccitt,
+)
 
 
 MIN_FRAME_LEN = PREAMBLE_BYTES + 1 + 1 + MIN_PAYLOAD_LEN + 2
@@ -61,6 +70,24 @@ STANDARD_ENDPOINT = "tcp://127.0.0.1:55556"
 STANDARD_SOFT_ENDPOINT = "tcp://127.0.0.1:55562"
 STANDARD_SOFT_SCALE = 40.0
 STANDARD_SOFT_ALIGNMENT_CHIPS = 64
+STANDARD_SOFT_ACQUIRE_MAX_DISTANCE = 96
+STANDARD_SOFT_ACQUIRE_KNOWN_SEGMENT_CHIPS = 64
+STANDARD_SOFT_ACQUIRE_KNOWN_SEGMENTS = 3
+STANDARD_SOFT_ACQUIRE_KNOWN_MAX_DISTANCE = (
+    STANDARD_SOFT_ACQUIRE_KNOWN_SEGMENTS
+    * 2
+    * STANDARD_MAX_AVG_PREFIX_DISTANCE
+)
+STANDARD_SOFT_ACQUIRE_KNOWN_ANCHOR_MAX_DISTANCE = 24
+STANDARD_SOFT_ACQUIRE_KNOWN_ANCHOR_CANDIDATES = 64
+STANDARD_SOFT_ACQUIRE_KNOWN_OFFSETS = 3
+STANDARD_SOFT_ACQUIRE_LOOKBACK_CHIPS = 32000
+STANDARD_SOFT_ACQUIRE_PROBES_PER_OFFSET = 16
+STANDARD_SOFT_ACQUIRE_MAX_PROBES = 8
+STANDARD_SOFT_ACQUIRE_DELAY_S = 0.004
+STANDARD_SOFT_ACQUIRE_WINDOW_S = 0.018
+STANDARD_SOFT_ACQUIRE_MAX_ATTEMPTS = 2
+STANDARD_SOFT_ACQUIRE_RETRY_SPACING_S = 0.006
 PHASE_ENDPOINTS = {
     offset: f"tcp://127.0.0.1:{55557 + offset}" for offset in range(5)
 }
@@ -314,6 +341,26 @@ def standard_prefix_chips():
     )
 
 
+def expected_standard_test_frame(payload_len, run_id, sequence):
+    """Build the exact PHY frame planned for one performance-test slot."""
+    payload = build_test_payload(payload_len, run_id, sequence)
+    fcs = crc16_ccitt(payload)
+    return (
+        bytes([0x00] * PREAMBLE_BYTES)
+        + bytes((SFD, payload_len + 2))
+        + payload
+        + bytes((fcs & 0xFF, fcs >> 8))
+    )
+
+
+def expected_standard_test_chips(payload_len, run_id, sequence):
+    return bits_to_chips(
+        bytes_to_bits(
+            expected_standard_test_frame(payload_len, run_id, sequence)
+        )
+    )
+
+
 def prefix_distances(chip_values, prefix_values):
     """Compute Hamming distance at every possible chip position."""
     correlations = np.correlate(chip_values, prefix_values, mode="valid")
@@ -385,6 +432,7 @@ def score_standard_offset(
         "ambiguity": ambiguity,
         "frame_chip_count": frame_chip_count,
         "work_values": work_values,
+        "prefix_distances": distances,
         "positions": positions,
         "minimum_distance": minimum_distance,
         "best_distance": (
@@ -591,6 +639,7 @@ def decode_standard_soft_frame(
     hard_candidate,
     soft_phase_offset,
     alignment_mismatches,
+    decode_method="soft_retry",
 ):
     """Soft-decode one frame window already acquired by the hard path."""
     frame_len = PREAMBLE_BYTES + 2 + expected_payload_len + 2
@@ -623,8 +672,8 @@ def decode_standard_soft_frame(
             distance for _, distance in symbols[: PREAMBLE_SYMBOLS + 4]
         ),
         frame_distance=sum(distance for _, distance in symbols),
-        decode_method="soft_retry",
-        hard_frame=hard_candidate["frame"],
+        decode_method=decode_method,
+        hard_frame=hard_candidate.get("frame", ()),
         soft_phase_offset=soft_phase_offset,
         soft_phase_bias=phase_bias,
         soft_min_symbol_margin=(float(margins.min()) if len(margins) else None),
@@ -638,6 +687,7 @@ def align_soft_frame(
     soft_buffers,
     expected_payload_len,
     preferred_soft_offset=None,
+    prepared_soft_buffers=None,
 ):
     """Locate a hard candidate in independently buffered soft timing streams.
 
@@ -666,13 +716,22 @@ def align_soft_frame(
         ordered_offsets.remove(preferred_soft_offset)
         ordered_offsets.insert(0, preferred_soft_offset)
     for soft_phase_offset in ordered_offsets:
-        raw_buffer = soft_buffers[soft_phase_offset]
-        raw_values = np.frombuffer(raw_buffer, dtype=np.int8)
-        if len(raw_values) < frame_chip_count:
+        if prepared_soft_buffers is None:
+            raw_buffer = soft_buffers[soft_phase_offset]
+            raw_values = np.frombuffer(raw_buffer, dtype=np.int8)
+            work_values = transform_standard_soft_values(
+                raw_values,
+                ambiguity,
+            )
+            signs = (work_values > 0).astype(np.uint8)
+            signs_bytes = signs.tobytes()
+        else:
+            prepared = prepared_soft_buffers.get(soft_phase_offset)
+            if prepared is None:
+                continue
+            work_values, signs, signs_bytes = prepared
+        if len(work_values) < frame_chip_count:
             continue
-        work_values = transform_standard_soft_values(raw_values, ambiguity)
-        signs = (work_values > 0).astype(np.uint8)
-        signs_bytes = signs.tobytes()
         possible_starts = set()
         for signature_start in starts:
             signature = hard_values[
@@ -705,6 +764,21 @@ def align_soft_frame(
     return None
 
 
+def prepare_standard_soft_buffers(soft_buffers, ambiguity):
+    """Convert each retained soft phase once for a multi-candidate retry."""
+    prepared = {}
+    for soft_phase_offset, raw_buffer in soft_buffers.items():
+        raw_values = np.frombuffer(raw_buffer, dtype=np.int8)
+        work_values = transform_standard_soft_values(raw_values, ambiguity)
+        signs = (work_values > 0).astype(np.uint8)
+        prepared[soft_phase_offset] = (
+            work_values,
+            signs,
+            signs.tobytes(),
+        )
+    return prepared
+
+
 def retry_standard_candidates_with_soft(
     candidates,
     soft_buffers,
@@ -715,6 +789,7 @@ def retry_standard_candidates_with_soft(
     attempts = 0
     aligned = 0
     observed_phase_delta = preferred_phase_delta
+    prepared_by_ambiguity = {}
     ordered = sorted(
         (candidate for candidate in candidates if candidate is not None),
         key=lambda candidate: candidate.get("offset_rank", 999),
@@ -730,20 +805,23 @@ def retry_standard_candidates_with_soft(
             and observed_phase_delta is not None
             else None
         )
+        ambiguity = candidate.get("standard_ambiguity", "normal")
+        if ambiguity not in prepared_by_ambiguity:
+            prepared_by_ambiguity[ambiguity] = prepare_standard_soft_buffers(
+                soft_buffers,
+                ambiguity,
+            )
         alignment = align_soft_frame(
             candidate,
             soft_buffers,
             expected_payload_len,
             preferred_soft_offset=preferred_soft_offset,
+            prepared_soft_buffers=prepared_by_ambiguity[ambiguity],
         )
         if alignment is None:
             continue
         aligned += 1
         soft_values, soft_phase_offset, mismatches = alignment
-        if hard_phase_offset is not None:
-            observed_phase_delta = (
-                soft_phase_offset - hard_phase_offset
-            ) % STANDARD_PHASE_COUNT
         recovered = decode_standard_soft_frame(
             soft_values,
             expected_payload_len,
@@ -752,8 +830,357 @@ def retry_standard_candidates_with_soft(
             mismatches,
         )
         if recovered is not None:
+            if hard_phase_offset is not None:
+                observed_phase_delta = (
+                    soft_phase_offset - hard_phase_offset
+                ) % STANDARD_PHASE_COUNT
             return recovered, attempts, aligned, observed_phase_delta
     return None, attempts, aligned, observed_phase_delta
+
+
+def known_test_frame_probe_positions(
+    score,
+    expected_frame_chips,
+    max_distance=STANDARD_SOFT_ACQUIRE_KNOWN_MAX_DISTANCE,
+):
+    """Find a planned frame from three separated, sequence-known chip runs.
+
+    Preamble-only acquisition cannot see a frame whose synchronization symbols
+    are the damaged part.  Performance-test slots are deterministic, so use
+    short runs from the payload header, Run ID, and Sequence as an acquisition
+    aid.  The complete soft-decoded frame still has to pass FCS and deterministic
+    payload validation before it is accepted.
+    """
+    work_values = score["work_values"]
+    frame_chip_count = len(expected_frame_chips)
+    frame_start_count = len(work_values) - frame_chip_count + 1
+    if frame_start_count <= 0:
+        return []
+
+    expected_values = (
+        np.frombuffer(expected_frame_chips.encode("ascii"), dtype=np.uint8)
+        - ord("0")
+    ).astype(np.int16)
+    payload_chip_start = (PREAMBLE_BYTES + 2) * 2 * 32
+    # First payload byte (Magic), first Run-ID byte, first Sequence byte.
+    segment_starts = [
+        payload_chip_start + payload_offset * 2 * 32
+        for payload_offset in (0, 4, 6)
+    ]
+    minimum_position = max(
+        0,
+        len(work_values) - STANDARD_SOFT_ACQUIRE_LOOKBACK_CHIPS,
+    )
+
+    # Scan once with the Sequence byte, then verify the Magic and Run-ID bytes
+    # only at a small number of anchor hits.  This retains the discrimination
+    # of three separated runs without paying for three full-window correlations.
+    anchor_start = segment_starts[-1]
+    anchor = expected_values[
+        anchor_start :
+        anchor_start + STANDARD_SOFT_ACQUIRE_KNOWN_SEGMENT_CHIPS
+    ]
+    anchor_distances = prefix_distances(work_values, anchor)[
+        anchor_start : anchor_start + frame_start_count
+    ]
+    positions = np.flatnonzero(
+        anchor_distances <= STANDARD_SOFT_ACQUIRE_KNOWN_ANCHOR_MAX_DISTANCE
+    )
+    positions = positions[positions >= minimum_position]
+    if not len(positions):
+        return []
+    positions = positions[
+        np.argsort(anchor_distances[positions])[
+            :STANDARD_SOFT_ACQUIRE_KNOWN_ANCHOR_CANDIDATES
+        ]
+    ]
+
+    ranked = []
+    for position_value in positions:
+        position = int(position_value)
+        combined_distance = 0
+        for segment_start in segment_starts:
+            actual = work_values[
+                position + segment_start :
+                position
+                + segment_start
+                + STANDARD_SOFT_ACQUIRE_KNOWN_SEGMENT_CHIPS
+            ]
+            expected = expected_values[
+                segment_start :
+                segment_start + STANDARD_SOFT_ACQUIRE_KNOWN_SEGMENT_CHIPS
+            ]
+            combined_distance += int(np.count_nonzero(actual != expected))
+        if combined_distance <= max_distance:
+            ranked.append((combined_distance, position))
+    ranked.sort()
+
+    selected = []
+    for _, position in ranked:
+        if any(abs(position - previous) < 32 for previous in selected):
+            continue
+        selected.append(position)
+        if len(selected) >= STANDARD_SOFT_ACQUIRE_PROBES_PER_OFFSET:
+            break
+    distance_by_position = {
+        position: distance
+        for distance, position in ranked
+    }
+    return [(position, distance_by_position[position]) for position in selected]
+
+
+def build_standard_soft_acquisition_probes(
+    scores,
+    expected_payload_len,
+    expected_run_id=None,
+    expected_sequence=None,
+    max_distance=STANDARD_SOFT_ACQUIRE_MAX_DISTANCE,
+):
+    """Build known-frame probes plus relaxed-preamble fallback probes."""
+    probes = []
+    frame_len = PREAMBLE_BYTES + 2 + expected_payload_len + 2
+    frame_chip_count = frame_len * 2 * 32
+    expected_frame_chips = (
+        expected_standard_test_chips(
+            expected_payload_len,
+            expected_run_id,
+            expected_sequence,
+        )
+        if expected_run_id is not None and expected_sequence is not None
+        else None
+    )
+    known_score_ids = {
+        id(score)
+        for score in sorted(
+            (score for score in scores if score is not None),
+            key=lambda score: score["minimum_distance"],
+        )[:STANDARD_SOFT_ACQUIRE_KNOWN_OFFSETS]
+    }
+    for score in scores:
+        if score is None:
+            continue
+        distances = score["prefix_distances"]
+        minimum_position = max(
+            0,
+            len(score["work_values"])
+            - STANDARD_SOFT_ACQUIRE_LOOKBACK_CHIPS,
+        )
+        positions = np.flatnonzero(distances <= max_distance)
+        positions = [
+            int(position)
+            for position in positions
+            if position >= minimum_position
+            and position + frame_chip_count <= len(score["work_values"])
+        ]
+        positions.sort(key=lambda position: (int(distances[position]), position))
+        selected = []
+        for position in positions:
+            if any(abs(position - previous) < 32 for previous in selected):
+                continue
+            selected.append(position)
+            if len(selected) >= STANDARD_SOFT_ACQUIRE_PROBES_PER_OFFSET:
+                break
+        candidates = {
+            position: {
+                "source": "relaxed_preamble",
+                "known_distance": None,
+            }
+            for position in selected
+        }
+        if (
+            expected_frame_chips is not None
+            and id(score) in known_score_ids
+        ):
+            for position, known_distance in known_test_frame_probe_positions(
+                score,
+                expected_frame_chips,
+            ):
+                candidates[position] = {
+                    "source": "known_payload",
+                    "known_distance": known_distance,
+                }
+
+        for position, metadata in candidates.items():
+            header_values = score["work_values"][
+                position : position + (PREAMBLE_BYTES + 2) * 2 * 32
+            ]
+            header_chips = (header_values + ord("0")).astype(
+                np.uint8
+            ).tobytes().decode("ascii")
+            header_symbols = chips_to_symbols(header_chips, CHIP_MAP)
+            header = bits_to_bytes_lsb(symbols_to_bits(header_symbols))
+            sfd_ok = len(header) >= PREAMBLE_BYTES + 1 and (
+                header[PREAMBLE_BYTES] == SFD
+            )
+            phr_ok = len(header) >= PREAMBLE_BYTES + 2 and (
+                header[PREAMBLE_BYTES + 1] == expected_payload_len + 2
+            )
+            probes.append(
+                {
+                    "frame": (),
+                    "hard_frame_values": score["work_values"][
+                        position : position + frame_chip_count
+                    ].astype(np.uint8, copy=True),
+                    "chip_pos": position,
+                    "phase_offset": score["sample_offset"],
+                    "polarity": "normal",
+                    "standard_ambiguity": score["ambiguity"],
+                    "offset_prefix_distance": int(distances[position]),
+                    "known_payload_distance": metadata["known_distance"],
+                    "soft_acquire_source": metadata["source"],
+                    "hard_sfd_ok": sfd_ok,
+                    "hard_phr_ok": phr_ok,
+                    "decode_method": "soft_acquire_probe",
+                }
+            )
+    probes.sort(
+        key=lambda probe: (
+            0 if probe["soft_acquire_source"] == "known_payload" else 1,
+            (
+                probe["known_payload_distance"]
+                if probe["known_payload_distance"] is not None
+                else probe["offset_prefix_distance"]
+            ),
+            0 if probe["hard_phr_ok"] else 1,
+            0 if probe["hard_sfd_ok"] else 1,
+            probe["offset_prefix_distance"],
+            probe["chip_pos"],
+            probe["phase_offset"],
+        )
+    )
+    probes = probes[:STANDARD_SOFT_ACQUIRE_MAX_PROBES]
+    for rank, probe in enumerate(probes, start=1):
+        probe["offset_rank"] = rank
+    return probes
+
+
+def acquire_scheduled_standard_frame_with_soft(
+    scores,
+    soft_buffers,
+    expected_payload_len,
+    expected_run_id,
+    expected_sequence,
+    preferred_phase_delta=None,
+):
+    """Soft-decode bounded probes for one predicted missing TX slot."""
+    probes = build_standard_soft_acquisition_probes(
+        scores,
+        expected_payload_len,
+        expected_run_id=expected_run_id,
+        expected_sequence=expected_sequence,
+    )
+    diagnostics = {
+        "candidate_probes": len(probes),
+        "attempts_by_source": {
+            "known_payload": 0,
+            "relaxed_preamble": 0,
+        },
+        "aligned_by_source": {
+            "known_payload": 0,
+            "relaxed_preamble": 0,
+        },
+    }
+    if not probes:
+        return None, 0, 0, preferred_phase_delta, diagnostics
+
+    prepared_by_ambiguity = {}
+    attempts = 0
+    aligned = 0
+    observed_phase_delta = preferred_phase_delta
+    for probe in probes:
+        attempts += 1
+        source = probe["soft_acquire_source"]
+        diagnostics["attempts_by_source"][source] += 1
+        ambiguity = probe["standard_ambiguity"]
+        if ambiguity not in prepared_by_ambiguity:
+            prepared_by_ambiguity[ambiguity] = prepare_standard_soft_buffers(
+                soft_buffers,
+                ambiguity,
+            )
+        hard_phase_offset = probe["phase_offset"]
+        preferred_soft_offset = (
+            (hard_phase_offset + observed_phase_delta) % STANDARD_PHASE_COUNT
+            if observed_phase_delta is not None
+            else None
+        )
+        alignment = align_soft_frame(
+            probe,
+            soft_buffers,
+            expected_payload_len,
+            preferred_soft_offset=preferred_soft_offset,
+            prepared_soft_buffers=prepared_by_ambiguity[ambiguity],
+        )
+        if alignment is None:
+            continue
+        aligned += 1
+        diagnostics["aligned_by_source"][source] += 1
+        soft_values, soft_phase_offset, mismatches = alignment
+        recovered = decode_standard_soft_frame(
+            soft_values,
+            expected_payload_len,
+            probe,
+            soft_phase_offset,
+            mismatches,
+            decode_method="soft_acquire",
+        )
+        if recovered is None:
+            continue
+        _, payload = validate_frame(recovered["frame"])
+        parsed = parse_test_payload(
+            payload,
+            expected_run_id=expected_run_id,
+            expected_payload_len=expected_payload_len,
+        )
+        if parsed.valid and parsed.sequence == expected_sequence:
+            observed_phase_delta = (
+                soft_phase_offset - hard_phase_offset
+            ) % STANDARD_PHASE_COUNT
+            recovered["soft_acquire_source"] = source
+            recovered["soft_acquire_known_payload_distance"] = probe[
+                "known_payload_distance"
+            ]
+            return (
+                recovered,
+                attempts,
+                aligned,
+                observed_phase_delta,
+                diagnostics,
+            )
+    return None, attempts, aligned, observed_phase_delta, diagnostics
+
+
+def planned_soft_acquire_slot(
+    now,
+    anchor_epochs,
+    interval_s,
+    expected_packets,
+    received_sequences,
+    attempt_counts,
+    last_attempt_times,
+):
+    """Return one due planned slot after the receiver has learned TX cadence."""
+    if not anchor_epochs or interval_s is None or interval_s <= 0:
+        return None
+    epoch = float(np.median(anchor_epochs[-32:]))
+    sequence = int(round((now - epoch) / interval_s))
+    if sequence < 0:
+        return None
+    if expected_packets is not None and sequence >= expected_packets:
+        return None
+    if sequence in received_sequences:
+        return None
+    predicted = epoch + sequence * interval_s
+    delay = now - predicted
+    if not STANDARD_SOFT_ACQUIRE_DELAY_S <= delay <= STANDARD_SOFT_ACQUIRE_WINDOW_S:
+        return None
+    if attempt_counts.get(sequence, 0) >= STANDARD_SOFT_ACQUIRE_MAX_ATTEMPTS:
+        return None
+    if (
+        now - last_attempt_times.get(sequence, float("-inf"))
+        < STANDARD_SOFT_ACQUIRE_RETRY_SPACING_S
+    ):
+        return None
+    return sequence
 
 
 def select_prefix_positions(
@@ -1222,6 +1649,9 @@ def build_summary(
             "standard_soft_retry": getattr(
                 args, "standard_soft_retry_stats", None
             ),
+            "standard_soft_acquisition": getattr(
+                args, "standard_soft_acquisition_stats", None
+            ),
             "longest_loss_burst": tracker.longest_loss_burst(
                 args.expected_packets
                 if args.expected_packets is not None
@@ -1304,6 +1734,11 @@ def print_summary(summary, json_path):
             f"{receiver['hard_crc_failure_before_soft_retry']}"
         )
         print(f"  Soft-retry recovered:    {soft_retry['recovered']}")
+    soft_acquisition = receiver.get("standard_soft_acquisition")
+    if soft_acquisition and soft_acquisition["enabled"]:
+        print(
+            f"  Soft-acquire recovered:  {soft_acquisition['recovered']}"
+        )
     print(f"  Payload failures:        {receiver['payload_failure']}")
     print(f"  Run-ID mismatches:       {receiver['run_id_mismatch']}")
     print(f"  Longest loss burst:      {receiver['longest_loss_burst']}")
@@ -1413,8 +1848,18 @@ def parse_args():
         "--soft-zmq",
         default=STANDARD_SOFT_ENDPOINT,
         help=(
-            "Parallel int8 phase-difference endpoint used only for standard "
-            f"CRC retry (default: {STANDARD_SOFT_ENDPOINT})"
+            "Parallel int8 phase-difference endpoint for standard CRC retry "
+            f"and scheduled soft acquisition (default: {STANDARD_SOFT_ENDPOINT})"
+        ),
+    )
+    parser.add_argument(
+        "--standard-soft-acquire",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help=(
+            "Use known test-frame segments plus relaxed preamble probes for "
+            "predicted slots with no hard candidate (experimental; default: "
+            "disabled, enable with --standard-soft-acquire)"
         ),
     )
     parser.add_argument(
@@ -1520,6 +1965,9 @@ def parse_args():
         args.phase_endpoints = {offset: args.chip_zmq}
     if args.chip_source != "standard" or args.payload_len is None:
         args.standard_soft_retry = False
+        args.standard_soft_acquire = False
+    if not args.standard_soft_retry:
+        args.standard_soft_acquire = False
     if not args.standard_soft_retry:
         args.soft_zmq = None
     return args
@@ -1545,6 +1993,8 @@ def main():
         "standard_ambiguity",
         "standard_offset_rank",
         "decode_method",
+        "soft_acquire_source",
+        "soft_acquire_known_payload_distance",
         "soft_phase_offset",
         "soft_phase_bias",
         "soft_min_symbol_margin",
@@ -1597,6 +2047,7 @@ def main():
         f"standard_policy={args.standard_offset_policy} "
         f"standard_ambiguity={args.standard_ambiguity} "
         f"soft_retry={'on' if args.standard_soft_retry else 'off'} "
+        f"soft_acquire={'on' if args.standard_soft_acquire else 'off'} "
         f"soft_zmq={args.soft_zmq or 'N/A'} "
         f"lo_offset={args.freq_offset:g} "
         f"cfo_correction={args.cfo_correction_hz:g} "
@@ -1676,6 +2127,33 @@ def main():
     soft_recovered = 0
     soft_retry_times_s = []
     soft_phase_delta = None
+    soft_acquire_anchor_epochs = []
+    soft_acquire_attempt_counts = {}
+    soft_acquire_last_attempt_times = {}
+    soft_acquire_slot_attempts = 0
+    soft_acquire_probe_attempts = 0
+    soft_acquire_aligned_probes = 0
+    soft_acquire_probe_candidates = 0
+    soft_acquire_attempts_by_source = {
+        "known_payload": 0,
+        "relaxed_preamble": 0,
+    }
+    soft_acquire_aligned_by_source = {
+        "known_payload": 0,
+        "relaxed_preamble": 0,
+    }
+    soft_acquire_recovered_by_source = {
+        "known_payload": 0,
+        "relaxed_preamble": 0,
+    }
+    soft_acquire_no_probe_attempts = 0
+    soft_acquire_recovered = 0
+    soft_acquire_times_s = []
+    soft_acquire_interval_s = (
+        args.tx_interval_us / 1_000_000.0
+        if args.tx_interval_us is not None
+        else None
+    )
     processing_count = 0
     processing_sum_s = 0.0
     processing_max_s = 0.0
@@ -1766,6 +2244,7 @@ def main():
             if received_any or pending_scan:
                 candidates = {}
                 predecoded_standard = {}
+                standard_scores = []
                 if (
                     args.chip_source == "standard"
                     and args.payload_len is not None
@@ -1925,6 +2404,75 @@ def main():
                     if args.chip_source == "phase"
                     else choose_standard_candidate(candidates.values())
                 )
+                if (
+                    selected is None
+                    and args.standard_soft_acquire
+                    and standard_scores
+                ):
+                    acquire_now = time.time()
+                    acquire_sequence = planned_soft_acquire_slot(
+                        acquire_now,
+                        soft_acquire_anchor_epochs,
+                        soft_acquire_interval_s,
+                        args.expected_packets,
+                        tracker.sequences,
+                        soft_acquire_attempt_counts,
+                        soft_acquire_last_attempt_times,
+                    )
+                    if acquire_sequence is not None:
+                        soft_acquire_attempt_counts[acquire_sequence] = (
+                            soft_acquire_attempt_counts.get(acquire_sequence, 0)
+                            + 1
+                        )
+                        soft_acquire_last_attempt_times[acquire_sequence] = (
+                            acquire_now
+                        )
+                        soft_acquire_slot_attempts += 1
+                        soft_acquire_start = time.perf_counter()
+                        (
+                            recovered,
+                            attempted,
+                            aligned,
+                            observed_delta,
+                            acquire_diagnostics,
+                        ) = acquire_scheduled_standard_frame_with_soft(
+                            standard_scores,
+                            soft_buffers,
+                            args.payload_len,
+                            args.run_id,
+                            acquire_sequence,
+                            preferred_phase_delta=soft_phase_delta,
+                        )
+                        soft_acquire_times_s.append(
+                            time.perf_counter() - soft_acquire_start
+                        )
+                        soft_acquire_probe_attempts += attempted
+                        soft_acquire_aligned_probes += aligned
+                        soft_acquire_probe_candidates += acquire_diagnostics[
+                            "candidate_probes"
+                        ]
+                        for source in soft_acquire_attempts_by_source:
+                            soft_acquire_attempts_by_source[source] += (
+                                acquire_diagnostics["attempts_by_source"][
+                                    source
+                                ]
+                            )
+                            soft_acquire_aligned_by_source[source] += (
+                                acquire_diagnostics["aligned_by_source"][
+                                    source
+                                ]
+                            )
+                        if attempted == 0:
+                            soft_acquire_no_probe_attempts += 1
+                        if observed_delta is not None:
+                            soft_phase_delta = observed_delta
+                        if recovered is not None:
+                            selected = recovered
+                            candidates[selected["phase_offset"]] = selected
+                            soft_acquire_recovered += 1
+                            soft_acquire_recovered_by_source[
+                                selected["soft_acquire_source"]
+                            ] += 1
                 if selected is not None:
                     hard_fcs_ok = validate_frame(selected["frame"])[0]
                     if args.chip_source == "standard" and not hard_fcs_ok:
@@ -1975,6 +2523,16 @@ def main():
                                 standard_scan_polarity,
                             )
                         parsed, result = tracker.observe(payload)
+                        if (
+                            parsed.valid
+                            and selected.get("decode_method", "hard") == "hard"
+                            and soft_acquire_interval_s is not None
+                        ):
+                            soft_acquire_anchor_epochs.append(
+                                now - parsed.sequence * soft_acquire_interval_s
+                            )
+                            if len(soft_acquire_anchor_epochs) > 32:
+                                del soft_acquire_anchor_epochs[:-32]
                         if parsed.reason == "magic":
                             non_test_packets += 1
                     else:
@@ -1998,6 +2556,12 @@ def main():
                         ),
                         "decode_method": selected.get(
                             "decode_method", "hard"
+                        ),
+                        "soft_acquire_source": selected.get(
+                            "soft_acquire_source", ""
+                        ),
+                        "soft_acquire_known_payload_distance": selected.get(
+                            "soft_acquire_known_payload_distance", ""
                         ),
                         "soft_phase_offset": selected.get(
                             "soft_phase_offset", ""
@@ -2101,6 +2665,7 @@ def main():
                     f"[elapsed:{now-start_epoch:.1f}s unique:{tracker.unique} "
                     f"duplicate:{tracker.duplicate} out_of_order:{tracker.out_of_order} "
                     f"crc_failure:{crc_failure} soft_recovered:{soft_recovered} "
+                    f"soft_acquired:{soft_acquire_recovered} "
                     f"payload_failure:{tracker.payload_failure} "
                     f"zmq:{zmq_msgs} chips:{sum(map(len, chip_buffers.values()))} "
                     f"ones:{ones:.3f} transitions:{transitions:.3f}]"
@@ -2176,6 +2741,65 @@ def main():
                 "recovered": soft_recovered,
                 "phase_offset_delta": soft_phase_delta,
                 "retry_timing_ms": soft_retry_timing,
+            }
+            if args.chip_source == "standard"
+            else None
+        )
+        soft_acquire_timing = summarize_numeric_samples(
+            soft_acquire_times_s,
+            1000.0,
+        )
+        args.standard_soft_acquisition_stats = (
+            {
+                "enabled": args.standard_soft_acquire,
+                "scope": "predicted planned slots with no hard candidate",
+                "requires_tx_interval": True,
+                "interval_s": soft_acquire_interval_s,
+                "anchor_samples": len(soft_acquire_anchor_epochs),
+                "slot_attempts": soft_acquire_slot_attempts,
+                "distinct_slots_attempted": len(soft_acquire_attempt_counts),
+                "candidate_probes": soft_acquire_probe_candidates,
+                "probe_attempts": soft_acquire_probe_attempts,
+                "aligned_probes": soft_acquire_aligned_probes,
+                "probe_attempts_by_source": (
+                    soft_acquire_attempts_by_source
+                ),
+                "aligned_probes_by_source": (
+                    soft_acquire_aligned_by_source
+                ),
+                "attempts_without_probe": soft_acquire_no_probe_attempts,
+                "recovered": soft_acquire_recovered,
+                "recovered_by_source": soft_acquire_recovered_by_source,
+                "phase_hint_update_policy": (
+                    "only after FCS, Run ID, Sequence, and payload validation"
+                ),
+                "known_payload_segments": (
+                    STANDARD_SOFT_ACQUIRE_KNOWN_SEGMENTS
+                ),
+                "known_payload_segment_chips": (
+                    STANDARD_SOFT_ACQUIRE_KNOWN_SEGMENT_CHIPS
+                ),
+                "known_payload_max_distance": (
+                    STANDARD_SOFT_ACQUIRE_KNOWN_MAX_DISTANCE
+                ),
+                "known_payload_anchor_max_distance": (
+                    STANDARD_SOFT_ACQUIRE_KNOWN_ANCHOR_MAX_DISTANCE
+                ),
+                "known_payload_offsets_scanned": (
+                    STANDARD_SOFT_ACQUIRE_KNOWN_OFFSETS
+                ),
+                "relaxed_prefix_max_distance": (
+                    STANDARD_SOFT_ACQUIRE_MAX_DISTANCE
+                ),
+                "lookback_chips": STANDARD_SOFT_ACQUIRE_LOOKBACK_CHIPS,
+                "max_probes_per_offset": (
+                    STANDARD_SOFT_ACQUIRE_PROBES_PER_OFFSET
+                ),
+                "max_probes_per_attempt": STANDARD_SOFT_ACQUIRE_MAX_PROBES,
+                "trigger_delay_s": STANDARD_SOFT_ACQUIRE_DELAY_S,
+                "trigger_window_s": STANDARD_SOFT_ACQUIRE_WINDOW_S,
+                "max_attempts_per_slot": STANDARD_SOFT_ACQUIRE_MAX_ATTEMPTS,
+                "timing_ms": soft_acquire_timing,
             }
             if args.chip_source == "standard"
             else None

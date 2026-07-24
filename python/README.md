@@ -89,9 +89,9 @@ phase 模式支持：
 
 standard 正式链从 ZMQ 55556 的单路 10 Msample/s 差分相位 bit 流连续拆出五个 2 Mchip/s offset，拆相状态跨 ZMQ 消息保存。提供 `--payload-len` 时，五个 offset 先只做 8-symbol preamble 评分；默认 `--standard-offset-policy adaptive` 按评分依次执行完整标准 `CHIP_MAP` 判决，找到有效 FCS 立即停止，前两个失败时继续尝试第 3--5 名。旧的“最多两个”策略保留为 `--standard-offset-policy ranked2`，仅用于 A/B。固定 `--standard-keep-offset 0..4` 仍保留为诊断入口。
 
-当前软值试验不改变上述硬判决成功路径。GNU Radio 在 55562 并行发布按 40 倍缩放的有符号 `int8` 相位差。第一层只在同一突发的全部硬候选未通过 FCS 时，用硬候选片段对齐软缓存，减去前导区间的局部相位偏置，并以软相关重新执行标准 `CHIP_MAP` symbol 判决。第二层在提供 `--tx-interval-us` 且已经从有效硬包学到计划时隙基准后，仅对“到期但没有硬候选”的时隙工作：优先使用已知测试payload中的 Magic、Run ID和Sequence分段定位，再以 distance 96 的短preamble探针回退，最后仍由软值和完整FCS/Run ID/Sequence/确定性填充决定是否接收。每个时隙最多尝试两次，不在连续背景流上全时软扫描；失败探针不再改变全局软相位提示。
+当前软值试验不改变上述硬判决成功路径。GNU Radio 在 55562 并行发布按 40 倍缩放的有符号 `int8` 相位差；只有同一突发的全部硬候选未通过 FCS 时，接收器才用硬候选片段对齐软缓存，减去前导区间的局部相位偏置，并以软相关重新执行标准 `CHIP_MAP` symbol判决。软缓冲按极性预处理后由同一轮候选复用，且只有完整软解码和FCS校验成功后才更新相位提示。
 
-默认模式为 retry-only：CRC软回退开启，soft-acquire关闭。使用 `--standard-soft-acquire` 显式启用第二层；`--no-standard-soft-retry` 会关闭整个55562软分支，恢复原硬链用于A/B。JSON 分别使用 `standard_soft_retry`、`standard_soft_acquisition` 记录尝试、按探针来源的对齐/恢复数量和耗时；CSV 的 `decode_method` 为 `hard`、`soft_retry` 或 `soft_acquire`。
+默认启用CRC软回退，可用 `--no-standard-soft-retry` 关闭55562软分支并恢复原硬链用于A/B。JSON的 `standard_soft_retry` 记录尝试、对齐、恢复数量和耗时；CSV的 `decode_method` 为 `hard`或`soft_retry`。
 
 BlueBee optimized 映射投影到标准 DSSS 码时，每 symbol 理想固有距离为 8 chips，因此前缀门限保留平均 10 chips/symbol。首次有效 FCS 后锁定 normal/inverted 差分极性；旧 Costas/IQ 变换只保留作离线诊断。跨 offset 合并仍以一次物理突发为单位，之后再次收到同一 Sequence 才计 duplicate。
 

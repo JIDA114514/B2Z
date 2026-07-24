@@ -179,7 +179,7 @@ deadline_miss=0 dma_timeout=0
 性能接收入口为 `python/perf_test/zigbee_perf_rx.py`：
 
 - `--chip-source standard` 使用正式验收链 ZMQ 55556；该端口输出单路 10 Msample/s 差分相位 bit 流，Python 按模 5 拆成五个 2 Mchip/s 采样相位。
-- standard 默认使用“硬判决成功直通、FCS失败才软重试”的 retry-only 模式，从并行 ZMQ 55562 的量化 `int8` 相位差窗口执行软 `CHIP_MAP` 重解码。实验性的 `--standard-soft-acquire` 会在已锁定的缺失计划时隙中，结合确定性 Run ID/Sequence 片段和放宽的preamble探针尝试恢复无硬候选帧；失败探针不会更新CRC重试使用的相位提示。`--no-standard-soft-retry`关闭整个软分支。
+- standard 默认使用“硬判决成功直通、FCS失败才软重试”的 retry-only 模式，从并行 ZMQ 55562 的量化 `int8` 相位差窗口执行软 `CHIP_MAP` 重解码；只有完整软解码和FCS校验成功后才更新相位提示。`--no-standard-soft-retry`关闭整个软分支。
 - `--chip-source phase` 使用 BlueBee 相位差诊断链；offset 0--4 对应 55557--55561。
 - `--phase-keep-offset auto` 同时比较五相位，固定值 `0`--`4` 只订阅指定相位。
 - 有效帧必须通过 ZigBee FCS、测试头、Run ID、Sequence 和确定性填充校验。
@@ -220,7 +220,13 @@ python3 python/perf_test/zigbee_perf_rx.py \
   --output-prefix python/perf_test/exadv-1248-standard-auto
 ```
 
-run 1243 首次使用该链路进行 exadv 实测，收到 Sequence `0--8、10、11`，结果为 `unique=11`、`crc_failure=0`、`duplicate=0`；完整处理平均 10.194 ms、最大 20.686 ms，仍小于 24 ms 缓存跨度。该结果证明旧 standard 零候选问题已解决，但 JSON 中 `board=null`；只有同 Run ID 板端确认 `tx_completed=12` 后才能正式写为 `11/12 = 91.67%`，且该点尚不满足 99% 稳定性要求。
+### 部分实验数据
+
+使用bluebee_exadv_perf_start?命令，将bluebee负载嵌入BLE拓展广播包的情况下有如下实验数据：
+
+- 在单包负载10字节，发射间隔500ms,持续时间65秒的设置下，包接受率为93.846%，总吞吐量300.308bit/s,应用负载吞吐量150.154bit/s
+- 在单包负载20字节，发射间隔250ms,持续时间65秒的设置下，包接受率为86.923%，总吞吐量834.462bit/s,应用负载吞吐量556.308bit/s
+- 在单包负载40字节，发射间隔250ms,持续时间65秒的设置下，包接受率为78.077%，总吞吐量999.385bit/s,应用负载吞吐量749.538bit/s
 
 五相位 phase auto 会增加 GNU Radio 分支、ZMQ 和 Python 扫描开销；当前流图即使固定 phase offset 也仍会发布全部五路。standard 的五相位则由 55556 单路全采样数据在 Python 中拆分，不需要五个 standard ZMQ 端口。phase 只作为诊断结果，最终 PRR 以 55556 和板端最终统计为准。
 

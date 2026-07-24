@@ -1708,3 +1708,88 @@ python3 python/perf_test/zigbee_perf_rx.py \
 ```
 
 若信号过弱，再分别测试 RF=0/IF=24/BB=24 和 RF=0/IF=32/BB=32；一次只改变增益并使用新 Run ID。找到最佳增益后再固定增益扫描 `--cfo-correction-hz`。在 standard 链尚未以宽松 interval 重复达到不低于 99% 前，不进入正式吞吐扫描；10 B payload只包含测试头，application goodput 始终为 0，它只用于建立接收稳定性基线。
+
+## 18. standard软解码实验与soft-acquire取舍
+
+### 18.1 使用软解码的原因
+
+增益和频偏扫描最终在 RF=0、IF=32、BB=40、CFO correction=0 下得到可重复的约80%计划端到端接收率，但剩余损失中有相当一部分不是完全没有信号，而是已经恢复出可信preamble、SFD、PHR和测试头，只因少量payload bit错误导致FCS失败。此前run 21001中曾出现仅有1--2个payload bit错误、接收FCS字节本身仍正确的长帧。这类帧已经完成突发捕获和帧边界定位，继续只用相位差正负做硬判决会丢弃相位差幅度携带的置信度信息。
+
+因此软解码首先被限定为“CRC失败后的retry-only”，不改变原有捕获和硬判决成功路径：
+
+1. GNU Radio在ZMQ 55562并行发布按40倍缩放的有符号`int8`相位差；55556仍发布原有硬bit流。
+2. 五个硬判决offset照常评分和完整解码；只在同一突发的全部硬候选均未通过FCS时进入软重试。
+3. 使用硬候选中避开重复preamble的64-chip片段，在五路软缓存中定位同一帧，解决硬流和软流ZMQ消息边界不一致的问题。
+4. 按硬候选的normal/inverted等变换处理软值，并用preamble区间均值估计局部相位偏置。
+5. 每个32-chip symbol不再只比较0/1，而是计算量化相位差向量与16个标准`CHIP_MAP`参考码的相关值，选择相关性最大的symbol。
+6. 软解码结果仍必须通过完整preamble、SFD、PHR和FCS；之后还必须通过Run ID、Sequence及确定性payload填充校验，不能因为使用软值而放宽最终正确性判据。
+
+后续又加入两项retry-only修正：同一轮候选按极性预处理软缓存后复用，避免每个候选重复转换；只有软帧完整恢复成功后才更新硬offset到软offset的相位差提示，失败对齐不得污染下一包的优先offset。
+
+### 18.2 实验流程
+
+软解码实验按以下顺序推进：
+
+1. runs 21105--21118先完成接收前端参数扫描和重复性确认，固定RF=0、IF=32、BB=40、CFO=0，避免把增益变化误认为软解码收益。runs 21117/21118的同参数结果大致稳定在80%。
+2. runs 21119/21121启用CRC软重试，runs 21120/21122使用原有硬链进行交替对照。结果中开始出现`decode_method=soft_retry`且最终FCS有效的包，CRC失败数相对硬判决开始收敛，证明相位差幅度确实能挽回部分少量bit错误帧。
+3. runs 21123/21124继续比较包含更积极软检测的配置与只保留CRC失败恢复的retry-only配置。软路径内部的候选恢复概率较高，但不同轮次的总体接收率波动仍与约80%的RF基线处于同一量级，不能仅用两轮端到端结果判定更积极的软检测有效。
+4. retry-only随后设为默认路径；若需要硬链A/B，可用`--no-standard-soft-retry`关闭。硬判决成功包始终直接提交，不执行软计算。
+5. 在retry-only之上实现soft-acquire：根据已接收硬包反推发射时隙基准，对到期但没有硬候选的Sequence使用已知Magic、Run ID和Sequence片段定位，并以放宽的preamble探针回退；每个计划时隙和每次探针数均设上限，避免在连续背景流上无限软扫描。
+6. runs 21126/21127及21129--21132用于检查soft-acquire的探针命中、软缓存对齐、恢复数、处理开销和与retry-only的成对端到端结果。
+
+早期轮次没有合并同Run ID的板端`tx_completed`，因此当时比较的是`unique / expected_packets`计划端到端接收率，不是正式无线PRR。它能够比较同配置接收结果，但不能区分板端漏发和无线/接收端丢包。
+
+### 18.3 soft-retry的实际效果
+
+soft-retry的有效性应以“同一个硬CRC失败候选最终被完整校验恢复”为直接证据，而不能只看两轮容易受RF波动影响的总体接收率。runs 21119--21122已经观察到该现象；后续run 21135提供了更完整的量化结果：
+
+```text
+planned/board completed = 260/260
+hard FCS success         = 191
+hard CRC failures        = 41
+soft-retry recovered     = 12
+final valid unique       = 203
+final CRC failures       = 29
+no submitted candidate   = 28
+```
+
+板端该轮满足`scheduled=generated=tx_started=tx_completed=260`、`deadline_miss=0`、`dma_timeout=0`，因此soft-retry把接收率从硬判决的`191/260 = 73.46%`提高到`203/260 = 78.08%`，绝对增加约4.62个百分点，并恢复了`12/41 = 29.27%`的硬CRC失败帧。这说明软值对“已经捕获但少量symbol判错”的帧有明确收益。
+
+run 21135的普通接收迭代`p99=13.98 ms`、`max=19.72 ms`；41次软重试本身平均约22.38 ms、`p99=46.98 ms`、`max=48.25 ms`。在250 ms interval下该开销可接受，而且只发生在硬CRC失败时；后续继续缩短interval时仍需同时观察软重试耗时、缓存临界计数和接收率，不能假设它在任意包速率下都没有代价。
+
+soft-retry的能力边界也很明确：它必须先有包含正确帧边界的硬候选。run 21135中约28个计划包没有形成最终候选，retry-only无法处理这部分损失。
+
+### 18.4 放弃soft-acquire的原因
+
+soft-acquire试图覆盖retry-only无法处理的“无硬候选”计划时隙，但实测没有形成可验证收益。已记录的soft-acquire实时轮次21123、21126、21127、21130和21131汇总为：
+
+```text
+distinct planned slots attempted = 103
+slot attempts                    = 149
+candidate probes                 = 570
+aligned probes                   = 526
+FCS/Run ID/Sequence/payload valid recovered = 0
+```
+
+runs 21129--21132的成对对照中，retry-only组与启用soft-acquire组的汇总结果均为`211/260 = 81.15%`，soft-acquire额外恢复数仍为0。不同单轮之间接收率存在正常RF波动，有时retry-only甚至高于soft-acquire，但更关键的内部证据是soft-acquire在大量探针和对齐后没有产生一个通过完整校验的新包；因此不能把“总体结果相近”解释为收益被硬件随机性完全掩盖。
+
+继续扩大查找窗口、增加探针或放宽距离会增加CPU开销、缓存压力和背景噪声伪对齐，却没有证据表明能够提高有效恢复率。soft-acquire还引入了计划时隙锚点、已知Sequence波形构造、探针来源统计和额外CSV/JSON字段，使正式吞吐链明显复杂化。为了保持下一阶段的吞吐基线可解释，最终决定：
+
+- 保留默认CRC soft-retry，因为它有逐帧FCS恢复的直接证据。
+- 保留软缓存预处理复用和“成功后才更新相位提示”的修正。
+- 在提交实验快照`b5fc93c`后，从正式`zigbee_perf_rx.py`移除soft-acquire实现、参数、统计字段和专用测试。
+- 后续吞吐实验统一使用retry-only，不再把soft-acquire作为扫描变量。
+
+### 18.5 soft-acquire效果不足的可能原因
+
+soft-acquire没有恢复有效帧，可能由以下因素共同造成：
+
+1. **无候选不等于轻微preamble损坏。** soft-retry成功的对象是已经确定帧边界、仅有少量symbol错误的帧；没有硬候选的计划时隙可能对应深衰落、接收前端过载、定时失锁、整段突发未进入缓存，或早期实验中的板端漏发。若软缓存中没有完整且相干的帧，提高判决精度也无法恢复。
+2. **计划时隙预测存在主机侧时间误差。** soft-acquire使用已接收包估计发射epoch，再按`tx_interval_us`预测缺失Sequence。板端启动时间、GNU Radio调度、ZMQ排队和Python处理都会引入抖动；真实突发可能落在4--18 ms触发窗口或32k-chip回看窗口之外。早期实验又缺少板端完成日志，无法确认每个预测时隙确实有RF发射。
+3. **“已对齐”不等于对齐到目标帧。** 526次软对齐主要表示某个64-chip符号片段或探针在保留缓存中找到了相似位置。连续背景流、重复DSSS结构和较宽探针门限都可能产生错误对齐；最终0个FCS有效包表明这些位置没有形成正确完整帧。
+4. **已知Sequence探针依赖正确的时隙编号。** epoch误差若使预测Sequence偏移一位，Magic仍相同，但Run ID/Sequence片段和确定性payload将与真实帧不一致，已知payload相关反而会把排序引向错误位置。
+5. **当前软值只改善symbol判决，没有重新完成同步。** 55562提供的是`int8`量化相位差，soft-acquire仍依赖既有五相位采样、硬流评分和短片段定位。它没有重新执行突发能量检测、连续定时插值、残余CFO估计或完整软preamble似然搜索。若失败发生在采样相位、频偏或突发边界层面，单纯用相位幅度重判`CHIP_MAP`不能修复。
+6. **BlueBee到标准码本本身留给噪声的余量有限。** optimized映射相对标准`CHIP_MAP`每个symbol已有8 chips固有距离。soft-retry在边界已知时可以利用幅度从相近码字中选优；soft-acquire面对长帧、未知边界及更多错误时，码本相关峰值更容易被噪声和错误offset淹没。
+7. **为控制CPU而设置的搜索边界可能漏掉真实帧。** 实现只检查有限offset、有限lookback、每offset有限候选及每时隙最多两次尝试。扩大这些范围可能提高覆盖率，但会直接增加处理时延和伪候选，违背当前先建立稳定吞吐基线的目标。
+
+因此，soft-acquire的失败不能简单归因为某一个门限不合适。现有证据更支持“无硬候选包的主要问题位于突发捕获、定时或RF可见性层，而不是FCS后的symbol选择”。若未来重新研究这部分，应先保存原始IQ或完整量化相位窗口，加入独立突发能量检测、软preamble对数似然、联合offset/定时搜索和CFO估计，并用板端`tx_completed`确认目标时隙确实发出；不应继续只增加已知Sequence探针数量。

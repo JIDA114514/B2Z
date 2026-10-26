@@ -1,0 +1,485 @@
+{
+  "board": null,
+  "expected_payload_len": 40,
+  "expected_run_id": 7243,
+  "observation": {
+    "duration_s": 70.00577449798584,
+    "end_epoch_s": 1784861308.976641,
+    "end_utc": "2026-07-24T02:48:28.976641+00:00",
+    "scope": "receiver process start through receiver stop",
+    "start_epoch_s": 1784861238.9708664,
+    "start_utc": "2026-07-24T02:47:18.970866+00:00"
+  },
+  "planned_sequences": {
+    "expected_packets": 260,
+    "in_range_unique": 181,
+    "missing": 79,
+    "missing_ranges": [
+      {
+        "count": 1,
+        "end": 0,
+        "start": 0
+      },
+      {
+        "count": 29,
+        "end": 30,
+        "start": 2
+      },
+      {
+        "count": 1,
+        "end": 36,
+        "start": 36
+      },
+      {
+        "count": 1,
+        "end": 47,
+        "start": 47
+      },
+      {
+        "count": 1,
+        "end": 52,
+        "start": 52
+      },
+      {
+        "count": 1,
+        "end": 55,
+        "start": 55
+      },
+      {
+        "count": 1,
+        "end": 58,
+        "start": 58
+      },
+      {
+        "count": 1,
+        "end": 60,
+        "start": 60
+      },
+      {
+        "count": 1,
+        "end": 62,
+        "start": 62
+      },
+      {
+        "count": 1,
+        "end": 69,
+        "start": 69
+      },
+      {
+        "count": 1,
+        "end": 74,
+        "start": 74
+      },
+      {
+        "count": 4,
+        "end": 86,
+        "start": 83
+      },
+      {
+        "count": 1,
+        "end": 91,
+        "start": 91
+      },
+      {
+        "count": 2,
+        "end": 94,
+        "start": 93
+      },
+      {
+        "count": 1,
+        "end": 97,
+        "start": 97
+      },
+      {
+        "count": 2,
+        "end": 102,
+        "start": 101
+      },
+      {
+        "count": 1,
+        "end": 107,
+        "start": 107
+      },
+      {
+        "count": 1,
+        "end": 110,
+        "start": 110
+      },
+      {
+        "count": 1,
+        "end": 113,
+        "start": 113
+      },
+      {
+        "count": 1,
+        "end": 121,
+        "start": 121
+      },
+      {
+        "count": 1,
+        "end": 124,
+        "start": 124
+      },
+      {
+        "count": 1,
+        "end": 127,
+        "start": 127
+      },
+      {
+        "count": 1,
+        "end": 130,
+        "start": 130
+      },
+      {
+        "count": 1,
+        "end": 139,
+        "start": 139
+      },
+      {
+        "count": 1,
+        "end": 145,
+        "start": 145
+      },
+      {
+        "count": 1,
+        "end": 155,
+        "start": 155
+      },
+      {
+        "count": 1,
+        "end": 159,
+        "start": 159
+      },
+      {
+        "count": 1,
+        "end": 164,
+        "start": 164
+      },
+      {
+        "count": 1,
+        "end": 166,
+        "start": 166
+      },
+      {
+        "count": 1,
+        "end": 172,
+        "start": 172
+      },
+      {
+        "count": 1,
+        "end": 174,
+        "start": 174
+      },
+      {
+        "count": 2,
+        "end": 181,
+        "start": 180
+      },
+      {
+        "count": 1,
+        "end": 186,
+        "start": 186
+      },
+      {
+        "count": 1,
+        "end": 197,
+        "start": 197
+      },
+      {
+        "count": 1,
+        "end": 199,
+        "start": 199
+      },
+      {
+        "count": 1,
+        "end": 209,
+        "start": 209
+      },
+      {
+        "count": 1,
+        "end": 211,
+        "start": 211
+      },
+      {
+        "count": 2,
+        "end": 215,
+        "start": 214
+      },
+      {
+        "count": 1,
+        "end": 218,
+        "start": 218
+      },
+      {
+        "count": 1,
+        "end": 223,
+        "start": 223
+      },
+      {
+        "count": 1,
+        "end": 234,
+        "start": 234
+      },
+      {
+        "count": 1,
+        "end": 242,
+        "start": 242
+      },
+      {
+        "count": 2,
+        "end": 245,
+        "start": 244
+      }
+    ],
+    "out_of_range_count": 0,
+    "out_of_range_sequences": [],
+    "range_end": 259,
+    "range_start": 0
+  },
+  "ratios": {
+    "end_to_end_receive": {
+      "denominator": null,
+      "numerator": 181,
+      "value": null
+    },
+    "planned_end_to_end_receive": {
+      "denominator": 260,
+      "numerator": 181,
+      "value": 0.6961538461538461
+    },
+    "scheduling_completion": {
+      "denominator": null,
+      "numerator": 0,
+      "value": null
+    },
+    "wireless_prr": {
+      "denominator": null,
+      "numerator": 181,
+      "reason": "board tx_completed was not provided",
+      "value": null
+    }
+  },
+  "raw_csv": "exadv-rt-p40-7243.csv",
+  "receiver": {
+    "bb_gain": 40.0,
+    "buffer_critical": {
+      "by_offset": {
+        "0": {
+          "critical_events": 6360,
+          "truncations": 6308
+        },
+        "1": {
+          "critical_events": 6360,
+          "truncations": 6308
+        },
+        "2": {
+          "critical_events": 6360,
+          "truncations": 6308
+        },
+        "3": {
+          "critical_events": 6360,
+          "truncations": 6308
+        },
+        "4": {
+          "critical_events": 6360,
+          "truncations": 6308
+        }
+      },
+      "capacity_chips_per_offset": 48000,
+      "critical_events": 31800,
+      "critical_threshold_chips": 43200,
+      "truncations": 31540
+    },
+    "cfo_correction_hz": 0.0,
+    "chip_source": "standard",
+    "chip_zmq": "tcp://127.0.0.1:55556",
+    "crc_failure": 50,
+    "crc_ok_packets": 181,
+    "duplicate": 0,
+    "freq_offset_hz": 0.0,
+    "hard_crc_failure_before_soft_retry": 70,
+    "if_gain": 32.0,
+    "longest_loss_burst": 29,
+    "loss_scope": "planned sequence 0..259",
+    "non_test_packets": 0,
+    "out_of_order": 0,
+    "payload_failure": 0,
+    "phase_candidate_stats": null,
+    "phase_endpoints": null,
+    "phase_keep_offset": "auto",
+    "phase_scan_timing": null,
+    "phase_zmq_messages": null,
+    "processing_timing": {
+      "avg_ms": 10.418423393620955,
+      "buffer_chips": 48000,
+      "includes_soft_retry": false,
+      "includes_zmq_receive": true,
+      "max_ms": 19.721343007404357,
+      "p50_ms": 10.470689041540027,
+      "p95_ms": 12.105124595109372,
+      "p99_ms": 14.83295066282153,
+      "samples": 6573
+    },
+    "rf_gain": 0.0,
+    "run_id_mismatch": 0,
+    "standard_ambiguity": "auto",
+    "standard_ambiguity_stats": {
+      "even_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "normal": {
+        "candidates": 477,
+        "fcs_failure": 316,
+        "fcs_ok": 161
+      },
+      "odd_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "swapped": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "swapped_even_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "swapped_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "swapped_odd_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      }
+    },
+    "standard_keep_offset": "auto",
+    "standard_offset_policy": "adaptive",
+    "standard_offset_ranking": {
+      "best_offset_distance": {
+        "avg": 66.96691176470588,
+        "max": 80.0,
+        "min": 60.0,
+        "p50": 65.0,
+        "p95": 79.0,
+        "p99": 80.0,
+        "samples": 272
+      },
+      "fcs_success_by_rank": {
+        "1": 147,
+        "2": 10,
+        "3": 4
+      },
+      "full_decode_attempts": 581,
+      "no_candidate_min_preamble_distance": {
+        "avg": 92.6295238095238,
+        "max": 99.0,
+        "min": 61.0,
+        "p50": 93.0,
+        "p95": 96.0,
+        "p99": 97.0,
+        "samples": 6300
+      },
+      "no_fcs_after_decode_scans": 70,
+      "policy": "adaptive",
+      "scans": 6572,
+      "second_offset_distance": {
+        "avg": 67.94921875,
+        "max": 80.0,
+        "min": 63.0,
+        "p50": 66.0,
+        "p95": 79.0,
+        "p99": 80.0,
+        "samples": 256
+      },
+      "strategy": "score all offsets; decode in rank order until FCS success"
+    },
+    "standard_offset_stats": {
+      "0": {
+        "candidates": 100,
+        "fcs_failure": 57,
+        "fcs_ok": 43
+      },
+      "1": {
+        "candidates": 89,
+        "fcs_failure": 64,
+        "fcs_ok": 25
+      },
+      "2": {
+        "candidates": 103,
+        "fcs_failure": 68,
+        "fcs_ok": 35
+      },
+      "3": {
+        "candidates": 97,
+        "fcs_failure": 62,
+        "fcs_ok": 35
+      },
+      "4": {
+        "candidates": 88,
+        "fcs_failure": 65,
+        "fcs_ok": 23
+      }
+    },
+    "standard_soft_retry": {
+      "aligned_but_not_recovered": 49,
+      "aligned_candidates": 198,
+      "alignment_miss_bursts": 1,
+      "buffer_chips_per_offset": 96000,
+      "buffer_truncations": 32810,
+      "candidate_attempts": 239,
+      "enabled": true,
+      "endpoint": "tcp://127.0.0.1:55562",
+      "format": "signed int8 quantized phase difference",
+      "hard_failure_bursts_attempted": 70,
+      "phase_offset_delta": 3,
+      "quantization_scale": 40.0,
+      "recovered": 20,
+      "retry_timing_ms": {
+        "avg": 19.929448356353014,
+        "max": 44.84987095929682,
+        "min": 1.875819987617433,
+        "p50": 20.681966008851305,
+        "p95": 36.85994851693977,
+        "p99": 40.12589296908119,
+        "samples": 70
+      },
+      "samples": 697290123,
+      "scope": "hard CRC failures only",
+      "zmq_messages": 290453
+    },
+    "standard_stream": "full-rate differential phase bits; modulo-5 deinterleaved",
+    "unique": 181,
+    "zmq_messages": 304671
+  },
+  "run_id": 7243,
+  "schema": "bluebee-perf-rx-v2",
+  "throughput": {
+    "application_bit_s": 668.3076923076923,
+    "application_byte_s": 83.53846153846153,
+    "gross_bit_s": 891.0769230769231,
+    "gross_byte_s": 111.38461538461539,
+    "payload_len": 40,
+    "time_basis": "planned_tx_duration",
+    "time_s": 65,
+    "unique_basis": 181
+  },
+  "tx_plan": {
+    "duration_s": 65,
+    "expected_packets": 260,
+    "interval_us": 250000,
+    "sequence_scope": "0..259"
+  }
+}

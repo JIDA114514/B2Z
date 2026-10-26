@@ -1,0 +1,53 @@
+{
+  "board": null,
+  "expected_payload_len": 46,
+  "expected_run_id": 1234,
+  "observation": {
+    "duration_s": 20.0000102519989,
+    "end_epoch_s": 1784277788.374854,
+    "end_utc": "2026-07-17T08:43:08.374854+00:00",
+    "scope": "receiver process start through receiver stop",
+    "start_epoch_s": 1784277768.3748438,
+    "start_utc": "2026-07-17T08:42:48.374844+00:00"
+  },
+  "ratios": {
+    "end_to_end_receive": {
+      "denominator": null,
+      "numerator": 0,
+      "value": null
+    },
+    "scheduling_completion": {
+      "denominator": null,
+      "numerator": 0,
+      "value": null
+    },
+    "wireless_prr": {
+      "denominator": null,
+      "numerator": 0,
+      "value": null
+    }
+  },
+  "raw_csv": "results/pure-1234.csv",
+  "receiver": {
+    "crc_failure": 0,
+    "crc_ok_packets": 0,
+    "duplicate": 0,
+    "longest_loss_burst": 0,
+    "loss_scope": "minimum through maximum valid received sequence",
+    "non_test_packets": 0,
+    "out_of_order": 0,
+    "payload_failure": 0,
+    "run_id_mismatch": 0,
+    "unique": 0,
+    "zmq_messages": 94953
+  },
+  "run_id": 1234,
+  "schema": "bluebee-perf-rx-v1",
+  "throughput": {
+    "application_bit_s": 0.0,
+    "application_byte_s": 0.0,
+    "gross_bit_s": 0.0,
+    "gross_byte_s": 0.0,
+    "payload_len": 46
+  }
+}

@@ -1,4 +1,21 @@
-*.pyc
-.Xil
+# Python / local build caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.Xil/
+
+# Preserve existing defaults outside experiment directories.
 *.json
 *.csv
+
+# Existing performance experiments: retain structured records.
+!/python/perf_test/*.json
+!/python/perf_test/*.csv
+!/python/perf_test/results/*.json
+!/python/perf_test/results/*.csv
+
+# Raw SDR recordings stay outside normal Git history.
+*.ci8
+*.cf32
+*.iq

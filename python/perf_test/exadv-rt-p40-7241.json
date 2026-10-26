@@ -1,0 +1,545 @@
+{
+  "board": null,
+  "expected_payload_len": 40,
+  "expected_run_id": 7241,
+  "observation": {
+    "duration_s": 70.00490474700928,
+    "end_epoch_s": 1784861061.192798,
+    "end_utc": "2026-07-24T02:44:21.192798+00:00",
+    "scope": "receiver process start through receiver stop",
+    "start_epoch_s": 1784860991.1878932,
+    "start_utc": "2026-07-24T02:43:11.187893+00:00"
+  },
+  "planned_sequences": {
+    "expected_packets": 260,
+    "in_range_unique": 187,
+    "missing": 73,
+    "missing_ranges": [
+      {
+        "count": 1,
+        "end": 3,
+        "start": 3
+      },
+      {
+        "count": 1,
+        "end": 7,
+        "start": 7
+      },
+      {
+        "count": 1,
+        "end": 9,
+        "start": 9
+      },
+      {
+        "count": 1,
+        "end": 15,
+        "start": 15
+      },
+      {
+        "count": 1,
+        "end": 19,
+        "start": 19
+      },
+      {
+        "count": 1,
+        "end": 23,
+        "start": 23
+      },
+      {
+        "count": 2,
+        "end": 36,
+        "start": 35
+      },
+      {
+        "count": 2,
+        "end": 39,
+        "start": 38
+      },
+      {
+        "count": 2,
+        "end": 42,
+        "start": 41
+      },
+      {
+        "count": 2,
+        "end": 46,
+        "start": 45
+      },
+      {
+        "count": 2,
+        "end": 50,
+        "start": 49
+      },
+      {
+        "count": 1,
+        "end": 57,
+        "start": 57
+      },
+      {
+        "count": 1,
+        "end": 59,
+        "start": 59
+      },
+      {
+        "count": 1,
+        "end": 62,
+        "start": 62
+      },
+      {
+        "count": 1,
+        "end": 67,
+        "start": 67
+      },
+      {
+        "count": 1,
+        "end": 73,
+        "start": 73
+      },
+      {
+        "count": 1,
+        "end": 75,
+        "start": 75
+      },
+      {
+        "count": 4,
+        "end": 96,
+        "start": 93
+      },
+      {
+        "count": 2,
+        "end": 104,
+        "start": 103
+      },
+      {
+        "count": 1,
+        "end": 111,
+        "start": 111
+      },
+      {
+        "count": 1,
+        "end": 118,
+        "start": 118
+      },
+      {
+        "count": 2,
+        "end": 121,
+        "start": 120
+      },
+      {
+        "count": 1,
+        "end": 124,
+        "start": 124
+      },
+      {
+        "count": 1,
+        "end": 126,
+        "start": 126
+      },
+      {
+        "count": 1,
+        "end": 128,
+        "start": 128
+      },
+      {
+        "count": 1,
+        "end": 130,
+        "start": 130
+      },
+      {
+        "count": 1,
+        "end": 132,
+        "start": 132
+      },
+      {
+        "count": 1,
+        "end": 135,
+        "start": 135
+      },
+      {
+        "count": 1,
+        "end": 139,
+        "start": 139
+      },
+      {
+        "count": 2,
+        "end": 143,
+        "start": 142
+      },
+      {
+        "count": 2,
+        "end": 148,
+        "start": 147
+      },
+      {
+        "count": 1,
+        "end": 154,
+        "start": 154
+      },
+      {
+        "count": 1,
+        "end": 159,
+        "start": 159
+      },
+      {
+        "count": 2,
+        "end": 169,
+        "start": 168
+      },
+      {
+        "count": 1,
+        "end": 171,
+        "start": 171
+      },
+      {
+        "count": 2,
+        "end": 174,
+        "start": 173
+      },
+      {
+        "count": 1,
+        "end": 177,
+        "start": 177
+      },
+      {
+        "count": 2,
+        "end": 183,
+        "start": 182
+      },
+      {
+        "count": 2,
+        "end": 189,
+        "start": 188
+      },
+      {
+        "count": 1,
+        "end": 199,
+        "start": 199
+      },
+      {
+        "count": 2,
+        "end": 202,
+        "start": 201
+      },
+      {
+        "count": 1,
+        "end": 207,
+        "start": 207
+      },
+      {
+        "count": 1,
+        "end": 211,
+        "start": 211
+      },
+      {
+        "count": 1,
+        "end": 218,
+        "start": 218
+      },
+      {
+        "count": 1,
+        "end": 221,
+        "start": 221
+      },
+      {
+        "count": 1,
+        "end": 223,
+        "start": 223
+      },
+      {
+        "count": 2,
+        "end": 226,
+        "start": 225
+      },
+      {
+        "count": 1,
+        "end": 234,
+        "start": 234
+      },
+      {
+        "count": 1,
+        "end": 237,
+        "start": 237
+      },
+      {
+        "count": 1,
+        "end": 240,
+        "start": 240
+      },
+      {
+        "count": 1,
+        "end": 244,
+        "start": 244
+      },
+      {
+        "count": 1,
+        "end": 248,
+        "start": 248
+      },
+      {
+        "count": 1,
+        "end": 251,
+        "start": 251
+      },
+      {
+        "count": 1,
+        "end": 255,
+        "start": 255
+      },
+      {
+        "count": 1,
+        "end": 258,
+        "start": 258
+      }
+    ],
+    "out_of_range_count": 0,
+    "out_of_range_sequences": [],
+    "range_end": 259,
+    "range_start": 0
+  },
+  "ratios": {
+    "end_to_end_receive": {
+      "denominator": null,
+      "numerator": 187,
+      "value": null
+    },
+    "planned_end_to_end_receive": {
+      "denominator": 260,
+      "numerator": 187,
+      "value": 0.7192307692307692
+    },
+    "scheduling_completion": {
+      "denominator": null,
+      "numerator": 0,
+      "value": null
+    },
+    "wireless_prr": {
+      "denominator": null,
+      "numerator": 187,
+      "reason": "board tx_completed was not provided",
+      "value": null
+    }
+  },
+  "raw_csv": "exadv-rt-p40-7241.csv",
+  "receiver": {
+    "bb_gain": 40.0,
+    "buffer_critical": {
+      "by_offset": {
+        "0": {
+          "critical_events": 6426,
+          "truncations": 6369
+        },
+        "1": {
+          "critical_events": 6426,
+          "truncations": 6369
+        },
+        "2": {
+          "critical_events": 6426,
+          "truncations": 6369
+        },
+        "3": {
+          "critical_events": 6426,
+          "truncations": 6369
+        },
+        "4": {
+          "critical_events": 6426,
+          "truncations": 6369
+        }
+      },
+      "capacity_chips_per_offset": 48000,
+      "critical_events": 32130,
+      "critical_threshold_chips": 43200,
+      "truncations": 31845
+    },
+    "cfo_correction_hz": 0.0,
+    "chip_source": "standard",
+    "chip_zmq": "tcp://127.0.0.1:55556",
+    "crc_failure": 40,
+    "crc_ok_packets": 187,
+    "duplicate": 0,
+    "freq_offset_hz": 0.0,
+    "hard_crc_failure_before_soft_retry": 52,
+    "if_gain": 32.0,
+    "longest_loss_burst": 4,
+    "loss_scope": "planned sequence 0..259",
+    "non_test_packets": 0,
+    "out_of_order": 0,
+    "payload_failure": 0,
+    "phase_candidate_stats": null,
+    "phase_endpoints": null,
+    "phase_keep_offset": "auto",
+    "phase_scan_timing": null,
+    "phase_zmq_messages": null,
+    "processing_timing": {
+      "avg_ms": 10.331591364179333,
+      "buffer_chips": 48000,
+      "includes_soft_retry": false,
+      "includes_zmq_receive": true,
+      "max_ms": 20.824309962335974,
+      "p50_ms": 10.36351901711896,
+      "p95_ms": 12.09551468491554,
+      "p99_ms": 14.895226882072166,
+      "samples": 6667
+    },
+    "rf_gain": 0.0,
+    "run_id_mismatch": 0,
+    "standard_ambiguity": "auto",
+    "standard_ambiguity_stats": {
+      "even_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "normal": {
+        "candidates": 445,
+        "fcs_failure": 270,
+        "fcs_ok": 175
+      },
+      "odd_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "swapped": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "swapped_even_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "swapped_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "swapped_odd_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      }
+    },
+    "standard_keep_offset": "auto",
+    "standard_offset_policy": "adaptive",
+    "standard_offset_ranking": {
+      "best_offset_distance": {
+        "avg": 65.68164794007491,
+        "max": 79.0,
+        "min": 61.0,
+        "p50": 64.0,
+        "p95": 77.0,
+        "p99": 79.0,
+        "samples": 267
+      },
+      "fcs_success_by_rank": {
+        "1": 155,
+        "2": 17,
+        "3": 3
+      },
+      "full_decode_attempts": 590,
+      "no_candidate_min_preamble_distance": {
+        "avg": 92.70209440450141,
+        "max": 99.0,
+        "min": 62.0,
+        "p50": 93.0,
+        "p95": 96.0,
+        "p99": 97.0,
+        "samples": 6398
+      },
+      "no_fcs_after_decode_scans": 52,
+      "policy": "adaptive",
+      "scans": 6665,
+      "second_offset_distance": {
+        "avg": 66.77862595419847,
+        "max": 79.0,
+        "min": 63.0,
+        "p50": 66.0,
+        "p95": 78.0,
+        "p99": 79.0,
+        "samples": 262
+      },
+      "strategy": "score all offsets; decode in rank order until FCS success"
+    },
+    "standard_offset_stats": {
+      "0": {
+        "candidates": 90,
+        "fcs_failure": 57,
+        "fcs_ok": 33
+      },
+      "1": {
+        "candidates": 93,
+        "fcs_failure": 54,
+        "fcs_ok": 39
+      },
+      "2": {
+        "candidates": 86,
+        "fcs_failure": 54,
+        "fcs_ok": 32
+      },
+      "3": {
+        "candidates": 91,
+        "fcs_failure": 55,
+        "fcs_ok": 36
+      },
+      "4": {
+        "candidates": 85,
+        "fcs_failure": 50,
+        "fcs_ok": 35
+      }
+    },
+    "standard_soft_retry": {
+      "aligned_but_not_recovered": 40,
+      "aligned_candidates": 175,
+      "alignment_miss_bursts": 0,
+      "buffer_chips_per_offset": 96000,
+      "buffer_truncations": 33275,
+      "candidate_attempts": 203,
+      "enabled": true,
+      "endpoint": "tcp://127.0.0.1:55562",
+      "format": "signed int8 quantized phase difference",
+      "hard_failure_bursts_attempted": 52,
+      "phase_offset_delta": 2,
+      "quantization_scale": 40.0,
+      "recovered": 12,
+      "retry_timing_ms": {
+        "avg": 19.12410369326468,
+        "max": 42.38434601575136,
+        "min": 2.2553890012204647,
+        "p50": 20.214882970321923,
+        "p95": 37.576782371615984,
+        "p99": 40.89426574006212,
+        "samples": 52
+      },
+      "samples": 697414895,
+      "scope": "hard CRC failures only",
+      "zmq_messages": 289398
+    },
+    "standard_stream": "full-rate differential phase bits; modulo-5 deinterleaved",
+    "unique": 187,
+    "zmq_messages": 302339
+  },
+  "run_id": 7241,
+  "schema": "bluebee-perf-rx-v2",
+  "throughput": {
+    "application_bit_s": 690.4615384615385,
+    "application_byte_s": 86.3076923076923,
+    "gross_bit_s": 920.6153846153846,
+    "gross_byte_s": 115.07692307692308,
+    "payload_len": 40,
+    "time_basis": "planned_tx_duration",
+    "time_s": 65,
+    "unique_basis": 187
+  },
+  "tx_plan": {
+    "duration_s": 65,
+    "expected_packets": 260,
+    "interval_us": 250000,
+    "sequence_scope": "0..259"
+  }
+}

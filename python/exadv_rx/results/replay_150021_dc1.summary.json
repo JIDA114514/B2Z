@@ -1,0 +1,82 @@
+{
+  "schema": "exadv_rx_v2",
+  "receiver_version": "2026-10-26-dc1",
+  "start_utc": "2026-10-26T07:14:25.255256+00:00",
+  "end_utc": "2026-10-26T07:16:00.531223+00:00",
+  "status": "complete",
+  "error": null,
+  "config": {
+    "channels": [
+      39
+    ],
+    "whitening_channels": [
+      39
+    ],
+    "sample_rate": 8000000,
+    "center_hz": 2480000000.0,
+    "iq_file": "python/exadv_rx/results/rx_20261026_150021_003660.ci8",
+    "format": "ci8",
+    "serial": null,
+    "lna": 24,
+    "vga": 20,
+    "amp": false,
+    "duration": 0.0,
+    "block_samples": 65536,
+    "queue_blocks": 64,
+    "stall_timeout": 10,
+    "sync_threshold": 0.84,
+    "dc_block_hz": 1000,
+    "pair_tolerance_us": 20,
+    "save_iq": false,
+    "output": "python/exadv_rx/results/replay_150021_dc1",
+    "quiet": true
+  },
+  "capture_command": null,
+  "capture_returncode": null,
+  "capture_stats": {
+    "bytes_read": 960000000,
+    "queue_high_water": 64
+  },
+  "counts": {
+    "clipped_components": 2904,
+    "samples_processed": 480000000,
+    "packets": 64154,
+    "same_channel_auxiliary_diagnostic": 63647,
+    "primary": 507
+  },
+  "channels": {
+    "39": {
+      "sync_candidates": 94030,
+      "packets": 64154,
+      "crc_failure_candidates": 19103,
+      "rejected_candidates": 10773
+    }
+  },
+  "matched_events": 0,
+  "expired_primary": 507,
+  "pending_primary": 0,
+  "wall_duration_s": 95.2759616530002,
+  "processed_sample_duration_s": 60.0,
+  "processing_ms_recent": {
+    "samples": 7326,
+    "mean": 11.961795984709706,
+    "p99": 18.46680424978331,
+    "max": 25.222797999958857
+  },
+  "stderr_tail": [],
+  "files": {
+    "packets": "python/exadv_rx/results/replay_150021_dc1.packets.jsonl",
+    "events": "python/exadv_rx/results/replay_150021_dc1.events.jsonl",
+    "summary": "python/exadv_rx/results/replay_150021_dc1.summary.json",
+    "text": "python/exadv_rx/results/replay_150021_dc1.summary.txt",
+    "stderr": "python/exadv_rx/results/replay_150021_dc1.hackrf.log"
+  },
+  "limitations": [
+    "LE 1M only; fixed RF capture, no host-timed frequency hopping",
+    "DC blocker/filter and demodulation timing require calibration before synchronization claims",
+    "sample timestamps are relative to capture, not hardware/UTC timestamps",
+    "HackRF/USB sample losses may be unobservable in raw IQ; no guaranteed gap-free timeline",
+    "CRC-failure counts refer to sync candidates, not uniquely identified transmitted packets",
+    "no PRR without independently supplied TX counts and matched observation window"
+  ]
+}

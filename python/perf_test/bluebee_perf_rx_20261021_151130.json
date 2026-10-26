@@ -1,0 +1,261 @@
+{
+  "board": null,
+  "expected_payload_len": 40,
+  "expected_run_id": 1021,
+  "observation": {
+    "duration_s": 60.028111934661865,
+    "end_epoch_s": 1792566750.3704724,
+    "end_utc": "2026-10-21T07:12:30.370472+00:00",
+    "scope": "receiver process start through receiver stop",
+    "start_epoch_s": 1792566690.3423605,
+    "start_utc": "2026-10-21T07:11:30.342360+00:00"
+  },
+  "planned_sequences": null,
+  "ratios": {
+    "end_to_end_receive": {
+      "denominator": null,
+      "numerator": 124,
+      "value": null
+    },
+    "planned_end_to_end_receive": {
+      "denominator": null,
+      "numerator": 0,
+      "reason": "provide --tx-duration-s and --tx-interval-us together",
+      "value": null
+    },
+    "scheduling_completion": {
+      "denominator": null,
+      "numerator": 0,
+      "value": null
+    },
+    "wireless_prr": {
+      "denominator": null,
+      "numerator": 124,
+      "reason": "board tx_completed was not provided",
+      "value": null
+    }
+  },
+  "raw_csv": "bluebee_perf_rx_20261021_151130.csv",
+  "receiver": {
+    "bb_gain": 40.0,
+    "buffer_critical": {
+      "by_offset": {
+        "0": {
+          "critical_events": 5268,
+          "truncations": 5218
+        },
+        "1": {
+          "critical_events": 5268,
+          "truncations": 5218
+        },
+        "2": {
+          "critical_events": 5268,
+          "truncations": 5218
+        },
+        "3": {
+          "critical_events": 5268,
+          "truncations": 5218
+        },
+        "4": {
+          "critical_events": 5268,
+          "truncations": 5218
+        }
+      },
+      "capacity_chips_per_offset": 48000,
+      "critical_events": 26340,
+      "critical_threshold_chips": 43200,
+      "truncations": 26090
+    },
+    "cfo_correction_hz": 0.0,
+    "chip_source": "standard",
+    "chip_zmq": "tcp://127.0.0.1:55556",
+    "crc_failure": 234,
+    "crc_ok_packets": 124,
+    "duplicate": 0,
+    "freq_offset_hz": 0.0,
+    "hard_crc_failure_before_soft_retry": 247,
+    "if_gain": 32.0,
+    "longest_loss_burst": 34,
+    "loss_scope": "minimum through maximum valid received sequence",
+    "non_test_packets": 0,
+    "out_of_order": 0,
+    "payload_failure": 0,
+    "phase_candidate_stats": null,
+    "phase_endpoints": null,
+    "phase_keep_offset": "auto",
+    "phase_scan_timing": null,
+    "phase_zmq_messages": null,
+    "processing_timing": {
+      "avg_ms": 10.168595616048883,
+      "buffer_chips": 48000,
+      "includes_soft_retry": false,
+      "includes_zmq_receive": true,
+      "max_ms": 22.106732008978724,
+      "p50_ms": 10.030805075075477,
+      "p95_ms": 13.158405519789085,
+      "p99_ms": 14.512425201246524,
+      "samples": 5466
+    },
+    "rf_gain": 0.0,
+    "run_id_mismatch": 0,
+    "standard_ambiguity": "auto",
+    "standard_ambiguity_stats": {
+      "even_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "normal": {
+        "candidates": 1245,
+        "fcs_failure": 1134,
+        "fcs_ok": 111
+      },
+      "odd_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "swapped": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "swapped_even_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "swapped_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "swapped_odd_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      }
+    },
+    "standard_keep_offset": "auto",
+    "standard_offset_policy": "adaptive",
+    "standard_offset_ranking": {
+      "best_offset_distance": {
+        "avg": 66.19548872180451,
+        "max": 80.0,
+        "min": 61.0,
+        "p50": 64.0,
+        "p95": 79.0,
+        "p99": 80.0,
+        "samples": 532
+      },
+      "fcs_success_by_rank": {
+        "1": 105,
+        "2": 5,
+        "3": 1
+      },
+      "full_decode_attempts": 2006,
+      "no_candidate_min_preamble_distance": {
+        "avg": 93.0117599351176,
+        "max": 101.0,
+        "min": 62.0,
+        "p50": 94.0,
+        "p95": 97.0,
+        "p99": 98.0,
+        "samples": 4932
+      },
+      "no_fcs_after_decode_scans": 247,
+      "policy": "adaptive",
+      "scans": 5464,
+      "second_offset_distance": {
+        "avg": 66.6240157480315,
+        "max": 80.0,
+        "min": 63.0,
+        "p50": 65.0,
+        "p95": 78.0,
+        "p99": 80.0,
+        "samples": 508
+      },
+      "strategy": "score all offsets; decode in rank order until FCS success"
+    },
+    "standard_offset_stats": {
+      "0": {
+        "candidates": 258,
+        "fcs_failure": 226,
+        "fcs_ok": 32
+      },
+      "1": {
+        "candidates": 241,
+        "fcs_failure": 227,
+        "fcs_ok": 14
+      },
+      "2": {
+        "candidates": 256,
+        "fcs_failure": 229,
+        "fcs_ok": 27
+      },
+      "3": {
+        "candidates": 248,
+        "fcs_failure": 226,
+        "fcs_ok": 22
+      },
+      "4": {
+        "candidates": 242,
+        "fcs_failure": 226,
+        "fcs_ok": 16
+      }
+    },
+    "standard_soft_retry": {
+      "aligned_but_not_recovered": 229,
+      "aligned_candidates": 914,
+      "alignment_miss_bursts": 5,
+      "buffer_chips_per_offset": 96000,
+      "buffer_truncations": 27275,
+      "candidate_attempts": 1085,
+      "enabled": true,
+      "endpoint": "tcp://127.0.0.1:55562",
+      "format": "signed int8 quantized phase difference",
+      "hard_failure_bursts_attempted": 247,
+      "phase_offset_delta": 3,
+      "quantization_scale": 40.0,
+      "recovered": 13,
+      "retry_timing_ms": {
+        "avg": 17.37258222843954,
+        "max": 35.77497694641352,
+        "min": 1.0992230381816626,
+        "p50": 19.099480006843805,
+        "p95": 31.883817818015814,
+        "p99": 33.48572094226256,
+        "samples": 247
+      },
+      "samples": 599013523,
+      "scope": "hard CRC failures only",
+      "zmq_messages": 231590
+    },
+    "standard_stream": "full-rate differential phase bits; modulo-5 deinterleaved",
+    "unique": 124,
+    "zmq_messages": 287094
+  },
+  "run_id": 1021,
+  "schema": "bluebee-perf-rx-v2",
+  "throughput": {
+    "application_bit_s": 495.767716838946,
+    "application_byte_s": 61.97096460486825,
+    "gross_bit_s": 661.0236224519281,
+    "gross_byte_s": 82.62795280649101,
+    "payload_len": 40,
+    "time_basis": "receiver_observation_duration",
+    "time_s": 60.028111934661865,
+    "unique_basis": 124
+  },
+  "tx_plan": {
+    "duration_s": null,
+    "expected_packets": null,
+    "interval_us": null,
+    "sequence_scope": null
+  }
+}

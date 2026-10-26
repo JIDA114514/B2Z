@@ -1,0 +1,20 @@
+# Small, reviewable experiment evidence only. Rules here override root defaults.
+*
+!.gitignore
+!*.md
+!*.summary.json
+!*.summary.txt
+!*.summary.csv
+!*.metrics.csv
+!*.config.json
+!*.manifest.json
+!*.manifest.example.json
+!*.payload_validation.json
+!*.events.jsonl
+!*.commands.jsonl
+!*.hackrf.log
+!*.board.log
+
+# *.packets.jsonl and raw IQ remain ignored, regardless of run prefix.
+# Curated packet excerpts can use this explicit name after size review.
+!*.packets.sample.jsonl

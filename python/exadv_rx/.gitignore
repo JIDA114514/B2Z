@@ -1,0 +1,5 @@
+__pycache__/
+*.ci8
+*.cf32
+
+# Do not ignore results/ itself: its .gitignore selects reviewable artifacts.

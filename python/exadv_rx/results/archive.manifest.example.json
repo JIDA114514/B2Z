@@ -1,0 +1,26 @@
+{
+  "schema": "experiment_archive_v1",
+  "example_only": true,
+  "run_id": 10262,
+  "experiment_prefix": "rx_20261026_152018_750312",
+  "transmitter_command": "bluebee_exadv_perf_start?30 200000 60 10262",
+  "board_planned_duration_s": 60,
+  "receiver_observation_duration_s": 30,
+  "source_commit": "REPLACE_WITH_ACTUAL_COMMIT",
+  "source_dirty": null,
+  "firmware_sha256": "REPLACE_WITH_ACTUAL_FIRMWARE_HASH",
+  "files": [
+    {
+      "role": "raw_iq",
+      "name": "rx_20261026_152018_750312.ci8",
+      "archive_uri": "REPLACE_WITH_VERIFIED_ARCHIVE_LOCATION",
+      "size_bytes": 480000000,
+      "sha256": "REPLACE_WITH_ACTUAL_FILE_HASH",
+      "format": "interleaved signed int8 I,Q",
+      "sample_rate_hz": 8000000,
+      "center_frequency_hz": 2480000000,
+      "rf_channels": [39],
+      "whitening_channels": [39]
+    }
+  ]
+}

@@ -1,0 +1,353 @@
+{
+  "board": null,
+  "expected_payload_len": 20,
+  "expected_run_id": 21133,
+  "observation": {
+    "duration_s": 70.00720500946045,
+    "end_epoch_s": 1784857460.7576857,
+    "end_utc": "2026-07-24T01:44:20.757686+00:00",
+    "scope": "receiver process start through receiver stop",
+    "start_epoch_s": 1784857390.7504807,
+    "start_utc": "2026-07-24T01:43:10.750481+00:00"
+  },
+  "planned_sequences": {
+    "expected_packets": 130,
+    "in_range_unique": 122,
+    "missing": 8,
+    "missing_ranges": [
+      {
+        "count": 2,
+        "end": 1,
+        "start": 0
+      },
+      {
+        "count": 1,
+        "end": 12,
+        "start": 12
+      },
+      {
+        "count": 1,
+        "end": 24,
+        "start": 24
+      },
+      {
+        "count": 1,
+        "end": 36,
+        "start": 36
+      },
+      {
+        "count": 1,
+        "end": 85,
+        "start": 85
+      },
+      {
+        "count": 1,
+        "end": 96,
+        "start": 96
+      },
+      {
+        "count": 1,
+        "end": 100,
+        "start": 100
+      }
+    ],
+    "out_of_range_count": 0,
+    "out_of_range_sequences": [],
+    "range_end": 129,
+    "range_start": 0
+  },
+  "ratios": {
+    "end_to_end_receive": {
+      "denominator": null,
+      "numerator": 122,
+      "value": null
+    },
+    "planned_end_to_end_receive": {
+      "denominator": 130,
+      "numerator": 122,
+      "value": 0.9384615384615385
+    },
+    "scheduling_completion": {
+      "denominator": null,
+      "numerator": 0,
+      "value": null
+    },
+    "wireless_prr": {
+      "denominator": null,
+      "numerator": 122,
+      "reason": "board tx_completed was not provided",
+      "value": null
+    }
+  },
+  "raw_csv": "pure-rt-p20-r21133-retry-only.csv",
+  "receiver": {
+    "bb_gain": 40.0,
+    "buffer_critical": {
+      "by_offset": {
+        "0": {
+          "critical_events": 7377,
+          "truncations": 7342
+        },
+        "1": {
+          "critical_events": 7377,
+          "truncations": 7342
+        },
+        "2": {
+          "critical_events": 7377,
+          "truncations": 7342
+        },
+        "3": {
+          "critical_events": 7377,
+          "truncations": 7342
+        },
+        "4": {
+          "critical_events": 7377,
+          "truncations": 7342
+        }
+      },
+      "capacity_chips_per_offset": 48000,
+      "critical_events": 36885,
+      "critical_threshold_chips": 43200,
+      "truncations": 36710
+    },
+    "cfo_correction_hz": 0.0,
+    "chip_source": "standard",
+    "chip_zmq": "tcp://127.0.0.1:55556",
+    "crc_failure": 3,
+    "crc_ok_packets": 122,
+    "duplicate": 0,
+    "freq_offset_hz": 0.0,
+    "hard_crc_failure_before_soft_retry": 8,
+    "if_gain": 32.0,
+    "longest_loss_burst": 2,
+    "loss_scope": "planned sequence 0..129",
+    "non_test_packets": 0,
+    "out_of_order": 0,
+    "payload_failure": 0,
+    "phase_candidate_stats": null,
+    "phase_endpoints": null,
+    "phase_keep_offset": "auto",
+    "phase_scan_timing": null,
+    "phase_zmq_messages": null,
+    "processing_timing": {
+      "avg_ms": 9.21227462249256,
+      "buffer_chips": 48000,
+      "includes_soft_retry": false,
+      "includes_zmq_receive": true,
+      "max_ms": 22.77270401827991,
+      "p50_ms": 9.19258751673624,
+      "p95_ms": 10.630263987695798,
+      "p99_ms": 12.873315528267993,
+      "samples": 7574
+    },
+    "rf_gain": 0.0,
+    "run_id_mismatch": 0,
+    "standard_ambiguity": "auto",
+    "standard_ambiguity_stats": {
+      "even_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "normal": {
+        "candidates": 160,
+        "fcs_failure": 43,
+        "fcs_ok": 117
+      },
+      "odd_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "swapped": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "swapped_even_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "swapped_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      },
+      "swapped_odd_inverted": {
+        "candidates": 0,
+        "fcs_failure": 0,
+        "fcs_ok": 0
+      }
+    },
+    "standard_keep_offset": "auto",
+    "standard_offset_policy": "adaptive",
+    "standard_offset_ranking": {
+      "best_offset_distance": {
+        "avg": 64.92647058823529,
+        "max": 79.0,
+        "min": 61.0,
+        "p50": 64.0,
+        "p95": 76.0,
+        "p99": 78.65,
+        "samples": 136
+      },
+      "fcs_success_by_rank": {
+        "1": 114,
+        "2": 1,
+        "3": 2
+      },
+      "full_decode_attempts": 193,
+      "no_candidate_min_preamble_distance": {
+        "avg": 93.30953341401103,
+        "max": 108.0,
+        "min": 63.0,
+        "p50": 93.0,
+        "p95": 100.0,
+        "p99": 104.0,
+        "samples": 7437
+      },
+      "no_fcs_after_decode_scans": 8,
+      "policy": "adaptive",
+      "scans": 7573,
+      "second_offset_distance": {
+        "avg": 64.96268656716418,
+        "max": 79.0,
+        "min": 64.0,
+        "p50": 64.0,
+        "p95": 74.69999999999999,
+        "p99": 78.66999999999999,
+        "samples": 134
+      },
+      "strategy": "score all offsets; decode in rank order until FCS success"
+    },
+    "standard_offset_stats": {
+      "0": {
+        "candidates": 66,
+        "fcs_failure": 9,
+        "fcs_ok": 57
+      },
+      "1": {
+        "candidates": 30,
+        "fcs_failure": 10,
+        "fcs_ok": 20
+      },
+      "2": {
+        "candidates": 27,
+        "fcs_failure": 7,
+        "fcs_ok": 20
+      },
+      "3": {
+        "candidates": 23,
+        "fcs_failure": 8,
+        "fcs_ok": 15
+      },
+      "4": {
+        "candidates": 14,
+        "fcs_failure": 9,
+        "fcs_ok": 5
+      }
+    },
+    "standard_soft_acquisition": {
+      "aligned_probes": 0,
+      "aligned_probes_by_source": {
+        "known_payload": 0,
+        "relaxed_preamble": 0
+      },
+      "anchor_samples": 32,
+      "attempts_without_probe": 0,
+      "candidate_probes": 0,
+      "distinct_slots_attempted": 0,
+      "enabled": false,
+      "interval_s": 0.5,
+      "known_payload_anchor_max_distance": 24,
+      "known_payload_max_distance": 60,
+      "known_payload_offsets_scanned": 3,
+      "known_payload_segment_chips": 64,
+      "known_payload_segments": 3,
+      "lookback_chips": 32000,
+      "max_attempts_per_slot": 2,
+      "max_probes_per_attempt": 8,
+      "max_probes_per_offset": 16,
+      "phase_hint_update_policy": "only after FCS, Run ID, Sequence, and payload validation",
+      "probe_attempts": 0,
+      "probe_attempts_by_source": {
+        "known_payload": 0,
+        "relaxed_preamble": 0
+      },
+      "recovered": 0,
+      "recovered_by_source": {
+        "known_payload": 0,
+        "relaxed_preamble": 0
+      },
+      "relaxed_prefix_max_distance": 96,
+      "requires_tx_interval": true,
+      "scope": "predicted planned slots with no hard candidate",
+      "slot_attempts": 0,
+      "timing_ms": {
+        "avg": null,
+        "max": null,
+        "min": null,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "samples": 0
+      },
+      "trigger_delay_s": 0.004,
+      "trigger_window_s": 0.018
+    },
+    "standard_soft_retry": {
+      "aligned_but_not_recovered": 3,
+      "aligned_candidates": 18,
+      "alignment_miss_bursts": 0,
+      "buffer_chips_per_offset": 96000,
+      "buffer_truncations": 37770,
+      "candidate_attempts": 24,
+      "enabled": true,
+      "endpoint": "tcp://127.0.0.1:55562",
+      "format": "signed int8 quantized phase difference",
+      "hard_failure_bursts_attempted": 8,
+      "phase_offset_delta": 1,
+      "quantization_scale": 40.0,
+      "recovered": 5,
+      "retry_timing_ms": {
+        "avg": 16.507188738614786,
+        "max": 49.774963001254946,
+        "min": 1.835422997828573,
+        "p50": 12.447732995497063,
+        "p95": 42.10311313800047,
+        "p99": 48.240593028604046,
+        "samples": 8
+      },
+      "samples": 697402809,
+      "scope": "hard CRC failures only",
+      "zmq_messages": 289218
+    },
+    "standard_stream": "full-rate differential phase bits; modulo-5 deinterleaved",
+    "unique": 122,
+    "zmq_messages": 302379
+  },
+  "run_id": 21133,
+  "schema": "bluebee-perf-rx-v2",
+  "throughput": {
+    "application_bit_s": 150.15384615384616,
+    "application_byte_s": 18.76923076923077,
+    "gross_bit_s": 300.3076923076923,
+    "gross_byte_s": 37.53846153846154,
+    "payload_len": 20,
+    "time_basis": "planned_tx_duration",
+    "time_s": 65,
+    "unique_basis": 122
+  },
+  "tx_plan": {
+    "duration_s": 65,
+    "expected_packets": 130,
+    "interval_us": 500000,
+    "sequence_scope": "0..129"
+  }
+}

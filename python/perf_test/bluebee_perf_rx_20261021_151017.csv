@@ -1,0 +1,1 @@
+time_utc,elapsed_s,fcs_ok,result,run_id,sequence,payload_len,phase_offset,phase_polarity,standard_ambiguity,standard_offset_rank,decode_method,soft_phase_offset,soft_phase_bias,soft_min_symbol_margin,soft_alignment_mismatches,prefix_symbol_errors,preamble_distance,frame_distance,phase_candidate_offsets,hard_frame_hex,frame_hex

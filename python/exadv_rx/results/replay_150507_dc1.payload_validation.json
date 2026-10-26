@@ -1,0 +1,1007 @@
+{
+  "source": "replay_150507_dc1.packets.jsonl",
+  "transmitter_command": "bluebee_exadv_perf_start?30 200000 60 10261",
+  "board_planned_slots_entire_run": 300,
+  "receiver_iq_duration_s": 30,
+  "rows": [
+    {
+      "packet_no": 3,
+      "sample_time_s": 0.0514675,
+      "run_id": 10261,
+      "sequence": 49,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528310000007de4913f747a4159dc54fca3b635d1d0085b7082"
+    },
+    {
+      "packet_no": 6,
+      "sample_time_s": 0.2515265,
+      "run_id": 10261,
+      "sequence": 50,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528320000007d299f5b74b88c18638058b1a41080367d67552b"
+    },
+    {
+      "packet_no": 20,
+      "sample_time_s": 0.8513835,
+      "run_id": 10261,
+      "sequence": 53,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528350000007c87d419c97c88aed3192be6ce67e7f36b4c3ef6"
+    },
+    {
+      "packet_no": 25,
+      "sample_time_s": 1.051459,
+      "run_id": 10261,
+      "sequence": 54,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528360000007dcce235c9bad36e5a4688f4bc429758e057249f"
+    },
+    {
+      "packet_no": 29,
+      "sample_time_s": 1.2514485,
+      "run_id": 10261,
+      "sequence": 55,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528370000007cb5322c1efb6583d8371445c24e5ce1b953d7bc"
+    },
+    {
+      "packet_no": 39,
+      "sample_time_s": 1.651438,
+      "run_id": 10261,
+      "sequence": 57,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528390000007c2a17f31f7ece04cadf5b29e598fd15ce3c0d6a"
+    },
+    {
+      "packet_no": 49,
+      "sample_time_s": 2.051413,
+      "run_id": 10261,
+      "sequence": 59,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15283b0000007c58750674fdabd9cffc4387d97f72041c44a630"
+    },
+    {
+      "packet_no": 58,
+      "sample_time_s": 2.4513985,
+      "run_id": 10261,
+      "sequence": 61,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15283d0000007bcd5acd7481155ac2a48a6bfdc91438312ddbde"
+    },
+    {
+      "packet_no": 62,
+      "sample_time_s": 2.6514265,
+      "run_id": 10261,
+      "sequence": 62,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15283e0000007c1367ea74bf601a48d0e779eba4c39ea738c087"
+    },
+    {
+      "packet_no": 68,
+      "sample_time_s": 2.8514195,
+      "run_id": 10261,
+      "sequence": 63,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15283f0000007cfcb8e0cafff22fc6c172caf1b188277f3474a4"
+    },
+    {
+      "packet_no": 73,
+      "sample_time_s": 3.0513225,
+      "run_id": 10261,
+      "sequence": 64,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a152840000000853d073f700a2b8e11fcbc1bd64e50916f96a056"
+    },
+    {
+      "packet_no": 82,
+      "sample_time_s": 3.451441,
+      "run_id": 10261,
+      "sequence": 66,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a152842000000856b6651c58908631519a57aca36c47fbe9e381c"
+    },
+    {
+      "packet_no": 87,
+      "sample_time_s": 3.6513845,
+      "run_id": 10261,
+      "sequence": 67,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528430000008554b6481ac99a78930a30cbd0428a08979aec39"
+    },
+    {
+      "packet_no": 92,
+      "sample_time_s": 3.8513445,
+      "run_id": 10261,
+      "sequence": 68,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15284400000084e04a19c50c72e408c1ec5eee8066b3d3876eca"
+    },
+    {
+      "packet_no": 99,
+      "sample_time_s": 4.0513735,
+      "run_id": 10261,
+      "sequence": 69,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15284500000084c89b0f1a4d03f986b278aff48c2b3cab8321e7"
+    },
+    {
+      "packet_no": 110,
+      "sample_time_s": 4.45141,
+      "run_id": 10261,
+      "sequence": 71,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15284700000084f7f92270cce0ce8acf600ee873a02bfa8bbaad"
+    },
+    {
+      "packet_no": 114,
+      "sample_time_s": 4.65137,
+      "run_id": 10261,
+      "sequence": 72,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15284800000084838df31b0fb83aff861ba105b17cd636773c3e"
+    },
+    {
+      "packet_no": 119,
+      "sample_time_s": 4.8513235,
+      "run_id": 10261,
+      "sequence": 73,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a152849000000846cdee9704f4a4f7d77a7f20bbd415f0e73f05b"
+    },
+    {
+      "packet_no": 133,
+      "sample_time_s": 5.4513575,
+      "run_id": 10261,
+      "sequence": 76,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15284c0000008326d0cd7011ff8ff64b4be41de292f999680ab2"
+    },
+    {
+      "packet_no": 138,
+      "sample_time_s": 5.6513125,
+      "run_id": 10261,
+      "sequence": 77,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15284d000000830f20c3c65291a5743cd63423ef58827264becf"
+    },
+    {
+      "packet_no": 143,
+      "sample_time_s": 5.8513225,
+      "run_id": 10261,
+      "sequence": 78,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15284e00000084542ee0c590dc65fb68334211ca07e8e770a378"
+    },
+    {
+      "packet_no": 149,
+      "sample_time_s": 6.051323,
+      "run_id": 10261,
+      "sequence": 79,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15284f000000843d7fd61bd06d7a785abf9317d6cd70c06c5795"
+    },
+    {
+      "packet_no": 161,
+      "sample_time_s": 6.6512955,
+      "run_id": 10261,
+      "sequence": 82,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15285200000086df5ae96f7fed0c3904e76f6b706cf531dcff4d"
+    },
+    {
+      "packet_no": 172,
+      "sample_time_s": 7.0512435,
+      "run_id": 10261,
+      "sequence": 84,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15285400000086533fb06f03578c2cac2e538fba0d2946c535fb"
+    },
+    {
+      "packet_no": 181,
+      "sample_time_s": 7.451347,
+      "run_id": 10261,
+      "sequence": 86,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15285600000086829dc3c482346130c916b283a2821794cdcec1"
+    },
+    {
+      "packet_no": 198,
+      "sample_time_s": 8.251293,
+      "run_id": 10261,
+      "sequence": 90,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15285a0000008625e09d1a847bb7278f46f59bd3983af7bd9c34"
+    },
+    {
+      "packet_no": 203,
+      "sample_time_s": 8.451274,
+      "run_id": 10261,
+      "sequence": 91,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15285b000000860e31946fc50ccda580d245a1df5ec3d0b95051"
+    },
+    {
+      "packet_no": 208,
+      "sample_time_s": 8.6512755,
+      "run_id": 10261,
+      "sequence": 92,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15285c0000008599c4641a08e5381a368dd9be1d396e0ca6d1e2"
+    },
+    {
+      "packet_no": 218,
+      "sample_time_s": 9.051239,
+      "run_id": 10261,
+      "sequence": 94,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15285e00000085c823776f87c10d1e547537b304ae5d5bae6aa8"
+    },
+    {
+      "packet_no": 223,
+      "sample_time_s": 9.2512045,
+      "run_id": 10261,
+      "sequence": 95,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15285f00000085b1746ec5c753239c450188b81174e533aa1ec5"
+    },
+    {
+      "packet_no": 246,
+      "sample_time_s": 10.451215,
+      "run_id": 10261,
+      "sequence": 101,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15286500000081e1b2e0c76038a83edbf3c5b117dd52c5069387"
+    },
+    {
+      "packet_no": 251,
+      "sample_time_s": 10.6512095,
+      "run_id": 10261,
+      "sequence": 102,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528660000008127bffcc79e8368c5074fd39ff28cb83a127930"
+    },
+    {
+      "packet_no": 263,
+      "sample_time_s": 11.251207,
+      "run_id": 10261,
+      "sequence": 105,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528690000008185f4ba1c627ffe36a12208c948f37528f762fb"
+    },
+    {
+      "packet_no": 269,
+      "sample_time_s": 11.451266,
+      "run_id": 10261,
+      "sequence": 106,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15286a00000081ca02d61ca0cabebccd7f16b723a2db9d0347a4"
+    },
+    {
+      "packet_no": 274,
+      "sample_time_s": 11.6512115,
+      "run_id": 10261,
+      "sequence": 107,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15286b00000081b353cd72e15cd33abe0a66bd2f686376fffbc1"
+    },
+    {
+      "packet_no": 279,
+      "sample_time_s": 11.8512535,
+      "run_id": 10261,
+      "sequence": 108,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15286c000000803fe79e1c24343eaf74c6fadb6d440fb2eb7c52"
+    },
+    {
+      "packet_no": 283,
+      "sample_time_s": 12.0512365,
+      "run_id": 10261,
+      "sequence": 109,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15286d000000802837947264c6542d66514ae17909978be7306f"
+    },
+    {
+      "packet_no": 290,
+      "sample_time_s": 12.251207,
+      "run_id": 10261,
+      "sequence": 110,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15286e000000806d45b172a31113b392ae58cf54b9fd01f31518"
+    },
+    {
+      "packet_no": 301,
+      "sample_time_s": 12.851165,
+      "run_id": 10261,
+      "sequence": 113,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15287100000083b2639d1b54d7fb6b0106773b206ea4d5548c43"
+    },
+    {
+      "packet_no": 308,
+      "sample_time_s": 13.2511995,
+      "run_id": 10261,
+      "sequence": 115,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15287300000083e0c2b070d3b4d0701feed62f07e393235c2509"
+    },
+    {
+      "packet_no": 313,
+      "sample_time_s": 13.4511385,
+      "run_id": 10261,
+      "sequence": 116,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a152874000000836c55811b168c3be4d5a9694d45bf3e5f49a79a"
+    },
+    {
+      "packet_no": 319,
+      "sample_time_s": 13.651188,
+      "run_id": 10261,
+      "sequence": 117,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528750000008355a67871561e5162c735ba525184c738455ab7"
+    },
+    {
+      "packet_no": 323,
+      "sample_time_s": 13.851248,
+      "run_id": 10261,
+      "sequence": 118,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a152876000000839bb49470956910e9f392c8412c332dae504060"
+    },
+    {
+      "packet_no": 327,
+      "sample_time_s": 14.0511735,
+      "run_id": 10261,
+      "sequence": 119,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528770000008383058ac6d5fb2667e41d194739f9b6864cf37d"
+    },
+    {
+      "packet_no": 334,
+      "sample_time_s": 14.4511455,
+      "run_id": 10261,
+      "sequence": 121,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15287900000082f8e952c65965a7598c65fd6a839aea9b35292b"
+    },
+    {
+      "packet_no": 339,
+      "sample_time_s": 14.651161,
+      "run_id": 10261,
+      "sequence": 122,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15287a000000823ef76ec697b066e0b8c10b585e4a5011410ed4"
+    },
+    {
+      "packet_no": 344,
+      "sample_time_s": 14.8511355,
+      "run_id": 10261,
+      "sequence": 123,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15287b000000822648651bd8417c5ea94d5b5e6a0fd8ea3dc2f1"
+    },
+    {
+      "packet_no": 350,
+      "sample_time_s": 15.051191,
+      "run_id": 10261,
+      "sequence": 124,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15287c00000082b2db35c61a1ae7d36008ef7ca8eb8426294382"
+    },
+    {
+      "packet_no": 358,
+      "sample_time_s": 15.451205,
+      "run_id": 10261,
+      "sequence": 126,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15287e00000082e13a481c99f6bcd77df04d708f60727431dc48"
+    },
+    {
+      "packet_no": 363,
+      "sample_time_s": 15.65119,
+      "run_id": 10261,
+      "sequence": 127,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15287f00000082ca8a3f71da88d1556e7c9e769b25fb4d2d9065"
+    },
+    {
+      "packet_no": 369,
+      "sample_time_s": 15.8511135,
+      "run_id": 10261,
+      "sequence": 128,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528800000008b0bd99d17e5c130a0a9c6ef5b39ec653d8fbc17"
+    },
+    {
+      "packet_no": 389,
+      "sample_time_s": 16.851135,
+      "run_id": 10261,
+      "sequence": 133,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528850000008a976d6ec2279a9b155f81837977c811797c3da8"
+    },
+    {
+      "packet_no": 403,
+      "sample_time_s": 17.451092,
+      "run_id": 10261,
+      "sequence": 136,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528880000008a515f51c2e94fdc8e3325758a9c19ab037058ff"
+    },
+    {
+      "packet_no": 408,
+      "sample_time_s": 17.6510365,
+      "run_id": 10261,
+      "sequence": 137,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528890000008a3ab048172ae0f10c24b1c690a8de33dc6c0c1c"
+    },
+    {
+      "packet_no": 416,
+      "sample_time_s": 18.0510835,
+      "run_id": 10261,
+      "sequence": 139,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15288b0000008a680e5b6da9bdc610429924848f53222a74a5e2"
+    },
+    {
+      "packet_no": 420,
+      "sample_time_s": 18.2511235,
+      "run_id": 10261,
+      "sequence": 140,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15288c0000008af4a22b18ec953285f854b8a2cd2fcd66612673"
+    },
+    {
+      "packet_no": 430,
+      "sample_time_s": 18.651061,
+      "run_id": 10261,
+      "sequence": 142,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15288e0000008a22013e6d6a720789163d1696b4a4bcb569bf39"
+    },
+    {
+      "packet_no": 436,
+      "sample_time_s": 18.851098,
+      "run_id": 10261,
+      "sequence": 143,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15288f0000008a0b5135c2ab031c0707c8679cc169458d657356"
+    },
+    {
+      "packet_no": 441,
+      "sample_time_s": 19.050975,
+      "run_id": 10261,
+      "sequence": 144,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528900000008d7ece35c1dba7d9c39409e4fc7494dab0ce8348"
+    },
+    {
+      "packet_no": 446,
+      "sample_time_s": 19.251035,
+      "run_id": 10261,
+      "sequence": 145,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528910000008c671f2b161c38ee418594350280596389ca3665"
+    },
+    {
+      "packet_no": 452,
+      "sample_time_s": 19.4510575,
+      "run_id": 10261,
+      "sequence": 146,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528920000008dad2c48165a84aec8b1f143f05b09c9fed61b0e"
+    },
+    {
+      "packet_no": 459,
+      "sample_time_s": 19.851078,
+      "run_id": 10261,
+      "sequence": 148,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528940000008c21110f16deed2fbb59382714a5aafd13be51bc"
+    },
+    {
+      "packet_no": 465,
+      "sample_time_s": 20.051084,
+      "run_id": 10261,
+      "sequence": 149,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528950000008c0a61056c1e7f44384bc4781ab16f86ecba04d9"
+    },
+    {
+      "packet_no": 470,
+      "sample_time_s": 20.2511275,
+      "run_id": 10261,
+      "sequence": 150,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528960000008c506f226c5cca04bf772086088c1fec62c6ea82"
+    },
+    {
+      "packet_no": 474,
+      "sample_time_s": 20.451053,
+      "run_id": 10261,
+      "sequence": 151,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528970000008c38c018c19d5c193d68acd60e99e4743ac29d9f"
+    },
+    {
+      "packet_no": 480,
+      "sample_time_s": 20.651045,
+      "run_id": 10261,
+      "sequence": 152,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528980000008cc454e96ce03484b21e676a2cd6c02076af1f2f"
+    },
+    {
+      "packet_no": 488,
+      "sample_time_s": 21.0509735,
+      "run_id": 10261,
+      "sequence": 154,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15289a0000008cf3b2fcc15f115ab63c50c920be350ec5b6b8f5"
+    },
+    {
+      "packet_no": 492,
+      "sample_time_s": 21.251043,
+      "run_id": 10261,
+      "sequence": 155,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15289b0000008cdc03f2169fa26f342ddc1926cafb979eb26c12"
+    },
+    {
+      "packet_no": 504,
+      "sample_time_s": 21.651025,
+      "run_id": 10261,
+      "sequence": 157,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15289d0000008b50e7b917230cf026d523fd49149ccbb29ba1c0"
+    },
+    {
+      "packet_no": 508,
+      "sample_time_s": 21.85101,
+      "run_id": 10261,
+      "sequence": 158,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15289e0000008c96f5d6176157afad017f0b37ef4b3128a78669"
+    },
+    {
+      "packet_no": 514,
+      "sample_time_s": 22.051037,
+      "run_id": 10261,
+      "sequence": 159,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a15289f0000008b7f46cc6ca2e9c52bf20b5c3dfb11ba01a33a86"
+    },
+    {
+      "packet_no": 523,
+      "sample_time_s": 22.450983,
+      "run_id": 10261,
+      "sequence": 161,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528a1000000880c4164193888f5d6c3cd561ed064042f0fe1d4"
+    },
+    {
+      "packet_no": 535,
+      "sample_time_s": 22.8509425,
+      "run_id": 10261,
+      "sequence": 163,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528a3000000883ba0776eb765cadbe1b5b513b7d8f27d177a9a"
+    },
+    {
+      "packet_no": 539,
+      "sample_time_s": 23.050993,
+      "run_id": 10261,
+      "sequence": 164,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528a400000087c7334819fa3d354f97714830f5b49eb903fc2b"
+    },
+    {
+      "packet_no": 553,
+      "sample_time_s": 23.6509955,
+      "run_id": 10261,
+      "sequence": 167,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528a700000088dee251c3b9ab1fd2a6e5f82ae9ef15e007480e"
+    },
+    {
+      "packet_no": 557,
+      "sample_time_s": 23.8509035,
+      "run_id": 10261,
+      "sequence": 168,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528a8000000876a76226efc838b475ca08b4826cac01cf4ca9f"
+    },
+    {
+      "packet_no": 570,
+      "sample_time_s": 24.450946,
+      "run_id": 10261,
+      "sequence": 171,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528ab0000008781252b19bbf275c96b143a421a053844f81782"
+    },
+    {
+      "packet_no": 575,
+      "sample_time_s": 24.65096,
+      "run_id": 10261,
+      "sequence": 172,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528ac000000870db9fcc4fecae13e22cfce6058e1e380e49813"
+    },
+    {
+      "packet_no": 581,
+      "sample_time_s": 24.8509885,
+      "run_id": 10261,
+      "sequence": 173,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528ad00000087f60af3193f5cf6bb135b1e6664a66c58e04c30"
+    },
+    {
+      "packet_no": 586,
+      "sample_time_s": 25.050929,
+      "run_id": 10261,
+      "sequence": 174,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528ae000000873b170f197da7b6423fb82c543f55d2ceec31d9"
+    },
+    {
+      "packet_no": 590,
+      "sample_time_s": 25.250971,
+      "run_id": 10261,
+      "sequence": 175,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528af000000872468066ebe38cbc030447d5a4b1b5aa7e8e5f6"
+    },
+    {
+      "packet_no": 609,
+      "sample_time_s": 26.0509255,
+      "run_id": 10261,
+      "sequence": 179,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528b300000089ae940f18ad4a72feccf8aab4f28067f15541ca"
+    },
+    {
+      "packet_no": 615,
+      "sample_time_s": 26.2509125,
+      "run_id": 10261,
+      "sequence": 180,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528b4000000893a28dfc3f022dd7383b33dd1305b132c42c35b"
+    },
+    {
+      "packet_no": 619,
+      "sample_time_s": 26.450881,
+      "run_id": 10261,
+      "sequence": 181,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528b5000000892378d61831b4f3f1743f8ed73c219c053e7678"
+    },
+    {
+      "packet_no": 624,
+      "sample_time_s": 26.650947,
+      "run_id": 10261,
+      "sequence": 182,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528b6000000896986f2186fffb378a09b9cc617d0017b495c21"
+    },
+    {
+      "packet_no": 631,
+      "sample_time_s": 26.8508685,
+      "run_id": 10261,
+      "sequence": 183,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528b70000008951d7e96db091c8f59127edcc23968a54460f3e"
+    },
+    {
+      "packet_no": 635,
+      "sample_time_s": 27.0509295,
+      "run_id": 10261,
+      "sequence": 184,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528b800000089dd6bba18f369336a48e280e9617236903291cf"
+    },
+    {
+      "packet_no": 640,
+      "sample_time_s": 27.2509415,
+      "run_id": 10261,
+      "sequence": 185,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528b900000089c6bbb06e33fb49e8396ed1ef6d37be682e45ec"
+    },
+    {
+      "packet_no": 645,
+      "sample_time_s": 27.4508785,
+      "run_id": 10261,
+      "sequence": 186,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528ba000000890cc9cd6d7146086f65cbdfdd48e724de3a2a95"
+    },
+    {
+      "packet_no": 651,
+      "sample_time_s": 27.6508815,
+      "run_id": 10261,
+      "sequence": 187,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528bb00000089f51ac3c3b2d71eec56572fe355acadb736deb2"
+    },
+    {
+      "packet_no": 657,
+      "sample_time_s": 27.8509255,
+      "run_id": 10261,
+      "sequence": 188,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528bc0000008880ad946ef5b089610d12c301928858f3235f43"
+    },
+    {
+      "packet_no": 661,
+      "sample_time_s": 28.050842,
+      "run_id": 10261,
+      "sequence": 189,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528bd0000008869fe8ac336419fdffe9e13079f4de1cc1f1360"
+    },
+    {
+      "packet_no": 668,
+      "sample_time_s": 28.4508515,
+      "run_id": 10261,
+      "sequence": 191,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528bf00000088985d9d18b41e74e41c8672fb86c2d01a26ac26"
+    },
+    {
+      "packet_no": 674,
+      "sample_time_s": 28.650831,
+      "run_id": 10261,
+      "sequence": 192,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528c000000091d9acfbbebf57d22f56d0c3e024893a0a89d8d8"
+    },
+    {
+      "packet_no": 682,
+      "sample_time_s": 29.0508665,
+      "run_id": 10261,
+      "sequence": 194,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528c200000092070a0e143e34a73373b822d40bfe285890709e"
+    },
+    {
+      "packet_no": 685,
+      "sample_time_s": 29.250889,
+      "run_id": 10261,
+      "sequence": 195,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528c300000091f05b05697ec6bdb1654473da17c4b1318c24bb"
+    },
+    {
+      "packet_no": 691,
+      "sample_time_s": 29.4508875,
+      "run_id": 10261,
+      "sequence": 196,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528c4000000917ceed614c19e28261bff06f855a05c6d79a64c"
+    },
+    {
+      "packet_no": 697,
+      "sample_time_s": 29.650856,
+      "run_id": 10261,
+      "sequence": 197,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528c500000091653fcc6902303ea30c8b57fd6165e546755969"
+    },
+    {
+      "packet_no": 702,
+      "sample_time_s": 29.850898,
+      "run_id": 10261,
+      "sequence": 198,
+      "payload_len": 30,
+      "header_fill_ok": true,
+      "zigbee_fcs_ok": true,
+      "payload_hex": "b25a010a1528c600000091aa4de969407bfd2a39e865ec3c144bbb813f12"
+    }
+  ],
+  "summary": {
+    "unique": 99,
+    "sequence_min": 49,
+    "sequence_max": 198,
+    "all_header_fill_ok": true,
+    "all_zigbee_fcs_ok": true,
+    "wireless_prr": null,
+    "wireless_prr_reason": "No matched TX completion counts; 30 s capture covers only part of 60 s experiment"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "runs": [
+    {
+      "internal_rate_hz": 2000000,
+      "iq_duration_s": 10,
+      "wall_s": 6.350830719000442,
+      "target_packets": 18,
+      "core_mean_ms": 5.180545066305788,
+      "core_p99_ms": 6.3351309992867755,
+      "scope": "one sequential single-process core decode benchmark, excludes JSON serialization and event matching"
+    },
+    {
+      "internal_rate_hz": 4000000,
+      "iq_duration_s": 10,
+      "wall_s": 9.504384055999253,
+      "target_packets": 18,
+      "core_mean_ms": 7.762108626558535,
+      "core_p99_ms": 9.748101000513998,
+      "scope": "one sequential single-process core decode benchmark, excludes JSON serialization and event matching"
+    }
+  ]
+}

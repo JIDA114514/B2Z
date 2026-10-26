@@ -1,0 +1,2455 @@
+{
+  "scope": "uncalibrated channel-band energy ratios: 100us bins in predicted packet vs prior0.2-1ms reference; not SNR, no claim of interferer identity",
+  "runs": [
+    {
+      "run_id": 10265,
+      "groups": {
+        "True": {
+          "n": 91,
+          "median_burst_energy_ratio_db": 18.068246568581806,
+          "median_peak_energy_ratio_db": 18.173391536447035,
+          "with_peak_above_reference_10db": 82,
+          "burst_peak_over_median_gt3db": 0,
+          "burst_peak_over_median_gt6db": 0,
+          "median_peak_over_median_db": 0.11698011114258833
+        },
+        "False": {
+          "n": 59,
+          "median_burst_energy_ratio_db": 17.926552227740913,
+          "median_peak_energy_ratio_db": 25.438702147725778,
+          "with_peak_above_reference_10db": 46,
+          "burst_peak_over_median_gt3db": 51,
+          "burst_peak_over_median_gt6db": 42,
+          "median_peak_over_median_db": 8.091227965041043
+        }
+      },
+      "rows": [
+        {
+          "sequence": 0,
+          "received": true,
+          "reference_power": 0.00010674043644891504,
+          "median_burst_db_over_reference": 8.524625825066156,
+          "max_burst_db_over_reference": 9.419553064295963,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 1,
+          "received": true,
+          "reference_power": 0.000765949318190493,
+          "median_burst_db_over_reference": -0.03572435672332597,
+          "max_burst_db_over_reference": 0.9023254293813067,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 2,
+          "received": true,
+          "reference_power": 4.197414030935164e-06,
+          "median_burst_db_over_reference": 22.544183469739977,
+          "max_burst_db_over_reference": 22.621013935711794,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 3,
+          "received": false,
+          "reference_power": 0.0005761608215604939,
+          "median_burst_db_over_reference": 1.3202658839281862,
+          "max_burst_db_over_reference": 6.533940097971753,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 4,
+          "received": false,
+          "reference_power": 4.822255585014662e-06,
+          "median_burst_db_over_reference": 22.129104889390028,
+          "max_burst_db_over_reference": 28.4742251781149,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 5,
+          "received": true,
+          "reference_power": 5.334276308243811e-06,
+          "median_burst_db_over_reference": 21.779398768593946,
+          "max_burst_db_over_reference": 21.854758459825415,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 6,
+          "received": false,
+          "reference_power": 0.0006031084961674258,
+          "median_burst_db_over_reference": 10.621718318550927,
+          "max_burst_db_over_reference": 13.380799121321987,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 7,
+          "received": true,
+          "reference_power": 3.834427759394121e-06,
+          "median_burst_db_over_reference": 23.207796985326805,
+          "max_burst_db_over_reference": 23.30333115198257,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 8,
+          "received": true,
+          "reference_power": 3.515903853231964e-06,
+          "median_burst_db_over_reference": 22.82237099564331,
+          "max_burst_db_over_reference": 22.878402733338696,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 9,
+          "received": false,
+          "reference_power": 0.0002252925776575417,
+          "median_burst_db_over_reference": 4.610273168487106,
+          "max_burst_db_over_reference": 10.750640876790085,
+          "burst_bins_above_reference_10db": 3
+        },
+        {
+          "sequence": 10,
+          "received": true,
+          "reference_power": 0.001492595355802763,
+          "median_burst_db_over_reference": -2.513242111957238,
+          "max_burst_db_over_reference": -2.4373615350728404,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 11,
+          "received": false,
+          "reference_power": 4.260836545072878e-06,
+          "median_burst_db_over_reference": 22.633339600277406,
+          "max_burst_db_over_reference": 26.734232904312954,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 12,
+          "received": true,
+          "reference_power": 4.0520740573818695e-06,
+          "median_burst_db_over_reference": 22.863710632527585,
+          "max_burst_db_over_reference": 22.918796416185977,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 13,
+          "received": true,
+          "reference_power": 0.0002219465238630408,
+          "median_burst_db_over_reference": 5.8452329719183,
+          "max_burst_db_over_reference": 5.953654234894059,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 14,
+          "received": false,
+          "reference_power": 4.090393691842631e-06,
+          "median_burst_db_over_reference": 22.861529815084772,
+          "max_burst_db_over_reference": 25.5842304213899,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 15,
+          "received": false,
+          "reference_power": 3.984514961000855e-06,
+          "median_burst_db_over_reference": 22.914651568720874,
+          "max_burst_db_over_reference": 26.588786752656404,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 16,
+          "received": false,
+          "reference_power": 5.379745840459079e-06,
+          "median_burst_db_over_reference": 21.337350930460698,
+          "max_burst_db_over_reference": 25.438702147725778,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 17,
+          "received": true,
+          "reference_power": 4.065782074008103e-06,
+          "median_burst_db_over_reference": 22.503294306957958,
+          "max_burst_db_over_reference": 22.603611425448037,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 18,
+          "received": true,
+          "reference_power": 4.27304317695466e-06,
+          "median_burst_db_over_reference": 21.903959943297032,
+          "max_burst_db_over_reference": 22.025948388959065,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 19,
+          "received": false,
+          "reference_power": 3.643428021199448e-06,
+          "median_burst_db_over_reference": 22.46851941004874,
+          "max_burst_db_over_reference": 30.40290961369368,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 20,
+          "received": true,
+          "reference_power": 5.2288793952623286e-06,
+          "median_burst_db_over_reference": 19.864821791678754,
+          "max_burst_db_over_reference": 20.01631643609545,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 21,
+          "received": true,
+          "reference_power": 5.104567452994811e-06,
+          "median_burst_db_over_reference": 19.192208293426614,
+          "max_burst_db_over_reference": 19.276104638486224,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 22,
+          "received": true,
+          "reference_power": 1.0141810540422014e-05,
+          "median_burst_db_over_reference": 16.03030762011028,
+          "max_burst_db_over_reference": 16.12952836147533,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 23,
+          "received": true,
+          "reference_power": 4.444628568629784e-06,
+          "median_burst_db_over_reference": 19.2610780471194,
+          "max_burst_db_over_reference": 19.412460290048003,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 24,
+          "received": true,
+          "reference_power": 3.98116131047416e-06,
+          "median_burst_db_over_reference": 19.571238545856602,
+          "max_burst_db_over_reference": 19.743088279903574,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 25,
+          "received": false,
+          "reference_power": 3.802743017652964e-06,
+          "median_burst_db_over_reference": 19.749866589253845,
+          "max_burst_db_over_reference": 28.21787441118775,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 26,
+          "received": true,
+          "reference_power": 4.208323056423253e-06,
+          "median_burst_db_over_reference": 19.678738388032706,
+          "max_burst_db_over_reference": 19.827738988123603,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 27,
+          "received": true,
+          "reference_power": 3.4859278313251342e-06,
+          "median_burst_db_over_reference": 20.143502488866865,
+          "max_burst_db_over_reference": 20.274144472072287,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 28,
+          "received": true,
+          "reference_power": 3.955291739451118e-06,
+          "median_burst_db_over_reference": 19.23209083292675,
+          "max_burst_db_over_reference": 19.396140260509235,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 29,
+          "received": true,
+          "reference_power": 3.954468018065602e-06,
+          "median_burst_db_over_reference": 19.526004270660156,
+          "max_burst_db_over_reference": 19.604823812094693,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 30,
+          "received": true,
+          "reference_power": 4.382686145517792e-06,
+          "median_burst_db_over_reference": 17.714572732827136,
+          "max_burst_db_over_reference": 17.831552843969725,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 31,
+          "received": true,
+          "reference_power": 4.4746768131247055e-06,
+          "median_burst_db_over_reference": 17.34371918553399,
+          "max_burst_db_over_reference": 17.49954654967829,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 32,
+          "received": true,
+          "reference_power": 4.671358956827378e-06,
+          "median_burst_db_over_reference": 17.179984403285943,
+          "max_burst_db_over_reference": 17.280797653412044,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 33,
+          "received": false,
+          "reference_power": 4.130707297789879e-06,
+          "median_burst_db_over_reference": 17.876722497045336,
+          "max_burst_db_over_reference": 29.063357336829235,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 34,
+          "received": true,
+          "reference_power": 3.755548554945744e-06,
+          "median_burst_db_over_reference": 18.104499944624234,
+          "max_burst_db_over_reference": 18.213303518353946,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 35,
+          "received": true,
+          "reference_power": 4.377272293308182e-06,
+          "median_burst_db_over_reference": 17.28648546845044,
+          "max_burst_db_over_reference": 17.467153491139026,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 36,
+          "received": true,
+          "reference_power": 0.0002727237718886534,
+          "median_burst_db_over_reference": -0.6739283119700716,
+          "max_burst_db_over_reference": -0.5309796046420673,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 37,
+          "received": false,
+          "reference_power": 0.0017069898921648011,
+          "median_burst_db_over_reference": -6.216325985637862,
+          "max_burst_db_over_reference": -1.9873407348586858,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 38,
+          "received": false,
+          "reference_power": 4.16684100335758e-06,
+          "median_burst_db_over_reference": 17.605446199746652,
+          "max_burst_db_over_reference": 28.299006168752037,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 39,
+          "received": true,
+          "reference_power": 4.045164572797631e-06,
+          "median_burst_db_over_reference": 17.660962408297305,
+          "max_burst_db_over_reference": 17.913824317605588,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 40,
+          "received": true,
+          "reference_power": 5.432804184205774e-06,
+          "median_burst_db_over_reference": 16.526309039462973,
+          "max_burst_db_over_reference": 16.619808855788612,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 41,
+          "received": true,
+          "reference_power": 3.816748880005924e-06,
+          "median_burst_db_over_reference": 17.989773868820876,
+          "max_burst_db_over_reference": 18.134659494294063,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 42,
+          "received": false,
+          "reference_power": 4.9779790272412975e-06,
+          "median_burst_db_over_reference": 17.07065374141783,
+          "max_burst_db_over_reference": 24.819947559707938,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 43,
+          "received": true,
+          "reference_power": 4.310094758842056e-06,
+          "median_burst_db_over_reference": 17.847347349573067,
+          "max_burst_db_over_reference": 18.61932334058719,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 44,
+          "received": true,
+          "reference_power": 3.7959831138475024e-06,
+          "median_burst_db_over_reference": 18.47204544630466,
+          "max_burst_db_over_reference": 18.60661473357161,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 45,
+          "received": true,
+          "reference_power": 3.912911816509405e-06,
+          "median_burst_db_over_reference": 18.384916901454655,
+          "max_burst_db_over_reference": 18.4919542874896,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 46,
+          "received": true,
+          "reference_power": 1.257182496300546e-05,
+          "median_burst_db_over_reference": 13.232376818400525,
+          "max_burst_db_over_reference": 13.338991035494907,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 47,
+          "received": true,
+          "reference_power": 3.889750887278857e-06,
+          "median_burst_db_over_reference": 18.31160664788814,
+          "max_burst_db_over_reference": 18.496222839151173,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 48,
+          "received": true,
+          "reference_power": 4.248385594910374e-06,
+          "median_burst_db_over_reference": 18.055428659456368,
+          "max_burst_db_over_reference": 18.1630641996397,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 49,
+          "received": false,
+          "reference_power": 4.22180417465364e-06,
+          "median_burst_db_over_reference": 17.9933586575496,
+          "max_burst_db_over_reference": 33.14386884227177,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 50,
+          "received": false,
+          "reference_power": 5.101209084692565e-06,
+          "median_burst_db_over_reference": 17.37750252938777,
+          "max_burst_db_over_reference": 24.2218419160275,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 51,
+          "received": false,
+          "reference_power": 3.904860203231782e-06,
+          "median_burst_db_over_reference": 18.779866189933585,
+          "max_burst_db_over_reference": 23.48268092806424,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 52,
+          "received": false,
+          "reference_power": 1.0161604809936889e-05,
+          "median_burst_db_over_reference": 14.459182284096885,
+          "max_burst_db_over_reference": 21.439165885144106,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 53,
+          "received": true,
+          "reference_power": 8.759094489221125e-06,
+          "median_burst_db_over_reference": 15.024678068887823,
+          "max_burst_db_over_reference": 15.120650626833335,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 54,
+          "received": true,
+          "reference_power": 3.5743940309378507e-06,
+          "median_burst_db_over_reference": 18.724837956178607,
+          "max_burst_db_over_reference": 18.797429950140486,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 55,
+          "received": true,
+          "reference_power": 3.9658956500049345e-06,
+          "median_burst_db_over_reference": 18.157012109720554,
+          "max_burst_db_over_reference": 18.253625077467447,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 56,
+          "received": true,
+          "reference_power": 5.474871766353269e-06,
+          "median_burst_db_over_reference": 16.659545147193818,
+          "max_burst_db_over_reference": 16.773676424869564,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 57,
+          "received": false,
+          "reference_power": 3.990575832484735e-06,
+          "median_burst_db_over_reference": 22.06572072250593,
+          "max_burst_db_over_reference": 47.65167036586779,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 58,
+          "received": false,
+          "reference_power": 3.606678984899689e-06,
+          "median_burst_db_over_reference": 18.614242065721758,
+          "max_burst_db_over_reference": 18.924740831671087,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 59,
+          "received": true,
+          "reference_power": 4.45419824326214e-06,
+          "median_burst_db_over_reference": 17.760818695218635,
+          "max_burst_db_over_reference": 17.989652123226673,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 60,
+          "received": true,
+          "reference_power": 4.564918030143885e-06,
+          "median_burst_db_over_reference": 17.637481393186903,
+          "max_burst_db_over_reference": 17.776545491533682,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 61,
+          "received": true,
+          "reference_power": 4.357032975247525e-06,
+          "median_burst_db_over_reference": 17.80322414381082,
+          "max_burst_db_over_reference": 17.90914021903653,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 62,
+          "received": true,
+          "reference_power": 4.450391289824294e-06,
+          "median_burst_db_over_reference": 17.700315713960993,
+          "max_burst_db_over_reference": 17.792648676054437,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 63,
+          "received": true,
+          "reference_power": 4.408943854778737e-06,
+          "median_burst_db_over_reference": 17.64829942811132,
+          "max_burst_db_over_reference": 17.743792473892526,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 64,
+          "received": false,
+          "reference_power": 4.235001658896901e-06,
+          "median_burst_db_over_reference": 17.846815144459153,
+          "max_burst_db_over_reference": 23.071427062806617,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 65,
+          "received": true,
+          "reference_power": 3.5362045477222864e-06,
+          "median_burst_db_over_reference": 18.554340505296373,
+          "max_burst_db_over_reference": 18.68719649929219,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 66,
+          "received": false,
+          "reference_power": 3.8387750600097554e-06,
+          "median_burst_db_over_reference": 18.270519108119,
+          "max_burst_db_over_reference": 24.60223749165341,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 67,
+          "received": true,
+          "reference_power": 0.0025952537019882363,
+          "median_burst_db_over_reference": -10.08955881325074,
+          "max_burst_db_over_reference": -9.99583762330454,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 68,
+          "received": true,
+          "reference_power": 3.910894417412019e-06,
+          "median_burst_db_over_reference": 18.16306736123435,
+          "max_burst_db_over_reference": 18.266636812308995,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 69,
+          "received": true,
+          "reference_power": 4.084243619253882e-06,
+          "median_burst_db_over_reference": 17.980044204370923,
+          "max_burst_db_over_reference": 18.053018787208416,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 70,
+          "received": true,
+          "reference_power": 4.154815308612518e-06,
+          "median_burst_db_over_reference": 17.896793724368646,
+          "max_burst_db_over_reference": 18.009075487404665,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 71,
+          "received": false,
+          "reference_power": 4.260200411341941e-06,
+          "median_burst_db_over_reference": 17.75531014411467,
+          "max_burst_db_over_reference": 31.374775691243777,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 72,
+          "received": true,
+          "reference_power": 4.234951269107804e-06,
+          "median_burst_db_over_reference": 17.874162894890702,
+          "max_burst_db_over_reference": 17.948979656823546,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 73,
+          "received": true,
+          "reference_power": 4.125206003258038e-06,
+          "median_burst_db_over_reference": 17.941826236761756,
+          "max_burst_db_over_reference": 17.98257559290456,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 74,
+          "received": false,
+          "reference_power": 4.228745005432017e-06,
+          "median_burst_db_over_reference": 18.07008532560166,
+          "max_burst_db_over_reference": 23.42159039135747,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 75,
+          "received": true,
+          "reference_power": 3.9745475673572125e-06,
+          "median_burst_db_over_reference": 18.112952546048245,
+          "max_burst_db_over_reference": 18.173391536447035,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 76,
+          "received": true,
+          "reference_power": 3.834859264209554e-06,
+          "median_burst_db_over_reference": 18.385757010422708,
+          "max_burst_db_over_reference": 18.67521475112017,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 77,
+          "received": true,
+          "reference_power": 0.00016372571603743687,
+          "median_burst_db_over_reference": 2.0870053509533792,
+          "max_burst_db_over_reference": 2.1980701266781506,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 78,
+          "received": true,
+          "reference_power": 3.898564644798974e-06,
+          "median_burst_db_over_reference": 18.291549694835275,
+          "max_burst_db_over_reference": 18.559656481941474,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 79,
+          "received": false,
+          "reference_power": 3.926441180136633e-06,
+          "median_burst_db_over_reference": 18.3360373499295,
+          "max_burst_db_over_reference": 31.656622785937376,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 80,
+          "received": false,
+          "reference_power": 0.0003289076114704355,
+          "median_burst_db_over_reference": -0.8442187684781941,
+          "max_burst_db_over_reference": 5.288121277069628,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 81,
+          "received": true,
+          "reference_power": 4.026277191334639e-06,
+          "median_burst_db_over_reference": 18.248131720160192,
+          "max_burst_db_over_reference": 18.34336651044236,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 82,
+          "received": false,
+          "reference_power": 4.261663742368191e-06,
+          "median_burst_db_over_reference": 17.96771098311046,
+          "max_burst_db_over_reference": 31.7538924972462,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 83,
+          "received": false,
+          "reference_power": 4.18900639680998e-06,
+          "median_burst_db_over_reference": 23.21511409724029,
+          "max_burst_db_over_reference": 29.870485668691966,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 84,
+          "received": false,
+          "reference_power": 0.0021312524517636522,
+          "median_burst_db_over_reference": -9.062392486480844,
+          "max_burst_db_over_reference": 3.7536363443798177,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 85,
+          "received": true,
+          "reference_power": 4.333812961578443e-06,
+          "median_burst_db_over_reference": 17.782478120611216,
+          "max_burst_db_over_reference": 17.881359974935343,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 86,
+          "received": false,
+          "reference_power": 0.0003719938296641725,
+          "median_burst_db_over_reference": -1.4567503424833184,
+          "max_burst_db_over_reference": 10.119284293974548,
+          "burst_bins_above_reference_10db": 1
+        },
+        {
+          "sequence": 87,
+          "received": true,
+          "reference_power": 3.6760084345085517e-06,
+          "median_burst_db_over_reference": 18.504831931503315,
+          "max_burst_db_over_reference": 18.614606860608966,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 88,
+          "received": true,
+          "reference_power": 0.00014098183433152844,
+          "median_burst_db_over_reference": 2.7354624771796847,
+          "max_burst_db_over_reference": 2.9101736169384114,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 89,
+          "received": true,
+          "reference_power": 3.83752497630697e-06,
+          "median_burst_db_over_reference": 18.281366195293746,
+          "max_burst_db_over_reference": 18.409258001930603,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 90,
+          "received": true,
+          "reference_power": 7.467301233582153e-06,
+          "median_burst_db_over_reference": 15.375713220550544,
+          "max_burst_db_over_reference": 15.529260826245658,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 91,
+          "received": true,
+          "reference_power": 3.8914711046275635e-06,
+          "median_burst_db_over_reference": 18.27077500326141,
+          "max_burst_db_over_reference": 18.432306811859277,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 92,
+          "received": true,
+          "reference_power": 3.955075696925765e-05,
+          "median_burst_db_over_reference": 8.312017475529837,
+          "max_burst_db_over_reference": 8.40421283441167,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 93,
+          "received": false,
+          "reference_power": 3.988376624644167e-06,
+          "median_burst_db_over_reference": 18.382058017998855,
+          "max_burst_db_over_reference": 29.536664982624963,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 94,
+          "received": true,
+          "reference_power": 3.8145029008545538e-06,
+          "median_burst_db_over_reference": 18.384963793769195,
+          "max_burst_db_over_reference": 18.63900363046121,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 95,
+          "received": true,
+          "reference_power": 3.922907772984726e-06,
+          "median_burst_db_over_reference": 18.358223985629152,
+          "max_burst_db_over_reference": 18.57602487027264,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 96,
+          "received": true,
+          "reference_power": 4.255324902782859e-06,
+          "median_burst_db_over_reference": 17.972413017226504,
+          "max_burst_db_over_reference": 18.042691673257067,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 97,
+          "received": true,
+          "reference_power": 5.152296738211933e-06,
+          "median_burst_db_over_reference": 17.151697520171943,
+          "max_burst_db_over_reference": 17.268125770677216,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 98,
+          "received": true,
+          "reference_power": 1.3449803900898359e-05,
+          "median_burst_db_over_reference": 13.001445529134717,
+          "max_burst_db_over_reference": 13.133368767514726,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 99,
+          "received": false,
+          "reference_power": 0.00027015997112893943,
+          "median_burst_db_over_reference": 0.8905941219552662,
+          "max_burst_db_over_reference": 9.55503041529163,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 100,
+          "received": true,
+          "reference_power": 3.808450803153672e-06,
+          "median_burst_db_over_reference": 18.494881657264585,
+          "max_burst_db_over_reference": 18.76982156093898,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 101,
+          "received": false,
+          "reference_power": 5.257615342490706e-06,
+          "median_burst_db_over_reference": 17.152588571177937,
+          "max_burst_db_over_reference": 32.54833936854353,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 102,
+          "received": true,
+          "reference_power": 4.482274552951194e-06,
+          "median_burst_db_over_reference": 17.874138879783622,
+          "max_burst_db_over_reference": 17.929433927708963,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 103,
+          "received": false,
+          "reference_power": 4.093986252483431e-06,
+          "median_burst_db_over_reference": 18.422042896166225,
+          "max_burst_db_over_reference": 31.106320412670932,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 104,
+          "received": false,
+          "reference_power": 6.91187197959516e-06,
+          "median_burst_db_over_reference": 16.118278994652936,
+          "max_burst_db_over_reference": 23.8359770869741,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 105,
+          "received": true,
+          "reference_power": 4.133194548408856e-06,
+          "median_burst_db_over_reference": 18.423351161216807,
+          "max_burst_db_over_reference": 18.710800487258027,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 106,
+          "received": false,
+          "reference_power": 3.7118077770092677e-06,
+          "median_burst_db_over_reference": 18.855444020068564,
+          "max_burst_db_over_reference": 31.122633789674005,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 107,
+          "received": true,
+          "reference_power": 7.125192917514261e-06,
+          "median_burst_db_over_reference": 16.04897294792158,
+          "max_burst_db_over_reference": 16.23860072373599,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 108,
+          "received": true,
+          "reference_power": 4.159850574827703e-06,
+          "median_burst_db_over_reference": 18.382354457480126,
+          "max_burst_db_over_reference": 18.5817835741115,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 109,
+          "received": false,
+          "reference_power": 3.827279225129194e-06,
+          "median_burst_db_over_reference": 18.72968790614118,
+          "max_burst_db_over_reference": 30.2468718508013,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 110,
+          "received": false,
+          "reference_power": 4.351704092943587e-06,
+          "median_burst_db_over_reference": 18.14362727686637,
+          "max_burst_db_over_reference": 20.29263548758751,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 111,
+          "received": true,
+          "reference_power": 3.7922693264311063e-06,
+          "median_burst_db_over_reference": 18.738724197904272,
+          "max_burst_db_over_reference": 18.832078279496706,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 112,
+          "received": false,
+          "reference_power": 3.929787588957379e-06,
+          "median_burst_db_over_reference": 18.556476698521706,
+          "max_burst_db_over_reference": 31.70243330166575,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 113,
+          "received": false,
+          "reference_power": 0.048915133319041175,
+          "median_burst_db_over_reference": -22.323718852307163,
+          "max_burst_db_over_reference": -20.705929287730733,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 114,
+          "received": false,
+          "reference_power": 7.670930295382122e-06,
+          "median_burst_db_over_reference": 15.658914768955693,
+          "max_burst_db_over_reference": 23.945720130368287,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 115,
+          "received": false,
+          "reference_power": 6.611836525048789e-06,
+          "median_burst_db_over_reference": 16.332704322472573,
+          "max_burst_db_over_reference": 25.92179381477876,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 116,
+          "received": true,
+          "reference_power": 3.891706484839545e-06,
+          "median_burst_db_over_reference": 18.55819777908001,
+          "max_burst_db_over_reference": 18.735894124043686,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 117,
+          "received": true,
+          "reference_power": 5.49748926622301e-06,
+          "median_burst_db_over_reference": 17.041317909846086,
+          "max_burst_db_over_reference": 17.18221309436683,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 118,
+          "received": true,
+          "reference_power": 3.7235567071861397e-06,
+          "median_burst_db_over_reference": 18.75405900100901,
+          "max_burst_db_over_reference": 18.872772173077312,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 119,
+          "received": true,
+          "reference_power": 4.032426884669305e-06,
+          "median_burst_db_over_reference": 18.35421151542531,
+          "max_burst_db_over_reference": 18.4880659167224,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 120,
+          "received": false,
+          "reference_power": 0.004852430460182787,
+          "median_burst_db_over_reference": -12.437542853986773,
+          "max_burst_db_over_reference": 1.3916180751231677,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 121,
+          "received": false,
+          "reference_power": 4.076206370574365e-06,
+          "median_burst_db_over_reference": 18.380824020424292,
+          "max_burst_db_over_reference": 27.286714238852305,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 122,
+          "received": false,
+          "reference_power": 0.002885903229059017,
+          "median_burst_db_over_reference": -10.084385808641192,
+          "max_burst_db_over_reference": -1.6411166597569058,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 123,
+          "received": true,
+          "reference_power": 4.042587574413047e-06,
+          "median_burst_db_over_reference": 18.35812680072815,
+          "max_burst_db_over_reference": 18.440224535909156,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 124,
+          "received": false,
+          "reference_power": 3.940270562719667e-06,
+          "median_burst_db_over_reference": 18.55845620819679,
+          "max_burst_db_over_reference": 30.166058824859313,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 125,
+          "received": true,
+          "reference_power": 3.842261340268305e-06,
+          "median_burst_db_over_reference": 18.58352763386152,
+          "max_burst_db_over_reference": 18.773020296501674,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 126,
+          "received": false,
+          "reference_power": 4.165334844772699e-06,
+          "median_burst_db_over_reference": 22.930311444719415,
+          "max_burst_db_over_reference": 31.732314545507855,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 127,
+          "received": false,
+          "reference_power": 3.651173353790347e-06,
+          "median_burst_db_over_reference": 18.980354021246153,
+          "max_burst_db_over_reference": 32.913865160286015,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 128,
+          "received": false,
+          "reference_power": 4.993137126781497e-06,
+          "median_burst_db_over_reference": 17.7180788708189,
+          "max_burst_db_over_reference": 17.89967518400038,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 129,
+          "received": false,
+          "reference_power": 0.0027493324146131925,
+          "median_burst_db_over_reference": -9.677574876320644,
+          "max_burst_db_over_reference": -7.34650972620681,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 130,
+          "received": false,
+          "reference_power": 0.0010241456038032294,
+          "median_burst_db_over_reference": -5.315904879642339,
+          "max_burst_db_over_reference": 7.669529782266174,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 131,
+          "received": false,
+          "reference_power": 4.805288568813023e-06,
+          "median_burst_db_over_reference": 22.53915532122752,
+          "max_burst_db_over_reference": 30.561048254004717,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 132,
+          "received": false,
+          "reference_power": 0.0001426087457725392,
+          "median_burst_db_over_reference": 3.0964475579130504,
+          "max_burst_db_over_reference": 6.184016424231808,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 133,
+          "received": true,
+          "reference_power": 4.757806371322066e-06,
+          "median_burst_db_over_reference": 17.917976633712254,
+          "max_burst_db_over_reference": 17.992565029228334,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 134,
+          "received": false,
+          "reference_power": 0.0014856516979511476,
+          "median_burst_db_over_reference": -7.126808962798771,
+          "max_burst_db_over_reference": 4.820908088289836,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 135,
+          "received": true,
+          "reference_power": 4.4413973386291335e-06,
+          "median_burst_db_over_reference": 18.068246568581806,
+          "max_burst_db_over_reference": 18.14659641785789,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 136,
+          "received": false,
+          "reference_power": 5.434540091350417e-06,
+          "median_burst_db_over_reference": 23.077981798267267,
+          "max_burst_db_over_reference": 29.41808804163829,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 137,
+          "received": true,
+          "reference_power": 4.4377501469832014e-06,
+          "median_burst_db_over_reference": 17.95480103261047,
+          "max_burst_db_over_reference": 18.09592204874104,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 138,
+          "received": false,
+          "reference_power": 4.571336060625804e-06,
+          "median_burst_db_over_reference": 30.239382740720796,
+          "max_burst_db_over_reference": 33.142647984831626,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 139,
+          "received": true,
+          "reference_power": 4.15471973974914e-06,
+          "median_burst_db_over_reference": 18.22895471114262,
+          "max_burst_db_over_reference": 18.387678054160318,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 140,
+          "received": true,
+          "reference_power": 6.471797787386721e-06,
+          "median_burst_db_over_reference": 16.37370547513177,
+          "max_burst_db_over_reference": 16.545141928121147,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 141,
+          "received": false,
+          "reference_power": 0.0028721186639465318,
+          "median_burst_db_over_reference": -10.003738809952992,
+          "max_burst_db_over_reference": 3.6837754605749407,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 142,
+          "received": true,
+          "reference_power": 4.229962407021343e-06,
+          "median_burst_db_over_reference": 18.202611027923027,
+          "max_burst_db_over_reference": 18.332337775893713,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 143,
+          "received": true,
+          "reference_power": 8.902600581614663e-06,
+          "median_burst_db_over_reference": 14.966531796752715,
+          "max_burst_db_over_reference": 15.066829168581826,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 144,
+          "received": true,
+          "reference_power": 1.615424958172106e-05,
+          "median_burst_db_over_reference": 12.404962926410882,
+          "max_burst_db_over_reference": 12.523073858952449,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 145,
+          "received": false,
+          "reference_power": 4.595297931125047e-05,
+          "median_burst_db_over_reference": 8.002665309404637,
+          "max_burst_db_over_reference": 16.09389327444568,
+          "burst_bins_above_reference_10db": 5
+        },
+        {
+          "sequence": 146,
+          "received": true,
+          "reference_power": 4.0833129488890436e-06,
+          "median_burst_db_over_reference": 18.341254658814087,
+          "max_burst_db_over_reference": 18.464808212773857,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 147,
+          "received": true,
+          "reference_power": 3.840885765930065e-06,
+          "median_burst_db_over_reference": 18.58182392262169,
+          "max_burst_db_over_reference": 18.685309397848854,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 148,
+          "received": false,
+          "reference_power": 4.539476046341827e-06,
+          "median_burst_db_over_reference": 17.926552227740913,
+          "max_burst_db_over_reference": 33.18091069538952,
+          "burst_bins_above_reference_10db": 14
+        },
+        {
+          "sequence": 149,
+          "received": true,
+          "reference_power": 5.437332947363501e-06,
+          "median_burst_db_over_reference": 17.02555415459041,
+          "max_burst_db_over_reference": 17.14363445437964,
+          "burst_bins_above_reference_10db": 14
+        }
+      ]
+    },
+    {
+      "run_id": 10266,
+      "groups": {
+        "True": {
+          "n": 61,
+          "median_burst_energy_ratio_db": 18.83380499289627,
+          "median_peak_energy_ratio_db": 18.978728787559717,
+          "with_peak_above_reference_10db": 56,
+          "burst_peak_over_median_gt3db": 0,
+          "burst_peak_over_median_gt6db": 0,
+          "median_peak_over_median_db": 0.12675589193687387
+        },
+        "False": {
+          "n": 89,
+          "median_burst_energy_ratio_db": 18.789713034569623,
+          "median_peak_energy_ratio_db": 23.913746643385018,
+          "with_peak_above_reference_10db": 82,
+          "burst_peak_over_median_gt3db": 70,
+          "burst_peak_over_median_gt6db": 47,
+          "median_peak_over_median_db": 6.454131467569464
+        }
+      },
+      "rows": [
+        {
+          "sequence": 0,
+          "received": false,
+          "reference_power": 5.113276257625103e-06,
+          "median_burst_db_over_reference": 19.318755637481452,
+          "max_burst_db_over_reference": 28.056890858488323,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 1,
+          "received": false,
+          "reference_power": 0.00012133240672644339,
+          "median_burst_db_over_reference": 5.73494880855543,
+          "max_burst_db_over_reference": 11.183342628566235,
+          "burst_bins_above_reference_10db": 4
+        },
+        {
+          "sequence": 2,
+          "received": true,
+          "reference_power": 4.693673381105942e-06,
+          "median_burst_db_over_reference": 19.53427616988295,
+          "max_burst_db_over_reference": 19.843857175228603,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 3,
+          "received": false,
+          "reference_power": 4.314421175303142e-06,
+          "median_burst_db_over_reference": 19.721444669004413,
+          "max_burst_db_over_reference": 30.797491051299133,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 4,
+          "received": false,
+          "reference_power": 8.961375822751193e-06,
+          "median_burst_db_over_reference": 17.60101134673115,
+          "max_burst_db_over_reference": 29.545119152925615,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 5,
+          "received": false,
+          "reference_power": 5.6724602473748974e-06,
+          "median_burst_db_over_reference": 18.98704442002369,
+          "max_burst_db_over_reference": 24.0708236309807,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 6,
+          "received": false,
+          "reference_power": 4.231118677558281e-06,
+          "median_burst_db_over_reference": 19.497244164379996,
+          "max_burst_db_over_reference": 32.46583061634756,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 7,
+          "received": false,
+          "reference_power": 4.0304285831352225e-06,
+          "median_burst_db_over_reference": 19.623923697914364,
+          "max_burst_db_over_reference": 25.54490550101191,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 8,
+          "received": true,
+          "reference_power": 1.8898011968234754e-05,
+          "median_burst_db_over_reference": 12.76353413945574,
+          "max_burst_db_over_reference": 12.884681604984795,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 9,
+          "received": false,
+          "reference_power": 0.005863631912014038,
+          "median_burst_db_over_reference": -12.093280743265124,
+          "max_burst_db_over_reference": -0.5281750229983522,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 10,
+          "received": false,
+          "reference_power": 4.4691395678260885e-06,
+          "median_burst_db_over_reference": 19.115316422239232,
+          "max_burst_db_over_reference": 35.72740946413593,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 11,
+          "received": false,
+          "reference_power": 7.526811686740324e-06,
+          "median_burst_db_over_reference": 16.52761025724497,
+          "max_burst_db_over_reference": 27.620931158703325,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 12,
+          "received": false,
+          "reference_power": 7.567057745592897e-06,
+          "median_burst_db_over_reference": 28.777717622006325,
+          "max_burst_db_over_reference": 30.170918603315663,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 13,
+          "received": true,
+          "reference_power": 3.893987969387739e-06,
+          "median_burst_db_over_reference": 19.685625650253932,
+          "max_burst_db_over_reference": 20.030809367186187,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 14,
+          "received": true,
+          "reference_power": 4.816326521808948e-06,
+          "median_burst_db_over_reference": 18.743837780322956,
+          "max_burst_db_over_reference": 18.895797787710883,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 15,
+          "received": true,
+          "reference_power": 0.0019322112645541614,
+          "median_burst_db_over_reference": -7.295816415893547,
+          "max_burst_db_over_reference": -7.183411123959145,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 16,
+          "received": false,
+          "reference_power": 4.663649961493153e-06,
+          "median_burst_db_over_reference": 18.80485671092875,
+          "max_burst_db_over_reference": 23.913746643385018,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 17,
+          "received": false,
+          "reference_power": 0.0015023580641038807,
+          "median_burst_db_over_reference": -6.900118401613207,
+          "max_burst_db_over_reference": 1.4563097585806362,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 18,
+          "received": false,
+          "reference_power": 4.5125687886947615e-06,
+          "median_burst_db_over_reference": 18.85560588582842,
+          "max_burst_db_over_reference": 27.999888971879834,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 19,
+          "received": true,
+          "reference_power": 5.702364598884265e-06,
+          "median_burst_db_over_reference": 17.63424206854125,
+          "max_burst_db_over_reference": 17.791031076962994,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 20,
+          "received": true,
+          "reference_power": 8.202181383446762e-06,
+          "median_burst_db_over_reference": 16.60244634206198,
+          "max_burst_db_over_reference": 16.781025692045645,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 21,
+          "received": true,
+          "reference_power": 4.458642781505762e-06,
+          "median_burst_db_over_reference": 19.299036276980576,
+          "max_burst_db_over_reference": 19.42716200006635,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 22,
+          "received": true,
+          "reference_power": 4.149443012422154e-06,
+          "median_burst_db_over_reference": 18.920350899099468,
+          "max_burst_db_over_reference": 19.04710679103634,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 23,
+          "received": true,
+          "reference_power": 4.065630601017671e-06,
+          "median_burst_db_over_reference": 18.39717212004059,
+          "max_burst_db_over_reference": 18.592658763787536,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 24,
+          "received": true,
+          "reference_power": 4.040418011055488e-06,
+          "median_burst_db_over_reference": 19.706256124555143,
+          "max_burst_db_over_reference": 19.85807497027413,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 25,
+          "received": true,
+          "reference_power": 4.40296402734413e-06,
+          "median_burst_db_over_reference": 19.74521446709103,
+          "max_burst_db_over_reference": 19.925182719378384,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 26,
+          "received": true,
+          "reference_power": 4.133222707273431e-06,
+          "median_burst_db_over_reference": 19.5577753278372,
+          "max_burst_db_over_reference": 19.67195672944175,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 27,
+          "received": false,
+          "reference_power": 4.79759952730648e-06,
+          "median_burst_db_over_reference": 18.877043752188815,
+          "max_burst_db_over_reference": 24.2681438596461,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 28,
+          "received": false,
+          "reference_power": 5.217394153363052e-06,
+          "median_burst_db_over_reference": 19.064712990121343,
+          "max_burst_db_over_reference": 29.267846456754615,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 29,
+          "received": false,
+          "reference_power": 0.0003599780192645291,
+          "median_burst_db_over_reference": -0.111120932635686,
+          "max_burst_db_over_reference": 11.510943122577704,
+          "burst_bins_above_reference_10db": 2
+        },
+        {
+          "sequence": 30,
+          "received": false,
+          "reference_power": 4.069930182008823e-06,
+          "median_burst_db_over_reference": 19.76014890635596,
+          "max_burst_db_over_reference": 36.05347701496286,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 31,
+          "received": true,
+          "reference_power": 3.968608456353702e-06,
+          "median_burst_db_over_reference": 19.811880299870214,
+          "max_burst_db_over_reference": 19.895987359215347,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 32,
+          "received": false,
+          "reference_power": 7.22620044712316e-06,
+          "median_burst_db_over_reference": 17.38147165702643,
+          "max_burst_db_over_reference": 19.142530244286103,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 33,
+          "received": false,
+          "reference_power": 1.5053776066638312e-05,
+          "median_burst_db_over_reference": 13.906917825614528,
+          "max_burst_db_over_reference": 16.74686997818432,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 34,
+          "received": false,
+          "reference_power": 3.940962055508565e-06,
+          "median_burst_db_over_reference": 19.64838220191735,
+          "max_burst_db_over_reference": 23.86746789554494,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 35,
+          "received": true,
+          "reference_power": 8.433433053334913e-06,
+          "median_burst_db_over_reference": 16.388126134984404,
+          "max_burst_db_over_reference": 16.49017569353985,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 36,
+          "received": true,
+          "reference_power": 3.248011362605474e-05,
+          "median_burst_db_over_reference": 10.53426954594675,
+          "max_burst_db_over_reference": 10.6269695824129,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 37,
+          "received": false,
+          "reference_power": 4.0697166090126155e-06,
+          "median_burst_db_over_reference": 19.926471103007405,
+          "max_burst_db_over_reference": 34.857568781694745,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 38,
+          "received": false,
+          "reference_power": 6.111330998662918e-06,
+          "median_burst_db_over_reference": 17.749348607418604,
+          "max_burst_db_over_reference": 26.778219930438002,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 39,
+          "received": false,
+          "reference_power": 7.718084103945748e-06,
+          "median_burst_db_over_reference": 16.60467221797188,
+          "max_burst_db_over_reference": 20.568033140493185,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 40,
+          "received": false,
+          "reference_power": 4.6152786313650405e-06,
+          "median_burst_db_over_reference": 18.848119363975634,
+          "max_burst_db_over_reference": 30.488099929121546,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 41,
+          "received": true,
+          "reference_power": 1.3667085383863513e-05,
+          "median_burst_db_over_reference": 14.130839276091681,
+          "max_burst_db_over_reference": 14.250975202936234,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 42,
+          "received": false,
+          "reference_power": 4.1188313973665e-06,
+          "median_burst_db_over_reference": 20.894614258660184,
+          "max_burst_db_over_reference": 29.188940041825543,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 43,
+          "received": true,
+          "reference_power": 4.12226275325586e-06,
+          "median_burst_db_over_reference": 19.444247283564327,
+          "max_burst_db_over_reference": 19.5865045143757,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 44,
+          "received": false,
+          "reference_power": 0.0007280938781004786,
+          "median_burst_db_over_reference": -2.695545716140569,
+          "max_burst_db_over_reference": 18.776179014882768,
+          "burst_bins_above_reference_10db": 1
+        },
+        {
+          "sequence": 45,
+          "received": true,
+          "reference_power": 3.6637159137717556e-06,
+          "median_burst_db_over_reference": 19.809941440905327,
+          "max_burst_db_over_reference": 19.89398459832143,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 46,
+          "received": false,
+          "reference_power": 2.1568656011074284e-05,
+          "median_burst_db_over_reference": 12.092851675531708,
+          "max_burst_db_over_reference": 24.079821865607247,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 47,
+          "received": true,
+          "reference_power": 4.272626513997356e-06,
+          "median_burst_db_over_reference": 19.13681819831745,
+          "max_burst_db_over_reference": 19.342093581938677,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 48,
+          "received": false,
+          "reference_power": 3.993856859763792e-06,
+          "median_burst_db_over_reference": 19.28664678937571,
+          "max_burst_db_over_reference": 24.607862269571733,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 49,
+          "received": true,
+          "reference_power": 4.990238553084584e-06,
+          "median_burst_db_over_reference": 17.988903050410734,
+          "max_burst_db_over_reference": 18.16215799780457,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 50,
+          "received": true,
+          "reference_power": 3.883538967158308e-06,
+          "median_burst_db_over_reference": 19.068393938828493,
+          "max_burst_db_over_reference": 19.268331169933873,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 51,
+          "received": false,
+          "reference_power": 4.029206673774975e-06,
+          "median_burst_db_over_reference": 18.67169788749816,
+          "max_burst_db_over_reference": 21.263135319403183,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 52,
+          "received": true,
+          "reference_power": 4.169167224304047e-06,
+          "median_burst_db_over_reference": 19.20503471600311,
+          "max_burst_db_over_reference": 19.33797443899444,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 53,
+          "received": false,
+          "reference_power": 4.195900011279339e-06,
+          "median_burst_db_over_reference": 19.12972886511969,
+          "max_burst_db_over_reference": 19.273526920546484,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 54,
+          "received": false,
+          "reference_power": 6.470270634864885e-06,
+          "median_burst_db_over_reference": 16.775302155020416,
+          "max_burst_db_over_reference": 28.35269876527926,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 55,
+          "received": false,
+          "reference_power": 3.975086070650986e-06,
+          "median_burst_db_over_reference": 19.078018409118023,
+          "max_burst_db_over_reference": 19.72711209992186,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 56,
+          "received": false,
+          "reference_power": 0.001704502231738887,
+          "median_burst_db_over_reference": 0.5762077023073893,
+          "max_burst_db_over_reference": 1.2580552607850173,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 57,
+          "received": false,
+          "reference_power": 5.890543273605436e-06,
+          "median_burst_db_over_reference": 17.332815763162856,
+          "max_burst_db_over_reference": 23.501629311796925,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 58,
+          "received": false,
+          "reference_power": 6.642990118778613e-06,
+          "median_burst_db_over_reference": 16.828414690181035,
+          "max_burst_db_over_reference": 24.092501465177598,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 59,
+          "received": false,
+          "reference_power": 4.0631051866815406e-06,
+          "median_burst_db_over_reference": 19.332344382294405,
+          "max_burst_db_over_reference": 24.234965055837648,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 60,
+          "received": true,
+          "reference_power": 4.301751550701818e-06,
+          "median_burst_db_over_reference": 19.55721075638894,
+          "max_burst_db_over_reference": 19.637305131992886,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 61,
+          "received": true,
+          "reference_power": 5.726805957959267e-06,
+          "median_burst_db_over_reference": 18.243840526444004,
+          "max_burst_db_over_reference": 18.334065598346697,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 62,
+          "received": false,
+          "reference_power": 3.8040450085011755e-06,
+          "median_burst_db_over_reference": 19.798903451944234,
+          "max_burst_db_over_reference": 25.589704199329873,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 63,
+          "received": true,
+          "reference_power": 2.400949450691148e-05,
+          "median_burst_db_over_reference": 11.637609451759365,
+          "max_burst_db_over_reference": 11.93381184255022,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 64,
+          "received": false,
+          "reference_power": 4.614432494910208e-06,
+          "median_burst_db_over_reference": 18.91089668166025,
+          "max_burst_db_over_reference": 20.436763837200004,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 65,
+          "received": false,
+          "reference_power": 0.003831003196613192,
+          "median_burst_db_over_reference": -10.22784973906046,
+          "max_burst_db_over_reference": 11.29740456964415,
+          "burst_bins_above_reference_10db": 1
+        },
+        {
+          "sequence": 66,
+          "received": true,
+          "reference_power": 0.0048475173776225565,
+          "median_burst_db_over_reference": -10.856233549730256,
+          "max_burst_db_over_reference": -10.737352577822135,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 67,
+          "received": false,
+          "reference_power": 4.158968769565214e-06,
+          "median_burst_db_over_reference": 19.48283808235303,
+          "max_burst_db_over_reference": 32.376869179658875,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 68,
+          "received": true,
+          "reference_power": 4.276829167060744e-06,
+          "median_burst_db_over_reference": 19.529305975559975,
+          "max_burst_db_over_reference": 19.724514261245197,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 69,
+          "received": true,
+          "reference_power": 3.684735124913916e-06,
+          "median_burst_db_over_reference": 19.817724034916132,
+          "max_burst_db_over_reference": 19.886124181613184,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 70,
+          "received": true,
+          "reference_power": 4.284743073365609e-06,
+          "median_burst_db_over_reference": 19.052072846595166,
+          "max_burst_db_over_reference": 19.15290666913918,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 71,
+          "received": true,
+          "reference_power": 5.033184315799286e-06,
+          "median_burst_db_over_reference": 18.12677349880824,
+          "max_burst_db_over_reference": 18.23716936541026,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 72,
+          "received": true,
+          "reference_power": 4.140599690724817e-06,
+          "median_burst_db_over_reference": 18.969221990653246,
+          "max_burst_db_over_reference": 19.08529704255348,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 73,
+          "received": false,
+          "reference_power": 4.040416747706528e-06,
+          "median_burst_db_over_reference": 19.140886419037926,
+          "max_burst_db_over_reference": 20.35737214320185,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 74,
+          "received": true,
+          "reference_power": 4.081144240144794e-06,
+          "median_burst_db_over_reference": 18.901432780696737,
+          "max_burst_db_over_reference": 18.981173490031843,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 75,
+          "received": false,
+          "reference_power": 4.071148043356711e-06,
+          "median_burst_db_over_reference": 19.305197937528483,
+          "max_burst_db_over_reference": 25.171757890088607,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 76,
+          "received": false,
+          "reference_power": 3.5069493779662246e-06,
+          "median_burst_db_over_reference": 19.83151965722185,
+          "max_burst_db_over_reference": 38.619196234430085,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 77,
+          "received": false,
+          "reference_power": 4.040104212517222e-06,
+          "median_burst_db_over_reference": 19.401894745806864,
+          "max_burst_db_over_reference": 22.6051019507399,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 78,
+          "received": true,
+          "reference_power": 5.569468431462634e-06,
+          "median_burst_db_over_reference": 17.748859339209307,
+          "max_burst_db_over_reference": 17.873803685180523,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 79,
+          "received": false,
+          "reference_power": 4.557507134493893e-06,
+          "median_burst_db_over_reference": 18.789713034569623,
+          "max_burst_db_over_reference": 26.937721816540588,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 80,
+          "received": false,
+          "reference_power": 8.271019098951904e-05,
+          "median_burst_db_over_reference": 6.519815526956936,
+          "max_burst_db_over_reference": 27.896086465143735,
+          "burst_bins_above_reference_10db": 3
+        },
+        {
+          "sequence": 81,
+          "received": false,
+          "reference_power": 4.266308858292536e-06,
+          "median_burst_db_over_reference": 18.42349794901285,
+          "max_burst_db_over_reference": 18.558591046773994,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 82,
+          "received": false,
+          "reference_power": 0.013974926575607012,
+          "median_burst_db_over_reference": -15.85499330832288,
+          "max_burst_db_over_reference": 0.7191864498885825,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 83,
+          "received": false,
+          "reference_power": 8.12926690514301e-06,
+          "median_burst_db_over_reference": 16.563518601660064,
+          "max_burst_db_over_reference": 19.95062942088431,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 84,
+          "received": false,
+          "reference_power": 0.015715271250492085,
+          "median_burst_db_over_reference": -6.161484275275388,
+          "max_burst_db_over_reference": 0.2926471922940761,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 85,
+          "received": false,
+          "reference_power": 3.704597469345056e-06,
+          "median_burst_db_over_reference": 18.922158229478313,
+          "max_burst_db_over_reference": 22.35760241487657,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 86,
+          "received": true,
+          "reference_power": 4.301259369755182e-06,
+          "median_burst_db_over_reference": 18.231736930028895,
+          "max_burst_db_over_reference": 18.51237747139268,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 87,
+          "received": false,
+          "reference_power": 5.099017313230961e-06,
+          "median_burst_db_over_reference": 17.592961159424554,
+          "max_burst_db_over_reference": 35.89512107433329,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 88,
+          "received": true,
+          "reference_power": 4.310466161262669e-06,
+          "median_burst_db_over_reference": 18.78675956151191,
+          "max_burst_db_over_reference": 18.897935488754428,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 89,
+          "received": false,
+          "reference_power": 4.14917892511724e-06,
+          "median_burst_db_over_reference": 19.180714480884774,
+          "max_burst_db_over_reference": 21.53512082167942,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 90,
+          "received": false,
+          "reference_power": 4.2816295665790145e-06,
+          "median_burst_db_over_reference": 19.000247505196754,
+          "max_burst_db_over_reference": 30.496123903318203,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 91,
+          "received": false,
+          "reference_power": 4.635732726176501e-06,
+          "median_burst_db_over_reference": 18.251870507777404,
+          "max_burst_db_over_reference": 31.686391147362535,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 92,
+          "received": false,
+          "reference_power": 3.900382992037022e-06,
+          "median_burst_db_over_reference": 18.95100293829769,
+          "max_burst_db_over_reference": 32.753761772450964,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 93,
+          "received": false,
+          "reference_power": 6.024345514952034e-06,
+          "median_burst_db_over_reference": 17.61603927284731,
+          "max_burst_db_over_reference": 21.47004106177105,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 94,
+          "received": false,
+          "reference_power": 4.087786051019026e-06,
+          "median_burst_db_over_reference": 18.77631134123703,
+          "max_burst_db_over_reference": 21.68644599930857,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 95,
+          "received": true,
+          "reference_power": 0.0008048206621704523,
+          "median_burst_db_over_reference": -4.562835556355394,
+          "max_burst_db_over_reference": -4.48059564614394,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 96,
+          "received": true,
+          "reference_power": 6.77261297553905e-06,
+          "median_burst_db_over_reference": 16.62984447057447,
+          "max_burst_db_over_reference": 16.840067098788182,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 97,
+          "received": false,
+          "reference_power": 4.3787150242620554e-06,
+          "median_burst_db_over_reference": 35.013409478085215,
+          "max_burst_db_over_reference": 36.17502302347386,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 98,
+          "received": false,
+          "reference_power": 3.932983228304753e-06,
+          "median_burst_db_over_reference": 19.106476565379467,
+          "max_burst_db_over_reference": 20.072169293674136,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 99,
+          "received": false,
+          "reference_power": 3.953404286271842e-06,
+          "median_burst_db_over_reference": 18.704998354327984,
+          "max_burst_db_over_reference": 23.73429063360121,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 100,
+          "received": false,
+          "reference_power": 3.6359352851339957e-06,
+          "median_burst_db_over_reference": 35.89124987810162,
+          "max_burst_db_over_reference": 36.95012490202743,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 101,
+          "received": true,
+          "reference_power": 3.964407733043725e-06,
+          "median_burst_db_over_reference": 19.546291634043097,
+          "max_burst_db_over_reference": 19.67084947603589,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 102,
+          "received": true,
+          "reference_power": 3.6386656395029783e-06,
+          "median_burst_db_over_reference": 19.426440697280405,
+          "max_burst_db_over_reference": 19.523061624785665,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 103,
+          "received": true,
+          "reference_power": 4.0743654626123885e-06,
+          "median_burst_db_over_reference": 19.149040226108326,
+          "max_burst_db_over_reference": 19.281465927525613,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 104,
+          "received": true,
+          "reference_power": 3.926361942780214e-06,
+          "median_burst_db_over_reference": 19.274820653300615,
+          "max_burst_db_over_reference": 19.370461513485683,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 105,
+          "received": true,
+          "reference_power": 4.401972534995611e-06,
+          "median_burst_db_over_reference": 19.18178947586125,
+          "max_burst_db_over_reference": 19.27222878446917,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 106,
+          "received": false,
+          "reference_power": 4.800538336898784e-06,
+          "median_burst_db_over_reference": 18.849162508657063,
+          "max_burst_db_over_reference": 20.192390890125722,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 107,
+          "received": true,
+          "reference_power": 5.458591134849862e-06,
+          "median_burst_db_over_reference": 17.99316526417642,
+          "max_burst_db_over_reference": 18.16478024046836,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 108,
+          "received": true,
+          "reference_power": 3.6220484257805608e-06,
+          "median_burst_db_over_reference": 19.47498899761015,
+          "max_burst_db_over_reference": 19.656347772279524,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 109,
+          "received": false,
+          "reference_power": 3.962447498724324e-06,
+          "median_burst_db_over_reference": 18.941437130098613,
+          "max_burst_db_over_reference": 26.45436351100127,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 110,
+          "received": true,
+          "reference_power": 4.627358856446952e-06,
+          "median_burst_db_over_reference": 18.83380499289627,
+          "max_burst_db_over_reference": 18.97565866008525,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 111,
+          "received": false,
+          "reference_power": 0.0012002861452469601,
+          "median_burst_db_over_reference": -5.675694390702044,
+          "max_burst_db_over_reference": 12.920601969953044,
+          "burst_bins_above_reference_10db": 2
+        },
+        {
+          "sequence": 112,
+          "received": true,
+          "reference_power": 9.724549355007885e-06,
+          "median_burst_db_over_reference": 15.36693509228406,
+          "max_burst_db_over_reference": 15.496578580322225,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 113,
+          "received": true,
+          "reference_power": 4.189103230908225e-06,
+          "median_burst_db_over_reference": 18.852221830534134,
+          "max_burst_db_over_reference": 18.978728787559717,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 114,
+          "received": false,
+          "reference_power": 4.293758436346271e-06,
+          "median_burst_db_over_reference": 18.878714861544026,
+          "max_burst_db_over_reference": 30.614204530470303,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 115,
+          "received": true,
+          "reference_power": 4.09657092438846e-06,
+          "median_burst_db_over_reference": 18.931930290362775,
+          "max_burst_db_over_reference": 19.075462600927228,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 116,
+          "received": false,
+          "reference_power": 7.958846824079776e-05,
+          "median_burst_db_over_reference": 6.01423028423773,
+          "max_burst_db_over_reference": 19.10381729848728,
+          "burst_bins_above_reference_10db": 4
+        },
+        {
+          "sequence": 117,
+          "received": true,
+          "reference_power": 3.812979990588847e-06,
+          "median_burst_db_over_reference": 19.620676752088354,
+          "max_burst_db_over_reference": 19.70980547813282,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 118,
+          "received": true,
+          "reference_power": 5.782061788188882e-06,
+          "median_burst_db_over_reference": 18.012750533241224,
+          "max_burst_db_over_reference": 18.131253788003942,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 119,
+          "received": false,
+          "reference_power": 6.297129880807158e-06,
+          "median_burst_db_over_reference": 17.222305522531077,
+          "max_burst_db_over_reference": 20.644121741622058,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 120,
+          "received": false,
+          "reference_power": 4.088250882703737e-06,
+          "median_burst_db_over_reference": 19.021283211497757,
+          "max_burst_db_over_reference": 31.222029780588826,
+          "burst_bins_above_reference_10db": 16
+        },
+        {
+          "sequence": 121,
+          "received": true,
+          "reference_power": 3.785282598001015e-06,
+          "median_burst_db_over_reference": 19.77800958611878,
+          "max_burst_db_over_reference": 19.95185916869047,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 122,
+          "received": false,
+          "reference_power": 4.5102967459459835e-06,
+          "median_burst_db_over_reference": 17.93527256797434,
+          "max_burst_db_over_reference": 22.280326901167818,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 123,
+          "received": false,
+          "reference_power": 5.1098945727009886e-06,
+          "median_burst_db_over_reference": 17.289789013356437,
+          "max_burst_db_over_reference": 23.707745445766378,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 124,
+          "received": false,
+          "reference_power": 4.708935051832927e-06,
+          "median_burst_db_over_reference": 18.171499249028457,
+          "max_burst_db_over_reference": 22.591959364999667,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 125,
+          "received": true,
+          "reference_power": 3.848256449136517e-06,
+          "median_burst_db_over_reference": 18.805642947637388,
+          "max_burst_db_over_reference": 18.88491870573587,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 126,
+          "received": false,
+          "reference_power": 3.91591661930412e-06,
+          "median_burst_db_over_reference": 17.85980858266687,
+          "max_burst_db_over_reference": 20.718098498831793,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 127,
+          "received": false,
+          "reference_power": 3.6867692381288926e-06,
+          "median_burst_db_over_reference": 17.975250270269424,
+          "max_burst_db_over_reference": 31.649930881443723,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 128,
+          "received": false,
+          "reference_power": 3.986449331016395e-06,
+          "median_burst_db_over_reference": 18.518500217862083,
+          "max_burst_db_over_reference": 31.590918824286554,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 129,
+          "received": false,
+          "reference_power": 4.190133065911711e-06,
+          "median_burst_db_over_reference": 18.492149355470985,
+          "max_burst_db_over_reference": 27.029602283361484,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 130,
+          "received": false,
+          "reference_power": 3.5008577325526477e-06,
+          "median_burst_db_over_reference": 19.451553964401715,
+          "max_burst_db_over_reference": 31.3599463201707,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 131,
+          "received": false,
+          "reference_power": 3.6027639216419e-06,
+          "median_burst_db_over_reference": 19.17286587566036,
+          "max_burst_db_over_reference": 23.718345869355616,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 132,
+          "received": true,
+          "reference_power": 3.750127300648098e-06,
+          "median_burst_db_over_reference": 19.36891380893004,
+          "max_burst_db_over_reference": 19.48380851826636,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 133,
+          "received": false,
+          "reference_power": 5.918387332906839e-06,
+          "median_burst_db_over_reference": 17.121517636089383,
+          "max_burst_db_over_reference": 22.237402945438205,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 134,
+          "received": true,
+          "reference_power": 0.0006875070104090781,
+          "median_burst_db_over_reference": -3.7180537122001827,
+          "max_burst_db_over_reference": -3.6082079955284634,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 135,
+          "received": false,
+          "reference_power": 0.0026271471948153885,
+          "median_burst_db_over_reference": -9.434964087571663,
+          "max_burst_db_over_reference": -5.313563665635956,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 136,
+          "received": false,
+          "reference_power": 6.385714849603706e-05,
+          "median_burst_db_over_reference": 6.695131944332174,
+          "max_burst_db_over_reference": 20.00572815662219,
+          "burst_bins_above_reference_10db": 7
+        },
+        {
+          "sequence": 137,
+          "received": true,
+          "reference_power": 2.6349785782448662e-05,
+          "median_burst_db_over_reference": 10.534576819360419,
+          "max_burst_db_over_reference": 11.382951261355467,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 138,
+          "received": true,
+          "reference_power": 4.35519599188644e-06,
+          "median_burst_db_over_reference": 18.680911485963602,
+          "max_burst_db_over_reference": 19.14330342655208,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 139,
+          "received": true,
+          "reference_power": 4.720148339168416e-06,
+          "median_burst_db_over_reference": 18.361345465526927,
+          "max_burst_db_over_reference": 18.46424826244902,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 140,
+          "received": false,
+          "reference_power": 4.356491554073495e-06,
+          "median_burst_db_over_reference": 18.238947391128068,
+          "max_burst_db_over_reference": 22.851292387765657,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 141,
+          "received": true,
+          "reference_power": 4.111956878335343e-06,
+          "median_burst_db_over_reference": 18.752129948104415,
+          "max_burst_db_over_reference": 18.968388305911525,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 142,
+          "received": false,
+          "reference_power": 0.0004804807258623238,
+          "median_burst_db_over_reference": -1.6168415108214393,
+          "max_burst_db_over_reference": -0.15160504141018777,
+          "burst_bins_above_reference_10db": 0
+        },
+        {
+          "sequence": 143,
+          "received": false,
+          "reference_power": 4.182055872681661e-06,
+          "median_burst_db_over_reference": 18.94804751723362,
+          "max_burst_db_over_reference": 31.57030679848628,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 144,
+          "received": false,
+          "reference_power": 0.0005214846257936686,
+          "median_burst_db_over_reference": -2.5861509822985775,
+          "max_burst_db_over_reference": 15.719514909372194,
+          "burst_bins_above_reference_10db": 4
+        },
+        {
+          "sequence": 145,
+          "received": true,
+          "reference_power": 4.65159522556392e-06,
+          "median_burst_db_over_reference": 18.346225193668605,
+          "max_burst_db_over_reference": 18.489409341416028,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 146,
+          "received": false,
+          "reference_power": 3.950770147776543e-06,
+          "median_burst_db_over_reference": 19.471743621538753,
+          "max_burst_db_over_reference": 20.6911689727368,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 147,
+          "received": false,
+          "reference_power": 3.975389396658354e-06,
+          "median_burst_db_over_reference": 19.50589265776098,
+          "max_burst_db_over_reference": 45.70657959233225,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 148,
+          "received": false,
+          "reference_power": 3.7809697580179402e-06,
+          "median_burst_db_over_reference": 18.99351278728423,
+          "max_burst_db_over_reference": 28.82024157551969,
+          "burst_bins_above_reference_10db": 17
+        },
+        {
+          "sequence": 149,
+          "received": true,
+          "reference_power": 0.00010946079676450218,
+          "median_burst_db_over_reference": 4.52854296343245,
+          "max_burst_db_over_reference": 4.7608272732322385,
+          "burst_bins_above_reference_10db": 0
+        }
+      ]
+    }
+  ]
+}

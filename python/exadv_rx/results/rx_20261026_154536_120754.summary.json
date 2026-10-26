@@ -1,0 +1,143 @@
+{
+  "schema": "exadv_rx_v2",
+  "receiver_version": "2026-10-26-dc1",
+  "start_utc": "2026-10-26T07:45:36.121131+00:00",
+  "end_utc": "2026-10-26T07:46:06.356166+00:00",
+  "status": "complete",
+  "error": null,
+  "config": {
+    "channels": [
+      39
+    ],
+    "whitening_channels": [
+      39
+    ],
+    "sample_rate": 8000000,
+    "center_hz": 2480000000.0,
+    "iq_file": null,
+    "format": "ci8",
+    "serial": null,
+    "lna": 24,
+    "vga": 20,
+    "amp": false,
+    "duration": 30.0,
+    "block_samples": 65536,
+    "queue_blocks": 64,
+    "stall_timeout": 10,
+    "sync_threshold": 0.84,
+    "dc_block_hz": 1000,
+    "pair_tolerance_us": 20,
+    "save_iq": true,
+    "output": null,
+    "quiet": true
+  },
+  "capture_command": [
+    "/usr/bin/hackrf_transfer",
+    "-r",
+    "-",
+    "-f",
+    "2480000000",
+    "-s",
+    "8000000",
+    "-l",
+    "24",
+    "-g",
+    "20",
+    "-a",
+    "0",
+    "-p",
+    "0",
+    "-n",
+    "240000000"
+  ],
+  "capture_returncode": 0,
+  "capture_stats": {
+    "bytes_read": 480000000,
+    "queue_high_water": 2
+  },
+  "counts": {
+    "clipped_components": 1028,
+    "samples_processed": 240000000,
+    "packets": 677,
+    "primary": 571,
+    "aux_ptr_unsupported_phy": 133,
+    "same_channel_auxiliary_diagnostic": 106
+  },
+  "channels": {
+    "39": {
+      "sync_candidates": 9888,
+      "rejected_candidates": 9142,
+      "packets": 677,
+      "crc_failure_candidates": 69
+    }
+  },
+  "matched_events": 0,
+  "expired_primary": 569,
+  "pending_primary": 2,
+  "wall_duration_s": 30.23502774499866,
+  "processed_sample_duration_s": 30.0,
+  "processing_ms_recent": {
+    "samples": 3664,
+    "mean": 4.993759158833994,
+    "p99": 6.972700130154403,
+    "max": 10.494572999959928
+  },
+  "stderr_tail": [
+    "samples_to_xfer 240000000/240Mio",
+    "Stop with Ctrl-C",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -29.5 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.2 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.9 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.1 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.8 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.3 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.9 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.1 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.4 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.7 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.2 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.3 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.6 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.1 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.4 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.7 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.4 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.4 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.2 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.9 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.7 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.9 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.7 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.5 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.0 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.3 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.1 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.7 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.4 dBfs",
+    "16.3 MB / 1.000 sec = 16.3 MB/second, average power -31.1 dBfs",
+    " 0.3 MB / 0.016 sec = 16.3 MB/second, average power -36.7 dBfs",
+    "",
+    "Exiting...",
+    "Total time: 30.01621 s",
+    "hackrf_stop_rx() done",
+    "hackrf_close() done",
+    "hackrf_exit() done",
+    "exit"
+  ],
+  "files": {
+    "packets": "/home/jida/Desktop/antsdr/B2Z/python/exadv_rx/results/rx_20261026_154536_120754.packets.jsonl",
+    "events": "/home/jida/Desktop/antsdr/B2Z/python/exadv_rx/results/rx_20261026_154536_120754.events.jsonl",
+    "summary": "/home/jida/Desktop/antsdr/B2Z/python/exadv_rx/results/rx_20261026_154536_120754.summary.json",
+    "text": "/home/jida/Desktop/antsdr/B2Z/python/exadv_rx/results/rx_20261026_154536_120754.summary.txt",
+    "stderr": "/home/jida/Desktop/antsdr/B2Z/python/exadv_rx/results/rx_20261026_154536_120754.hackrf.log",
+    "iq": "/home/jida/Desktop/antsdr/B2Z/python/exadv_rx/results/rx_20261026_154536_120754.ci8"
+  },
+  "limitations": [
+    "LE 1M only; fixed RF capture, no host-timed frequency hopping",
+    "DC blocker/filter and demodulation timing require calibration before synchronization claims",
+    "sample timestamps are relative to capture, not hardware/UTC timestamps",
+    "HackRF/USB sample losses may be unobservable in raw IQ; no guaranteed gap-free timeline",
+    "CRC-failure counts refer to sync candidates, not uniquely identified transmitted packets",
+    "no PRR without independently supplied TX counts and matched observation window"
+  ]
+}

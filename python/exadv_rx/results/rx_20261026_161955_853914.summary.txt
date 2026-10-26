@@ -1,0 +1,12 @@
+Status: complete
+Error: None
+CRC-valid exadv packets: 811
+Counts: {'clipped_components': 0, 'samples_processed': 320000000, 'packets': 811, 'primary': 720, 'aux_ptr_unsupported_phy': 132, 'same_channel_auxiliary_diagnostic': 91}
+Matched primary/auxiliary events: 0
+Same-channel diagnostic pairs (not AuxPtr compliant): 79
+Processed IQ: 40.000000 s; wall: 40.230 s
+Application queue overflow: 0
+AuxPtr pointing to unsupported PHY: 132
+PRR: N/A (TX count/window not merged)
+Timing: relative nominal IQ sample timeline; USB gaps are not ruled out.
+JSON summary: /home/jida/Desktop/antsdr/B2Z/python/exadv_rx/results/rx_20261026_161955_853914.summary.json

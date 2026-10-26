@@ -1,0 +1,94 @@
+{
+  "schema": "exadv_rx_v3",
+  "receiver_version": "2026-10-26-window-retry1-diagnostic4M",
+  "start_utc": "2026-10-26T08:57:45.090940+00:00",
+  "end_utc": "2026-10-26T08:58:26.661798+00:00",
+  "status": "complete",
+  "error": null,
+  "config": {
+    "channels": [
+      39
+    ],
+    "whitening_channels": [
+      39
+    ],
+    "sample_rate": 8000000,
+    "center_hz": 2480000000.0,
+    "iq_file": "python/exadv_rx/results/rx_20261026_161955_853914.ci8",
+    "format": "ci8",
+    "serial": null,
+    "lna": 24,
+    "vga": 20,
+    "amp": false,
+    "duration": 0.0,
+    "block_samples": 65536,
+    "queue_blocks": 64,
+    "stall_timeout": 10,
+    "sync_threshold": 0.84,
+    "dc_block_hz": 1000,
+    "timing_retry": true,
+    "channel_cutoff_hz": 850000,
+    "pair_tolerance_us": 20,
+    "diagnostic_pairs": true,
+    "diagnostic_pair_window_us": 2000,
+    "save_iq": false,
+    "output": "python/exadv_rx/results/assess_10265_full4m",
+    "quiet": true
+  },
+  "capture_command": null,
+  "capture_returncode": null,
+  "capture_stats": {
+    "bytes_read": 640000000,
+    "queue_high_water": 64
+  },
+  "counts": {
+    "clipped_components": 0,
+    "samples_processed": 320000000,
+    "packets": 816,
+    "primary": 724,
+    "aux_ptr_unsupported_phy": 133,
+    "same_channel_auxiliary_diagnostic": 92
+  },
+  "channels": {
+    "39": {
+      "sync_candidates": 12657,
+      "rejected_candidates": 11749,
+      "packets": 816,
+      "hard_crc_failure_candidates": 92,
+      "timing_retry_attempts": 525,
+      "crc_failure_candidates": 92
+    }
+  },
+  "matched_events": 0,
+  "expired_primary": 723,
+  "diagnostic_pairs": 80,
+  "diagnostic_expired_primary": 643,
+  "diagnostic_pending_overflow": 0,
+  "pending_primary": 1,
+  "wall_duration_s": 41.57085876699966,
+  "processed_sample_duration_s": 40.0,
+  "processing_ms_recent": {
+    "samples": 4884,
+    "mean": 7.829349461508284,
+    "p99": 9.905764169488975,
+    "max": 13.619396999274613
+  },
+  "stderr_tail": [],
+  "files": {
+    "packets": "python/exadv_rx/results/assess_10265_full4m.packets.jsonl",
+    "events": "python/exadv_rx/results/assess_10265_full4m.events.jsonl",
+    "summary": "python/exadv_rx/results/assess_10265_full4m.summary.json",
+    "text": "python/exadv_rx/results/assess_10265_full4m.summary.txt",
+    "stderr": "python/exadv_rx/results/assess_10265_full4m.hackrf.log"
+  },
+  "limitations": [
+    "LE 1M only; fixed RF capture, no host-timed frequency hopping",
+    "DC blocker/filter and demodulation timing require calibration before synchronization claims",
+    "sample timestamps are relative to capture, not hardware/UTC timestamps",
+    "HackRF/USB sample losses may be unobservable in raw IQ; no guaranteed gap-free timeline",
+    "CRC-failure counts refer to sync candidates, not uniquely identified transmitted packets",
+    "no PRR without independently supplied TX counts and matched observation window"
+  ],
+  "diagnostic_internal_output_rate_hz": 4000000,
+  "diagnostic_note": "Internal phase rate changed to4Msps only in this independent process; production default unchanged"
+}

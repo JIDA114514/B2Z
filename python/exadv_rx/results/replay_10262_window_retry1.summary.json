@@ -1,0 +1,93 @@
+{
+  "schema": "exadv_rx_v3",
+  "receiver_version": "2026-10-26-window-retry1",
+  "start_utc": "2026-10-26T08:01:18.470635+00:00",
+  "end_utc": "2026-10-26T08:01:50.685472+00:00",
+  "status": "complete",
+  "error": null,
+  "config": {
+    "channels": [
+      39
+    ],
+    "whitening_channels": [
+      39
+    ],
+    "sample_rate": 8000000,
+    "center_hz": 2480000000.0,
+    "iq_file": "python/exadv_rx/results/rx_20261026_152018_750312.ci8",
+    "format": "ci8",
+    "serial": null,
+    "lna": 24,
+    "vga": 20,
+    "amp": false,
+    "duration": 0.0,
+    "block_samples": 65536,
+    "queue_blocks": 64,
+    "stall_timeout": 10,
+    "sync_threshold": 0.84,
+    "dc_block_hz": 1000,
+    "timing_retry": true,
+    "channel_cutoff_hz": 850000,
+    "pair_tolerance_us": 20,
+    "diagnostic_pairs": true,
+    "diagnostic_pair_window_us": 2000,
+    "save_iq": false,
+    "output": "python/exadv_rx/results/replay_10262_window_retry1",
+    "quiet": true
+  },
+  "capture_command": null,
+  "capture_returncode": null,
+  "capture_stats": {
+    "bytes_read": 480000000,
+    "queue_high_water": 64
+  },
+  "counts": {
+    "clipped_components": 417,
+    "samples_processed": 240000000,
+    "packets": 637,
+    "primary": 533,
+    "aux_ptr_unsupported_phy": 143,
+    "same_channel_auxiliary_diagnostic": 104
+  },
+  "channels": {
+    "39": {
+      "sync_candidates": 8491,
+      "packets": 637,
+      "rejected_candidates": 7776,
+      "hard_crc_failure_candidates": 79,
+      "timing_retry_attempts": 309,
+      "crc_failure_candidates": 78,
+      "timing_retry_recovered": 1
+    }
+  },
+  "matched_events": 0,
+  "expired_primary": 532,
+  "diagnostic_pairs": 100,
+  "diagnostic_expired_primary": 432,
+  "diagnostic_pending_overflow": 0,
+  "pending_primary": 1,
+  "wall_duration_s": 32.21482552699854,
+  "processed_sample_duration_s": 30.0,
+  "processing_ms_recent": {
+    "samples": 3664,
+    "mean": 7.32696102591184,
+    "p99": 13.562387139336344,
+    "max": 16.138069999215077
+  },
+  "stderr_tail": [],
+  "files": {
+    "packets": "python/exadv_rx/results/replay_10262_window_retry1.packets.jsonl",
+    "events": "python/exadv_rx/results/replay_10262_window_retry1.events.jsonl",
+    "summary": "python/exadv_rx/results/replay_10262_window_retry1.summary.json",
+    "text": "python/exadv_rx/results/replay_10262_window_retry1.summary.txt",
+    "stderr": "python/exadv_rx/results/replay_10262_window_retry1.hackrf.log"
+  },
+  "limitations": [
+    "LE 1M only; fixed RF capture, no host-timed frequency hopping",
+    "DC blocker/filter and demodulation timing require calibration before synchronization claims",
+    "sample timestamps are relative to capture, not hardware/UTC timestamps",
+    "HackRF/USB sample losses may be unobservable in raw IQ; no guaranteed gap-free timeline",
+    "CRC-failure counts refer to sync candidates, not uniquely identified transmitted packets",
+    "no PRR without independently supplied TX counts and matched observation window"
+  ]
+}

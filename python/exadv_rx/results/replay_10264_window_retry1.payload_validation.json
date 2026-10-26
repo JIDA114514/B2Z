@@ -1,0 +1,1079 @@
+{
+  "summary": {
+    "run_id": 10264,
+    "baseline": 115,
+    "optimized": 117,
+    "gained": [
+      69,
+      96
+    ],
+    "lost": [],
+    "all_payload_checks_ok": true,
+    "diagnostic_pairs": 106,
+    "strict_pairs": 0,
+    "decoder_stats": {
+      "sync_candidates": 12948,
+      "rejected_candidates": 12022,
+      "packets": 844,
+      "hard_crc_failure_candidates": 84,
+      "timing_retry_attempts": 303,
+      "crc_failure_candidates": 82,
+      "timing_retry_recovered": 2
+    }
+  },
+  "rows": [
+    {
+      "sequence": 0,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 31,
+      "sample_time_s": 2.618309,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab523658f31cd3450da482bf2710656b2ba64b4de9e328753aa5fd28d25f9a652fcf995124228d18ab227bea11a1b07d0a49d2f362d0461b2dfd0c440a2551f20a49e5f4aca33e46a50b9be915d2f08f0c4092ad28ffbdd1e3b4335ad21f20af47c1f8290a042c277107"
+    },
+    {
+      "sequence": 1,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 38,
+      "sample_time_s": 2.8181435,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab525ca5f31cd3450da482bf2710656b2ba64b4de9e3dad7c7857419e147e38c2fcf9fbaa7c24c4c972ed8f257488365d0564fe590e4fe4e8fd33fca404451f281926614a9f0332ec7472212d4fe4832e40f2a10d60d58f61533af0a1293086cdad7b103485ee21f41c4"
+    },
+    {
+      "sequence": 3,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 46,
+      "sample_time_s": 3.21809,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5255ccf31cd3450da482bf2710656b2ba64b4de9e3d3beb6c7fd2883e5b24e19ee53da2c198d1898ac7283f00de1c7920cc03f32cab09c470030480e96883611ec559aaca3794f9a432ed4fcd5d5244621b70675fbde45e3b417b75a61a4f633d011be0a042894592c"
+    },
+    {
+      "sequence": 4,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 53,
+      "sample_time_s": 3.4181,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab523780f31cd3450da482bf2710656b2ba6e96328b75937963fe90f3b580a1be71c9fbaa7c22a5dab2289489b28214b73a00c5f62d0f326c8dafac3f4d725e339c7c50c31b53b1560021d5a61c3d84c7539ba6e9c6cbdd115336f864e4f2dc7c1725f6cb6acde13afab"
+    },
+    {
+      "sequence": 5,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 58,
+      "sample_time_s": 3.6180765,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52f6d4f31cd3450da482bf2710656b2ba6e96328b71fde576b331020fd9a653d0353da2c19dcda972e746860e3e1c7b2f4c95690e46e3041eb0082c41d20b08cfa699631b59393968596816cab3003879b38dcd2be58f673226e5ef2e78012626a930ceba8de1308ee"
+    },
+    {
+      "sequence": 6,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 63,
+      "sample_time_s": 3.81818,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5290c5f31cd3450da482bf2710656b2ba6e96328b7d555befc714a42b18e42453253da2c194c4c5916bee353fbe1c718853bf462d0873755ccfe70a80bacd289a94d72a9f0dab906132ed4e770969eacfd023b9457559e153327747e85943ca2e611be0f57f638e179"
+    },
+    {
+      "sequence": 7,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 68,
+      "sample_time_s": 4.0181335,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab526642f31cd3450da482bf2710656b2ba6e96328b7b89b06a9714a0b9b88a94532106024222a5d98acf031199ab07d2ea4428d90e47a17cd89cd68e0f925e33501a7aea9f0b19c60029eba26ca922d8ef252211835bc0915338aa1b40e6acec81bf9f189e46e7d63cb"
+    },
+    {
+      "sequence": 8,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 74,
+      "sample_time_s": 4.218108,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52de17f31cd3450da482bf2710656b2ba6e96328b7b94356b3fbc320fdbe88a546a55d2c19c432ab22187e574887d63a8a4ab694577cfc650ffac3688762ea05cbe5f4ebaaa3508e6d363c6490a1350128b7060c12bdd1732217b76aa2c8e0cef09a65ba6ac6fb0936"
+    },
+    {
+      "sequence": 9,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 78,
+      "sample_time_s": 4.418075,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab527eaaf31cd3450da482bf2710656b2ba6e96328b7f1b12e82cde2ab260a1ba01510602422c432972e44a253fb4d5de34e3bf44afb7595c5b236a3d03ac0c4032066144984b77757a906ffcc165397248353f991045da5b276335a83a5289447c11cd6866666469800"
+    },
+    {
+      "sequence": 10,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 83,
+      "sample_time_s": 4.6181285,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52a76ef31cd3450da482bf2710656b2ba6e96328b71b6d0a6f913e0b9b22d83d0310602422648f5916f80a92414d5dd4e5c03f62d0b42fbccb246fcb9fb8f503206f7debaa7dfc2ed006ff853c78f18819c31717b7559e73223f9cfadc6e7df2fca52d0f57e4f49800"
+    },
+    {
+      "sequence": 12,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 92,
+      "sample_time_s": 5.018081,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52d37ff31cd3450da482bf2710656b2ba6337c28b7dad7c78590e613730773d40410602422e0d6ab22486460e3c46c0a49ab1a9457461bed719cd240449c1869dd04582379db6126ebdce0fcd5d0779c3ef00f75fbd72cb2768ff27e85c938fe3a5f6c0f572c27e942"
+    },
+    {
+      "sequence": 15,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 104,
+      "sample_time_s": 5.6180635,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab529476f31cd3450da482bf2710656b2ba6e96328b728753aa5f2aa1fb522d82924a55d2c19e0d698acd8f29b2887d6920c0c5f4afbd68d8b6014ac0a25aa3905cb7db14984b8f523b8363cd83831db4292f4bc24397d5db2762774129398faa2e61985ba6a6e7d0936"
+    },
+    {
+      "sequence": 18,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 119,
+      "sample_time_s": 6.218193,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab526a8499e1d3450da482bf2710656b2ba621b0e9e35c64963fe90fe1470a1ba015995124221df68309d8f2b927c904d4e5fad8a3fc160147000082f4d720b081926614ef19a3500613363c61c378f19c3e023b0c121b4cdfb8335a7e85b0d1cef095e7ba6af638ec11"
+    },
+    {
+      "sequence": 19,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 123,
+      "sample_time_s": 6.418158,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5255cc99e1d3450da482bf2710656b2ba621b0e9e379cf576b331042b1407a2924f547a7c21df6a7e44864ad09c13f2262ab1a6e167cfc2dfdbc2a393db8f589a94d72ef194a57600206ff6cab5afeb41552219104e10ddfb8af0ab40ea4f642925bdfba6af638e179"
+    },
+    {
+      "sequence": 20,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 128,
+      "sample_time_s": 6.6180695,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52378099e1d3450da482bf2710656b2ba621b0e9e3d3beb6c7f2aa3b58407aad7d995124226cb45da5ba5053fbc9040a49e2307a38fe4e41eb14ac0e96aa3939c7a31da1cb332e57a9eff82279d0778ef2b706d60dc5e0fb5c3f9c6aa22dc7047bb1034ced6b2e0936"
+    },
+    {
+      "sequence": 22,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 138,
+      "sample_time_s": 7.0180975,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5290c599e1d3450da482bf2710656b2ba621b0e9e31b6df49dfbc342b1be88d404f547a7c269e78309fd5911a1c13f1e6ed2f37a38d68dcd8936a36887c0c489a994b6199e794f2ed0dce064905c15e40fc31775fb1b4c22986f86fadc943cc17281c086666e7d41c4"
+    },
+    {
+      "sequence": 23,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 143,
+      "sample_time_s": 7.2181575,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52664299e1d3450da482bf2710656b2ba621b0e9e3510c2e82cde20b9baaa60dc035cb2c196cb4a7e4f80a574842df920cc6d45837b09cc8dabc2a487faa3935010580a1cbb7778e6d7f1615d231dbacfd31b528ffe10d22980c1271076acea33ef9f1924128949800"
+    },
+    {
+      "sequence": 25,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 152,
+      "sample_time_s": 7.618104,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab527eaa99e1d3450da482bf2710656b2ba64b4de9e35c64963f37a31373e254e3af53da2c198cc0972e486411a12093b2f4d2f332ca6e308b605d86f4d7004869dd0458d8b21bedbeaed853853cd84c0128ba6e17b7d1c75be12774b40e289400c8930c89e4e4f46aa2"
+    },
+    {
+      "sequence": 28,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 165,
+      "sample_time_s": 8.2180625,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52d37f99e1d3450da482bf2710656b2ba64b4de9e3e9593c4e7971e5f4e38c44ea53da2c19d01cab22fd59199a20933a8afad8da854add2c250c444d2c90decbf3a31d25924a57c69fd853cc166cdf42920efd91041fffe3b46e5efadcc938626a1cd60a048fd1e942"
+    },
+    {
+      "sequence": 29,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 169,
+      "sample_time_s": 8.4181005,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52d62c99e1d3450da482bf2710656b2ba64b4de9e3b94356b3d9cc2f7f736226a699512422d01c972e604f9b28b07de34e6a4e32ca75954e693fca688790de6805e0a725928b7bac629be944685c159c3e3e373cd1d1c7e3b43f9c7107a21df2fc81c00a048fd1c9ba"
+    },
+    {
+      "sequence": 30,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 174,
+      "sample_time_s": 8.61811,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab524e6999e1d3450da482bf2710656b2ba64b4de9e379cf576bc124a64eb24e85be99512422e63d5916508c574869b9d4e54fe5da85b42fed715c5ec41d0048a95194b6d8b287bd64b112d884e45afe248352211edeedcb5be18aa1786e59d6c81ba9eb4cedf63808ee"
+    },
+    {
+      "sequence": 31,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 180,
+      "sample_time_s": 8.8180825,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52947699e1d3450da482bf2710656b2ba64b4de9e3c1720a6f79712994022044ea9fbaa7c2e63d98ac746853fb836522623bf432ca7cfced71b979cb9f6659f8eb05802592a35064b114336490a135047b1ad30c12de455be16f86f2e798fac172b1030a041f3fe179"
+    },
+    {
+      "sequence": 33,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 189,
+      "sample_time_s": 9.2181155,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab525ca5afc0d3450da482bf2710656b2ba6ae6a28b75c643aa5f2aa299422d83d0315332422dcda1e1f8948b927597ae34e6a4e5edc4add7121246f0a25c0c4f8eb6f7d0176b8f526eb1d5ad8385397b8d3023b1ede1fffcb9f3f9c4289c9384aa95f6c485e664608ee"
+    },
+    {
+      "sequence": 34,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 194,
+      "sample_time_s": 9.4181645,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab526a84afc0d3450da482bf2710656b2ba6ab3928b7d3be56b3fbc31fb588a94532153324222a5dfb38d8f289e4597ad4e54fe5515e6e302c25cd686887b8f5f8eba7ae199ea35057a91d5a649078f10c40b2559c6cd1c711808ff2d21f2894fe3a9a657b46e4f4e179"
+    },
+    {
+      "sequence": 35,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 201,
+      "sample_time_s": 9.618135,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5255ccafc0d3450da482bf2710656b2ba6ab3928b728752e82fbc313730a1be71ca99ba7c22a5dfae0bee3a1cf42df9a37e2305edcb42f4e69fac3d03a62eacbf3c50ca1cb4a57aa899681cc166cdf8ef2f4bcd2beedcb11806f86786e59d6a33ef8294ced6b2e55ea"
+    },
+    {
+      "sequence": 36,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 205,
+      "sample_time_s": 9.8180385,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab523780afc0d3450da482bf2710656b2ba6ae6a28b71fde06a951b24369aaa6a01515332422c4321377ba50f00d83650a49d2f36e16b09c8fd336a3393d9c18212f6614d8b2332e64b17f16d4fed07788190efde515de45cb9f335a5a61a4f64292b103a282e4f4e942"
+    },
+    {
+      "sequence": 37,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 211,
+      "sample_time_s": 10.0180335,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52f6d4afc0d3450da482bf2710656b2ba6ae6a28b71b6d963f37a383e5407a292496d3a7c21df61e1f187e89e4209372784fe5a3fc461b55ccbc2af4d7a35011ec4d72d8b2dab9c69feff8e770969ee5d7c3172439bdd1cb9fc91b134b20af00c895e7eba8de130936"
+    },
+    {
+      "sequence": 39,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 220,
+      "sample_time_s": 10.4180815,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab526642afc0d3450da482bf2710656b2ba6ae6a28b75937befc90e62f7fbe88a5461d082c19c432fae0f80a9dc369b9920caac25edc17d92dfd9cd2c2f69c186805e5f40176b777beaedce015d2f08f879b1ad39104edcbcb9f17b7f2e7b0d1cef0930c7b464e8563cb"
+    },
+    {
+      "sequence": 40,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 225,
+      "sample_time_s": 10.618061,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52de17afc0d3450da482bf2710656b2ba6ae6a28b7f1b13c4e797142b181c0d40496d3a7c269e71377d8f2b927e1c773a06a4e6e167a1741eb36a3487f004889a994b6259293939a43eff86cab30039c3e92ad7423bc0953da6f86b40e6acea33e95e7808d8e09ab18"
+    },
+    {
+      "sequence": 41,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 230,
+      "sample_time_s": 10.81803,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab527eaaafc0d3450da482bf2710656b2ba6ae6a28b7e59f56b3d9cc0b9baaa60dc01d082c1969e71e1f4864ad09b07db2f4c956a3fcf326bccbbc2a6887665935010580aca31beda50b7ece446878f142922a109457bdd153da6e5e786e2dc7047b11beb6ac6b2e7107"
+    },
+    {
+      "sequence": 42,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 235,
+      "sample_time_s": 11.018025,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52a76eafc0d3450da482bf2710656b2ba6ae6a28b7510c576b37a3d25f44c929241d082c191df6fb3844a2a1cfb07d18853bf46e16fe4ecd8914acc41dc11c0a497db1d8b2db61ac62dce026ca922d012831b5b4af58f653da2774b0bd086cc81b9a65485e2c27ab18"
+    },
+    {
+      "sequence": 43,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 241,
+      "sample_time_s": 11.2180515,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab525a4eafc0d3450da482bf2710656b2ba6ae6a28b7b9433527c124e1470773d40415332422e0d6fae07beaf1d583652ea4fad8a3fc8737c8da9cd2a9d3c11c8192045825923b15ac62be4261c360192483b70628ff559e53da8ff283a5943cc172f8297b46ed9d55ea"
+    },
+    {
+      "sequence": 44,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 246,
+      "sample_time_s": 11.418033,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52d37fafc0d3450da482bf2710656b2ba6275b28b75c643aa5fd28ab26022015281d082c19f4f11377fd5911a1b07d3a8a4fe558371601c5b25c5ea80b288b0320595ca9f04a570613143315d25397e40fba6ed2bebc095689cda84e4fab7447c11985b6ac2c2741c4"
+    },
+    {
+      "sequence": 45,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 252,
+      "sample_time_s": 11.61804,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52d62cafc0d3450da482bf2710656b2ba6275b28b779cfc785fd28a31d81c015288d7624222eee1e1ff80a5748214b1e6e3bf47a387cfc7de7b9794044288bcf40edcfa9f08b7b6002d8532279d5240c4038dc75fbbdd15689335a6aa2c8e0dad7a9ebba6ac6fb592c"
+    },
+    {
+      "sequence": 46,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 258,
+      "sample_time_s": 11.817956,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab524e69afc0d3450da482bf2710656b2ba6275b28b7d5552e82d9cc3b58e2540dc08d7624226cb4fb38f0319dc3214b2262c03f6e16f675650fb411d03a665939c7a31daca387bdc747be42ee195afe4621f4bc183558f656893f9cf7b480124aa995e70f578e09c9ba"
+    },
+    {
+      "sequence": 47,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 262,
+      "sample_time_s": 12.018099,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab529476afc0d3450da482bf2710656b2ba6275b28b7dad7b6c7000820fd44c9ad7d96d3a7c26cb4fae08948f00de1c79a3708ec7a38b42fc5b25d86f81190de8cfae0a7aca3a350c74712d86490a135b415f00f9c6c559e5689039042896e7d33d095e7485e4e85ab18"
+    },
+    {
+      "sequence": 48,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 267,
+      "sample_time_s": 12.2179475,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5236589088d3450da482bf2710656b2ba6337c28b71fde576bc1242f7f44c9ad7da99ba7c2f4f1ab22f80a89e44bb673a0c6d4f246f32647005d86c41d00486805e0a71558b19cc69fbe4284e430038ef20efd1835d72cd03a0390fadc98faea1481c0ba6aed9dafab"
+    },
+    {
+      "sequence": 49,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 273,
+      "sample_time_s": 12.4180245,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab525ca59088d3450da482bf2710656b2ba6337c28b71b6d0a6fc124436902201528a55d2c19f4f1972eba50a1cf7151b2f4e230d2bef6752dfd5c5ea9d30048212f595c2a103b15c69f12d861c378f1acfd3e379c6c5da5ef7217b77107c938cef0397deba88e09ab18"
+    },
+    {
+      "sequence": 50,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 278,
+      "sample_time_s": 12.6180365,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab526a849088d3450da482bf2710656b2ba6337c28b779cf06a951b22994aaa60dc0a55d2c1969e75916894814f287d6188508ecf2465ef34e69bc2ae0f9a350f8eb05801558332ebeaeeff8d4fe4832462152217423f523d03a6e5e4e4f2894626af82989e4d2d5ab18"
+    },
+    {
+      "sequence": 51,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 284,
+      "sample_time_s": 12.818015,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5255cc9088d3450da482bf2710656b2ba6337c28b7c172963f37a3e5f4e2540dc0106024226cb498acfd593159c46c2ea44ab6d2be8737712114acf4d7c11ccbf3a31d15581bed64b17ece853c60190c401ad394577d5dd03a3f9cf2e759d6f2fc81c00f578fd19800"
+    },
+    {
+      "sequence": 53,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 295,
+      "sample_time_s": 13.218042,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52f6d49088d3450da482bf2710656b2ba6337c28b7e59fb6c7000842b1b24e85be153324228cc01e1fbee314f2c13fe34eaac2d2be4addcd895c5ef811288b89a994b6485c794fa50b1433fcd55c1588192a100c12c5e0d9538ff2129320affe3aa52d485e28947107"
+    },
+    {
+      "sequence": 55,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 305,
+      "sample_time_s": 13.6180185,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5266429088d3450da482bf2710656b2ba6337c28b7d3be56b3d9ccd25f7362e3afa99ba7c22eee98ac44a260e37d979a37ab1ad2be16018fd3b411688790de0a497db12a107dfc9a43d8534468a1357539b70617b71b4cef72af0a83a5b0d1dad7f82992418fd163cb"
+    },
+    {
+      "sequence": 57,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 313,
+      "sample_time_s": 14.0180215,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab527eaa9088d3450da482bf2710656b2ba6ab3928b779cf06a9714aab2688a926a6a99ba7c2ef541e1ffd59f1d542df7278fad8d7ed461b650ffe70e0f9acd203206f7def19db6196852ed426ca4832047b38dcb4afc5e0b3ae0390f2e72dc7ea14f9f1023f1f3f41c4"
+    },
+    {
+      "sequence": 58,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 319,
+      "sample_time_s": 14.217998,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52a76e9088d3450da482bf2710656b2ba6ab3928b7d5553aa5fd280b9b022044eaa99ba7c2e63dfb38486431597d97975f4ab6331217d9c8da30480a258836350105808908b777c747d85315d231dbe5d7023b91042ce7d9536f86f7b4086ca33ea52dea708fd1afab"
+    },
+    {
+      "sequence": 59,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 324,
+      "sample_time_s": 14.4179745,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab525a4e9088d3450da482bf2710656b2ba6ab3928b7b89bc78574193b58e38c44eaa55d2c19d01cfae0508c89e4c904920cc6d4d7edd68d41eb0c444044883639c7a31d89088b7b06139be92279d0770128f00f3cd11b4cd9536e5e4289943c047bf9f14ced6e7de942"
+    },
+    {
+      "sequence": 61,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 333,
+      "sample_time_s": 14.8179865,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52d62c9088d3450da482bf2710656b2ba6ab3928b7510c3c4e913ea31d8e4245321d082c194c4c1e1f7bea3159c904b2f4d2f35edcf675ed71246f4d2c20b0a9514d72199eb19c57a99eba84e45afee40f53f918351fff1180277483a5c8e0c81bf82989e4e21f592c"
+    },
+    {
+      "sequence": 63,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 344,
+      "sample_time_s": 15.2179915,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5294769088d3450da482bf2710656b2ba6ab3928b7e959576b33101fb59a652fcf153324228d18fae0187e9241597a2ea4f61ed7ed87377de70c44c41d25e305cbe5f4ef1993932ed022126cab922d9c3e31b574231b4cb3ae335a134b6e7d4292f9f1ba6a6e7de942"
+    },
+    {
+      "sequence": 64,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 348,
+      "sample_time_s": 15.417821,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab523658f2c4d3450da482bf2710656b2ba6edd0e9e3510cbefce90f13730773152896d32c192eeefae0508c5748c46c9a374ab632ca17d941eb36a3a80b20b069dd595c89087dfc9a43363c853c78f124830efdd60df523153317b7b40e80124aa91cd6808df638592c"
+    },
+    {
+      "sequence": 65,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 353,
+      "sample_time_s": 15.617955,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab525ca5f2c4d3450da482bf2710656b2ba6edd0e9e3d3be06a9e90fa64e81c015281d0824222eee1377746853fb7d97e34ec6d4da85b09cbccbbc2a4044b8f5a951edcf8908b8f5a50bdce084e46cdf9c3e3e3791047d5d1533057b4e4f6e7d33d095e7023f6e7d6aa2"
+    },
+    {
+      "sequence": 67,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 363,
+      "sample_time_s": 16.0179255,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5255ccf2c4d3450da482bf2710656b2ba6edd0e9e31b6d1e41714a1fb544c9ad7d1533988af4f1fb38486411a17151226208ecda857595c8da9cd2f81120b005cbe0a7485c4a57ac627f166cab5afe047bc3171ede58f61533feb07e852dc7047b1985a2824e8508ee"
+    },
+    {
+      "sequence": 68,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 368,
+      "sample_time_s": 16.217955,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab523780f2c4d3450da482bf2710656b2ba6edd0e9e3d5550a6f913ea64e44c985be1d082422e63d3bb4187e9dc37d970a49ab1a32ca5ef37de75c5ecb9fc0c4a95194b6ef19332e0613dce04468d524b415f4bcb4aff52373228aa17107289400c8a9ebeba8f63808ee"
+    },
+    {
+      "sequence": 69,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 374,
+      "sample_time_s": 16.4179635,
+      "decode_method": "narrow_window_retry",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52f6d4f2c4d3450da482bf2710656b2ba68bc1e9e3b89b3c4efbc32994022044ea8d76988ad01cb3ca7283f00dc904d056f61eda857a178b60b979c41daa39f8eb0580199edab96002be42d838f08fe40f2a1028ff7d5d73226f86b0bd59d6c81b19850a04e4f4ec11"
+    },
+    {
+      "sequence": 71,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 384,
+      "sample_time_s": 16.817931,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab526642f2c4d3450da482bf2710656b2ba6edd0e9e3e59f576b913e1373e254e3af96d32c198cc091c5604f9b28c13f975ffad8da85fe4ec5b25d86393dc0c469dd0458ef19b777c747eff8cc1653974621b25524395da5732287c9fadcc8e0dad75bdf4ced6e7d0936"
+    },
+    {
+      "sequence": 72,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 387,
+      "sample_time_s": 17.017917,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52de17f2c4d3450da482bf2710656b2ba68bc1e9e3c172b394f2aa4369e25426a68d76988aef543bb4bee353fbc90411ecc6d490e4b42f4e69fe706887a350212f595ca1cb93932ed0d853d4fe922dacfd1ad31835f523b276feb01293a21df2fcf829a282de13ab18"
+    },
+    {
+      "sequence": 73,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 392,
+      "sample_time_s": 17.2179005,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab527eaaf2c4d3450da482bf2710656b2ba68bc1e9e3e9593aa590e683e5b24e19ee96d32c198d18b3caf031199ac13f73a0e23062d016014e693048d03ac11c11ecedcfa1cb1bed8e6d12d8e770d84cb8d30efd3cd11b4cb27617b77e85b0d14aa9f829eba8e21f6aa2"
+    },
+    {
+      "sequence": 74,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 398,
+      "sample_time_s": 17.417871,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52a76ef2c4d3450da482bf2710656b2ba68bc1e9e35937f49dcde2e5f481c044ea96d32c19d01c1b4c7bea11a1c13f7278aac232caf326ed71b411a9d39c18cbf3a31d199edb61968512d8fcd548320c40023b7423d72c73220c1283a598fac17268c77b46e21fe942"
+    },
+    {
+      "sequence": 75,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 403,
+      "sample_time_s": 17.6178795,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab525a4ef2c4d3450da482bf2710656b2ba68bc1e9e379cf2e82f2aa2f7f736226a6bdb52422ef5491c5d8f257487d972ea4d2f362d0f6752c255d86487f9c186805e0a7199e3b1596857ecee8f2969e8ef252210c125da5b2763f9cd21fc938626aa52d023f4e857107"
+    },
+    {
+      "sequence": 76,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 407,
+      "sample_time_s": 17.817931,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52d37ff2c4d3450da482bf2710656b2ba68bc1e9e3d3be06a937a342b17362453296d32c192a5d3bb4f80a9241597a9a37f61e90e417d92dfdfe704044665989a94d7201764a57aa899be96cab6cdf0128b7061ede2ce7d03a2774f2e7086cdad781c086664e8555ea"
+    },
+    {
+      "sequence": 77,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 412,
+      "sample_time_s": 18.017943,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52d62cf2c4d3450da482bf2710656b2ba68bc1e9e32875963fc1240b9b88a94532bdb524222a5db3caba5014f242dfe34eaac262d0d68d8fd33048c2f666593501a7ae01768b7b23b814334468a135e5d792add60d1b4cd03a8aa1fadc943ca2e681c089e46e7d7107"
+    },
+    {
+      "sequence": 78,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 416,
+      "sample_time_s": 18.217966,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab524e69f2c4d3450da482bf2710656b2ba68bc1e9e3b943c78551b2d25f02202fcfbdb524224c4c1b4c89489b2842dfd4e5fad890e47cfc71210c44f811c11c0a49e5f4a1cb87bd57a9143384e430038819c317d2bee10db276057b4289a4f633d0930c485e1f3fe179"
+    },
+    {
+      "sequence": 80,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 425,
+      "sample_time_s": 18.61784,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5236583390d3450da482bf2710656b2ba6a302e9e3d555f49dcde21373e38c2fcf1533988a4c4cfae0ba50f00de1c711ecc03f515e1601bccb3fcaa9d39c1869dd6614ebaab19c6002143326ca922d0128f4bcd2beedcb2298af0a71078012cef05f6c0f572c27ab18"
+    },
+    {
+      "sequence": 81,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 431,
+      "sample_time_s": 18.817956,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab525ca53390d3450da482bf2710656b2ba61b57e9e3b89b2e82f2aaa64e73624532a99b2c192a5d1377187e89e4b07d73a008eca3fc7cfc650ffe704d2ca350a9514d72ebaa3b156002d853e8f260192483f00f17b7de45229887c96aa26e7d42925bdfa28228946520"
+    },
+    {
+      "sequence": 83,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 440,
+      "sample_time_s": 19.217888,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5255cc3390d3450da482bf2710656b2ba6a302e9e3dad73c4efbc31fb502202fcfa55d24224c4cfb38f80a9dc383651885c9565edc6e30bccb0c44c41d9c1805cb7db131b51bed061312d8d838969ee5d7b2559c6cd1c72298057bfadc2dc7ea14930cea70e21f9800"
+    },
+    {
+      "sequence": 85,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 449,
+      "sample_time_s": 19.6178565,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52f6d43390d3450da482bf2710656b2ba61b57e9e3e959befc37a34369e38c3d031d082422648f13774864ad09214be34e0c5fa3fcb09ced71246f0a256659212f6f7d2379794f8e6d9be961c3a135b4150efde515de45fb5c3f9c7e8559d6a33e81c00a044e85c9ba"
+    },
+    {
+      "sequence": 86,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 455,
+      "sample_time_s": 19.8177945,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5290c53390d3450da482bf2710656b2ba61b57e9e35937b39490e6299488a94532a55d24222a5d1e1f44a2a1cf214bd4e54fe56e164addc5b230486887c11cf8eba7aeebaa4a5796859be9d4fe30039c3e023b1ede1ffffb5c8aa15a61ab7400c8a52d7b46e21f0936"
+    },
+    {
+      "sequence": 87,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 461,
+      "sample_time_s": 20.017827,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5266423390d3450da482bf2710656b2ba61b57e9e31fde3aa590e6e5f4b24ee71c1533988adcdafb3819a6f1d5e1c722623bf4a3fc75957de70c44d03a0048cbf3c50c49847dfc2ed01433853c78f142925221d60dd1c7fb5ccda8134bc8e0c81b95e7ba6ae21f08ee"
+    },
+    {
+      "sequence": 88,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 466,
+      "sample_time_s": 20.2178535,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52de173390d3450da482bf2710656b2ba61b57e9e3e59f576b7971e1470a1ba0151d0824221df6fae0fd5911a14bb60a4908ec5837873771210082393d288b819266141558dab923b89ebaee1931db8ef2b70628ff559e5be1057bf2e7a21d33d0198586662c27afab"
+    },
+    {
+      "sequence": 89,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 470,
+      "sample_time_s": 20.4178525,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab527eaa3390d3450da482bf2710656b2ba61b57e9e328750a6fd9cc42b1407a29241533988ae0d61377f80a574887d6d0564ab67a387a174700246ff4d7883689a94d721558db6126eb2212fcd5d077acfd92ad7423bc095be1af0afadcb0d1cef0a9eba2826646afab"
+    },
+    {
+      "sequence": 91,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 479,
+      "sample_time_s": 20.817788,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab525a4e3390d3450da482bf2710656b2ba61b57e9e3f1b1963fc124d25f88a9a546a99b2c19c432fb388948f00d4d5d975fc03fa3fc5ef34e69fac3c2f690de0a49e5f423798b7baa892ed444685c150c4031b5b4af58f65be117b7786ec9384aa9f829808d289455ea"
+    },
+    {
+      "sequence": 92,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 485,
+      "sample_time_s": 21.017851,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52d37f3390d3450da482bf2710656b2ba6edd0e9e379cf2e82fd2820fdbe88d4041533988a69e7fae044a2ad0987d611ec0c5f5837b42f55cc36a3487facd28cfa69962a101bed64b11d5ae7706019879bf00f9c6c559ee3b46f8683a5086cc81bf9f17b46e4f408ee"
+    },
+    {
+      "sequence": 93,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 491,
+      "sample_time_s": 21.217878,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52d62c3390d3450da482bf2710656b2ba6edd0e9e3c172b394fd28ab26aaa60dc096d32c196cb4137719a69dc3c46c73a0ab1a7a38160155ccbc2a6887acd203200580485cb19cc69f363c26ca922d8819ba6ed2bebc09e3b40c12d21f943cc172a9eb2afcd2d56520"
+    },
+    {
+      "sequence": 95,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 499,
+      "sample_time_s": 21.6177635,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5294763390d3450da482bf2710656b2ba6edd0e9e35c64f49d00083b580773d4041d08242269e7fb387283b9274bb62ea4428d7a386e308fd39cd2a9d351f239c7c50c2a109393beae06ff227948327539f4bc183558f6e3b48aa16aa220af00c8930ca2824e857107"
+    },
+    {
+      "sequence": 96,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 504,
+      "sample_time_s": 21.8177865,
+      "decode_method": "narrow_window_retry",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5236585581d3450da482bf2710656b2ba628d9e9e3d3bec78590e60b9b022044ea5769988ae63d5da5604fb9274d5d11ec0c5fd7ed6e30cd89b979f811a350350105802379b19caa8912d826ca922d4292b706742358f6cb9f6f866aa220affe3a68c70a04f638e179"
+    },
+    {
+      "sequence": 97,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 510,
+      "sample_time_s": 22.017808,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab525ca55581d3450da482bf2710656b2ba628d9e9e32875befc51b23b5881c044ea35cb2c19d01c6a0e187e92414bb6b2f4ab1a3312b42fc8dab411a80bc11c39c7a31d23793b15aa897ece61c3d84c462192ad0c12559ecb9f0c125a61086ca33e5f6c92414e85afab"
+    },
+    {
+      "sequence": 98,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 514,
+      "sample_time_s": 22.217903,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab526a845581d3450da482bf2710656b2ba628d9e9e31b6db394f2aae147e254e3aff49f2c198cc083097468a1cf214b18853bf4d7ed7a178fd35d860e969c18819204584984332e8e6d7eced4fe48322483c317b4afbc09118027744289b0d1dad711be89e42c2708ee"
+    },
+    {
+      "sequence": 99,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 519,
+      "sample_time_s": 22.4177845,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5255cc5581d3450da482bf2710656b2ba628d9e9e3510c3aa590e642b144c985be64712422e63da7e4fd59f1d587d62ea4428d3312f32655cc5c5e0a25a35089a994b649841bed57a9be42e77060199c3e31b517b7bdd111808aa14e4fa4f6a2e6a9eb89e4de136520"
+    },
+    {
+      "sequence": 101,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 529,
+      "sample_time_s": 22.817801,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52f6d45581d3450da482bf2710656b2ba61791e9e359370a6f79711fb59a652fcf647124228d186a0ebee3a1cf87d6e34ec6d4515e17d9650f0c44cb9f90de05cbe5f41558794fbeae2ed464905c158ef2ba6e75fbf52353da335ab40e8012cef068c7a2822894ab18"
+    },
+    {
+      "sequence": 102,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 534,
+      "sample_time_s": 23.0178225,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5290c55581d3450da482bf2710656b2ba628d9e9e3e59f06a937a320fd736226a664712422ef548309728314f287d6d4e5c03fd7ed1601c8da3fcae0f900488cfae0a723794a5723b8d8536cab5afe0c40b2551835bc09cb9f3f9c134b943c047b1cd6485ee4f4592c"
+    },
+    {
+      "sequence": 103,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 539,
+      "sample_time_s": 23.2177885,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5266425581d3450da482bf2710656b2ba628d9e9e3d555963fc124ab2688a926a65769988aef54a7e47bea3159c46c226208ec515e4add41ebfe70c2f666590320595c15587dfc26eb12d8853c78f1e40ff4bc3cd1bdd1cb9ffeb0b0bd6acef2fc397d0f57f6386520"
+    },
+    {
+      "sequence": 106,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 551,
+      "sample_time_s": 23.817804,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52a76e5581d3450da482bf2710656b2ba61791e9e31fde3c4ed9cc1373e38c2fcf5769988a4c4c8309f031f1d5c46c1e6e428d5edcd68dc5b23fca4d2c288b69dd66142a10b77764b19be9cc165397753938dc28ff7d5d53daaf0a786e6e7d429295e70f576646ec11"
+    },
+    {
+      "sequence": 107,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 556,
+      "sample_time_s": 24.017739,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab525a4e5581d3450da482bf2710656b2ba61791e9e3c172f49dd9cca64e8e42453235cb2c192a5da7e48948b9274bb6920c0c5f515e461b7de7fe70a9d3288ba9514d722a108b7bc69f22122279d524b8d31ad3d60dd72c53da2774f7b4ab7400c8a52dea704e857107"
+    },
+    {
+      "sequence": 108,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 560,
+      "sample_time_s": 24.217784,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52d37f5581d3450da482bf2710656b2ba61791e9e32875befc714a83e58e42a546f547a7c2648f5da544a2a1cfc13f11ecc6d4a3fcf6757121cd68a80b25e311ec559a89081bedc7479ebae7706019047b92ad17b75da5dfb80390134bc9384aa9f9f1a282c6fb6520"
+    },
+    {
+      "sequence": 109,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 564,
+      "sample_time_s": 24.417797,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52d62c5581d3450da482bf2710656b2ba61791e9e3dad706a9e90fd25fbe88a54635cb2c19c4326a0e19a6f1d57d97b2f4e2306e166e304700fac3e0f925e30a49e5f48908b19c06131d5a84e4300342922a107423f523dfb817b7b0bda21d33d0a9eb89e4f638e942"
+    },
+    {
+      "sequence": 110,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 571,
+      "sample_time_s": 24.6177495,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab524e695581d3450da482bf2710656b2ba61791e9e3f1b13aa574192f7f9a653d0335cb2c19dcda8309ba50f00d7d971885aac25edc7a172c2500820a2551f268056996485c3e469a432212e8f2969e012853f99c6c7d5d56890c126aa259d6a33e397d7b466e7d0936"
+    },
+    {
+      "sequence": 111,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 574,
+      "sample_time_s": 24.817709,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5294765581d3450da482bf2710656b2ba61791e9e3d3bec7857419436922d83d0364712422648fa7e4187e89e471512ea44ab66e16f3264e69246ff811acd2212f6f7d89089393a50b9681d4fe922de5d7b255b4afd72c56893f9c5a6198fa047bf9f1eba8c6fbec11"
+    },
+    {
+      "sequence": 112,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 578,
+      "sample_time_s": 25.0177095,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab523658a306d3450da482bf2710656b2ba64a95e9e3b89b3c4ed9ccab2622d83d03bdb52422648f3bb419a6199a20930a493bf44afb5ef3c8da246fc41d288b03206f7d25923e46beae221215d231db9c3ef00f24392ce7ef723f9c83a520af626af829808d8e09ec11"
+    },
+    {
+      "sequence": 113,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 584,
+      "sample_time_s": 25.217732,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab525ca5a306d3450da482bf2710656b2ba64a95e9e35937f49d0008a31d8e42a5468d76988ac432b3cad8f29b2869b9d056fad89457873741ebcd68a9d38836cf40559a2592332e64b196812279d0774292ba6eb4af1b4cef72feb0d21f086cf2fc1985eba8c6fb9800"
+    },
+    {
+      "sequence": 114,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 588,
+      "sample_time_s": 25.4178,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab526a84a306d3450da482bf2710656b2ba68bc1e9e3dad7576b79713b580a1be71c8d76988adcda1b4c187e574869b91e6ed2f34afbb09c55cc0c44393d90de39c7c50cd8b2b8f526eb2ed4ee195397047b2a109104e10dd03a6f86134bb0d1c81bf9f1023f6b2eec11"
+    },
+    {
+      "sequence": 115,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 592,
+      "sample_time_s": 25.6176765,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5255cca306d3450da482bf2710656b2ba64a95e9e35c640a6f797120fd9a653d03f49f2c19dcda91c544a253fb597a975f4fe59457fe4ecd890082cb9f288b8cfa6996d8b2794f26eb9eba6490d5242483f4bce515c5e0ef720c12b0bda4f6c172f8294cede4f4ec11"
+    },
+    {
+      "sequence": 116,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 596,
+      "sample_time_s": 25.817714,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab523780a306d3450da482bf2710656b2ba64a95e9e3510c3aa57419a64e407a29245769988a1df63bb4894814f2b07d11ecc03f4afb6e30c5b2246fd03aacd2a9514d72aca33b15ac629681e8f26019e40f0efd0c12d1c7d953af0a42892dc747c1a52dea704e856aa2"
+    },
+    {
+      "sequence": 117,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 601,
+      "sample_time_s": 26.0177575,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52f6d4a306d3450da482bf2710656b2ba64a95e9e3b943c785714a299422d82924f49f2c19e0d6b3cafd593159836573a0d2f3f246b42f7de714acf81125e3f8eba7aeaca393939a4306ffd4fe3003acfd3e371835edcbd95327744e4f8012dad711be0a0428940936"
+    },
+    {
+      "sequence": 118,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 606,
+      "sample_time_s": 26.2177065,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5290c5a306d3450da482bf2710656b2ba64a95e9e31fde2e8200081fb5be88a546f49f2c19c4321b4c486460e3836572786a4e4afbf326bccbfac3487f51f205cbe5f42592dab9c69f9ebad838969e462138dc17b7de45ef7217b71293943cea14f9f189e4ed9d7107"
+    },
+    {
+      "sequence": 119,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 610,
+      "sample_time_s": 26.417733,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab526642a306d3450da482bf2710656b2ba64a95e9e31b6db394fd2813730a1ba015bdb524221df691c5f031924120932ea4c9569457f675650f00820e96acd269dd6614aca3b19cac621d5a26ca4832b415c31774231fffd953057bf7b46ace33d0b103b6ac28946aa2"
+    },
+    {
+      "sequence": 120,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 617,
+      "sample_time_s": 26.6176595,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52de17a306d3450da482bf2710656b2ba64a95e9e3d555963f33104369aaa60dc0f49f2c196cb43bb472839b2883659a37428dd2be7595ed71bc2ac2f6b8f5212f058031b5a350c74706ff61c3a135b8d392ad75fbd1c7b3ae0c12134bc8e0a33e930c808d6e7d9800"
+    },
+    {
+      "sequence": 121,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 622,
+      "sample_time_s": 26.8176765,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab527eaaa306d3450da482bf2710656b2ba628d9e9e3dad7576b331083e5407aad7dbdb524226cb4b3ca44a260e3e1c7e34e6a4ef246d68d2c2514ac393d62ea11eca31d31b5b77706137f16cc166cdf88192a101edeedcbb3ae3f9cb0bd2894626a68c786666b2eab18"
+    },
+    {
+      "sequence": 124,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 637,
+      "sample_time_s": 27.417787,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52d37fa306d3450da482bf2710656b2ba628d9e9e3c172f49dcde283e581c01528647124222eee3bb448643159e1c70a4908ecd7ed5ef34700b979a9d3aa3911ecedcfebaadb612ed0be42fcd5d524e5d71ad3e51558f61180335a786ec938cef05bdfb6ac8e0955ea"
+    },
+    {
+      "sequence": 125,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 640,
+      "sample_time_s": 27.617722,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52d62ca306d3450da482bf2710656b2ba628d9e9e3e9592e82cde2d25faaa6e3af5769988a8cc06a0e508c89e44d5dd0564ab6331287372dfdb411487faa390a497db1ebaa3e462ed0eff815d2f08f047b38dc9c6c559e1180af0af7b4a21d429211be023f6b2ec9ba"
+    },
+    {
+      "sequence": 126,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 645,
+      "sample_time_s": 27.817792,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab524e69a306d3450da482bf2710656b2ba628d9e9e35c640a6f913e2f7f44c9ad7d5769988af4f11b4c19a69241b07d1e6ec956d2beb09c4e699cd2cb9f62ea0a49e0a731b58b7b6002eff844685c15879b023bd60dde45b3aefeb083a559d6f2fca52d8666de13ec11"
+    },
+    {
+      "sequence": 127,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 650,
+      "sample_time_s": 28.0177495,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab529476a306d3450da482bf2710656b2ba628d9e9e379cf3c4efbc3436907731528f49f2c19f4f191c5bee314f2214b920cc03ff246461b712136a34d2cc0c4212f595cebaab8f59685dce0ee1931db012852219457bdd1b3ae17b7d21f98faea14198589e4ed9dafab"
+    },
+    {
+      "sequence": 128,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 657,
+      "sample_time_s": 28.217601,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5236581b53d3450da482bf2710656b2ba6ae6ae9e31fde963f913e83e58e42a5466471988ac432a7e4ba5053fb597a2ea44fe57a384add8b60cd68a80baa3911ec559aa9f0b19cac62d853fcd54832b8d352219104e10d1533feb0fadc59d6a33ef829485ef63808ee"
+    },
+    {
+      "sequence": 129,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 659,
+      "sample_time_s": 28.417683,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab525ca51b53d3450da482bf2710656b2ba6ae6ae9e31b6d3527fbc3d25f88a9a546f5472c191df65da57283b927209373a03bf458377595ed71fac3e0f99c180a49e5f4a9f03b15ac629be915d2601988191ad33cd1c5e073228ff2710798fa047b11bea2821f3f6aa2"
+    },
+    {
+      "sequence": 130,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 664,
+      "sample_time_s": 28.617654,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab526a841b53d3450da482bf2710656b2ba6ab39e9e3b89bbefce90fd25f9a653d035769944c648f6a0efd5911a120937278aac2a3fcb42f7de73fca0a25c0c468056996aca3332e64b112d84468d0778ef22a107423f52315330c124e4fc8e0c81b397d2afc1f3fe179"
+    },
+    {
+      "sequence": 131,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 672,
+      "sample_time_s": 28.8177,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5255cc1b53d3450da482bf2710656b2ba6ae6ae9e35937f02e3310e147e38c3d0335cb2422c4328309604f574869b91885d2f3583716017de7fe70f811aa39212f6f7da9f01bedc69f1433d838f08f7539023b0c121b4c1533c91bf2e72894fe3a11be2afcf638e179"
+    },
+    {
+      "sequence": 132,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 676,
+      "sample_time_s": 29.017711,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5237801b53d3450da482bf2710656b2ba6ae6ae9e3f1b1f49df2aa0b9b22d82924f5472c19e0d6a7e4bee3f00d20939a37c9567a38461b7121cd68cb9fc11c3501a7ae31b587bdc7479be926ca5afe248331b528ffe10d732287c9d21fb0d1cef0930c0a04d2d5ec11"
+    },
+    {
+      "sequence": 133,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 680,
+      "sample_time_s": 29.2176675,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52f6d41b53d3450da482bf2710656b2ba6ae6ae9e3e59f2e82f2aa3b588e42d40435cb242269e75da5486411a1b07d3a8ac03f5837fe4e4700fac34d2c004839c7c50cebaa794fc747221261c378f1047bb706d60dc5e0b2768aa11293a4f642929a65808de4f4e942"
+    },
+    {
+      "sequence": 134,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 686,
+      "sample_time_s": 29.4177105,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5290c51b53d3450da482bf2710656b2ba6ae6ae9e3510c0a6ffbc3e1470a1ba01535cb24221df66a0e44a2ad0969b9b2f4428d7a3817d92c250082f4d7a3508192661431b54a579a431433d4fe922d879b38dc24392ce77322057bb0bdc9384aa9f9f12afc6e7de942"
+    },
+    {
+      "sequence": 136,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 696,
+      "sample_time_s": 29.8175915,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52de171b53d3450da482bf2710656b2ba6ae6ae9e35c641e4137a3a31d407aad7d35cb2422f4f1a7e4fd59199ab07d920c3bf4da85f32655cc14ac0e9690decf40559a4984dab996851d5aee195397b415f4bc9c6cde45b276c91b4e4f943cc17211be2afce4f4ab18"
+    },
+    {
+      "sequence": 138,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 707,
+      "sample_time_s": 30.217528,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52a76e1b53d3450da482bf2710656b2ba6ae6ae9e3d555b39490e620fdbe88d4049951988a6cb46a0e508c57488365e34e08ecda855ef32dfd0082688766598cfa6996ebaab77706132ed46cab6cdf429253f994572ce7b276cda87e8520af00c8f9f1023fde130936"
+    },
+    {
+      "sequence": 139,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 711,
+      "sample_time_s": 30.417624,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab525a4e1b53d3450da482bf2710656b2ba6ae6ae9e3b89b3aa551b2ab260a1b0dc0f5472c196cb48309746853fbe1c7975f4fe532ca7a178fd3bc2a487f665903206f7d49848b7b60029eba853c5c159c3eb255e5151b4cb2760c124289086cc81b198589e44e85ab18"
+    },
+    {
+      "sequence": 140,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 716,
+      "sample_time_s": 30.6176025,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52d37f1b53d3450da482bf2710656b2ba6275be9e31b6d352779712994aaa6e3af9951988a8cc098ac7bea11a1214b11ecc03fda857cfc41eb14ace0f951f2f8eb7db123791bed57a9363cd838969eacfd1ad30c12de45d03aaf0ab0bd6e7d33d019854cedde1341c4"
+    },
+    {
+      "sequence": 141,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 724,
+      "sample_time_s": 30.817649,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52d62c1b53d3450da482bf2710656b2ba6275be9e3510c0a6fd9cce5f4407a85bef5472c19e63dab22d8f2574887d673a008ec90e44addbccb5d86f4d751f2cbf304581558b19caa8906fffcd5922d8ef20efd91041fffef7287c983a5ab7447c1f9f1ba6af63855ea"
+    },
+    {
+      "sequence": 142,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 728,
+      "sample_time_s": 31.01757,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab524e691b53d3450da482bf2710656b2ba6275be9e3c172f02ec124137307731528f5472c192eee6a0e187e9dc3e1c772780c5fda856e30c8da36a34044288b69dd595c23793e462ed006ffcc16f08f0c40ba6e17b7d1c7d03a8ff2fadc2dc7047b1985808d8fd1e179"
+    },
+    {
+      "sequence": 143,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 732,
+      "sample_time_s": 31.2176195,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5294761b53d3450da482bf2710656b2ba6275be9e3e959963f7971a64ebe88152835cb24228cc059167283f00d4d5d1885c95632ca1601c8dabc2aa80b8836a951edcf237993938e6d1d5a2279d077e40f52211edeedcbd03a057b134b80124aa9a52d89e4e4f46520"
+    },
+    {
+      "sequence": 145,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 742,
+      "sample_time_s": 31.617665,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab525ca5bbeed3450da482bf2710656b2ba6337ce9e3e59f3aa551b20b9baaa6e3afbdb5988a8cc05da5bee3a1cfc13f0a494ab6515e6e304e6914ac487f90de35017db1199e332e06131d5a4468d524b8d3b706742358f6fb5c6e5e129398faea14397dea706b2e6aa2"
+    },
+    {
+      "sequence": 146,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 747,
+      "sample_time_s": 31.817558,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab526a84bbeed3450da482bf2710656b2ba6337ce9e3510cf49df2aad25f22d8ad7dbdb5988a2eeeb3ca728314f2c46ce34eab1ad7ed87378b609cd2cb9f00480a49e5f4ef19b8f5a50b221284e46cdfacfd38dc9c6c559e2298feb06aa2c8e0a33ef9f10f57d2d56520"
+    },
+    {
+      "sequence": 147,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 751,
+      "sample_time_s": 32.017627,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab5255ccbbeed3450da482bf2710656b2ba6337ce9e3d3be2e8290e6e147077315285769944c2eee1b4c7bea31597d97975ff61e3312f326ed7136a34d2c66598192595c199e794fa50b968161c3a1358ef2c317b4afbc0922988ff25a612894626a5f6c0f57d2d57107"
+    },
+    {
+      "sequence": 149,
+      "run_id": 10264,
+      "all_checks_ok": true,
+      "packet_no": 759,
+      "sample_time_s": 32.4175885,
+      "decode_method": "hard",
+      "pdu_hex": "47ac4909a6a5a4a3a2c1c80d0201060209539bffffffd18cffaafd630f6d70b158cc4d163e7c683dbe02ae508b0bb4651011e7dc8f53a68f47fb967fbb8a4cf2841f835bab52f6d4bbeed3450da482bf2710656b2ba6ab39e9e379cf963f7971a31d81c044ea5769944cef545da5f80a9dc37d9773a06a4e515e75952dfdb411a80b51f2cf40a31d017693932ed0363c22794832e5d7f00fd2be58f65be10c12f2e7a4f6a2e6a52d4cede4f455ea"
+    }
+  ]
+}

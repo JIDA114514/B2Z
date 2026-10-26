@@ -1,0 +1,12 @@
+Status: complete
+Error: None
+CRC-valid exadv packets: 678
+Counts: {'clipped_components': 1028, 'samples_processed': 240000000, 'packets': 678, 'primary': 571, 'aux_ptr_unsupported_phy': 133, 'same_channel_auxiliary_diagnostic': 107}
+Matched primary/auxiliary events: 0
+Same-channel diagnostic pairs (not AuxPtr compliant): 101
+Processed IQ: 30.000000 s; wall: 32.542 s
+Application queue overflow: 0
+AuxPtr pointing to unsupported PHY: 133
+PRR: N/A (TX count/window not merged)
+Timing: relative nominal IQ sample timeline; USB gaps are not ruled out.
+JSON summary: python/exadv_rx/results/replay_10263_window_retry1.summary.json

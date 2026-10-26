@@ -1,0 +1,106 @@
+{
+  "full_iq_runs": [
+    {
+      "run_id": 10262,
+      "baseline": 104,
+      "optimized": 104,
+      "gained": [],
+      "lost": [],
+      "all_payload_checks_ok": true,
+      "diagnostic_pairs": 100,
+      "strict_pairs": 0,
+      "decoder_stats": {
+        "sync_candidates": 8491,
+        "packets": 637,
+        "rejected_candidates": 7776,
+        "hard_crc_failure_candidates": 79,
+        "timing_retry_attempts": 309,
+        "crc_failure_candidates": 78,
+        "timing_retry_recovered": 1
+      }
+    },
+    {
+      "run_id": 10263,
+      "baseline": 106,
+      "optimized": 107,
+      "gained": [
+        42
+      ],
+      "lost": [],
+      "all_payload_checks_ok": true,
+      "diagnostic_pairs": 101,
+      "strict_pairs": 0,
+      "decoder_stats": {
+        "sync_candidates": 9888,
+        "rejected_candidates": 9142,
+        "packets": 678,
+        "hard_crc_failure_candidates": 69,
+        "timing_retry_attempts": 255,
+        "crc_failure_candidates": 68,
+        "timing_retry_recovered": 1
+      }
+    },
+    {
+      "run_id": 10264,
+      "baseline": 115,
+      "optimized": 117,
+      "gained": [
+        69,
+        96
+      ],
+      "lost": [],
+      "all_payload_checks_ok": true,
+      "diagnostic_pairs": 106,
+      "strict_pairs": 0,
+      "decoder_stats": {
+        "sync_candidates": 12948,
+        "rejected_candidates": 12022,
+        "packets": 844,
+        "hard_crc_failure_candidates": 84,
+        "timing_retry_attempts": 303,
+        "crc_failure_candidates": 82,
+        "timing_retry_recovered": 2
+      }
+    }
+  ],
+  "acceptance": "BLE CRC24, extended header, Run ID, deterministic payload and IEEE802.15.4 FCS; no known payload used by decoder",
+  "single_process_benchmark": {
+    "hard": {
+      "processed_sample_duration_s": 25.0,
+      "wall_duration_s": 20.459396107999055,
+      "processing_ms_recent": {
+        "samples": 3053,
+        "mean": 5.762663531280548,
+        "p99": 8.726540759162164,
+        "max": 10.517425000216463
+      },
+      "counts": {
+        "clipped_components": 622,
+        "samples_processed": 200000000,
+        "packets": 575,
+        "primary": 492,
+        "same_channel_auxiliary_diagnostic": 83,
+        "aux_ptr_unsupported_phy": 103
+      }
+    },
+    "retry": {
+      "processed_sample_duration_s": 25.0,
+      "wall_duration_s": 21.62501830900146,
+      "processing_ms_recent": {
+        "samples": 3053,
+        "mean": 6.11675964854477,
+        "p99": 9.929783519328343,
+        "max": 11.75785600025847
+      },
+      "counts": {
+        "clipped_components": 622,
+        "samples_processed": 200000000,
+        "packets": 577,
+        "primary": 492,
+        "same_channel_auxiliary_diagnostic": 85,
+        "aux_ptr_unsupported_phy": 103
+      }
+    }
+  },
+  "benchmark_wall_increase_fraction": 0.05697246364699304
+}

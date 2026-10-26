@@ -180,8 +180,73 @@ class EventMatcher:
                     self.matched += 1
                     matches.append({"primary_packet": primary["packet_no"],
                                     "auxiliary_packet": packet["packet_no"],
+                                    "match_type": "aux_ptr",
                                     "delta_us": delta, "aux_ptr": aux})
         aux = packet["extended"].get("aux_ptr")
         if packet["kind"] == "primary" and aux and aux["offset_us"]:
             self.pending.append(packet)
         return matches
+
+
+class DiagnosticEventMatcher:
+    """Same-RF pairing for the board's explicit nonstandard debug waveform.
+
+    This never changes strict AuxPtr counts. Identity, an explicit finite time
+    window, and a one-to-one match are required; no periodic time folding.
+    """
+    def __init__(self, window_us: float = 2000):
+        if not 0 < window_us <= 10000:
+            raise ValueError("diagnostic pair window must be in (0, 10000] us")
+        self.window_us = window_us
+        self.pending: list[dict] = []
+        self.matched = 0
+        self.expired = 0
+        self.overflow = 0
+
+    def feed(self, packet: dict) -> list[dict]:
+        now = packet["sample_time_s"] * 1e6
+        keep = []
+        for primary in self.pending:
+            aux = primary["extended"]["aux_ptr"]
+            end = primary["sample_time_s"] * 1e6 + aux["offset_us"] + self.window_us
+            if now > end:
+                self.expired += 1
+            else:
+                keep.append(primary)
+        self.pending = keep
+        ext = packet["extended"]
+        if packet["kind"] == "primary" and ext.get("aux_ptr") and ext["aux_ptr"]["offset_us"]:
+            self.pending.append(packet)
+            if len(self.pending) > 1024:
+                self.pending.pop(0)
+                self.overflow += 1
+        if packet["kind"] != "same_channel_auxiliary_diagnostic":
+            return []
+        candidates = []
+        for primary in self.pending:
+            pri = primary["extended"]
+            if primary["channel"] != packet["channel"]:
+                continue
+            if "adi" not in pri or pri.get("adi") != ext.get("adi"):
+                continue
+            if "adva" in pri and pri["adva"] != ext.get("adva"):
+                continue
+            delta = now - primary["sample_time_s"] * 1e6
+            if delta <= (primary["pdu_length"] + 10) * 8:
+                continue
+            error = delta - pri["aux_ptr"]["offset_us"]
+            if abs(error) <= self.window_us:
+                candidates.append((abs(error), primary, delta, error))
+        if not candidates:
+            return []
+        _, primary, delta, error = min(candidates, key=lambda entry: entry[0])
+        self.pending.remove(primary)
+        self.matched += 1
+        aux = primary["extended"]["aux_ptr"]
+        return [{"match_type": "same_channel_diagnostic", "primary_packet": primary["packet_no"],
+                 "auxiliary_packet": packet["packet_no"], "delta_us": delta,
+                 "error_vs_aux_us": error, "diagnostic_window_us": self.window_us,
+                 "aux_ptr": aux, "actual_channel": packet["channel"],
+                 "channel_matches_aux": aux["channel"] == packet["channel"],
+                 "phy_matches_aux": aux["phy"] == 0,
+                 "standards_compliant": False}]

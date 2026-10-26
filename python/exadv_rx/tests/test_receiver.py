@@ -13,7 +13,7 @@ from scipy import signal
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from decoder import ChannelDecoder, IQDCBlocker, SYNC_BYTES
-from protocol import EventMatcher, crc24, parse_extended, parse_pdu, whiten
+from protocol import DiagnosticEventMatcher, EventMatcher, crc24, parse_extended, parse_pdu, whiten
 from receive import Capture, main, parse_args
 
 
@@ -108,6 +108,34 @@ class ProtocolTests(unittest.TestCase):
         with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
             parse_args(["--channels", "39,3"])
 
+    def test_same_channel_diagnostic_is_separate_from_strict_pairs(self):
+        primary = {"packet_no": 1, "kind": "primary", "channel": 39, "pdu_length": 7,
+                   "sample_time_s": .01, "extended": {"adi": {"sid": 3, "did": 17},
+                   "aux_ptr": {"channel": 3, "phy": 1, "offset_us": 30000, "offset_unit_us": 30}}}
+        secondary = parse_pdu(pdu(), 39)
+        secondary.update(packet_no=2, sample_time_s=.040808)
+        strict = EventMatcher()
+        strict.feed(primary)
+        self.assertEqual(strict.feed(secondary), [])
+        matcher = DiagnosticEventMatcher()
+        matcher.feed(primary)
+        events = matcher.feed(secondary)
+        self.assertEqual(len(events), 1)
+        self.assertFalse(events[0]["standards_compliant"])
+        self.assertFalse(events[0]["channel_matches_aux"])
+        self.assertFalse(events[0]["phy_matches_aux"])
+        self.assertAlmostEqual(events[0]["error_vs_aux_us"], 808)
+        self.assertEqual(matcher.feed(secondary), [])
+        secondary["sample_time_s"] = .040808
+        for window, mismatch in ((500, False), (2000, True)):
+            with self.subTest(window=window, identity_mismatch=mismatch):
+                candidate = dict(primary)
+                if mismatch:
+                    candidate["extended"] = dict(primary["extended"], adi={"sid": 1, "did": 9})
+                test_matcher = DiagnosticEventMatcher(window)
+                test_matcher.feed(candidate)
+                self.assertEqual(test_matcher.feed(secondary), [])
+
     def test_live_queue_overflow_is_explicit(self):
         args = parse_args(["--queue-blocks", "1", "--block-samples", "1024", "--duration", "0"])
         capture = Capture(args)
@@ -120,6 +148,26 @@ class ProtocolTests(unittest.TestCase):
 
 
 class IQTests(unittest.TestCase):
+    def test_recorded_packet_recovered_by_window_retry(self):
+        with np.load(ROOT / "tests" / "fixtures" / "run10264_seq24.npz", allow_pickle=False) as fixture:
+            values = fixture["iq_ci8"].astype(np.float32)
+            iq = (values[:, 0] + 1j * values[:, 1]) / 128
+            expected = str(fixture["expected_pdu_hex"])
+        for enabled in (False, True):
+            with self.subTest(timing_retry=enabled):
+                decoder = ChannelDecoder(8000000, 2480000000, 39, timing_retry=enabled)
+                dc = IQDCBlocker(8000000)
+                packets = []
+                for start in range(0, len(iq), 997):
+                    packets.extend(decoder.feed(dc.feed(iq[start:start + 997])))
+                packets.extend(decoder.feed([], final=True))
+                target = [packet for packet in packets if packet["extended"].get("adva") == "C1:A2:A3:A4:A5:A6"]
+                self.assertEqual(len(target), int(enabled))
+                if enabled:
+                    self.assertEqual(target[0]["pdu_hex"], expected)
+                    self.assertEqual(target[0]["decode_method"], "narrow_window_retry")
+                    self.assertEqual(decoder.stats["timing_retry_recovered"], 1)
+
     def test_dc_filter_is_independent_of_chunk_boundaries(self):
         iq = waveform(pdu()) + np.complex64(.5 + .9j)
         expected = IQDCBlocker(8000000).feed(iq)

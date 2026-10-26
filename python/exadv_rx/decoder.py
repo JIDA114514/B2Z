@@ -45,7 +45,8 @@ class IQDCBlocker:
 
 class ChannelDecoder:
     def __init__(self, sample_rate: int, center_hz: float, channel: int,
-                 whitening_channel: int | None = None, sync_threshold: float = .84):
+                 whitening_channel: int | None = None, sync_threshold: float = .84,
+                 timing_retry: bool = True, cutoff_hz: float = 850000):
         if sample_rate not in (4000000, 8000000, 12000000, 16000000, 20000000):
             raise ValueError("sample rate must be 4/8/12/16/20 Msps")
         self.channel = channel
@@ -60,7 +61,9 @@ class ChannelDecoder:
             period = sample_rate // math.gcd(sample_rate, abs(int(self.offset_hz)))
             if period <= 65536:
                 self.oscillator = np.exp(-2j * np.pi * self.offset_hz * np.arange(period) / sample_rate).astype(np.complex64)
-        self.taps = signal.firwin(16 * self.decimation + 1, 850000, fs=sample_rate)
+        if not math.isfinite(cutoff_hz) or not 400000 <= cutoff_hz <= 950000:
+            raise ValueError("channel cutoff must be in 400000..950000 Hz")
+        self.taps = signal.firwin(16 * self.decimation + 1, cutoff_hz, fs=sample_rate)
         self.history = np.zeros(len(self.taps) - 1, dtype=np.complex64)
         self.input_samples = 0
         self.buffer_base = 0
@@ -68,6 +71,7 @@ class ChannelDecoder:
         self.scan_cursor = 1
         self.last_end = -1
         self.sync_threshold = sync_threshold
+        self.timing_retry = timing_retry
         self.stats = Counter()
 
     def feed(self, iq: np.ndarray, final: bool = False) -> list[dict]:
@@ -154,6 +158,22 @@ class ChannelDecoder:
                         break
                 if decoded is not None:
                     break
+            if decoded is None and saw_crc_failure:
+                self.stats["hard_crc_failure_candidates"] += 1
+                if self.timing_retry:
+                    # Keep the original result whenever it succeeds. A bounded
+                    # second decision window reduces Gaussian intersymbol mixing
+                    # without using expected payloads or changing received bits.
+                    for start, score in sorted(group, key=lambda item: -item[1])[:2]:
+                        for ppm in (0, -80, 80):
+                            self.stats["timing_retry_attempts"] += 1
+                            decoded, _ = self._decode(integral, integral_indices, start, score, ppm,
+                                                      window_fraction=.75)
+                            if decoded is not None:
+                                self.stats["timing_retry_recovered"] += 1
+                                break
+                        if decoded is not None:
+                            break
             if decoded is not None:
                 packets.append(decoded)
                 self.stats["packets"] += 1
@@ -165,14 +185,20 @@ class ChannelDecoder:
         self.scan_cursor = self.buffer_base + limit + 1
         return packets
 
-    def _decode(self, integral, integral_indices, start, score, ppm):
+    def _decode(self, integral, integral_indices, start, score, ppm, window_fraction=1.):
         step = SPS * (1 + ppm * 1e-6)
 
         def demod(count):
             edges = start + np.arange(count + 1) * step
             if edges[-1] >= len(integral):
                 return None
-            values = np.diff(np.interp(edges, integral_indices, integral)) / step
+            if window_fraction == 1.:
+                values = np.diff(np.interp(edges, integral_indices, integral)) / step
+            else:
+                centers = start + (np.arange(count) + .5) * step
+                half = step * window_fraction / 2
+                values = (np.interp(centers + half, integral_indices, integral)
+                          - np.interp(centers - half, integral_indices, integral)) / (step * window_fraction)
             amplitude = float(values[:40] @ SYNC_CENTERED / SYNC_ENERGY)
             cfo = float(values[:40].mean() - amplitude * SYNC.mean())
             bits = ((values - cfo) * amplitude > 0).astype(np.uint8)
@@ -205,6 +231,8 @@ class ChannelDecoder:
         packet.update(sample_start=sample, sample_time_s=sample / self.input_rate,
                       whitening_channel=self.whitening_channel, cfo_hz=cfo,
                       polarity=1 if amplitude > 0 else -1, sync_score=score,
+                      decode_method="hard" if window_fraction == 1. else "narrow_window_retry",
+                      decision_window_fraction=window_fraction,
                       clock_search_ppm=ppm, crc_hex=data[-3:].hex(),
                       _end_sample=self.buffer_base + start + total_bits * step - SPS)
         return packet, False

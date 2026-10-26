@@ -19,7 +19,7 @@ import time
 import numpy as np
 
 from decoder import ChannelDecoder, IQDCBlocker
-from protocol import EventMatcher, channel_frequency
+from protocol import DiagnosticEventMatcher, EventMatcher, channel_frequency
 
 
 def parse_args(argv=None):
@@ -41,7 +41,15 @@ def parse_args(argv=None):
     parser.add_argument("--sync-threshold", type=float, default=.84)
     parser.add_argument("--dc-block-hz", type=float, default=1000,
                         help="continuous IQ high-pass cutoff before demodulation; default 1000 Hz, 0 disables")
+    parser.add_argument("--timing-retry", action=argparse.BooleanOptionalAction, default=True,
+                        help="bounded narrower symbol-window retry after hard CRC failure; default enabled")
+    parser.add_argument("--channel-cutoff-hz", type=float, default=850000,
+                        help="channel low-pass cutoff in Hz; default 850000")
     parser.add_argument("--pair-tolerance-us", type=float, default=20)
+    parser.add_argument("--diagnostic-pairs", action=argparse.BooleanOptionalAction, default=True,
+                        help="separate same-channel debug pairing counter; does not relax strict pairs")
+    parser.add_argument("--diagnostic-pair-window-us", type=float, default=2000,
+                        help="maximum absolute error from advertised offset for diagnostic pairs, default 2000us")
     parser.add_argument("--save-iq", action="store_true", help="save input bytes and metadata beside output")
     parser.add_argument("--output", type=Path, help="output prefix; files are never overwritten")
     parser.add_argument("--quiet", action="store_true", help="only periodic status and final summary")
@@ -73,8 +81,12 @@ def parse_args(argv=None):
             raise ValueError("sync-threshold must be in [0.6, 1)")
         if not math.isfinite(args.dc_block_hz) or not 0 <= args.dc_block_hz < args.sample_rate / 2:
             raise ValueError("dc-block-hz must be finite and in [0, Fs/2)")
+        if not math.isfinite(args.channel_cutoff_hz) or not 400000 <= args.channel_cutoff_hz <= 950000:
+            raise ValueError("channel-cutoff-hz must be in [400000, 950000]")
         if not math.isfinite(args.pair_tolerance_us) or args.pair_tolerance_us < 0:
             raise ValueError("pair-tolerance-us must be finite and nonnegative")
+        if not math.isfinite(args.diagnostic_pair_window_us) or not 0 < args.diagnostic_pair_window_us <= 10000:
+            raise ValueError("diagnostic-pair-window-us must be in (0, 10000]")
         if not args.iq_file and args.format != "ci8":
             raise ValueError("HackRF live capture uses ci8")
         if args.iq_file and not args.iq_file.is_file():
@@ -200,9 +212,11 @@ def main(argv=None):
     for path in paths.values():
         if path.exists():
             raise FileExistsError(f"refusing to overwrite {path}")
-    decoders = [ChannelDecoder(args.sample_rate, args.center_hz, channel, white, args.sync_threshold)
+    decoders = [ChannelDecoder(args.sample_rate, args.center_hz, channel, white, args.sync_threshold,
+                               args.timing_retry, args.channel_cutoff_hz)
                 for channel, white in zip(args.channels, args.whitening_channels)]
     matcher = EventMatcher(args.pair_tolerance_us)
+    diagnostic_matcher = DiagnosticEventMatcher(args.diagnostic_pair_window_us)
     dc_blocker = IQDCBlocker(args.sample_rate, args.dc_block_hz)
     counts = Counter()
     processing = []
@@ -233,6 +247,9 @@ def main(argv=None):
                 packets_file.write(json.dumps(packet, ensure_ascii=False) + "\n")
                 for event in matcher.feed(packet):
                     events_file.write(json.dumps(event) + "\n")
+                if args.diagnostic_pairs:
+                    for event in diagnostic_matcher.feed(packet):
+                        events_file.write(json.dumps(event) + "\n")
                 if not args.quiet:
                     ext = packet["extended"]
                     print(f"#{packet['packet_no']} ch{packet['channel']} {packet['kind']} "
@@ -278,7 +295,8 @@ def main(argv=None):
                 if time.monotonic() - last_status >= 5:
                     last_status = time.monotonic()
                     print(f"status samples={counts['samples_processed']} packets={counts['packets']} "
-                          f"pairs={matcher.matched} queue={capture.queue.qsize()}", flush=True)
+                          f"pairs={matcher.matched} diagnostic_pairs={diagnostic_matcher.matched} "
+                          f"queue={capture.queue.qsize()}", flush=True)
             if capture.error:
                 raise RuntimeError(capture.error)
         except KeyboardInterrupt:
@@ -296,7 +314,7 @@ def main(argv=None):
             process(np.empty(0, np.complex64), final=True)
     wall = time.monotonic() - started
     summary = {
-        "schema": "exadv_rx_v2", "receiver_version": "2026-10-26-dc1", "start_utc": start_utc,
+        "schema": "exadv_rx_v3", "receiver_version": "2026-10-26-window-retry1", "start_utc": start_utc,
         "end_utc": datetime.now(timezone.utc).isoformat(),
         "status": "error" if error else "interrupted" if interrupted else "complete",
         "error": error, "config": {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()},
@@ -304,6 +322,9 @@ def main(argv=None):
         "capture_stats": dict(capture.stats), "counts": dict(counts),
         "channels": {str(d.channel): dict(d.stats) for d in decoders},
         "matched_events": matcher.matched, "expired_primary": matcher.expired,
+        "diagnostic_pairs": diagnostic_matcher.matched,
+        "diagnostic_expired_primary": diagnostic_matcher.expired,
+        "diagnostic_pending_overflow": diagnostic_matcher.overflow,
         "pending_primary": len(matcher.pending),
         "wall_duration_s": wall, "processed_sample_duration_s": counts["samples_processed"] / args.sample_rate,
         "processing_ms_recent": {"samples": len(processing), "mean": float(np.mean(processing) * 1000) if processing else None,
@@ -321,6 +342,7 @@ def main(argv=None):
     text_report = (f"Status: {summary['status']}\nError: {error}\n"
                    f"CRC-valid exadv packets: {counts['packets']}\nCounts: {dict(counts)}\n"
                    f"Matched primary/auxiliary events: {matcher.matched}\n"
+                   f"Same-channel diagnostic pairs (not AuxPtr compliant): {diagnostic_matcher.matched}\n"
                    f"Processed IQ: {summary['processed_sample_duration_s']:.6f} s; wall: {wall:.3f} s\n"
                    f"Application queue overflow: {capture.stats['queue_overflow']}\n"
                    f"AuxPtr pointing to unsupported PHY: {counts['aux_ptr_unsupported_phy']}\n"

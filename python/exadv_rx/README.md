@@ -26,6 +26,8 @@ python3 python/exadv_rx/receive.py \
 标准 secondary 固定在 BLE data ch3（2410 MHz）时改成 `--channels 3`。必须核实实际 RF 频率和白化信道，不能仅从 AuxPtr 推断板端实际发射配置。两块 HackRF 并用时通过 `--serial <序列号>` 选择设备。
 
 - `--duration 0` 持续接收到 Ctrl-C；离线模式表示读到 EOF。
+- 默认启用 `--timing-retry`：原始完整符号窗口通过 CRC 时直接提交，失败时只对最多两个采样候选和三个小幅时钟偏差，用 0.75 符号宽度的中心窗口重判。重试仍须通过完整 BLE CRC24 和扩展头校验，不使用已知 Run ID/Sequence/填充恢复负载，也不翻转弱位来凑 CRC。`--no-timing-retry` 关闭以做同 IQ 对照。
+- `--channel-cutoff-hz` 允许在 400000–950000 Hz 范围内显式设置通道 FIR 截止频率，默认仍为 850000 Hz。较窄滤波在不同记录上有得有失，未自动改为新的默认值。
 - `--output python/exadv_rx/results/run001` 指定结果前缀，已有文件时拒绝覆盖。
 - 默认射频放大器关闭，LNA=24 dB、VGA=20 dB 只是初始设置，不是稳定性保证；根据距离和饱和情况调整。
 - `--whitening-channels 39` 可显式设置与 RF 信道不同的白化信道，仅用于诊断或特殊发射配置，结果会保留两者。
@@ -46,7 +48,7 @@ python3 python/exadv_rx/receive.py \
 默认保存到本目录 `results/`，每轮生成：
 
 - `.packets.jsonl`：CRC 正确且扩展头可解析的逐包记录，包括完整 PDU/AdvData、AD 字段、AdvA、ADI、AuxPtr、相对采样时刻、频偏和同步评分。
-- `.events.jsonl`：同一 IQ 时间线中满足 AuxPtr 信道、PHY、量化偏移窗口以及 ADI/AdvA 身份条件的 primary/auxiliary 匹配。
+- `.events.jsonl`：通过 `match_type` 区分严格 AuxPtr 匹配和同频诊断匹配，不能将两类事件合并为规范符合的事件数。
 - `.summary.json`、`.summary.txt`：配置、计数、处理耗时、队列压力和运行状态；JSONL 作为原始结构化数据。
 - `.hackrf.log`：`hackrf_transfer` 原始 stderr，保留设备错误和可能的传输异常。
 - 开启 `--save-iq` 时输出 `.ci8`（或离线输入对应的 `.cf32`），录制参数在 summary 中。
@@ -61,6 +63,21 @@ python3 python/exadv_rx/receive.py \
 6. AuxPtr 的偏移表示量化窗口，不是无误差的精确执行时刻；当前配对还允许配置的测量容差。多个 primary 指向同一个 secondary 时可产生多个指针匹配，不等于多个独立控制任务。
 7. `auxiliary` 不凭 type 7 或 ADI 猜测 AUX_ADV_IND/AUX_CHAIN_IND 等具体子类型；当前不重组链式数据，也不执行应用控制命令。
 8. 未合并发送端有效计数与一致观察窗口时 PRR 为 N/A。新脚本不会从接收数量推测板端发送数。
+
+### `pairs` 与 `diagnostic_pairs`
+
+状态行同时显示两种计数：
+
+```text
+status samples=... packets=... pairs=0 diagnostic_pairs=... queue=...
+```
+
+- `pairs` / summary 的 `matched_events`：严格 AuxPtr 配对，要求信道、LE 1M PHY、身份与声明的量化偏移窗口一致，原有口径未放宽。
+- `diagnostic_pairs`：默认启用的同频调试配对，仅处理 `same_channel_auxiliary_diagnostic`。要求同一实际 RF 信道、相同 ADI，以及存在时一致的 AdvA；只在声明偏移的 ±2000 us 内做一对一匹配，不按实验周期折叠时间。窗口由 `--diagnostic-pair-window-us` 显式配置，最高 10000 us，`--no-diagnostic-pairs` 可关闭。
+- 诊断事件标为 `match_type=same_channel_diagnostic`、`standards_compliant=false`，保留实际间隔、对 AuxPtr 的误差、信道/PHY 是否一致。不是硬件时间同步精度，也不是控制任务执行成功率。
+- 当前板端同频 ch39、AuxPtr 声明 ch3/PHY=1/30000us，而实测偏移约 30800us，因此严格 `pairs` 仍应为 0，诊断计数可以增加。
+
+逐包 `decode_method` 区分 `hard` 和 `narrow_window_retry`。通道统计中的 `hard_crc_failure_candidates` 包括随后被重试恢复的候选，`crc_failure_candidates` 为最终仍失败的候选，`timing_retry_attempts` / `timing_retry_recovered` 报告额外开销与恢复数。候选计数不能当成独立物理坏包数。
 
 ## 录制回放与稳定性排查
 
@@ -85,6 +102,8 @@ HackRF 原始 IQ 不保证提供可定位每次 USB 丢样的序列号/硬件时
 ## 当前验证与发送端注意事项
 
 当前验证覆盖：CRC/白化与项目旧编码器交叉检查、严格扩展头边界、完整 8 位长度、跨任意数据块、频偏、IQ 反相、小幅采样时钟偏差、坏 CRC、噪声、真实重复包、数字信道平移、同一 IQ 中 primary/secondary 配对、旧 30.72 Msps 生成器 IQ 回归及离线 CLI。
+
+窗口重试另有一个约 19 KB 的真实 IQ 回归片段，验证完整窗口失败、窄窗口成功且 CRC 条件不变；同频诊断匹配覆盖身份不符、窗口超限、重复提交和严格/诊断计数隔离。完整 IQ 对照结果保存在 `results/window_retry_comparison.summary.json`，不以分段窗口探针的收益代替连续回放结果。
 
 ```bash
 python3 -m unittest discover -s python/exadv_rx/tests -v

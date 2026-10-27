@@ -1,0 +1,102 @@
+{
+  "runs": [
+    {
+      "run_id": 10265,
+      "fcs_valid": 97,
+      "valid_test_payloads": 97,
+      "unique": 97,
+      "duplicate": 0,
+      "longest_missing": 4,
+      "seq_min": 0,
+      "seq_max": 149,
+      "decode_methods": {
+        "hard_dsss": 96,
+        "soft_dsss": 1
+      },
+      "ble_valid_same_iq": 91,
+      "common_sequence_count_same_iq_only": 85,
+      "zigbee_only": [
+        11,
+        14,
+        52,
+        58,
+        64,
+        71,
+        93,
+        110,
+        113,
+        127,
+        128,
+        134
+      ],
+      "ble_only": [
+        8,
+        56,
+        77,
+        107,
+        119,
+        140
+      ],
+      "same_iq_reference_delta_us": {
+        "min": 215.7499999988488,
+        "median": 216.00000000177033,
+        "max": 216.50000000050795
+      },
+      "note": "one previously recorded IQ decoded twice; not two independent receivers or execution synchronization"
+    },
+    {
+      "run_id": 10266,
+      "fcs_valid": 64,
+      "valid_test_payloads": 64,
+      "unique": 64,
+      "duplicate": 0,
+      "longest_missing": 6,
+      "seq_min": 2,
+      "seq_max": 149,
+      "decode_methods": {
+        "hard_dsss": 64
+      },
+      "ble_valid_same_iq": 61,
+      "common_sequence_count_same_iq_only": 48,
+      "zigbee_only": [
+        18,
+        27,
+        39,
+        53,
+        64,
+        65,
+        73,
+        81,
+        89,
+        91,
+        94,
+        98,
+        106,
+        142,
+        146,
+        148
+      ],
+      "ble_only": [
+        20,
+        21,
+        35,
+        41,
+        45,
+        52,
+        63,
+        68,
+        74,
+        88,
+        112,
+        121,
+        141
+      ],
+      "same_iq_reference_delta_us": {
+        "min": 215.7499999988488,
+        "median": 215.99999999999397,
+        "max": 216.25000000113914
+      },
+      "note": "one previously recorded IQ decoded twice; not two independent receivers or execution synchronization"
+    }
+  ]
+}

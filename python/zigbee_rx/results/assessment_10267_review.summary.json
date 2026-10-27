@@ -1,0 +1,90 @@
+{
+  "run_id": 10267,
+  "live_summary": "python/zigbee_rx/results/rx_20261027_104502_973395.summary.json",
+  "replay_summary": "python/zigbee_rx/results/assessment_10267_replay.summary.json",
+  "all_88_frames_revalidated": true,
+  "live_replay_identical_sequence_frame_time_method": true,
+  "planned_recovery": {
+    "numerator": 88,
+    "denominator": 150,
+    "value": 0.5866666666666667,
+    "scope": "explicit receiver expected-packets, not verified TX count"
+  },
+  "wireless_prr": null,
+  "wireless_prr_reason": "no matching board final counts merged; full coverage not explicitly confirmed",
+  "missing": 62,
+  "longest_loss_burst": 4,
+  "loss_burst_histogram": {
+    "3": 4,
+    "2": 8,
+    "1": 18,
+    "4": 4
+  },
+  "sequence_blocks": [
+    {
+      "first": 0,
+      "last": 29,
+      "unique": 18,
+      "planned": 30
+    },
+    {
+      "first": 30,
+      "last": 59,
+      "unique": 21,
+      "planned": 30
+    },
+    {
+      "first": 60,
+      "last": 89,
+      "unique": 14,
+      "planned": 30
+    },
+    {
+      "first": 90,
+      "last": 119,
+      "unique": 18,
+      "planned": 30
+    },
+    {
+      "first": 120,
+      "last": 149,
+      "unique": 17,
+      "planned": 30
+    }
+  ],
+  "first": {
+    "sequence": 3,
+    "sample_time_s": 6.11549575
+  },
+  "last": {
+    "sequence": 149,
+    "sample_time_s": 35.31501175
+  },
+  "timing_fit": {
+    "interval_s": 0.19999650222959844,
+    "sequence_zero_time_s": 5.5155736435475236,
+    "scope": "fit of successfully decoded IQ sample times, not board timestamps or clock synchronization measurement"
+  },
+  "soft_retry_sequences": [
+    109
+  ],
+  "clipped_component_percentage": 0.0001140625,
+  "mean_processing_to_block_duration_ratio": 0.667434457385906,
+  "throughput_40s": {
+    "gross": {
+      "byte_s": 66.0,
+      "bit_s": 528.0
+    },
+    "application": {
+      "byte_s": 44.0,
+      "bit_s": 352.0
+    },
+    "scope": "unique valid test payloads of selected Run ID only"
+  },
+  "limits": [
+    "single HackRF experiment; no simultaneous independent BLE result found",
+    "offline equality does not exclude USB/hardware sample gaps or transmitter omissions",
+    "FCS failures are candidate counts, not a physical packet PER",
+    "RF reliability and decoder limitations remain unresolved"
+  ]
+}

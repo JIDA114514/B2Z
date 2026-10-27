@@ -1,0 +1,8 @@
+Status: error
+Error: hackrf_transfer exited 1
+FCS-valid PHY packets: 0
+Run ID: None; unique=0 duplicate=0 out_of_order=0 longest_loss=0
+IQ observation: 0.000108s; queue high-water: 1
+Wireless PRR: 0/None = N/A
+Throughput: {'gross': {'byte_s': 0.0, 'bit_s': 0.0}, 'application': {'byte_s': 0.0, 'bit_s': 0.0}, 'scope': 'unique valid test payloads of selected Run ID only'}
+JSON: python/zigbee_rx/results/live_transport_smoke_v1.summary.json

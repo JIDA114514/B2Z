@@ -1,0 +1,152 @@
+{
+  "schema": "zigbee_rx_v1",
+  "receiver_version": "2026-10-26-independent1",
+  "status": "error",
+  "error": "hackrf_transfer exited 1",
+  "start_utc": "2026-10-26T12:06:36.371702+00:00",
+  "end_utc": "2026-10-26T12:06:36.574712+00:00",
+  "config": {
+    "channel": 26,
+    "serial": "000000000000000017c467dc3348a6c3",
+    "sample_rate": 8000000,
+    "center_hz": 2480000000,
+    "iq_file": null,
+    "format": "ci8",
+    "lna": 24,
+    "vga": 20,
+    "amp": false,
+    "duration": 3.0,
+    "block_samples": 65536,
+    "queue_blocks": 64,
+    "stall_timeout": 10,
+    "dc_block_hz": 1000,
+    "cutoff_hz": 1300000,
+    "cfo_hz": 0,
+    "demod": "phase",
+    "symbol_order": "project",
+    "soft_retry": true,
+    "preamble_max_distance": 80,
+    "run_id": null,
+    "payload_len": null,
+    "expected_packets": null,
+    "board_log": null,
+    "full_run_covered": false,
+    "save_iq": false,
+    "output": "python/zigbee_rx/results/live_transport_smoke_v1",
+    "quiet": true
+  },
+  "capture_command": [
+    "/usr/bin/hackrf_transfer",
+    "-r",
+    "-",
+    "-f",
+    "2480000000",
+    "-s",
+    "8000000",
+    "-l",
+    "24",
+    "-g",
+    "20",
+    "-a",
+    "0",
+    "-p",
+    "0",
+    "-d",
+    "000000000000000017c467dc3348a6c3",
+    "-n",
+    "24000000"
+  ],
+  "capture_returncode": 1,
+  "capture_stats": {
+    "bytes_read": 1733,
+    "queue_high_water": 1
+  },
+  "stderr_tail": [
+    "hackrf_init() failed: Other error (-1000)"
+  ],
+  "counts": {
+    "clipped_components": 0,
+    "samples_processed": 866
+  },
+  "decoder": {},
+  "run_id": null,
+  "receiver": {
+    "unique": 0,
+    "duplicate": 0,
+    "out_of_order": 0,
+    "payload_failure": 0,
+    "run_id_mismatch": 0,
+    "longest_loss_burst": 0,
+    "loss_scope": "min..max valid received Sequence"
+  },
+  "planned_sequences": null,
+  "board": null,
+  "ratios": {
+    "wireless_prr": {
+      "numerator": 0,
+      "denominator": null,
+      "value": null,
+      "reason": "matching board final counts and full-run coverage required"
+    },
+    "end_to_end_receive": {
+      "numerator": 0,
+      "denominator": null,
+      "value": null,
+      "reason": "matching board final counts and full-run coverage required"
+    },
+    "scheduling_completion": {
+      "numerator": 0,
+      "denominator": null,
+      "value": null,
+      "reason": "matching board final counts and full-run coverage required"
+    }
+  },
+  "observation": {
+    "sample_duration_s": 0.00010825,
+    "wall_duration_s": 0.2030465380012174,
+    "scope": "all processed capture samples, including pre/post experiment silence"
+  },
+  "throughput": {
+    "gross": {
+      "byte_s": 0.0,
+      "bit_s": 0.0
+    },
+    "application": {
+      "byte_s": 0.0,
+      "bit_s": 0.0
+    },
+    "scope": "unique valid test payloads of selected Run ID only"
+  },
+  "processing_ms_recent": {
+    "samples": 2,
+    "mean": 0.11608249951677863,
+    "p99": 0.216063569932885,
+    "max": 0.21810399994137697
+  },
+  "environment": {
+    "python": "3.14.4",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3"
+  },
+  "sources_sha256": {
+    "zigbee_rx/receive.py": "9487948ee43c3896f1e1c009e9ef6f12f0d5b78474522565a9631177a082e010",
+    "zigbee_rx/zigbee_decoder.py": "6b134e6988a38bdbc04c2051f93894236719a91b1d8574b09c7b32d3cb610f26",
+    "zigbee_rx/zigbee_protocol.py": "0901c76cc29253f85c5437f87fa6f62bc13a79d9a7a1278b67509195ce6045b1",
+    "zigbee_rx/dsp.py": "834240c91c7e4b0723fe8c3607a13f34a8dc2038c2991902c3eae41dd9f4c353",
+    "zigbee_rx/hackrf_capture.py": "274ed2819c9a152b9ca4f0dc34c0c4b6a2bf079f9a6bf414f024767afc085698",
+    "perf_test/bluebee_perf_protocol.py": "8aae24b33b412a88a4faec8659c4dcdaec6ab903e3a77eec5f1acc270f868aac"
+  },
+  "files": {
+    "packets": "python/zigbee_rx/results/live_transport_smoke_v1.packets.jsonl",
+    "summary": "python/zigbee_rx/results/live_transport_smoke_v1.summary.json",
+    "text": "python/zigbee_rx/results/live_transport_smoke_v1.summary.txt",
+    "hackrf": "python/zigbee_rx/results/live_transport_smoke_v1.hackrf.log"
+  },
+  "limitations": [
+    "independent SDR PHY decoder, not commercial ZigBee stack compatibility",
+    "FCS failures are candidate counts, not unique physical packet losses",
+    "relative nominal sample timing; USB gaps and sample clock errors not ruled out",
+    "two HackRF captures have independent time origins; do not subtract their timestamps as synchronization error",
+    "no command execution or common control command schema implemented"
+  ]
+}

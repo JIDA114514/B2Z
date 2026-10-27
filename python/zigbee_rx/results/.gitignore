@@ -1,0 +1,12 @@
+*
+!.gitignore
+!*.md
+!*.summary.json
+!*.summary.txt
+!*.summary.csv
+!*.metrics.csv
+!*.config.json
+!*.manifest.json
+!*.board.log
+!*.hackrf.log
+!*.packets.sample.jsonl

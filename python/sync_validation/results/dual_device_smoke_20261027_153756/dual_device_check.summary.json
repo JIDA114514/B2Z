@@ -1,0 +1,83 @@
+{
+  "scope": "3s concurrent USB/DSP capture only; target decoding and long-term stability not validated",
+  "results": [
+    {
+      "receiver": "exadv_rx",
+      "command": [
+        "/usr/bin/python3",
+        "/home/jida/Desktop/antsdr/B2Z/python/exadv_rx/receive.py",
+        "--serial",
+        "000000000000000017c467dc2926a0c3",
+        "--duration",
+        "3",
+        "--quiet",
+        "--output",
+        "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/dual_device_smoke_20261027_153756/exadv_rx",
+        "--channels",
+        "39"
+      ],
+      "returncode": 0,
+      "status": "complete",
+      "error": null,
+      "capture_stats": {
+        "bytes_read": 48000000,
+        "queue_high_water": 2
+      },
+      "samples_processed": 24000000,
+      "capture_returncode": 0,
+      "stderr_tail": [
+        "16.3 MB / 1.000 sec = 16.3 MB/second, average power -26.0 dBfs",
+        "16.0 MB / 1.000 sec = 16.0 MB/second, average power -26.2 dBfs",
+        " 0.3 MB / 0.016 sec = 16.9 MB/second, average power -20.1 dBfs",
+        "",
+        "Exiting...",
+        "Total time: 3.01555 s",
+        "hackrf_stop_rx() done",
+        "hackrf_close() done",
+        "hackrf_exit() done",
+        "exit"
+      ]
+    },
+    {
+      "receiver": "zigbee_rx",
+      "command": [
+        "/usr/bin/python3",
+        "/home/jida/Desktop/antsdr/B2Z/python/zigbee_rx/receive.py",
+        "--serial",
+        "000000000000000017c467dc3348a6c3",
+        "--duration",
+        "3",
+        "--quiet",
+        "--output",
+        "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/dual_device_smoke_20261027_153756/zigbee_rx",
+        "--channel",
+        "26",
+        "--demod",
+        "phase",
+        "--symbol-order",
+        "project"
+      ],
+      "returncode": 0,
+      "status": "complete",
+      "error": null,
+      "capture_stats": {
+        "bytes_read": 48000000,
+        "queue_high_water": 2
+      },
+      "samples_processed": 24000000,
+      "capture_returncode": 0,
+      "stderr_tail": [
+        "16.3 MB / 1.000 sec = 16.3 MB/second, average power -30.1 dBfs",
+        "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.5 dBfs",
+        " 0.3 MB / 0.015 sec = 16.9 MB/second, average power -24.5 dBfs",
+        "",
+        "Exiting...",
+        "Total time: 3.01553 s",
+        "hackrf_stop_rx() done",
+        "hackrf_close() done",
+        "hackrf_exit() done",
+        "exit"
+      ]
+    }
+  ]
+}

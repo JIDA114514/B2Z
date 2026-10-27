@@ -1,0 +1,10 @@
+*
+!.gitignore
+!*.md
+!*.summary.json
+!*.manifest.json
+!*.metrics.csv
+!*.summary.txt
+!*.png
+!*.pdf
+!*/

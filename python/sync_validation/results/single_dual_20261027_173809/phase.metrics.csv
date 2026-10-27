@@ -1,0 +1,4 @@
+stage,duration_s,unique,sequence_min,sequence_max,observed_sequence_span,missing_within_observed_span,longest_loss_burst_within_observed_span,duplicate,out_of_order,payload_failure,queue_high_water,gross_byte_s,gross_bit_s,application_byte_s,application_bit_s,processing_mean_ms,processing_p99_ms,counts_per_5s
+single_before,30.0,104,17,166,150,46,4,0,0,0,3,104.0,832.0,69.33333333333333,554.6666666666666,5.823886091307766,8.060347434075076,"[15, 17, 16, 18, 18, 20]"
+dual,30.0,95,171,320,150,55,4,0,0,0,3,95.0,760.0,63.333333333333336,506.6666666666667,5.816041698106974,9.55045829221489,"[15, 15, 13, 15, 20, 17]"
+single_after,30.0,108,326,474,149,41,3,0,0,0,2,108.0,864.0,72.0,576.0,5.453804214041124,7.607688132120499,"[19, 18, 17, 21, 20, 13]"

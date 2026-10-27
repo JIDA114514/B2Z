@@ -1,0 +1,354 @@
+{
+  "schema": "zigbee_rx_v1",
+  "receiver_version": "2026-10-26-independent1",
+  "status": "complete",
+  "error": null,
+  "start_utc": "2026-10-27T08:23:43.961735+00:00",
+  "end_utc": "2026-10-27T08:24:21.806752+00:00",
+  "config": {
+    "channel": 26,
+    "serial": null,
+    "sample_rate": 8000000,
+    "center_hz": 2480000000,
+    "iq_file": "python/exadv_rx/results/rx_20261027_161604_978887.ci8",
+    "format": "ci8",
+    "lna": 24,
+    "vga": 20,
+    "amp": false,
+    "duration": 0.0,
+    "block_samples": 65536,
+    "queue_blocks": 64,
+    "stall_timeout": 10,
+    "dc_block_hz": 1000,
+    "cutoff_hz": 700000.0,
+    "cfo_hz": 0,
+    "demod": "phase",
+    "symbol_order": "project",
+    "soft_retry": true,
+    "preamble_max_distance": 80,
+    "run_id": 10269,
+    "payload_len": 30,
+    "expected_packets": 150,
+    "board_log": null,
+    "full_run_covered": false,
+    "save_iq": false,
+    "output": "python/sync_validation/results/dual_run10269_diagnostic/ble_iq_zigbee_700k",
+    "quiet": true
+  },
+  "capture_command": null,
+  "capture_returncode": null,
+  "capture_stats": {
+    "bytes_read": 640000000,
+    "queue_high_water": 64
+  },
+  "stderr_tail": [],
+  "counts": {
+    "clipped_components": 4613,
+    "samples_processed": 320000000,
+    "fcs_valid_packets": 70,
+    "unique": 70
+  },
+  "decoder": {
+    "preamble_candidates": 390,
+    "rejected_candidates": 267,
+    "fcs_failure_candidates": 53,
+    "fcs_valid_packets": 70,
+    "hard_dsss_packets": 66,
+    "soft_dsss_packets": 4
+  },
+  "run_id": 10269,
+  "receiver": {
+    "unique": 70,
+    "duplicate": 0,
+    "out_of_order": 0,
+    "payload_failure": 0,
+    "run_id_mismatch": 0,
+    "longest_loss_burst": 5,
+    "loss_scope": "explicit planned range"
+  },
+  "planned_sequences": {
+    "expected_packets": 150,
+    "range_start": 0,
+    "range_end": 149,
+    "in_range_unique": 70,
+    "missing": 80,
+    "missing_ranges": [
+      {
+        "start": 0,
+        "end": 0,
+        "count": 1
+      },
+      {
+        "start": 2,
+        "end": 4,
+        "count": 3
+      },
+      {
+        "start": 6,
+        "end": 7,
+        "count": 2
+      },
+      {
+        "start": 9,
+        "end": 9,
+        "count": 1
+      },
+      {
+        "start": 11,
+        "end": 11,
+        "count": 1
+      },
+      {
+        "start": 13,
+        "end": 14,
+        "count": 2
+      },
+      {
+        "start": 17,
+        "end": 17,
+        "count": 1
+      },
+      {
+        "start": 19,
+        "end": 20,
+        "count": 2
+      },
+      {
+        "start": 24,
+        "end": 24,
+        "count": 1
+      },
+      {
+        "start": 26,
+        "end": 26,
+        "count": 1
+      },
+      {
+        "start": 29,
+        "end": 32,
+        "count": 4
+      },
+      {
+        "start": 37,
+        "end": 38,
+        "count": 2
+      },
+      {
+        "start": 40,
+        "end": 41,
+        "count": 2
+      },
+      {
+        "start": 46,
+        "end": 46,
+        "count": 1
+      },
+      {
+        "start": 50,
+        "end": 52,
+        "count": 3
+      },
+      {
+        "start": 56,
+        "end": 57,
+        "count": 2
+      },
+      {
+        "start": 60,
+        "end": 61,
+        "count": 2
+      },
+      {
+        "start": 65,
+        "end": 66,
+        "count": 2
+      },
+      {
+        "start": 70,
+        "end": 70,
+        "count": 1
+      },
+      {
+        "start": 72,
+        "end": 73,
+        "count": 2
+      },
+      {
+        "start": 77,
+        "end": 78,
+        "count": 2
+      },
+      {
+        "start": 81,
+        "end": 81,
+        "count": 1
+      },
+      {
+        "start": 83,
+        "end": 83,
+        "count": 1
+      },
+      {
+        "start": 87,
+        "end": 87,
+        "count": 1
+      },
+      {
+        "start": 89,
+        "end": 90,
+        "count": 2
+      },
+      {
+        "start": 93,
+        "end": 95,
+        "count": 3
+      },
+      {
+        "start": 97,
+        "end": 99,
+        "count": 3
+      },
+      {
+        "start": 101,
+        "end": 101,
+        "count": 1
+      },
+      {
+        "start": 103,
+        "end": 103,
+        "count": 1
+      },
+      {
+        "start": 105,
+        "end": 105,
+        "count": 1
+      },
+      {
+        "start": 107,
+        "end": 108,
+        "count": 2
+      },
+      {
+        "start": 110,
+        "end": 110,
+        "count": 1
+      },
+      {
+        "start": 113,
+        "end": 117,
+        "count": 5
+      },
+      {
+        "start": 119,
+        "end": 121,
+        "count": 3
+      },
+      {
+        "start": 123,
+        "end": 126,
+        "count": 4
+      },
+      {
+        "start": 129,
+        "end": 129,
+        "count": 1
+      },
+      {
+        "start": 131,
+        "end": 131,
+        "count": 1
+      },
+      {
+        "start": 134,
+        "end": 137,
+        "count": 4
+      },
+      {
+        "start": 139,
+        "end": 140,
+        "count": 2
+      },
+      {
+        "start": 143,
+        "end": 143,
+        "count": 1
+      },
+      {
+        "start": 145,
+        "end": 148,
+        "count": 4
+      }
+    ],
+    "out_of_range_count": 0,
+    "out_of_range_sequences": []
+  },
+  "board": null,
+  "ratios": {
+    "wireless_prr": {
+      "numerator": 70,
+      "denominator": null,
+      "value": null,
+      "reason": "matching board final counts and full-run coverage required"
+    },
+    "end_to_end_receive": {
+      "numerator": 70,
+      "denominator": null,
+      "value": null,
+      "reason": "matching board final counts and full-run coverage required"
+    },
+    "scheduling_completion": {
+      "numerator": 0,
+      "denominator": null,
+      "value": null,
+      "reason": "matching board final counts and full-run coverage required"
+    }
+  },
+  "observation": {
+    "sample_duration_s": 40.0,
+    "wall_duration_s": 37.84518363099778,
+    "scope": "all processed capture samples, including pre/post experiment silence"
+  },
+  "throughput": {
+    "gross": {
+      "byte_s": 52.5,
+      "bit_s": 420.0
+    },
+    "application": {
+      "byte_s": 35.0,
+      "bit_s": 280.0
+    },
+    "scope": "unique valid test payloads of selected Run ID only"
+  },
+  "processing_ms_recent": {
+    "samples": 4884,
+    "mean": 6.716006379781792,
+    "p99": 10.856007485563172,
+    "max": 15.244756999891251
+  },
+  "environment": {
+    "python": "3.14.4",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3"
+  },
+  "sources_sha256": {
+    "zigbee_rx/receive.py": "635fe8e924dc346ce2310a6db9daa9024d067595c576bed6d77a35b559eacc0d",
+    "zigbee_rx/zigbee_decoder.py": "6b134e6988a38bdbc04c2051f93894236719a91b1d8574b09c7b32d3cb610f26",
+    "zigbee_rx/zigbee_protocol.py": "0901c76cc29253f85c5437f87fa6f62bc13a79d9a7a1278b67509195ce6045b1",
+    "zigbee_rx/dsp.py": "834240c91c7e4b0723fe8c3607a13f34a8dc2038c2991902c3eae41dd9f4c353",
+    "zigbee_rx/hackrf_capture.py": "274ed2819c9a152b9ca4f0dc34c0c4b6a2bf079f9a6bf414f024767afc085698",
+    "perf_test/bluebee_perf_protocol.py": "8aae24b33b412a88a4faec8659c4dcdaec6ab903e3a77eec5f1acc270f868aac"
+  },
+  "files": {
+    "packets": "python/sync_validation/results/dual_run10269_diagnostic/ble_iq_zigbee_700k.packets.jsonl",
+    "summary": "python/sync_validation/results/dual_run10269_diagnostic/ble_iq_zigbee_700k.summary.json",
+    "text": "python/sync_validation/results/dual_run10269_diagnostic/ble_iq_zigbee_700k.summary.txt",
+    "hackrf": "python/sync_validation/results/dual_run10269_diagnostic/ble_iq_zigbee_700k.hackrf.log"
+  },
+  "limitations": [
+    "independent SDR PHY decoder, not commercial ZigBee stack compatibility",
+    "FCS failures are candidate counts, not unique physical packet losses",
+    "relative nominal sample timing; USB gaps and sample clock errors not ruled out",
+    "two HackRF captures have independent time origins; do not subtract their timestamps as synchronization error",
+    "no command execution or common control command schema implemented"
+  ]
+}

@@ -1,0 +1,8 @@
+Status: complete
+Error: None
+FCS-valid PHY packets: 70
+Run ID: 10269; unique=70 duplicate=0 out_of_order=0 longest_loss=5
+IQ observation: 40.000000s; queue high-water: 64
+Wireless PRR: 70/None = N/A
+Throughput: {'gross': {'byte_s': 52.5, 'bit_s': 420.0}, 'application': {'byte_s': 35.0, 'bit_s': 280.0}, 'scope': 'unique valid test payloads of selected Run ID only'}
+JSON: python/sync_validation/results/dual_run10269_diagnostic/ble_iq_zigbee_700k.summary.json

@@ -1,0 +1,16 @@
+{
+  "source": "read-only journalctl -k, USB device path filter only",
+  "command": [
+    "journalctl",
+    "-k",
+    "--since",
+    "2026-10-27 17:19:30",
+    "--until",
+    "2026-10-27 17:21:30",
+    "--no-pager"
+  ],
+  "confirmed_event": "17:20:41 device55 disconnect and re-enumeration as device56 on USB path1-3.2.2",
+  "serial": "000000000000000017c467dc2926a0c3",
+  "causal_limit": "disconnect confirmed, physical/electrical/firmware/manual cause not determined",
+  "native_transport_check": "python/sync_validation/results/usb_transport_20261027_173025/transport_check.summary.json"
+}

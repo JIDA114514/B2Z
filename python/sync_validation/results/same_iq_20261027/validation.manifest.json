@@ -1,0 +1,248 @@
+{
+  "config": {
+    "schema": "same_iq_reference_validation_v1",
+    "sample_rate": 8000000,
+    "center_hz": 2480000000,
+    "calibration": {
+      "run_id": 10265,
+      "sequence_lt": 75
+    },
+    "recordings": [
+      {
+        "run_id": 10265,
+        "payload_len": 30,
+        "expected_packets": 150,
+        "iq": "python/exadv_rx/results/rx_20261026_161955_853914.ci8"
+      },
+      {
+        "run_id": 10266,
+        "payload_len": 40,
+        "expected_packets": 150,
+        "iq": "python/exadv_rx/results/rx_20261026_162114_151247.ci8"
+      },
+      {
+        "run_id": 10267,
+        "payload_len": 30,
+        "expected_packets": 150,
+        "iq": "python/zigbee_rx/results/rx_20261027_104502_973395.ci8"
+      }
+    ],
+    "excluded": [
+      {
+        "iq": "python/zigbee_rx/results/rx_20261027_104243_311380.ci8",
+        "reason": "capture status=error; hackrf_open failed; 1733 bytes is not complete ci8 IQ"
+      }
+    ]
+  },
+  "config_sha256": "1fe5a26a6fdffe07889a1d781fae2b79f3dd64a8b90107fafa1e703f9b6f1eb5",
+  "start_utc": "2026-10-27T03:22:39.559921+00:00",
+  "sources_sha256": {
+    "python/exadv_rx/receive.py": "c5ab42ee58a5e1117969f2a73fea38f71b6745dd8b004ecb157abeb08164946f",
+    "python/exadv_rx/decoder.py": "b0975b91d2e8997fb0a4c217cb771aba7661eeb671986163a9e8430f82bf6bd6",
+    "python/exadv_rx/protocol.py": "cf2cf405a303ce1f8087c0806f66ee3e2a82d72b317130113c9f78825fd9bff8",
+    "python/zigbee_rx/receive.py": "9146a137216be16e7a8997e57c3086328c35b9fd40159a4aa20cbb21406c9993",
+    "python/zigbee_rx/zigbee_protocol.py": "0901c76cc29253f85c5437f87fa6f62bc13a79d9a7a1278b67509195ce6045b1",
+    "python/zigbee_rx/dsp.py": "834240c91c7e4b0723fe8c3607a13f34a8dc2038c2991902c3eae41dd9f4c353",
+    "python/zigbee_rx/zigbee_decoder.py": "6b134e6988a38bdbc04c2051f93894236719a91b1d8574b09c7b32d3cb610f26",
+    "python/zigbee_rx/hackrf_capture.py": "274ed2819c9a152b9ca4f0dc34c0c4b6a2bf079f9a6bf414f024767afc085698",
+    "python/sync_validation/validate_saved_iq.py": "9fc8f579457866bf332fa0115ccc51ccb2a757039fe16d9f2a5efcdeefc7e195",
+    "python/perf_test/bluebee_perf_protocol.py": "8aae24b33b412a88a4faec8659c4dcdaec6ab903e3a77eec5f1acc270f868aac"
+  },
+  "replays": [
+    {
+      "recording": {
+        "run_id": 10265,
+        "payload_len": 30,
+        "expected_packets": 150,
+        "iq": "python/exadv_rx/results/rx_20261026_161955_853914.ci8"
+      },
+      "iq_sha256": "bbaf60f1542d8af8155a03a5c5240d81111bbd3990659c3ffb641cafb599badf",
+      "iq_bytes": 640000000,
+      "capture_summary_sha256": "361e06883139de69413ef1d3d5180395f51dcdf5cac78c0033a7d9cfc646996d",
+      "commands": {
+        "ble": [
+          "/usr/bin/python3",
+          "/home/jida/Desktop/antsdr/B2Z/python/exadv_rx/receive.py",
+          "--iq-file",
+          "/home/jida/Desktop/antsdr/B2Z/python/exadv_rx/results/rx_20261026_161955_853914.ci8",
+          "--format",
+          "ci8",
+          "--sample-rate",
+          "8000000",
+          "--center-hz",
+          "2480000000",
+          "--duration",
+          "0",
+          "--quiet",
+          "--channels",
+          "39",
+          "--whitening-channels",
+          "39",
+          "--output",
+          "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/same_iq_20261027/run_10265_ble"
+        ],
+        "zigbee": [
+          "/usr/bin/python3",
+          "/home/jida/Desktop/antsdr/B2Z/python/zigbee_rx/receive.py",
+          "--iq-file",
+          "/home/jida/Desktop/antsdr/B2Z/python/exadv_rx/results/rx_20261026_161955_853914.ci8",
+          "--format",
+          "ci8",
+          "--sample-rate",
+          "8000000",
+          "--center-hz",
+          "2480000000",
+          "--duration",
+          "0",
+          "--quiet",
+          "--channel",
+          "26",
+          "--demod",
+          "phase",
+          "--symbol-order",
+          "project",
+          "--run-id",
+          "10265",
+          "--payload-len",
+          "30",
+          "--expected-packets",
+          "150",
+          "--output",
+          "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/same_iq_20261027/run_10265_zigbee"
+        ]
+      }
+    },
+    {
+      "recording": {
+        "run_id": 10266,
+        "payload_len": 40,
+        "expected_packets": 150,
+        "iq": "python/exadv_rx/results/rx_20261026_162114_151247.ci8"
+      },
+      "iq_sha256": "55e691811a0009732f5d6c9c99c6d11ab7e07fbc38c230eb7f0b450bcf45b98d",
+      "iq_bytes": 640000000,
+      "capture_summary_sha256": "f14e0eb1f740eb46f90c51a35251ca5b0c0d629398e19609fd0232b834be923a",
+      "commands": {
+        "ble": [
+          "/usr/bin/python3",
+          "/home/jida/Desktop/antsdr/B2Z/python/exadv_rx/receive.py",
+          "--iq-file",
+          "/home/jida/Desktop/antsdr/B2Z/python/exadv_rx/results/rx_20261026_162114_151247.ci8",
+          "--format",
+          "ci8",
+          "--sample-rate",
+          "8000000",
+          "--center-hz",
+          "2480000000",
+          "--duration",
+          "0",
+          "--quiet",
+          "--channels",
+          "39",
+          "--whitening-channels",
+          "39",
+          "--output",
+          "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/same_iq_20261027/run_10266_ble"
+        ],
+        "zigbee": [
+          "/usr/bin/python3",
+          "/home/jida/Desktop/antsdr/B2Z/python/zigbee_rx/receive.py",
+          "--iq-file",
+          "/home/jida/Desktop/antsdr/B2Z/python/exadv_rx/results/rx_20261026_162114_151247.ci8",
+          "--format",
+          "ci8",
+          "--sample-rate",
+          "8000000",
+          "--center-hz",
+          "2480000000",
+          "--duration",
+          "0",
+          "--quiet",
+          "--channel",
+          "26",
+          "--demod",
+          "phase",
+          "--symbol-order",
+          "project",
+          "--run-id",
+          "10266",
+          "--payload-len",
+          "40",
+          "--expected-packets",
+          "150",
+          "--output",
+          "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/same_iq_20261027/run_10266_zigbee"
+        ]
+      }
+    },
+    {
+      "recording": {
+        "run_id": 10267,
+        "payload_len": 30,
+        "expected_packets": 150,
+        "iq": "python/zigbee_rx/results/rx_20261027_104502_973395.ci8"
+      },
+      "iq_sha256": "16b2b76e67c8e04031e32e24eb91fe9893a63bff17d249849bd671d911d9ba63",
+      "iq_bytes": 640000000,
+      "capture_summary_sha256": "9fca27391e63a7eb423dafb2aa8488d612bbf5712e258dc75a978fe05386b8ab",
+      "commands": {
+        "ble": [
+          "/usr/bin/python3",
+          "/home/jida/Desktop/antsdr/B2Z/python/exadv_rx/receive.py",
+          "--iq-file",
+          "/home/jida/Desktop/antsdr/B2Z/python/zigbee_rx/results/rx_20261027_104502_973395.ci8",
+          "--format",
+          "ci8",
+          "--sample-rate",
+          "8000000",
+          "--center-hz",
+          "2480000000",
+          "--duration",
+          "0",
+          "--quiet",
+          "--channels",
+          "39",
+          "--whitening-channels",
+          "39",
+          "--output",
+          "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/same_iq_20261027/run_10267_ble"
+        ],
+        "zigbee": [
+          "/usr/bin/python3",
+          "/home/jida/Desktop/antsdr/B2Z/python/zigbee_rx/receive.py",
+          "--iq-file",
+          "/home/jida/Desktop/antsdr/B2Z/python/zigbee_rx/results/rx_20261027_104502_973395.ci8",
+          "--format",
+          "ci8",
+          "--sample-rate",
+          "8000000",
+          "--center-hz",
+          "2480000000",
+          "--duration",
+          "0",
+          "--quiet",
+          "--channel",
+          "26",
+          "--demod",
+          "phase",
+          "--symbol-order",
+          "project",
+          "--run-id",
+          "10267",
+          "--payload-len",
+          "30",
+          "--expected-packets",
+          "150",
+          "--output",
+          "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/same_iq_20261027/run_10267_zigbee"
+        ]
+      }
+    }
+  ],
+  "end_utc": "2026-10-27T03:24:28.662780+00:00",
+  "artifacts_sha256": {
+    "per_sequence.metrics.csv": "f945c1da6204f0ef46ded5cb7739433b8a5f3d7a9ae19b6c8f920c970c7fe406",
+    "reference_validation.png": "5270ad158da0359bb0df2338fff851076c1f39b811dcbc4612066e1b676bcdad",
+    "reference_validation.pdf": "395298137b62968f2e2da13510afc0796cdb928de77672353dedbce448d8c93b"
+  }
+}

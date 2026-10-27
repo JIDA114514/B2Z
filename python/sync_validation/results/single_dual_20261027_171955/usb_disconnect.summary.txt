@@ -1,0 +1,34 @@
+Oct 27 17:19:34 jida-MS-114 kernel: usb 1-3.2.2: new high-speed USB device number 52 using xhci_hcd
+Oct 27 17:19:34 jida-MS-114 kernel: usb 1-3.2.2: New USB device found, idVendor=1d50, idProduct=6089, bcdDevice= 1.04
+Oct 27 17:19:34 jida-MS-114 kernel: usb 1-3.2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=4
+Oct 27 17:19:34 jida-MS-114 kernel: usb 1-3.2.2: Product: HackRF One
+Oct 27 17:19:34 jida-MS-114 kernel: usb 1-3.2.2: Manufacturer: Great Scott Gadgets
+Oct 27 17:19:34 jida-MS-114 kernel: usb 1-3.2.2: SerialNumber: 000000000000000017c467dc2926a0c3
+Oct 27 17:19:37 jida-MS-114 kernel: usb 1-3.2.2: USB disconnect, device number 52
+Oct 27 17:19:37 jida-MS-114 kernel: usb 1-3.2.2: new high-speed USB device number 53 using xhci_hcd
+Oct 27 17:19:37 jida-MS-114 kernel: usb 1-3.2.2: New USB device found, idVendor=1d50, idProduct=6089, bcdDevice= 1.04
+Oct 27 17:19:37 jida-MS-114 kernel: usb 1-3.2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=4
+Oct 27 17:19:37 jida-MS-114 kernel: usb 1-3.2.2: Product: HackRF One
+Oct 27 17:19:37 jida-MS-114 kernel: usb 1-3.2.2: Manufacturer: Great Scott Gadgets
+Oct 27 17:19:37 jida-MS-114 kernel: usb 1-3.2.2: SerialNumber: 000000000000000017c467dc2926a0c3
+Oct 27 17:19:38 jida-MS-114 kernel: usb 1-3.2.2: USB disconnect, device number 53
+Oct 27 17:19:38 jida-MS-114 kernel: usb 1-3.2.2: new high-speed USB device number 54 using xhci_hcd
+Oct 27 17:19:38 jida-MS-114 kernel: usb 1-3.2.2: New USB device found, idVendor=1d50, idProduct=6089, bcdDevice= 1.04
+Oct 27 17:19:38 jida-MS-114 kernel: usb 1-3.2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=4
+Oct 27 17:19:38 jida-MS-114 kernel: usb 1-3.2.2: Product: HackRF One
+Oct 27 17:19:38 jida-MS-114 kernel: usb 1-3.2.2: Manufacturer: Great Scott Gadgets
+Oct 27 17:19:38 jida-MS-114 kernel: usb 1-3.2.2: SerialNumber: 000000000000000017c467dc2926a0c3
+Oct 27 17:19:51 jida-MS-114 kernel: usb 1-3.2.2: USB disconnect, device number 54
+Oct 27 17:19:51 jida-MS-114 kernel: usb 1-3.2.2: new high-speed USB device number 55 using xhci_hcd
+Oct 27 17:19:51 jida-MS-114 kernel: usb 1-3.2.2: New USB device found, idVendor=1d50, idProduct=6089, bcdDevice= 1.04
+Oct 27 17:19:51 jida-MS-114 kernel: usb 1-3.2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=4
+Oct 27 17:19:51 jida-MS-114 kernel: usb 1-3.2.2: Product: HackRF One
+Oct 27 17:19:51 jida-MS-114 kernel: usb 1-3.2.2: Manufacturer: Great Scott Gadgets
+Oct 27 17:19:51 jida-MS-114 kernel: usb 1-3.2.2: SerialNumber: 000000000000000017c467dc2926a0c3
+Oct 27 17:20:41 jida-MS-114 kernel: usb 1-3.2.2: USB disconnect, device number 55
+Oct 27 17:20:41 jida-MS-114 kernel: usb 1-3.2.2: new high-speed USB device number 56 using xhci_hcd
+Oct 27 17:20:41 jida-MS-114 kernel: usb 1-3.2.2: New USB device found, idVendor=1d50, idProduct=6089, bcdDevice= 1.04
+Oct 27 17:20:41 jida-MS-114 kernel: usb 1-3.2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=4
+Oct 27 17:20:41 jida-MS-114 kernel: usb 1-3.2.2: Product: HackRF One
+Oct 27 17:20:41 jida-MS-114 kernel: usb 1-3.2.2: Manufacturer: Great Scott Gadgets
+Oct 27 17:20:41 jida-MS-114 kernel: usb 1-3.2.2: SerialNumber: 000000000000000017c467dc2926a0c3

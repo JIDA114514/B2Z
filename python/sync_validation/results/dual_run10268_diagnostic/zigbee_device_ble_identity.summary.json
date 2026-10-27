@@ -1,0 +1,160 @@
+{
+  "identities": [
+    {
+      "run_id": 10268,
+      "sequence": 22,
+      "payload_len": 30,
+      "frame_hex": "00000000a720b25a010a1c2816000000e9726c4152d7a1be3c9cc637cad6571cbf528f7182a1",
+      "pdu_byte_offset": 22,
+      "layout_delta_us": 216,
+      "sample_start": 61158252.0,
+      "decode_method": "hard",
+      "time_s": 7.6447815,
+      "cfo_hz": 61872.30629882813
+    },
+    {
+      "run_id": 10268,
+      "sequence": 31,
+      "payload_len": 30,
+      "frame_hex": "00000000a720b25a010a1c281f000000e8a142eb521cc07fa818b00d004549eb5e2fdf76133b",
+      "pdu_byte_offset": 22,
+      "layout_delta_us": 216,
+      "sample_start": 75557596.0,
+      "decode_method": "hard",
+      "time_s": 9.4446995,
+      "cfo_hz": 58786.891195678705
+    },
+    {
+      "run_id": 10268,
+      "sequence": 45,
+      "payload_len": 30,
+      "frame_hex": "00000000a720b25a010a1c282d000000e3180612ffb933b0393801cf28aede9db66cf11f92fd",
+      "pdu_byte_offset": 22,
+      "layout_delta_us": 216,
+      "sample_start": 97957936.0,
+      "decode_method": "hard",
+      "time_s": 12.244742,
+      "cfo_hz": 55846.29154295109
+    },
+    {
+      "run_id": 10268,
+      "sequence": 60,
+      "payload_len": 30,
+      "frame_hex": "00000000a720b25a010a1c283c000000e5a2aab3546f8744df32b774c3ddc08951ae053399b0",
+      "pdu_byte_offset": 22,
+      "layout_delta_us": 216,
+      "sample_start": 121957436.0,
+      "decode_method": "hard",
+      "time_s": 15.2446795,
+      "cfo_hz": 57411.40189208984
+    },
+    {
+      "run_id": 10268,
+      "sequence": 67,
+      "payload_len": 30,
+      "frame_hex": "00000000a720b25a010a1c2843000000ee1257244ff99d772e8aea249c61fce28f18caabc6a1",
+      "pdu_byte_offset": 22,
+      "layout_delta_us": 216,
+      "sample_start": 133156908.0,
+      "decode_method": "hard",
+      "time_s": 16.6446135,
+      "cfo_hz": 63772.905669545915
+    },
+    {
+      "run_id": 10268,
+      "sequence": 68,
+      "payload_len": 30,
+      "frame_hex": "00000000a720b25a010a1c2844000000ee9eebf5fa3c75e3a341a5b7ba9fd88dcb054b3cacdf",
+      "pdu_byte_offset": 22,
+      "layout_delta_us": 216,
+      "sample_start": 134757328.0,
+      "decode_method": "hard",
+      "time_s": 16.844666,
+      "cfo_hz": 60262.6763381958
+    },
+    {
+      "run_id": 10268,
+      "sequence": 69,
+      "payload_len": 30,
+      "frame_hex": "00000000a720b25a010a1c2845000000ee863beb4f7c07f821323108c0ab9d16a401ff59919a",
+      "pdu_byte_offset": 22,
+      "layout_delta_us": 216,
+      "sample_start": 136356780.0,
+      "decode_method": "hard",
+      "time_s": 17.0445975,
+      "cfo_hz": 60093.37465209961
+    },
+    {
+      "run_id": 10268,
+      "sequence": 72,
+      "payload_len": 30,
+      "frame_hex": "00000000a720b25a010a1c2848000000ed412ecf4f3ebc389a06d4fad2d0eeb02ef51ab0aa0a",
+      "pdu_byte_offset": 22,
+      "layout_delta_us": 216,
+      "sample_start": 141156452.0,
+      "decode_method": "narrow_window_retry",
+      "time_s": 17.6445565,
+      "cfo_hz": 60836.66282349656
+    },
+    {
+      "run_id": 10268,
+      "sequence": 80,
+      "payload_len": 30,
+      "frame_hex": "00000000a720b25a010a1c2850000000f06e9cb24e301435d067b86943a869e0db5244f8fe49",
+      "pdu_byte_offset": 22,
+      "layout_delta_us": 216,
+      "sample_start": 153955908.0,
+      "decode_method": "hard",
+      "time_s": 19.2444885,
+      "cfo_hz": 61313.888520812994
+    },
+    {
+      "run_id": 10268,
+      "sequence": 84,
+      "payload_len": 30,
+      "frame_hex": "00000000a720b25a010a1c2854000000ef11df8ca4335b8bc72ce7ac5bda7f023e43126cfaca",
+      "pdu_byte_offset": 22,
+      "layout_delta_us": 216,
+      "sample_start": 160355648.0,
+      "decode_method": "hard",
+      "time_s": 20.044456,
+      "cfo_hz": 54967.908115260885
+    },
+    {
+      "run_id": 10268,
+      "sequence": 89,
+      "payload_len": 30,
+      "frame_hex": "00000000a720b25a010a1c2859000000ef9d735d4f7533f63ce2a33f79175bae7a2f94fdf188",
+      "pdu_byte_offset": 22,
+      "layout_delta_us": 216,
+      "sample_start": 168355836.0,
+      "decode_method": "hard",
+      "time_s": 21.0444795,
+      "cfo_hz": 58382.281967163086
+    },
+    {
+      "run_id": 10268,
+      "sequence": 113,
+      "payload_len": 30,
+      "frame_hex": "00000000a720b25a010a1c2871000000ec7004795083dbfa0681bfd0073fe07ecdd26ab5eb3e",
+      "pdu_byte_offset": 22,
+      "layout_delta_us": 216,
+      "sample_start": 206755380.0,
+      "decode_method": "hard",
+      "time_s": 25.8444225,
+      "cfo_hz": 63029.43292686003
+    },
+    {
+      "run_id": 10268,
+      "sequence": 114,
+      "payload_len": 30,
+      "frame_hex": "00000000a720b25a010a1c2872000000edb6129650c226b98dae1bdef51a8fe443de4f5e0fed",
+      "pdu_byte_offset": 22,
+      "layout_delta_us": 216,
+      "sample_start": 208355352.0,
+      "decode_method": "hard",
+      "time_s": 26.044419,
+      "cfo_hz": 58761.35340423584
+    }
+  ]
+}

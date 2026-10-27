@@ -1,0 +1,580 @@
+{
+  "scope": "BLE-located 10ms windows; reset DC/FIR state; diagnostic only, not an independent full-stream receive result",
+  "decoder_input": "raw IQ only; no expected frame/Sequence/payload supplied to DSP",
+  "runs": [
+    {
+      "device": "ble_device",
+      "iq": "python/exadv_rx/results/rx_20261027_154450_562661.ci8",
+      "ble_valid_sequence_windows": [
+        5,
+        15,
+        17,
+        26,
+        32,
+        34,
+        35,
+        45,
+        55,
+        59,
+        69,
+        78,
+        86,
+        87,
+        95,
+        99,
+        101,
+        145
+      ],
+      "variants": [
+        {
+          "cutoff_hz": 700000,
+          "dc_hz": 0,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [],
+          "count": 0,
+          "wall_s": 0.14605107199167833
+        },
+        {
+          "cutoff_hz": 700000,
+          "dc_hz": 1000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [
+            5,
+            15,
+            17,
+            26,
+            32,
+            34,
+            35,
+            45,
+            55,
+            59,
+            69,
+            78,
+            86,
+            87,
+            95,
+            99,
+            101,
+            145
+          ],
+          "count": 18,
+          "wall_s": 0.19604170200182125
+        },
+        {
+          "cutoff_hz": 700000,
+          "dc_hz": 5000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [
+            5,
+            15,
+            17,
+            26,
+            32,
+            34,
+            35,
+            45,
+            55,
+            59,
+            69,
+            78,
+            86,
+            87,
+            95,
+            99,
+            101,
+            145
+          ],
+          "count": 18,
+          "wall_s": 0.19133993799914606
+        },
+        {
+          "cutoff_hz": 850000,
+          "dc_hz": 0,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [],
+          "count": 0,
+          "wall_s": 0.1417375900055049
+        },
+        {
+          "cutoff_hz": 850000,
+          "dc_hz": 1000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [
+            5,
+            15,
+            17,
+            26,
+            32,
+            34,
+            35,
+            45,
+            55,
+            59,
+            69,
+            78,
+            86,
+            87,
+            95,
+            99,
+            101,
+            145
+          ],
+          "count": 18,
+          "wall_s": 0.19227463999413885
+        },
+        {
+          "cutoff_hz": 850000,
+          "dc_hz": 5000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [
+            5,
+            15,
+            17,
+            26,
+            32,
+            34,
+            35,
+            45,
+            55,
+            59,
+            69,
+            78,
+            86,
+            87,
+            95,
+            99,
+            101,
+            145
+          ],
+          "count": 18,
+          "wall_s": 0.19110282701149117
+        },
+        {
+          "cutoff_hz": 1000000,
+          "dc_hz": 0,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [],
+          "count": 0,
+          "wall_s": 0.12499701700289734
+        },
+        {
+          "cutoff_hz": 1000000,
+          "dc_hz": 1000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [
+            5,
+            15,
+            26,
+            32,
+            34,
+            35,
+            45,
+            55,
+            78,
+            86,
+            87,
+            95,
+            99,
+            101
+          ],
+          "count": 14,
+          "wall_s": 0.19347893999656662
+        },
+        {
+          "cutoff_hz": 1000000,
+          "dc_hz": 5000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [
+            5,
+            15,
+            17,
+            32,
+            34,
+            35,
+            45,
+            55,
+            86,
+            87,
+            95,
+            99,
+            101
+          ],
+          "count": 13,
+          "wall_s": 0.19304119600565173
+        },
+        {
+          "cutoff_hz": 1300000,
+          "dc_hz": 0,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [],
+          "count": 0,
+          "wall_s": 0.12402346899034455
+        },
+        {
+          "cutoff_hz": 1300000,
+          "dc_hz": 1000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [],
+          "count": 0,
+          "wall_s": 0.1794673190015601
+        },
+        {
+          "cutoff_hz": 1300000,
+          "dc_hz": 5000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [],
+          "count": 0,
+          "wall_s": 0.17860423600359354
+        },
+        {
+          "cutoff_hz": 850000,
+          "dc_hz": 1000,
+          "cfo_hz": 60000,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [
+            5,
+            15,
+            17,
+            26,
+            32,
+            34,
+            35,
+            45,
+            55,
+            59,
+            69,
+            78,
+            86,
+            87,
+            95,
+            99,
+            101,
+            145
+          ],
+          "count": 18,
+          "wall_s": 0.20681784200132824
+        },
+        {
+          "cutoff_hz": 1300000,
+          "dc_hz": 1000,
+          "cfo_hz": 60000,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [
+            99
+          ],
+          "count": 1,
+          "wall_s": 0.20468949800124392
+        },
+        {
+          "cutoff_hz": 850000,
+          "dc_hz": 1000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 88,
+          "recovered_sequences": [
+            5,
+            15,
+            17,
+            26,
+            32,
+            34,
+            35,
+            45,
+            55,
+            59,
+            69,
+            78,
+            86,
+            87,
+            95,
+            99,
+            101,
+            145
+          ],
+          "count": 18,
+          "wall_s": 0.21622253699752036
+        },
+        {
+          "cutoff_hz": 1300000,
+          "dc_hz": 1000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 88,
+          "recovered_sequences": [],
+          "count": 0,
+          "wall_s": 0.21681766801339108
+        }
+      ]
+    },
+    {
+      "device": "zigbee_device",
+      "iq": "python/zigbee_rx/results/rx_20261027_154453_216417.ci8",
+      "ble_valid_sequence_windows": [
+        22,
+        31,
+        45,
+        60,
+        67,
+        68,
+        69,
+        72,
+        80,
+        84,
+        89,
+        113,
+        114
+      ],
+      "variants": [
+        {
+          "cutoff_hz": 700000,
+          "dc_hz": 0,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [],
+          "count": 0,
+          "wall_s": 0.09211400599451736
+        },
+        {
+          "cutoff_hz": 700000,
+          "dc_hz": 1000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [
+            22,
+            31,
+            45,
+            60,
+            67,
+            68,
+            69,
+            72,
+            80,
+            84,
+            89,
+            113,
+            114
+          ],
+          "count": 13,
+          "wall_s": 0.13380213899654336
+        },
+        {
+          "cutoff_hz": 700000,
+          "dc_hz": 5000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [
+            22,
+            31,
+            45,
+            60,
+            67,
+            68,
+            69,
+            72,
+            80,
+            84,
+            89,
+            113,
+            114
+          ],
+          "count": 13,
+          "wall_s": 0.13406117098929826
+        },
+        {
+          "cutoff_hz": 850000,
+          "dc_hz": 0,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [],
+          "count": 0,
+          "wall_s": 0.08919860699097626
+        },
+        {
+          "cutoff_hz": 850000,
+          "dc_hz": 1000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [
+            22,
+            31,
+            60,
+            67,
+            68,
+            69,
+            72,
+            80,
+            84,
+            113,
+            114
+          ],
+          "count": 11,
+          "wall_s": 0.13317001299583353
+        },
+        {
+          "cutoff_hz": 850000,
+          "dc_hz": 5000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [
+            22,
+            31,
+            60,
+            67,
+            68,
+            69,
+            72,
+            80,
+            84,
+            113,
+            114
+          ],
+          "count": 11,
+          "wall_s": 0.13535754800250288
+        },
+        {
+          "cutoff_hz": 1000000,
+          "dc_hz": 0,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [],
+          "count": 0,
+          "wall_s": 0.08970078200218268
+        },
+        {
+          "cutoff_hz": 1000000,
+          "dc_hz": 1000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [
+            22,
+            60,
+            67,
+            68,
+            69,
+            80,
+            113,
+            114
+          ],
+          "count": 8,
+          "wall_s": 0.13617923400306609
+        },
+        {
+          "cutoff_hz": 1000000,
+          "dc_hz": 5000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [
+            22,
+            60,
+            67,
+            68,
+            69,
+            80,
+            113,
+            114
+          ],
+          "count": 8,
+          "wall_s": 0.13274035399081185
+        },
+        {
+          "cutoff_hz": 1300000,
+          "dc_hz": 0,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [],
+          "count": 0,
+          "wall_s": 0.09000786599062849
+        },
+        {
+          "cutoff_hz": 1300000,
+          "dc_hz": 1000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [],
+          "count": 0,
+          "wall_s": 0.12018228600209113
+        },
+        {
+          "cutoff_hz": 1300000,
+          "dc_hz": 5000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [],
+          "count": 0,
+          "wall_s": 0.12226942199049518
+        },
+        {
+          "cutoff_hz": 850000,
+          "dc_hz": 1000,
+          "cfo_hz": 60000,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [
+            22,
+            31,
+            60,
+            67,
+            68,
+            69,
+            72,
+            80,
+            84,
+            113,
+            114
+          ],
+          "count": 11,
+          "wall_s": 0.15502847399329767
+        },
+        {
+          "cutoff_hz": 1300000,
+          "dc_hz": 1000,
+          "cfo_hz": 60000,
+          "preamble_max_distance": 80,
+          "recovered_sequences": [],
+          "count": 0,
+          "wall_s": 0.14567045398871414
+        },
+        {
+          "cutoff_hz": 850000,
+          "dc_hz": 1000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 88,
+          "recovered_sequences": [
+            22,
+            31,
+            60,
+            67,
+            68,
+            69,
+            72,
+            80,
+            84,
+            113,
+            114
+          ],
+          "count": 11,
+          "wall_s": 0.16434442400350235
+        },
+        {
+          "cutoff_hz": 1300000,
+          "dc_hz": 1000,
+          "cfo_hz": 0,
+          "preamble_max_distance": 88,
+          "recovered_sequences": [],
+          "count": 0,
+          "wall_s": 0.15133590999175794
+        }
+      ]
+    }
+  ]
+}

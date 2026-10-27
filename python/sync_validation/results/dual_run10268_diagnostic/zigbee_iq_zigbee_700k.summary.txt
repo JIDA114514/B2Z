@@ -1,0 +1,8 @@
+Status: complete
+Error: None
+FCS-valid PHY packets: 68
+Run ID: 10268; unique=68 duplicate=0 out_of_order=0 longest_loss=10
+IQ observation: 40.000000s; queue high-water: 64
+Wireless PRR: 68/None = N/A
+Throughput: {'gross': {'byte_s': 51.0, 'bit_s': 408.0}, 'application': {'byte_s': 34.0, 'bit_s': 272.0}, 'scope': 'unique valid test payloads of selected Run ID only'}
+JSON: python/sync_validation/results/dual_run10268_diagnostic/zigbee_iq_zigbee_700k.summary.json

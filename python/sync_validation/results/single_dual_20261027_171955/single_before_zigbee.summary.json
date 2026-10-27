@@ -1,0 +1,200 @@
+{
+  "schema": "zigbee_rx_v1",
+  "receiver_version": "2026-10-26-independent1",
+  "status": "complete",
+  "error": null,
+  "start_utc": "2026-10-27T09:19:55.666070+00:00",
+  "end_utc": "2026-10-27T09:20:25.900946+00:00",
+  "config": {
+    "channel": 26,
+    "serial": "000000000000000017c467dc3348a6c3",
+    "sample_rate": 8000000,
+    "center_hz": 2480000000,
+    "iq_file": null,
+    "format": "ci8",
+    "lna": 24,
+    "vga": 20,
+    "amp": false,
+    "duration": 30.0,
+    "block_samples": 65536,
+    "queue_blocks": 64,
+    "stall_timeout": 10,
+    "dc_block_hz": 1000.0,
+    "cutoff_hz": 700000.0,
+    "cfo_hz": 0,
+    "demod": "phase",
+    "symbol_order": "project",
+    "soft_retry": true,
+    "preamble_max_distance": 80,
+    "run_id": 10271,
+    "payload_len": 30,
+    "expected_packets": null,
+    "board_log": null,
+    "full_run_covered": false,
+    "save_iq": true,
+    "output": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_171955/single_before_zigbee",
+    "quiet": true
+  },
+  "capture_command": [
+    "/usr/bin/hackrf_transfer",
+    "-r",
+    "-",
+    "-f",
+    "2480000000",
+    "-s",
+    "8000000",
+    "-l",
+    "24",
+    "-g",
+    "20",
+    "-a",
+    "0",
+    "-p",
+    "0",
+    "-d",
+    "000000000000000017c467dc3348a6c3",
+    "-n",
+    "240000000"
+  ],
+  "capture_returncode": 0,
+  "capture_stats": {
+    "bytes_read": 480000000,
+    "queue_high_water": 3
+  },
+  "stderr_tail": [
+    "samples_to_xfer 240000000/240Mio",
+    "Stop with Ctrl-C",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.4 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.9 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -26.0 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.8 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -26.2 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.2 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.4 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.8 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -25.1 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.2 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -25.5 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.0 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -26.2 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.0 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.2 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.1 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -26.1 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.8 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -27.4 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.1 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.5 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.2 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.4 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.3 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.7 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.8 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -27.8 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.9 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.3 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.6 dBfs",
+    " 0.5 MB / 0.018 sec = 29.9 MB/second, average power -32.2 dBfs",
+    "",
+    "Exiting...",
+    "Total time: 30.01764 s",
+    "hackrf_stop_rx() done",
+    "hackrf_close() done",
+    "hackrf_exit() done",
+    "exit"
+  ],
+  "counts": {
+    "clipped_components": 114994,
+    "samples_processed": 240000000,
+    "fcs_valid_packets": 2,
+    "unique": 2
+  },
+  "decoder": {
+    "preamble_candidates": 165,
+    "fcs_failure_candidates": 51,
+    "fcs_valid_packets": 2,
+    "hard_dsss_packets": 2,
+    "rejected_candidates": 112
+  },
+  "run_id": 10271,
+  "receiver": {
+    "unique": 2,
+    "duplicate": 0,
+    "out_of_order": 0,
+    "payload_failure": 0,
+    "run_id_mismatch": 0,
+    "longest_loss_burst": 7,
+    "loss_scope": "min..max valid received Sequence"
+  },
+  "planned_sequences": null,
+  "board": null,
+  "ratios": {
+    "wireless_prr": {
+      "numerator": 2,
+      "denominator": null,
+      "value": null,
+      "reason": "matching board final counts and full-run coverage required"
+    },
+    "end_to_end_receive": {
+      "numerator": 2,
+      "denominator": null,
+      "value": null,
+      "reason": "matching board final counts and full-run coverage required"
+    },
+    "scheduling_completion": {
+      "numerator": 0,
+      "denominator": null,
+      "value": null,
+      "reason": "matching board final counts and full-run coverage required"
+    }
+  },
+  "observation": {
+    "sample_duration_s": 30.0,
+    "wall_duration_s": 30.23498250800185,
+    "scope": "all processed capture samples, including pre/post experiment silence"
+  },
+  "throughput": {
+    "gross": {
+      "byte_s": 2.0,
+      "bit_s": 16.0
+    },
+    "application": {
+      "byte_s": 1.3333333333333333,
+      "bit_s": 10.666666666666666
+    },
+    "scope": "unique valid test payloads of selected Run ID only"
+  },
+  "processing_ms_recent": {
+    "samples": 3664,
+    "mean": 5.6256881394706575,
+    "p99": 7.571038087044142,
+    "max": 11.767778007197194
+  },
+  "environment": {
+    "python": "3.14.4",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3"
+  },
+  "sources_sha256": {
+    "zigbee_rx/receive.py": "635fe8e924dc346ce2310a6db9daa9024d067595c576bed6d77a35b559eacc0d",
+    "zigbee_rx/zigbee_decoder.py": "6b134e6988a38bdbc04c2051f93894236719a91b1d8574b09c7b32d3cb610f26",
+    "zigbee_rx/zigbee_protocol.py": "0901c76cc29253f85c5437f87fa6f62bc13a79d9a7a1278b67509195ce6045b1",
+    "zigbee_rx/dsp.py": "834240c91c7e4b0723fe8c3607a13f34a8dc2038c2991902c3eae41dd9f4c353",
+    "zigbee_rx/hackrf_capture.py": "274ed2819c9a152b9ca4f0dc34c0c4b6a2bf079f9a6bf414f024767afc085698",
+    "perf_test/bluebee_perf_protocol.py": "8aae24b33b412a88a4faec8659c4dcdaec6ab903e3a77eec5f1acc270f868aac"
+  },
+  "files": {
+    "packets": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_171955/single_before_zigbee.packets.jsonl",
+    "summary": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_171955/single_before_zigbee.summary.json",
+    "text": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_171955/single_before_zigbee.summary.txt",
+    "hackrf": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_171955/single_before_zigbee.hackrf.log",
+    "iq": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_171955/single_before_zigbee.ci8"
+  },
+  "limitations": [
+    "independent SDR PHY decoder, not commercial ZigBee stack compatibility",
+    "FCS failures are candidate counts, not unique physical packet losses",
+    "relative nominal sample timing; USB gaps and sample clock errors not ruled out",
+    "two HackRF captures have independent time origins; do not subtract their timestamps as synchronization error",
+    "no command execution or common control command schema implemented"
+  ]
+}

@@ -1,0 +1,85 @@
+/*
+
+Xilinx Vitis v2021.1.0 (64-bit) [Major: 2021, Minor: 1]
+SW Build 3245906 on 2021-06-09-18:10:55
+
+Process ID (PID): 85885
+License: Customer
+
+Current time: 	Tue Oct 27 17:04:13 CST 2026
+Time zone: 	China Standard Time (Asia/Shanghai)
+
+OS: Ubuntu
+OS Version: 7.0.0-38-generic
+OS Architecture: amd64
+Available processors (cores): 12
+
+Display: :0
+Screen size: 2560x1080
+Available screens: 1
+Available disk space: 33 GB
+
+Java version: 	11.0.2 64-bit
+Java home: 	/home/jida/vivado/2021.1/Vitis/2021.1/tps/lnx64/jre11.0.2
+Java executable location: 	/home/jida/vivado/2021.1/Vitis/2021.1/tps/lnx64/jre11.0.2/bin/java
+Java initial memory (-Xms): 	64 MB
+Java maximum memory (-Xmx):	 1,024 MB
+
+Java library paths: /home/jida/vivado/2021.1/Vitis/2021.1/tps/lnx64/javafx-sdk-11.0.2/lib:/home/jida/vivado/2021.1/Vitis/2021.1/lib/lnx64.o/Ubuntu:/home/jida/vivado/2021.1/Vitis/2021.1/lib/lnx64.o:/home/jida/vivado/2021.1/Vitis/2021.1/tps/lnx64/jre11.0.2/lib/:/home/jida/vivado/2021.1/Vitis/2021.1/tps/lnx64/jre11.0.2/lib//server:/home/jida/vivado/2021.1/Vitis/2021.1/lib/lnx64.o:/home/jida/vivado/2021.1/Vitis/2021.1/lib/lnx64.o/Ubuntu:/home/jida/vivado/2021.1/Vitis/2021.1/lib/lnx64.o:/home/jida/vivado/2021.1/Vitis/2021.1/tps/lnx64/python-3.8.3/lib:/home/jida/vivado/2021.1/Vitis/2021.1/aietools/lib/lnx64.o:/home/jida/vivado/2021.1/Vitis/2021.1/bin/../lnx64/tools/dot/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+
+Java class paths: /home/jida/vivado/2021.1/Vitis/2021.1/eclipse/lnx64.o//plugins/org.eclipse.equinox.launcher_1.5.700.v20200207-2156.jar
+LD_LIBRARY_PATH: /home/jida/vivado/2021.1/Vitis
+
+User name: 	jida
+User home directory: /home/jida
+User working directory: /home/jida/Desktop/antsdr/B2Z/python/exadv_rx
+User country: 	US
+User language: 	en
+User locale: 	en_US
+
+RDI_BASEROOT: /home/jida/vivado/2021.1/Vitis
+HDI_APPROOT: /home/jida/vivado/2021.1/Vitis/2021.1
+RDI_DATADIR: /home/jida/vivado/2021.1/Vitis/2021.1/data
+RDI_BINDIR: /home/jida/vivado/2021.1/Vitis/2021.1/bin
+
+Vitis preferences directory: /home/jida/.Xilinx/Vitis/2021.1/
+Vitis workspace directory: /home/jida/Desktop/antsdr/B2Z/hdl/projects/antsdre310/antsdre310.sdk
+Vitis workspace log file location: /home/jida/Desktop/antsdr/B2Z/hdl/projects/antsdre310/antsdre310.sdk/.metadata/.log
+Engine tmp dir: 	
+
+Xilinx Environment Variables
+----------------------------
+XILINX_DSP: 
+XILINX_HLS: /home/jida/vivado/2021.1/Vitis_HLS/2021.1
+XILINX_PLANAHEAD: /home/jida/vivado/2021.1/Vitis/2021.1
+XILINX_SDK: /home/jida/vivado/2021.1/Vitis/2021.1
+XILINX_VITIS: /home/jida/vivado/2021.1/Vitis/2021.1
+XILINX_VIVADO: /home/jida/vivado/2021.1/Vivado/2021.1
+XILINX_VIVADO_HLS: /home/jida/vivado/2021.1/Vivado/2021.1
+_RDI_DONT_SET_XILINX_AS_PATH: True
+
+
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+
+*/
+
+selectTreeTable("Release", "app_system > app", "Explorer", "ProjectExplorer", "TreeViewer.NavigatorContentServiceContentProvider");
+activateView("Vitis Serial Terminal", "SDKTerminalView", "CTabItem.VITIS_SERIAL_TERMINAL");
+selectToolBarButton("Connect to serial port", "Vitis Serial Terminal", "SDKTerminalView", "ToolItem.CONNECT_TO_SERIAL");
+selectCombo("/dev/ttyUSB1", "Connect to serial port", "SerialConnectionDialog", "ComboViewer.PORT");
+selectButton("OK", "Connect to serial port", "SerialConnectionDialog", "Button.OK");
+selectToolBarButton("Remove a serial port from the monitor", "Vitis Serial Terminal", "SDKTerminalView", "ToolItem.REMOVE_A_SERIAL");
+selectToolBarButton("Connect to serial port", "Vitis Serial Terminal", "SDKTerminalView", "ToolItem.CONNECT_TO_SERIAL");
+selectCombo("/dev/ttyUSB0", "Connect to serial port", "SerialConnectionDialog", "ComboViewer.PORT");
+selectButton("OK", "Connect to serial port", "SerialConnectionDialog", "Button.OK");
+selectToolBarButton("Remove a serial port from the monitor", "Vitis Serial Terminal", "SDKTerminalView", "ToolItem.REMOVE_A_SERIAL");
+selectToolBarButton("Connect to serial port", "Vitis Serial Terminal", "SDKTerminalView", "ToolItem.CONNECT_TO_SERIAL");
+selectCombo("/dev/ttyUSB1", "Connect to serial port", "SerialConnectionDialog", "ComboViewer.PORT");
+selectButton("OK", "Connect to serial port", "SerialConnectionDialog", "Button.OK");
+setTextField("bluebee_exadv_perf_start?30 200000 0 10270", "Vitis Serial Terminal", "SDKTerminalView", "Text");
+setTextField("bluebee_exadv_perf_start?30 200000 0 10271", "Vitis Serial Terminal", "SDKTerminalView", "Text");
+selectToolBarButton("Remove a serial port from the monitor", "Vitis Serial Terminal", "SDKTerminalView", "ToolItem.REMOVE_A_SERIAL");
+selectToolBarButton("Connect to serial port", "Vitis Serial Terminal", "SDKTerminalView", "ToolItem.CONNECT_TO_SERIAL");
+selectButton("OK", "Connect to serial port", "SerialConnectionDialog", "Button.OK");
+setTextField("bluebee_exadv_perf_start?30 200000 0 10272", "Vitis Serial Terminal", "SDKTerminalView", "Text");
+selectToolBarButton("Remove a serial port from the monitor", "Vitis Serial Terminal", "SDKTerminalView", "ToolItem.REMOVE_A_SERIAL");

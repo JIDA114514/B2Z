@@ -1,0 +1,8 @@
+Status: complete
+Error: None
+FCS-valid PHY packets: 0
+Run ID: 10268; unique=0 duplicate=0 out_of_order=0 longest_loss=150
+IQ observation: 40.000000s; queue high-water: 64
+Wireless PRR: 0/None = N/A
+Throughput: {'gross': {'byte_s': 0.0, 'bit_s': 0.0}, 'application': {'byte_s': 0.0, 'bit_s': 0.0}, 'scope': 'unique valid test payloads of selected Run ID only'}
+JSON: python/sync_validation/results/dual_run10268_diagnostic/zigbee_iq_zigbee.summary.json

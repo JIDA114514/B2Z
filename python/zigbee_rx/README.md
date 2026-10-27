@@ -31,6 +31,7 @@ python3 python/exadv_rx/receive.py --serial SERIAL_A \
 ```bash
 python3 python/zigbee_rx/receive.py --serial SERIAL_B \
   --channel 26 --demod phase --symbol-order project \
+  --cutoff-hz 700000 --dc-block-hz 1000 \
   --run-id 10267 --payload-len 30 --expected-packets 150 \
   --duration 40 --save-iq --quiet
 ```
@@ -74,6 +75,8 @@ python3 python/zigbee_rx/receive.py \
 
 参数包括 `--center-hz`、`--cutoff-hz`（默认 1.3 MHz）、`--cfo-hz`（默认 0，数字频偏补偿）、`--dc-block-hz`（默认 1 kHz）、LNA/VGA、块大小、有界队列容量及停滞超时。频偏参数不改变时间基准。配置不在采集带宽内时直接拒绝。
 
+上例显式使用 `--cutoff-hz 700000 --dc-block-hz 1000`，用于保留 Run 10268 中已验证的离线改善配置：两份完整 IQ 在原 1.3 MHz 截止频率下均恢复 0 个 ZigBee 有效包，改为 700 kHz 后分别恢复 81 和 68 包。但后续 Run 10269 实时实验已正确采用该参数，ZigBee 设备仍为 0 包；相同程序回放旧 IQ 仍恢复 68 包，新 BLE 设备 IQ 则能恢复 70 包。因此 700 kHz 尚不是稳定解决方案，应优先做单台/双台接收对照，定位目标信号的接收路径。通用默认值 1.3 MHz 保留，历史结果不覆盖，也不能将收窄带宽视为对所有原生 O-QPSK 输入都最优。参见 `../sync_validation/results/dual_run10269_diagnostic/review.md`。
+
 ## 输出与统计
 
 - `.packets.jsonl`：所有 FCS 正确的 PHY 帧、完整 payload、采样时间、观测方式、符号顺序、硬/软判决方法、Run ID、Sequence、测试校验及 disposition。
@@ -94,6 +97,8 @@ unique 只统计指定/锁定 Run ID、通过完整确定性填充校验的首�
 新进程不读取 BLE PDU、白化字节或 BLE 接收结果。读取同一份旧 IQ 只是离线算法验证；真正双独立接收要使用两块不同序列号的 HackRF，同时各自录制。
 
 两个独立采集的 `sample_time_s` 起点不同，不能直接相减作为同步误差。共同接收率可在解码完成后按 Run ID+Sequence 或未来 command_id 合并；同步精度还需独立校准。
+
+去掉 `--quiet` 可逐包打印时间戳。`t=...s` 显示到小数点后 9 位，`sample=...` 是补偿 FIR 延迟后的输入采样位置，`ref=zigbee_preamble` 标明包内参考点。BLE 脚本对应 `ref=ble_preamble`。二者都是各自采集的相对标称采样时间，不是打印时刻或 UTC；显示位数不代表测量精度。比较必须匹配同一 Run ID+Sequence，不能使用终端中的 `#` 包计数配对。相同 IQ 可按包布局补偿位置差；不同 HackRF 需先校准起点、采样率偏差和固定延迟。
 
 队列溢出明确报错，不静默丢块；文件回放允许背压。没有队列溢出不保证 USB/硬件完全无丢样。两块高采样率 SDR 共用主机时应分别检查队列和设备日志；当前不能承诺实时长测稳定点。
 

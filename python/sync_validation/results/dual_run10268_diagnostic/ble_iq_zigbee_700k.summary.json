@@ -1,0 +1,308 @@
+{
+  "schema": "zigbee_rx_v1",
+  "receiver_version": "2026-10-26-independent1",
+  "status": "complete",
+  "error": null,
+  "start_utc": "2026-10-27T07:59:28.949423+00:00",
+  "end_utc": "2026-10-27T08:00:02.821094+00:00",
+  "config": {
+    "channel": 26,
+    "serial": null,
+    "sample_rate": 8000000,
+    "center_hz": 2480000000,
+    "iq_file": "python/exadv_rx/results/rx_20261027_154450_562661.ci8",
+    "format": "ci8",
+    "lna": 24,
+    "vga": 20,
+    "amp": false,
+    "duration": 0.0,
+    "block_samples": 65536,
+    "queue_blocks": 64,
+    "stall_timeout": 10,
+    "dc_block_hz": 1000,
+    "cutoff_hz": 700000.0,
+    "cfo_hz": 0,
+    "demod": "phase",
+    "symbol_order": "project",
+    "soft_retry": true,
+    "preamble_max_distance": 80,
+    "run_id": 10268,
+    "payload_len": 30,
+    "expected_packets": 150,
+    "board_log": null,
+    "full_run_covered": false,
+    "save_iq": false,
+    "output": "python/sync_validation/results/dual_run10268_diagnostic/ble_iq_zigbee_700k",
+    "quiet": true
+  },
+  "capture_command": null,
+  "capture_returncode": null,
+  "capture_stats": {
+    "bytes_read": 640000000,
+    "queue_high_water": 64
+  },
+  "stderr_tail": [],
+  "counts": {
+    "clipped_components": 81,
+    "samples_processed": 320000000,
+    "fcs_valid_packets": 81,
+    "unique": 81
+  },
+  "decoder": {
+    "preamble_candidates": 395,
+    "rejected_candidates": 273,
+    "fcs_failure_candidates": 41,
+    "fcs_valid_packets": 81,
+    "hard_dsss_packets": 81
+  },
+  "run_id": 10268,
+  "receiver": {
+    "unique": 81,
+    "duplicate": 0,
+    "out_of_order": 0,
+    "payload_failure": 0,
+    "run_id_mismatch": 0,
+    "longest_loss_burst": 6,
+    "loss_scope": "explicit planned range"
+  },
+  "planned_sequences": {
+    "expected_packets": 150,
+    "range_start": 0,
+    "range_end": 149,
+    "in_range_unique": 81,
+    "missing": 69,
+    "missing_ranges": [
+      {
+        "start": 0,
+        "end": 2,
+        "count": 3
+      },
+      {
+        "start": 7,
+        "end": 11,
+        "count": 5
+      },
+      {
+        "start": 13,
+        "end": 13,
+        "count": 1
+      },
+      {
+        "start": 16,
+        "end": 16,
+        "count": 1
+      },
+      {
+        "start": 19,
+        "end": 21,
+        "count": 3
+      },
+      {
+        "start": 25,
+        "end": 25,
+        "count": 1
+      },
+      {
+        "start": 28,
+        "end": 30,
+        "count": 3
+      },
+      {
+        "start": 37,
+        "end": 42,
+        "count": 6
+      },
+      {
+        "start": 47,
+        "end": 48,
+        "count": 2
+      },
+      {
+        "start": 52,
+        "end": 52,
+        "count": 1
+      },
+      {
+        "start": 57,
+        "end": 57,
+        "count": 1
+      },
+      {
+        "start": 61,
+        "end": 62,
+        "count": 2
+      },
+      {
+        "start": 65,
+        "end": 66,
+        "count": 2
+      },
+      {
+        "start": 70,
+        "end": 71,
+        "count": 2
+      },
+      {
+        "start": 77,
+        "end": 77,
+        "count": 1
+      },
+      {
+        "start": 79,
+        "end": 79,
+        "count": 1
+      },
+      {
+        "start": 82,
+        "end": 83,
+        "count": 2
+      },
+      {
+        "start": 85,
+        "end": 85,
+        "count": 1
+      },
+      {
+        "start": 88,
+        "end": 88,
+        "count": 1
+      },
+      {
+        "start": 91,
+        "end": 94,
+        "count": 4
+      },
+      {
+        "start": 100,
+        "end": 100,
+        "count": 1
+      },
+      {
+        "start": 102,
+        "end": 103,
+        "count": 2
+      },
+      {
+        "start": 106,
+        "end": 107,
+        "count": 2
+      },
+      {
+        "start": 111,
+        "end": 111,
+        "count": 1
+      },
+      {
+        "start": 115,
+        "end": 116,
+        "count": 2
+      },
+      {
+        "start": 118,
+        "end": 118,
+        "count": 1
+      },
+      {
+        "start": 123,
+        "end": 125,
+        "count": 3
+      },
+      {
+        "start": 127,
+        "end": 129,
+        "count": 3
+      },
+      {
+        "start": 132,
+        "end": 133,
+        "count": 2
+      },
+      {
+        "start": 136,
+        "end": 139,
+        "count": 4
+      },
+      {
+        "start": 141,
+        "end": 143,
+        "count": 3
+      },
+      {
+        "start": 147,
+        "end": 148,
+        "count": 2
+      }
+    ],
+    "out_of_range_count": 0,
+    "out_of_range_sequences": []
+  },
+  "board": null,
+  "ratios": {
+    "wireless_prr": {
+      "numerator": 81,
+      "denominator": null,
+      "value": null,
+      "reason": "matching board final counts and full-run coverage required"
+    },
+    "end_to_end_receive": {
+      "numerator": 81,
+      "denominator": null,
+      "value": null,
+      "reason": "matching board final counts and full-run coverage required"
+    },
+    "scheduling_completion": {
+      "numerator": 0,
+      "denominator": null,
+      "value": null,
+      "reason": "matching board final counts and full-run coverage required"
+    }
+  },
+  "observation": {
+    "sample_duration_s": 40.0,
+    "wall_duration_s": 33.8717320660071,
+    "scope": "all processed capture samples, including pre/post experiment silence"
+  },
+  "throughput": {
+    "gross": {
+      "byte_s": 60.75,
+      "bit_s": 486.0
+    },
+    "application": {
+      "byte_s": 40.5,
+      "bit_s": 324.0
+    },
+    "scope": "unique valid test payloads of selected Run ID only"
+  },
+  "processing_ms_recent": {
+    "samples": 4884,
+    "mean": 6.139151937412825,
+    "p99": 8.72669172487804,
+    "max": 12.397961007081904
+  },
+  "environment": {
+    "python": "3.14.4",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3"
+  },
+  "sources_sha256": {
+    "zigbee_rx/receive.py": "635fe8e924dc346ce2310a6db9daa9024d067595c576bed6d77a35b559eacc0d",
+    "zigbee_rx/zigbee_decoder.py": "6b134e6988a38bdbc04c2051f93894236719a91b1d8574b09c7b32d3cb610f26",
+    "zigbee_rx/zigbee_protocol.py": "0901c76cc29253f85c5437f87fa6f62bc13a79d9a7a1278b67509195ce6045b1",
+    "zigbee_rx/dsp.py": "834240c91c7e4b0723fe8c3607a13f34a8dc2038c2991902c3eae41dd9f4c353",
+    "zigbee_rx/hackrf_capture.py": "274ed2819c9a152b9ca4f0dc34c0c4b6a2bf079f9a6bf414f024767afc085698",
+    "perf_test/bluebee_perf_protocol.py": "8aae24b33b412a88a4faec8659c4dcdaec6ab903e3a77eec5f1acc270f868aac"
+  },
+  "files": {
+    "packets": "python/sync_validation/results/dual_run10268_diagnostic/ble_iq_zigbee_700k.packets.jsonl",
+    "summary": "python/sync_validation/results/dual_run10268_diagnostic/ble_iq_zigbee_700k.summary.json",
+    "text": "python/sync_validation/results/dual_run10268_diagnostic/ble_iq_zigbee_700k.summary.txt",
+    "hackrf": "python/sync_validation/results/dual_run10268_diagnostic/ble_iq_zigbee_700k.hackrf.log"
+  },
+  "limitations": [
+    "independent SDR PHY decoder, not commercial ZigBee stack compatibility",
+    "FCS failures are candidate counts, not unique physical packet losses",
+    "relative nominal sample timing; USB gaps and sample clock errors not ruled out",
+    "two HackRF captures have independent time origins; do not subtract their timestamps as synchronization error",
+    "no command execution or common control command schema implemented"
+  ]
+}

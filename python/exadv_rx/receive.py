@@ -253,7 +253,8 @@ def main(argv=None):
                 if not args.quiet:
                     ext = packet["extended"]
                     print(f"#{packet['packet_no']} ch{packet['channel']} {packet['kind']} "
-                          f"len={packet['pdu_length']} CRC=OK t={packet['sample_time_s']:.6f}s "
+                          f"len={packet['pdu_length']} CRC=OK t={packet['sample_time_s']:.9f}s "
+                          f"sample={packet['sample_start']:.3f} ref=ble_preamble "
                           f"CFO={packet['cfo_hz']:.0f}Hz ADI={ext.get('adi')} "
                           f"AuxPtr={ext.get('aux_ptr')} "
                           f"AdvData={ext['adv_data_hex']}", flush=True)

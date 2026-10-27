@@ -153,7 +153,8 @@ def main(argv=None):
                 if not args.quiet:
                     print(f"#{packet['packet_no']} FCS=OK {packet['phy_observation']} "
                           f"{packet['decode_method']} len={len(payload)} run={parsed.run_id} "
-                          f"seq={parsed.sequence} {disposition} t={packet['sample_time_s']:.6f}s "
+                          f"seq={parsed.sequence} {disposition} t={packet['sample_time_s']:.9f}s "
+                          f"sample={packet['sample_start']:.3f} ref=zigbee_preamble "
                           f"payload={payload.hex()}", flush=True)
             output.flush()
             processing.append(time.monotonic() - before)

@@ -1,0 +1,12 @@
+Status: error
+Error: hackrf_transfer exited 1
+CRC-valid exadv packets: 0
+Counts: {'clipped_components': 0, 'samples_processed': 866}
+Matched primary/auxiliary events: 0
+Same-channel diagnostic pairs (not AuxPtr compliant): 0
+Processed IQ: 0.000108 s; wall: 0.209 s
+Application queue overflow: 0
+AuxPtr pointing to unsupported PHY: 0
+PRR: N/A (TX count/window not merged)
+Timing: relative nominal IQ sample timeline; USB gaps are not ruled out.
+JSON summary: /home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_170547/dual_ble.summary.json

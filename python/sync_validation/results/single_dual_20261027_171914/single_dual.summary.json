@@ -1,0 +1,58 @@
+{
+  "schema": "single_dual_single_rx_v2",
+  "status": "error",
+  "start_utc": "2026-10-27T09:19:14.334099+00:00",
+  "assumed_board_command": "bluebee_exadv_perf_start?30 200000 0 10271",
+  "board_start_or_counters_verified": false,
+  "scope": "single/dual activity control, no PRR or clock synchronization result",
+  "source_sha256": "48a07b60a5d18448765171615a13a6845fce98e4a2f2208706ae622113fc3bf4",
+  "stages": [
+    {
+      "stage": "single_before",
+      "commands": {
+        "zigbee": [
+          "/usr/bin/python3",
+          "/home/jida/Desktop/antsdr/B2Z/python/zigbee_rx/receive.py",
+          "--serial",
+          "000000000000000017c467dc3348a6c3",
+          "--channel",
+          "26",
+          "--demod",
+          "phase",
+          "--symbol-order",
+          "project",
+          "--cutoff-hz",
+          "700000",
+          "--dc-block-hz",
+          "1000",
+          "--run-id",
+          "10271",
+          "--payload-len",
+          "30",
+          "--quiet",
+          "--duration",
+          "30",
+          "--save-iq",
+          "--output",
+          "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_171914/single_before_zigbee"
+        ]
+      },
+      "start_utc": "2026-10-27T09:19:14.334435+00:00",
+      "receivers": {},
+      "device_check": {
+        "command": [
+          "/usr/bin/hackrf_info"
+        ],
+        "returncode": 0,
+        "raw_output": "hackrf_info version: 2026.01.3\nlibhackrf version: 2026.01.3 (0.9.2)\nFound HackRF\nIndex: 0\nSerial number: 000000000000000017c467dc3348a6c3\nBoard ID Number: 2 (HackRF One)\nFirmware Version: 2023.01.1 (API:1.07)\nPart ID Number: 0xa000cb3c 0x00544754\nHardware Revision: older than r6\nHardware supported by installed firmware:\n    HackRF One\nThere are 9 other devices on the same USB bus.\nYou may have problems at high sample rates.\n\n",
+        "detected_serials": [
+          "000000000000000017c467dc3348a6c3"
+        ],
+        "missing_serials": [
+          "000000000000000017c467dc2926a0c3"
+        ]
+      }
+    }
+  ],
+  "error": "RuntimeError: required HackRF not detected: 000000000000000017c467dc2926a0c3; detected: 000000000000000017c467dc3348a6c3; keep BOTH devices connected by USB throughout the experiment"
+}

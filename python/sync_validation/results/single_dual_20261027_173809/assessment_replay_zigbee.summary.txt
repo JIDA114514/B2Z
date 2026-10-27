@@ -1,0 +1,8 @@
+Status: complete
+Error: None
+FCS-valid PHY packets: 95
+Run ID: 10272; unique=95 duplicate=0 out_of_order=0 longest_loss=4
+IQ observation: 30.000000s; queue high-water: 64
+Wireless PRR: 95/None = N/A
+Throughput: {'gross': {'byte_s': 95.0, 'bit_s': 760.0}, 'application': {'byte_s': 63.333333333333336, 'bit_s': 506.6666666666667}, 'scope': 'unique valid test payloads of selected Run ID only'}
+JSON: python/sync_validation/results/single_dual_20261027_173809/assessment_replay_zigbee.summary.json

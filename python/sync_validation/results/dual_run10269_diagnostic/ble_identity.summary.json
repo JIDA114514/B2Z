@@ -1,0 +1,41 @@
+{
+  "identities": [
+    {
+      "run_id": 10269,
+      "sequence": 76,
+      "payload_len": 30,
+      "frame_hex": "00000000a720b25a010a1d284c00000053417b902d3b748eb9bd61167d54a2d7ae10ec34aac9",
+      "pdu_byte_offset": 22,
+      "layout_delta_us": 216,
+      "sample_start": 138907340.0,
+      "decode_method": "hard",
+      "time_s": 17.3634175,
+      "cfo_hz": 57978.02706298829
+    },
+    {
+      "run_id": 10269,
+      "sequence": 88,
+      "payload_len": 30,
+      "frame_hex": "00000000a720b25a010a1d285800000055112d4e823013e1e5e374c8075d3329bf5ee4f00989",
+      "pdu_byte_offset": 22,
+      "layout_delta_us": 216,
+      "sample_start": 158106920.0,
+      "decode_method": "hard",
+      "time_s": 19.763365,
+      "cfo_hz": 56813.20977136155
+    },
+    {
+      "run_id": 10269,
+      "sequence": 92,
+      "payload_len": 30,
+      "frame_hex": "00000000a720b25a010a1d285c00000055b47028d7325937dda8a30b1e8e494c224fb3640196",
+      "pdu_byte_offset": 22,
+      "layout_delta_us": 216,
+      "sample_start": 164506556.0,
+      "decode_method": "hard",
+      "time_s": 20.5633195,
+      "cfo_hz": 54992.6221282959
+    }
+  ],
+  "errors": []
+}

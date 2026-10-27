@@ -1,0 +1,8 @@
+Status: complete
+Error: None
+FCS-valid PHY packets: 64
+Run ID: 10266; unique=64 duplicate=0 out_of_order=0 longest_loss=6
+IQ observation: 40.000000s; queue high-water: 64
+Wireless PRR: 64/None = N/A
+Throughput: {'gross': {'byte_s': 64.0, 'bit_s': 512.0}, 'application': {'byte_s': 48.0, 'bit_s': 384.0}, 'scope': 'unique valid test payloads of selected Run ID only'}
+JSON: /home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/same_iq_20261027/run_10266_zigbee.summary.json

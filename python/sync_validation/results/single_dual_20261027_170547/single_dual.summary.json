@@ -1,0 +1,124 @@
+{
+  "schema": "single_dual_single_rx_v1",
+  "start_utc": "2026-10-27T09:05:47.461091+00:00",
+  "assumed_board_command": "bluebee_exadv_perf_start?30 200000 0 10270",
+  "board_start_or_counters_verified": false,
+  "scope": "single/dual activity control, no PRR or clock synchronization result",
+  "source_sha256": "32c6f4f66c36aa6f42ad344506f266f03b070775b1d435d951531a944551fcc4",
+  "stages": [
+    {
+      "stage": "single_before",
+      "commands": {
+        "zigbee": [
+          "/usr/bin/python3",
+          "/home/jida/Desktop/antsdr/B2Z/python/zigbee_rx/receive.py",
+          "--serial",
+          "000000000000000017c467dc3348a6c3",
+          "--channel",
+          "26",
+          "--demod",
+          "phase",
+          "--symbol-order",
+          "project",
+          "--cutoff-hz",
+          "700000",
+          "--dc-block-hz",
+          "1000",
+          "--run-id",
+          "10270",
+          "--payload-len",
+          "30",
+          "--quiet",
+          "--duration",
+          "30",
+          "--save-iq",
+          "--output",
+          "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_170547/single_before_zigbee"
+        ]
+      },
+      "start_utc": "2026-10-27T09:05:47.461360+00:00",
+      "receivers": {
+        "zigbee": {
+          "summary": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_170547/single_before_zigbee.summary.json",
+          "status": "complete",
+          "counts": {
+            "clipped_components": 7489,
+            "samples_processed": 240000000,
+            "fcs_valid_packets": 56,
+            "unique": 56
+          },
+          "capture_stats": {
+            "bytes_read": 480000000,
+            "queue_high_water": 5
+          },
+          "source_sha256": {
+            "zigbee_rx/receive.py": "635fe8e924dc346ce2310a6db9daa9024d067595c576bed6d77a35b559eacc0d",
+            "zigbee_rx/zigbee_decoder.py": "6b134e6988a38bdbc04c2051f93894236719a91b1d8574b09c7b32d3cb610f26",
+            "zigbee_rx/zigbee_protocol.py": "0901c76cc29253f85c5437f87fa6f62bc13a79d9a7a1278b67509195ce6045b1",
+            "zigbee_rx/dsp.py": "834240c91c7e4b0723fe8c3607a13f34a8dc2038c2991902c3eae41dd9f4c353",
+            "zigbee_rx/hackrf_capture.py": "274ed2819c9a152b9ca4f0dc34c0c4b6a2bf079f9a6bf414f024767afc085698",
+            "perf_test/bluebee_perf_protocol.py": "8aae24b33b412a88a4faec8659c4dcdaec6ab903e3a77eec5f1acc270f868aac"
+          },
+          "receiver": {
+            "unique": 56,
+            "duplicate": 0,
+            "out_of_order": 0,
+            "payload_failure": 0,
+            "run_id_mismatch": 0,
+            "longest_loss_burst": 17,
+            "loss_scope": "min..max valid received Sequence"
+          }
+        }
+      },
+      "end_utc": "2026-10-27T09:06:18.388713+00:00"
+    },
+    {
+      "stage": "dual",
+      "commands": {
+        "zigbee": [
+          "/usr/bin/python3",
+          "/home/jida/Desktop/antsdr/B2Z/python/zigbee_rx/receive.py",
+          "--serial",
+          "000000000000000017c467dc3348a6c3",
+          "--channel",
+          "26",
+          "--demod",
+          "phase",
+          "--symbol-order",
+          "project",
+          "--cutoff-hz",
+          "700000",
+          "--dc-block-hz",
+          "1000",
+          "--run-id",
+          "10270",
+          "--payload-len",
+          "30",
+          "--quiet",
+          "--duration",
+          "30",
+          "--save-iq",
+          "--output",
+          "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_170547/dual_zigbee"
+        ],
+        "ble": [
+          "/usr/bin/python3",
+          "/home/jida/Desktop/antsdr/B2Z/python/exadv_rx/receive.py",
+          "--serial",
+          "000000000000000017c467dc2926a0c3",
+          "--channels",
+          "39",
+          "--quiet",
+          "--duration",
+          "30",
+          "--save-iq",
+          "--output",
+          "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_170547/dual_ble"
+        ]
+      },
+      "start_utc": "2026-10-27T09:06:18.389009+00:00",
+      "receivers": {}
+    }
+  ],
+  "error": "RuntimeError: receiver failed: [('ble', 1)]; inspect console logs"
+}

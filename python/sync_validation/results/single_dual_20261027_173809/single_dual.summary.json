@@ -1,0 +1,463 @@
+{
+  "schema": "single_dual_single_rx_v2",
+  "status": "complete",
+  "start_utc": "2026-10-27T09:38:09.404169+00:00",
+  "assumed_board_command": "bluebee_exadv_perf_start?30 200000 0 10272",
+  "board_start_or_counters_verified": false,
+  "scope": "single/dual activity control, no PRR or clock synchronization result",
+  "source_sha256": "e51d54e5dd19cf5fd68825207008ee9c177dfe11fa329b054eaa6450347ee934",
+  "stages": [
+    {
+      "stage": "single_before",
+      "commands": {
+        "zigbee": [
+          "/usr/bin/python3",
+          "/home/jida/Desktop/antsdr/B2Z/python/zigbee_rx/receive.py",
+          "--serial",
+          "000000000000000017c467dc3348a6c3",
+          "--channel",
+          "26",
+          "--demod",
+          "phase",
+          "--symbol-order",
+          "project",
+          "--cutoff-hz",
+          "700000",
+          "--dc-block-hz",
+          "1000",
+          "--run-id",
+          "10272",
+          "--payload-len",
+          "30",
+          "--quiet",
+          "--duration",
+          "30",
+          "--save-iq",
+          "--output",
+          "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_173809/single_before_zigbee"
+        ]
+      },
+      "start_utc": "2026-10-27T09:38:09.404420+00:00",
+      "receivers": {
+        "zigbee": {
+          "summary": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_173809/single_before_zigbee.summary.json",
+          "console_log": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_173809/single_before_zigbee.console.log",
+          "process_returncode": 0,
+          "status": "complete",
+          "error": null,
+          "counts": {
+            "clipped_components": 6082,
+            "samples_processed": 240000000,
+            "fcs_valid_packets": 104,
+            "unique": 104
+          },
+          "capture_stats": {
+            "bytes_read": 480000000,
+            "queue_high_water": 3
+          },
+          "receiver": {
+            "unique": 104,
+            "duplicate": 0,
+            "out_of_order": 0,
+            "payload_failure": 0,
+            "run_id_mismatch": 0,
+            "longest_loss_burst": 4,
+            "loss_scope": "min..max valid received Sequence"
+          },
+          "run_id": 10272,
+          "stderr_tail": [
+            "samples_to_xfer 240000000/240Mio",
+            "Stop with Ctrl-C",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.9 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.9 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -29.3 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -29.8 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.5 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -29.7 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.5 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.5 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -27.8 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.3 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -30.3 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -29.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.8 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -29.0 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -33.1 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -33.7 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -33.1 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.8 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -33.2 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.5 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -33.0 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.4 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -33.0 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.4 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.9 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.5 dBfs",
+            " 0.5 MB / 0.017 sec = 30.8 MB/second, average power -34.9 dBfs",
+            "",
+            "Exiting...",
+            "Total time: 30.01703 s",
+            "hackrf_stop_rx() done",
+            "hackrf_close() done",
+            "hackrf_exit() done",
+            "exit"
+          ],
+          "source_sha256": {
+            "zigbee_rx/receive.py": "635fe8e924dc346ce2310a6db9daa9024d067595c576bed6d77a35b559eacc0d",
+            "zigbee_rx/zigbee_decoder.py": "6b134e6988a38bdbc04c2051f93894236719a91b1d8574b09c7b32d3cb610f26",
+            "zigbee_rx/zigbee_protocol.py": "0901c76cc29253f85c5437f87fa6f62bc13a79d9a7a1278b67509195ce6045b1",
+            "zigbee_rx/dsp.py": "834240c91c7e4b0723fe8c3607a13f34a8dc2038c2991902c3eae41dd9f4c353",
+            "zigbee_rx/hackrf_capture.py": "274ed2819c9a152b9ca4f0dc34c0c4b6a2bf079f9a6bf414f024767afc085698",
+            "perf_test/bluebee_perf_protocol.py": "8aae24b33b412a88a4faec8659c4dcdaec6ab903e3a77eec5f1acc270f868aac"
+          }
+        }
+      },
+      "device_check": {
+        "command": [
+          "/usr/bin/hackrf_info"
+        ],
+        "returncode": 0,
+        "raw_output": "hackrf_info version: 2026.01.3\nlibhackrf version: 2026.01.3 (0.9.2)\nFound HackRF\nIndex: 0\nSerial number: 000000000000000017c467dc2926a0c3\nBoard ID Number: 2 (HackRF One)\nFirmware Version: 2021.03.1 (API:1.04)\nPart ID Number: 0xa000cb3c 0x004b4761\nThere are 10 other devices on the same USB bus.\nYou may have problems at high sample rates.\n\nFound HackRF\nIndex: 1\nSerial number: 000000000000000017c467dc3348a6c3\nBoard ID Number: 2 (HackRF One)\nFirmware Version: 2023.01.1 (API:1.07)\nPart ID Number: 0xa000cb3c 0x00544754\nHardware Revision: older than r6\nHardware supported by installed firmware:\n    HackRF One\nThere are 10 other devices on the same USB bus.\nYou may have problems at high sample rates.\n\n",
+        "detected_serials": [
+          "000000000000000017c467dc2926a0c3",
+          "000000000000000017c467dc3348a6c3"
+        ],
+        "missing_serials": []
+      },
+      "end_utc": "2026-10-27T09:38:40.242344+00:00",
+      "status": "complete"
+    },
+    {
+      "stage": "dual",
+      "commands": {
+        "zigbee": [
+          "/usr/bin/python3",
+          "/home/jida/Desktop/antsdr/B2Z/python/zigbee_rx/receive.py",
+          "--serial",
+          "000000000000000017c467dc3348a6c3",
+          "--channel",
+          "26",
+          "--demod",
+          "phase",
+          "--symbol-order",
+          "project",
+          "--cutoff-hz",
+          "700000",
+          "--dc-block-hz",
+          "1000",
+          "--run-id",
+          "10272",
+          "--payload-len",
+          "30",
+          "--quiet",
+          "--duration",
+          "30",
+          "--save-iq",
+          "--output",
+          "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_173809/dual_zigbee"
+        ],
+        "ble": [
+          "/usr/bin/python3",
+          "/home/jida/Desktop/antsdr/B2Z/python/exadv_rx/receive.py",
+          "--serial",
+          "000000000000000017c467dc2926a0c3",
+          "--channels",
+          "39",
+          "--quiet",
+          "--duration",
+          "30",
+          "--save-iq",
+          "--output",
+          "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_173809/dual_ble"
+        ]
+      },
+      "start_utc": "2026-10-27T09:38:40.243020+00:00",
+      "receivers": {
+        "zigbee": {
+          "summary": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_173809/dual_zigbee.summary.json",
+          "console_log": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_173809/dual_zigbee.console.log",
+          "process_returncode": 0,
+          "status": "complete",
+          "error": null,
+          "counts": {
+            "clipped_components": 4059,
+            "samples_processed": 240000000,
+            "fcs_valid_packets": 95,
+            "unique": 95
+          },
+          "capture_stats": {
+            "bytes_read": 480000000,
+            "queue_high_water": 3
+          },
+          "receiver": {
+            "unique": 95,
+            "duplicate": 0,
+            "out_of_order": 0,
+            "payload_failure": 0,
+            "run_id_mismatch": 0,
+            "longest_loss_burst": 4,
+            "loss_scope": "min..max valid received Sequence"
+          },
+          "run_id": 10272,
+          "stderr_tail": [
+            "samples_to_xfer 240000000/240Mio",
+            "Stop with Ctrl-C",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.8 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.9 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.8 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.5 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.2 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.9 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.7 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.5 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.8 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.2 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.3 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.3 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -33.2 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.5 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.8 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.9 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.5 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.8 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.9 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.9 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.2 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.4 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.0 dBfs",
+            "16.3 MB / 1.000 sec = 16.3 MB/second, average power -32.9 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.9 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.9 dBfs",
+            " 0.3 MB / 0.015 sec = 17.8 MB/second, average power -33.1 dBfs",
+            "",
+            "Exiting...",
+            "Total time: 30.01477 s",
+            "hackrf_stop_rx() done",
+            "hackrf_close() done",
+            "hackrf_exit() done",
+            "exit"
+          ],
+          "source_sha256": {
+            "zigbee_rx/receive.py": "635fe8e924dc346ce2310a6db9daa9024d067595c576bed6d77a35b559eacc0d",
+            "zigbee_rx/zigbee_decoder.py": "6b134e6988a38bdbc04c2051f93894236719a91b1d8574b09c7b32d3cb610f26",
+            "zigbee_rx/zigbee_protocol.py": "0901c76cc29253f85c5437f87fa6f62bc13a79d9a7a1278b67509195ce6045b1",
+            "zigbee_rx/dsp.py": "834240c91c7e4b0723fe8c3607a13f34a8dc2038c2991902c3eae41dd9f4c353",
+            "zigbee_rx/hackrf_capture.py": "274ed2819c9a152b9ca4f0dc34c0c4b6a2bf079f9a6bf414f024767afc085698",
+            "perf_test/bluebee_perf_protocol.py": "8aae24b33b412a88a4faec8659c4dcdaec6ab903e3a77eec5f1acc270f868aac"
+          }
+        },
+        "ble": {
+          "summary": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_173809/dual_ble.summary.json",
+          "console_log": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_173809/dual_ble.console.log",
+          "process_returncode": 0,
+          "status": "complete",
+          "error": null,
+          "counts": {
+            "clipped_components": 963,
+            "samples_processed": 240000000,
+            "packets": 677,
+            "primary": 599,
+            "aux_ptr_unsupported_phy": 120,
+            "same_channel_auxiliary_diagnostic": 78
+          },
+          "capture_stats": {
+            "bytes_read": 480000000,
+            "queue_high_water": 3
+          },
+          "stderr_tail": [
+            "samples_to_xfer 240000000/240Mio",
+            "Stop with Ctrl-C",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.5 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -27.7 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.4 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.5 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.4 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.4 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.5 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.3 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.4 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.7 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.3 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.3 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -27.9 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.9 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.3 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.3 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.3 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.5 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.7 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.5 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.7 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.4 dBfs",
+            "16.3 MB / 1.000 sec = 16.3 MB/second, average power -28.9 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.5 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.4 dBfs",
+            " 0.3 MB / 0.015 sec = 17.7 MB/second, average power -29.3 dBfs",
+            "",
+            "Exiting...",
+            "Total time: 30.01484 s",
+            "hackrf_stop_rx() done",
+            "hackrf_close() done",
+            "hackrf_exit() done",
+            "exit"
+          ],
+          "source_sha256": null
+        }
+      },
+      "device_check": {
+        "command": [
+          "/usr/bin/hackrf_info"
+        ],
+        "returncode": 0,
+        "raw_output": "hackrf_info version: 2026.01.3\nlibhackrf version: 2026.01.3 (0.9.2)\nFound HackRF\nIndex: 0\nSerial number: 000000000000000017c467dc2926a0c3\nBoard ID Number: 2 (HackRF One)\nFirmware Version: 2021.03.1 (API:1.04)\nPart ID Number: 0xa000cb3c 0x004b4761\nThere are 10 other devices on the same USB bus.\nYou may have problems at high sample rates.\n\nFound HackRF\nIndex: 1\nSerial number: 000000000000000017c467dc3348a6c3\nBoard ID Number: 2 (HackRF One)\nFirmware Version: 2023.01.1 (API:1.07)\nPart ID Number: 0xa000cb3c 0x00544754\nHardware Revision: older than r6\nHardware supported by installed firmware:\n    HackRF One\nThere are 10 other devices on the same USB bus.\nYou may have problems at high sample rates.\n\n",
+        "detected_serials": [
+          "000000000000000017c467dc2926a0c3",
+          "000000000000000017c467dc3348a6c3"
+        ],
+        "missing_serials": []
+      },
+      "end_utc": "2026-10-27T09:39:11.080486+00:00",
+      "status": "complete"
+    },
+    {
+      "stage": "single_after",
+      "commands": {
+        "zigbee": [
+          "/usr/bin/python3",
+          "/home/jida/Desktop/antsdr/B2Z/python/zigbee_rx/receive.py",
+          "--serial",
+          "000000000000000017c467dc3348a6c3",
+          "--channel",
+          "26",
+          "--demod",
+          "phase",
+          "--symbol-order",
+          "project",
+          "--cutoff-hz",
+          "700000",
+          "--dc-block-hz",
+          "1000",
+          "--run-id",
+          "10272",
+          "--payload-len",
+          "30",
+          "--quiet",
+          "--duration",
+          "30",
+          "--save-iq",
+          "--output",
+          "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_173809/single_after_zigbee"
+        ]
+      },
+      "start_utc": "2026-10-27T09:39:11.081536+00:00",
+      "receivers": {
+        "zigbee": {
+          "summary": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_173809/single_after_zigbee.summary.json",
+          "console_log": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/single_dual_20261027_173809/single_after_zigbee.console.log",
+          "process_returncode": 0,
+          "status": "complete",
+          "error": null,
+          "counts": {
+            "clipped_components": 1045,
+            "samples_processed": 240000000,
+            "fcs_valid_packets": 108,
+            "unique": 108
+          },
+          "capture_stats": {
+            "bytes_read": 480000000,
+            "queue_high_water": 2
+          },
+          "receiver": {
+            "unique": 108,
+            "duplicate": 0,
+            "out_of_order": 0,
+            "payload_failure": 0,
+            "run_id_mismatch": 0,
+            "longest_loss_burst": 3,
+            "loss_scope": "min..max valid received Sequence"
+          },
+          "run_id": 10272,
+          "stderr_tail": [
+            "samples_to_xfer 240000000/240Mio",
+            "Stop with Ctrl-C",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -33.0 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.8 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.8 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -33.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -33.2 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -33.0 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.8 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.5 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.5 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.8 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.2 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.2 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.0 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.4 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.1 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.9 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.1 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.2 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.8 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.7 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.9 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.4 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.3 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.7 dBfs",
+            "16.3 MB / 1.000 sec = 16.3 MB/second, average power -31.8 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -32.0 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.7 dBfs",
+            " 0.3 MB / 0.015 sec = 17.6 MB/second, average power -27.7 dBfs",
+            "",
+            "Exiting...",
+            "Total time: 30.01498 s",
+            "hackrf_stop_rx() done",
+            "hackrf_close() done",
+            "hackrf_exit() done",
+            "exit"
+          ],
+          "source_sha256": {
+            "zigbee_rx/receive.py": "635fe8e924dc346ce2310a6db9daa9024d067595c576bed6d77a35b559eacc0d",
+            "zigbee_rx/zigbee_decoder.py": "6b134e6988a38bdbc04c2051f93894236719a91b1d8574b09c7b32d3cb610f26",
+            "zigbee_rx/zigbee_protocol.py": "0901c76cc29253f85c5437f87fa6f62bc13a79d9a7a1278b67509195ce6045b1",
+            "zigbee_rx/dsp.py": "834240c91c7e4b0723fe8c3607a13f34a8dc2038c2991902c3eae41dd9f4c353",
+            "zigbee_rx/hackrf_capture.py": "274ed2819c9a152b9ca4f0dc34c0c4b6a2bf079f9a6bf414f024767afc085698",
+            "perf_test/bluebee_perf_protocol.py": "8aae24b33b412a88a4faec8659c4dcdaec6ab903e3a77eec5f1acc270f868aac"
+          }
+        }
+      },
+      "device_check": {
+        "command": [
+          "/usr/bin/hackrf_info"
+        ],
+        "returncode": 0,
+        "raw_output": "hackrf_info version: 2026.01.3\nlibhackrf version: 2026.01.3 (0.9.2)\nFound HackRF\nIndex: 0\nSerial number: 000000000000000017c467dc2926a0c3\nBoard ID Number: 2 (HackRF One)\nFirmware Version: 2021.03.1 (API:1.04)\nPart ID Number: 0xa000cb3c 0x004b4761\nThere are 10 other devices on the same USB bus.\nYou may have problems at high sample rates.\n\nFound HackRF\nIndex: 1\nSerial number: 000000000000000017c467dc3348a6c3\nBoard ID Number: 2 (HackRF One)\nFirmware Version: 2023.01.1 (API:1.07)\nPart ID Number: 0xa000cb3c 0x00544754\nHardware Revision: older than r6\nHardware supported by installed firmware:\n    HackRF One\nThere are 10 other devices on the same USB bus.\nYou may have problems at high sample rates.\n\n",
+        "detected_serials": [
+          "000000000000000017c467dc2926a0c3",
+          "000000000000000017c467dc3348a6c3"
+        ],
+        "missing_serials": []
+      },
+      "end_utc": "2026-10-27T09:39:41.925748+00:00",
+      "status": "complete"
+    }
+  ],
+  "end_utc": "2026-10-27T09:39:41.928032+00:00"
+}

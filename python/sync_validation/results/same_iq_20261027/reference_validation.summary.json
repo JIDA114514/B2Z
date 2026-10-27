@@ -1,0 +1,281 @@
+{
+  "schema": "same_iq_reference_validation_v1",
+  "calibration": {
+    "rule": {
+      "run_id": 10265,
+      "sequence_lt": 75
+    },
+    "joint_training_samples": 49,
+    "fixed_bias_us": 0.0,
+    "scope": "one constant only, no slope fit or per-packet alignment; no validation sample used for calibration"
+  },
+  "runs": [
+    {
+      "run_id": 10265,
+      "payload_len": 30,
+      "planned": 150,
+      "outcomes": {
+        "both": 85,
+        "neither": 47,
+        "ble_only": 6,
+        "zigbee_only": 12
+      },
+      "ble_unique": 91,
+      "zigbee_unique": 97,
+      "joint_decode": {
+        "numerator": 85,
+        "denominator": 150,
+        "value": 0.5666666666666667
+      },
+      "raw_delta": {
+        "n": 85,
+        "mean_us": 216.10588235294117,
+        "median_us": 216.0,
+        "std_us": 0.15518712892085787,
+        "min_us": 215.75,
+        "max_us": 216.5,
+        "abs_p95_us": 216.25,
+        "abs_p99_us": 216.29,
+        "abs_max_us": 216.5
+      },
+      "layout_only_error": {
+        "n": 85,
+        "mean_us": 0.10588235294117647,
+        "median_us": 0.0,
+        "std_us": 0.15518712892085787,
+        "min_us": -0.25,
+        "max_us": 0.5,
+        "abs_p95_us": 0.25,
+        "abs_p99_us": 0.28999999999999915,
+        "abs_max_us": 0.5
+      },
+      "held_out_error": {
+        "n": 36,
+        "mean_us": 0.13194444444444445,
+        "median_us": 0.25,
+        "std_us": 0.13801810357188743,
+        "min_us": -0.25,
+        "max_us": 0.25,
+        "abs_p95_us": 0.25,
+        "abs_p99_us": 0.25,
+        "abs_max_us": 0.25
+      },
+      "tolerance_results": [
+        {
+          "tolerance_us": 0.25,
+          "numerator": 36,
+          "denominator": 75,
+          "scope": "planned held-out slots, joint decoding plus reference residual bound; not execution success"
+        },
+        {
+          "tolerance_us": 0.5,
+          "numerator": 36,
+          "denominator": 75,
+          "scope": "planned held-out slots, joint decoding plus reference residual bound; not execution success"
+        },
+        {
+          "tolerance_us": 1,
+          "numerator": 36,
+          "denominator": 75,
+          "scope": "planned held-out slots, joint decoding plus reference residual bound; not execution success"
+        },
+        {
+          "tolerance_us": 5,
+          "numerator": 36,
+          "denominator": 75,
+          "scope": "planned held-out slots, joint decoding plus reference residual bound; not execution success"
+        }
+      ],
+      "timing_exclusions": {},
+      "identity_errors": {},
+      "ble_out_of_range": [],
+      "zigbee_out_of_range": []
+    },
+    {
+      "run_id": 10266,
+      "payload_len": 40,
+      "planned": 150,
+      "outcomes": {
+        "neither": 73,
+        "both": 48,
+        "zigbee_only": 16,
+        "ble_only": 13
+      },
+      "ble_unique": 61,
+      "zigbee_unique": 64,
+      "joint_decode": {
+        "numerator": 48,
+        "denominator": 150,
+        "value": 0.32
+      },
+      "raw_delta": {
+        "n": 48,
+        "mean_us": 216.07291666666666,
+        "median_us": 216.0,
+        "std_us": 0.1346129998262509,
+        "min_us": 215.75,
+        "max_us": 216.25,
+        "abs_p95_us": 216.25,
+        "abs_p99_us": 216.25,
+        "abs_max_us": 216.25
+      },
+      "layout_only_error": {
+        "n": 48,
+        "mean_us": 0.07291666666666667,
+        "median_us": 0.0,
+        "std_us": 0.13461299982625088,
+        "min_us": -0.25,
+        "max_us": 0.25,
+        "abs_p95_us": 0.25,
+        "abs_p99_us": 0.25,
+        "abs_max_us": 0.25
+      },
+      "held_out_error": {
+        "n": 48,
+        "mean_us": 0.07291666666666667,
+        "median_us": 0.0,
+        "std_us": 0.13461299982625088,
+        "min_us": -0.25,
+        "max_us": 0.25,
+        "abs_p95_us": 0.25,
+        "abs_p99_us": 0.25,
+        "abs_max_us": 0.25
+      },
+      "tolerance_results": [
+        {
+          "tolerance_us": 0.25,
+          "numerator": 48,
+          "denominator": 150,
+          "scope": "planned held-out slots, joint decoding plus reference residual bound; not execution success"
+        },
+        {
+          "tolerance_us": 0.5,
+          "numerator": 48,
+          "denominator": 150,
+          "scope": "planned held-out slots, joint decoding plus reference residual bound; not execution success"
+        },
+        {
+          "tolerance_us": 1,
+          "numerator": 48,
+          "denominator": 150,
+          "scope": "planned held-out slots, joint decoding plus reference residual bound; not execution success"
+        },
+        {
+          "tolerance_us": 5,
+          "numerator": 48,
+          "denominator": 150,
+          "scope": "planned held-out slots, joint decoding plus reference residual bound; not execution success"
+        }
+      ],
+      "timing_exclusions": {},
+      "identity_errors": {},
+      "ble_out_of_range": [],
+      "zigbee_out_of_range": []
+    },
+    {
+      "run_id": 10267,
+      "payload_len": 30,
+      "planned": 150,
+      "outcomes": {
+        "neither": 49,
+        "both": 82,
+        "zigbee_only": 6,
+        "ble_only": 13
+      },
+      "ble_unique": 95,
+      "zigbee_unique": 88,
+      "joint_decode": {
+        "numerator": 82,
+        "denominator": 150,
+        "value": 0.5466666666666666
+      },
+      "raw_delta": {
+        "n": 82,
+        "mean_us": 216.0670731707317,
+        "median_us": 216.0,
+        "std_us": 0.16121102520002786,
+        "min_us": 215.75,
+        "max_us": 216.25,
+        "abs_p95_us": 216.25,
+        "abs_p99_us": 216.25,
+        "abs_max_us": 216.25
+      },
+      "layout_only_error": {
+        "n": 82,
+        "mean_us": 0.06707317073170732,
+        "median_us": 0.0,
+        "std_us": 0.16121102520002786,
+        "min_us": -0.25,
+        "max_us": 0.25,
+        "abs_p95_us": 0.25,
+        "abs_p99_us": 0.25,
+        "abs_max_us": 0.25
+      },
+      "held_out_error": {
+        "n": 82,
+        "mean_us": 0.06707317073170732,
+        "median_us": 0.0,
+        "std_us": 0.16121102520002786,
+        "min_us": -0.25,
+        "max_us": 0.25,
+        "abs_p95_us": 0.25,
+        "abs_p99_us": 0.25,
+        "abs_max_us": 0.25
+      },
+      "tolerance_results": [
+        {
+          "tolerance_us": 0.25,
+          "numerator": 82,
+          "denominator": 150,
+          "scope": "planned held-out slots, joint decoding plus reference residual bound; not execution success"
+        },
+        {
+          "tolerance_us": 0.5,
+          "numerator": 82,
+          "denominator": 150,
+          "scope": "planned held-out slots, joint decoding plus reference residual bound; not execution success"
+        },
+        {
+          "tolerance_us": 1,
+          "numerator": 82,
+          "denominator": 150,
+          "scope": "planned held-out slots, joint decoding plus reference residual bound; not execution success"
+        },
+        {
+          "tolerance_us": 5,
+          "numerator": 82,
+          "denominator": 150,
+          "scope": "planned held-out slots, joint decoding plus reference residual bound; not execution success"
+        }
+      ],
+      "timing_exclusions": {},
+      "identity_errors": {},
+      "ble_out_of_range": [],
+      "zigbee_out_of_range": []
+    }
+  ],
+  "sample_rate_hz": 8000000,
+  "input_sample_period_us": 0.125,
+  "scope": "conditional common-packet reference consistency in the same IQ, not independent clocks or execution",
+  "matching": "run_id + sequence + identical complete FCS-validated PHY frame; repeated identities excluded from timing",
+  "pooled_held_out_error": {
+    "n": 166,
+    "mean_us": 0.08283132530120482,
+    "median_us": 0.0,
+    "std_us": 0.15127110580828199,
+    "min_us": -0.25,
+    "max_us": 0.25,
+    "abs_p95_us": 0.25,
+    "abs_p99_us": 0.25,
+    "abs_max_us": 0.25
+  },
+  "limitations": [
+    "same IQ shared clock and path, not two simultaneously receiving devices",
+    "timestamps have DSP and sample grid quantization; input sample period is not achieved accuracy",
+    "calibration uses first-half joint sequences of run10265; all other samples held out",
+    "conditional error excludes missing frames; per-slot outcomes and tolerance denominators retain them",
+    "150 planned slots are receiver configuration, not verified board TX counters",
+    "no sync fields, clock drift compensation, software timer execution or actuator events tested",
+    "fixed same-channel secondary experiment, not complete AuxPtr following"
+  ]
+}

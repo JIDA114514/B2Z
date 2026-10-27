@@ -1,0 +1,129 @@
+{
+  "schema": "exadv_rx_v3",
+  "receiver_version": "2026-10-26-window-retry1",
+  "start_utc": "2026-10-27T07:37:57.092940+00:00",
+  "end_utc": "2026-10-27T07:38:00.325433+00:00",
+  "status": "complete",
+  "error": null,
+  "config": {
+    "channels": [
+      39
+    ],
+    "whitening_channels": [
+      39
+    ],
+    "sample_rate": 8000000,
+    "center_hz": 2480000000.0,
+    "iq_file": null,
+    "format": "ci8",
+    "serial": "000000000000000017c467dc2926a0c3",
+    "lna": 24,
+    "vga": 20,
+    "amp": false,
+    "duration": 3.0,
+    "block_samples": 65536,
+    "queue_blocks": 64,
+    "stall_timeout": 10,
+    "sync_threshold": 0.84,
+    "dc_block_hz": 1000,
+    "timing_retry": true,
+    "channel_cutoff_hz": 850000,
+    "pair_tolerance_us": 20,
+    "diagnostic_pairs": true,
+    "diagnostic_pair_window_us": 2000,
+    "save_iq": false,
+    "output": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/dual_device_smoke_20261027_153756/exadv_rx",
+    "quiet": true
+  },
+  "capture_command": [
+    "/usr/bin/hackrf_transfer",
+    "-r",
+    "-",
+    "-f",
+    "2480000000",
+    "-s",
+    "8000000",
+    "-l",
+    "24",
+    "-g",
+    "20",
+    "-a",
+    "0",
+    "-p",
+    "0",
+    "-d",
+    "000000000000000017c467dc2926a0c3",
+    "-n",
+    "24000000"
+  ],
+  "capture_returncode": 0,
+  "capture_stats": {
+    "bytes_read": 48000000,
+    "queue_high_water": 2
+  },
+  "counts": {
+    "clipped_components": 1717,
+    "samples_processed": 24000000,
+    "packets": 47,
+    "primary": 47
+  },
+  "channels": {
+    "39": {
+      "sync_candidates": 738,
+      "rejected_candidates": 686,
+      "packets": 47,
+      "hard_crc_failure_candidates": 5,
+      "timing_retry_attempts": 21,
+      "crc_failure_candidates": 5
+    }
+  },
+  "matched_events": 0,
+  "expired_primary": 46,
+  "diagnostic_pairs": 0,
+  "diagnostic_expired_primary": 46,
+  "diagnostic_pending_overflow": 0,
+  "pending_primary": 1,
+  "wall_duration_s": 3.232485528002144,
+  "processed_sample_duration_s": 3.0,
+  "processing_ms_recent": {
+    "samples": 368,
+    "mean": 5.710716478144763,
+    "p99": 7.628211760020348,
+    "max": 9.284503001254052
+  },
+  "stderr_tail": [
+    "call hackrf_set_sample_rate(8000000 Hz/8.000 MHz)",
+    "call hackrf_set_hw_sync_mode(0)",
+    "call hackrf_set_freq(2480000000 Hz/2480.000 MHz)",
+    "call hackrf_set_amp_enable(0)",
+    "call hackrf_set_antenna_enable(0)",
+    "samples_to_xfer 24000000/24Mio",
+    "Stop with Ctrl-C",
+    "15.7 MB / 1.000 sec = 15.7 MB/second, average power -25.1 dBfs",
+    "16.3 MB / 1.000 sec = 16.3 MB/second, average power -26.0 dBfs",
+    "16.0 MB / 1.000 sec = 16.0 MB/second, average power -26.2 dBfs",
+    " 0.3 MB / 0.016 sec = 16.9 MB/second, average power -20.1 dBfs",
+    "",
+    "Exiting...",
+    "Total time: 3.01555 s",
+    "hackrf_stop_rx() done",
+    "hackrf_close() done",
+    "hackrf_exit() done",
+    "exit"
+  ],
+  "files": {
+    "packets": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/dual_device_smoke_20261027_153756/exadv_rx.packets.jsonl",
+    "events": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/dual_device_smoke_20261027_153756/exadv_rx.events.jsonl",
+    "summary": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/dual_device_smoke_20261027_153756/exadv_rx.summary.json",
+    "text": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/dual_device_smoke_20261027_153756/exadv_rx.summary.txt",
+    "stderr": "/home/jida/Desktop/antsdr/B2Z/python/sync_validation/results/dual_device_smoke_20261027_153756/exadv_rx.hackrf.log"
+  },
+  "limitations": [
+    "LE 1M only; fixed RF capture, no host-timed frequency hopping",
+    "DC blocker/filter and demodulation timing require calibration before synchronization claims",
+    "sample timestamps are relative to capture, not hardware/UTC timestamps",
+    "HackRF/USB sample losses may be unobservable in raw IQ; no guaranteed gap-free timeline",
+    "CRC-failure counts refer to sync candidates, not uniquely identified transmitted packets",
+    "no PRR without independently supplied TX counts and matched observation window"
+  ]
+}

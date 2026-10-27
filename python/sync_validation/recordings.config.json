@@ -1,0 +1,14 @@
+{
+  "schema": "same_iq_reference_validation_v1",
+  "sample_rate": 8000000,
+  "center_hz": 2480000000,
+  "calibration": {"run_id": 10265, "sequence_lt": 75},
+  "recordings": [
+    {"run_id": 10265, "payload_len": 30, "expected_packets": 150, "iq": "python/exadv_rx/results/rx_20261026_161955_853914.ci8"},
+    {"run_id": 10266, "payload_len": 40, "expected_packets": 150, "iq": "python/exadv_rx/results/rx_20261026_162114_151247.ci8"},
+    {"run_id": 10267, "payload_len": 30, "expected_packets": 150, "iq": "python/zigbee_rx/results/rx_20261027_104502_973395.ci8"}
+  ],
+  "excluded": [
+    {"iq": "python/zigbee_rx/results/rx_20261027_104243_311380.ci8", "reason": "capture status=error; hackrf_open failed; 1733 bytes is not complete ci8 IQ"}
+  ]
+}

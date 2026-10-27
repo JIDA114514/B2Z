@@ -1,0 +1,12 @@
+Status: complete
+Error: None
+CRC-valid exadv packets: 640
+Counts: {'clipped_components': 3531, 'samples_processed': 320000000, 'packets': 640, 'primary': 640}
+Matched primary/auxiliary events: 0
+Same-channel diagnostic pairs (not AuxPtr compliant): 0
+Processed IQ: 40.000000 s; wall: 33.292 s
+Application queue overflow: 0
+AuxPtr pointing to unsupported PHY: 0
+PRR: N/A (TX count/window not merged)
+Timing: relative nominal IQ sample timeline; USB gaps are not ruled out.
+JSON summary: python/sync_validation/results/dual_run10269_diagnostic/zigbee_iq_ble.summary.json

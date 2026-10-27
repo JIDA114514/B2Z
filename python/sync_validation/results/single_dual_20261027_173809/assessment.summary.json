@@ -1,0 +1,190 @@
+{
+  "schema": "completed_single_dual_assessment_v1",
+  "run_id": 10272,
+  "experiment_directory": "python/sync_validation/results/single_dual_20261027_173809",
+  "all_four_captures_complete": true,
+  "total_iq_bytes": 1920000000,
+  "phase_results": [
+    {
+      "stage": "single_before",
+      "duration_s": 30.0,
+      "unique": 104,
+      "sequence_min": 17,
+      "sequence_max": 166,
+      "observed_sequence_span": 150,
+      "missing_within_observed_span": 46,
+      "longest_loss_burst_within_observed_span": 4,
+      "duplicate": 0,
+      "out_of_order": 0,
+      "payload_failure": 0,
+      "queue_high_water": 3,
+      "gross_byte_s": 104.0,
+      "gross_bit_s": 832.0,
+      "application_byte_s": 69.33333333333333,
+      "application_bit_s": 554.6666666666666,
+      "processing_mean_ms": 5.823886091307766,
+      "processing_p99_ms": 8.060347434075076,
+      "counts_per_5s": [
+        15,
+        17,
+        16,
+        18,
+        18,
+        20
+      ]
+    },
+    {
+      "stage": "dual",
+      "duration_s": 30.0,
+      "unique": 95,
+      "sequence_min": 171,
+      "sequence_max": 320,
+      "observed_sequence_span": 150,
+      "missing_within_observed_span": 55,
+      "longest_loss_burst_within_observed_span": 4,
+      "duplicate": 0,
+      "out_of_order": 0,
+      "payload_failure": 0,
+      "queue_high_water": 3,
+      "gross_byte_s": 95.0,
+      "gross_bit_s": 760.0,
+      "application_byte_s": 63.333333333333336,
+      "application_bit_s": 506.6666666666667,
+      "processing_mean_ms": 5.816041698106974,
+      "processing_p99_ms": 9.55045829221489,
+      "counts_per_5s": [
+        15,
+        15,
+        13,
+        15,
+        20,
+        17
+      ]
+    },
+    {
+      "stage": "single_after",
+      "duration_s": 30.0,
+      "unique": 108,
+      "sequence_min": 326,
+      "sequence_max": 474,
+      "observed_sequence_span": 149,
+      "missing_within_observed_span": 41,
+      "longest_loss_burst_within_observed_span": 3,
+      "duplicate": 0,
+      "out_of_order": 0,
+      "payload_failure": 0,
+      "queue_high_water": 2,
+      "gross_byte_s": 108.0,
+      "gross_bit_s": 864.0,
+      "application_byte_s": 72.0,
+      "application_bit_s": 576.0,
+      "processing_mean_ms": 5.453804214041124,
+      "processing_p99_ms": 7.607688132120499,
+      "counts_per_5s": [
+        19,
+        18,
+        17,
+        21,
+        20,
+        13
+      ]
+    }
+  ],
+  "dual_ble": {
+    "valid_unique_test": 78,
+    "gross_byte_s": 78.0,
+    "gross_bit_s": 624.0,
+    "application_byte_s": 52.0,
+    "application_bit_s": 416.0,
+    "queue_high_water": 3,
+    "processing_ms": {
+      "samples": 3664,
+      "mean": 5.304347148147346,
+      "p99": 6.931995413760881,
+      "max": 9.575856005540118
+    }
+  },
+  "dual_joint": {
+    "observed_sequence_min": 171,
+    "observed_sequence_max": 320,
+    "observed_sequence_span": 150,
+    "outcomes": {
+      "both": 76,
+      "ble_only": 2,
+      "zigbee_only": 19,
+      "neither": 53
+    },
+    "joint_recovery_within_observed_span": {
+      "numerator": 76,
+      "denominator": 150,
+      "value": 0.5066666666666667
+    },
+    "joint_decoded_events_per_s": 2.533333333333333,
+    "frame_mismatches": 0,
+    "longest_missing": {
+      "ble": 7,
+      "zigbee": 4,
+      "joint": 7,
+      "both_missing": 4
+    },
+    "scope": "live independent receivers, matched on Run ID+Sequence and identical full validated PHY frame; observed Sequence span, not measured TX completion count"
+  },
+  "single_dual_comparison": {
+    "single_average_unique": 106.0,
+    "dual_unique": 95,
+    "difference_count": -11.0,
+    "relative_difference": -0.10377358490566035,
+    "scope": "one sequential ABA run; not a causal or statistical significance finding"
+  },
+  "full_stream_replay_equal_live": {
+    "ble": true,
+    "zigbee": true
+  },
+  "kernel_check": {
+    "interval_local": "2026-10-27 17:38:05..17:40:00",
+    "usb_events_found": 0,
+    "log": "kernel_usb_check.summary.txt",
+    "scope": "no USB events reported in queried journal; not proof of no hardware sample shortfalls"
+  },
+  "inputs": [
+    {
+      "role": "single_before_zigbee",
+      "iq": "python/sync_validation/results/single_dual_20261027_173809/single_before_zigbee.ci8",
+      "iq_sha256": "c08cf75ba8c8d58fe40118a2151d9e0640e916548f8bd0d76b496d0efd44d8eb",
+      "summary_sha256": "70e7dfe636d4627fc1ed52098ece5c00c627065e861bc959eb3eec54259c5826",
+      "packets_sha256": "a160c9b9ae8610f99c9730f4ae27ec81018b53b7ac1811bf1b205ba6bb5c8934"
+    },
+    {
+      "role": "dual_zigbee",
+      "iq": "python/sync_validation/results/single_dual_20261027_173809/dual_zigbee.ci8",
+      "iq_sha256": "bf8cc3a926bc1c8cfc8ad18d1deeb2b0530b8f93ce5309245fb0735bd3976e64",
+      "summary_sha256": "9bb600c1c4d916756d7af2e9dcb9057a6cb3a772654b533738032c41cb01605c",
+      "packets_sha256": "78a7b8f6fdd3287d3c6404796528c4407c181c4564e99818a3a7c3d5d48d68db"
+    },
+    {
+      "role": "single_after_zigbee",
+      "iq": "python/sync_validation/results/single_dual_20261027_173809/single_after_zigbee.ci8",
+      "iq_sha256": "a41f304632b19e160ee344ad0008a54eae5bcd09dc50c4558e219db0614eae20",
+      "summary_sha256": "269a9edd6189616de3559be2a1fbb884c8e110bb485451e6022edba049744ab5",
+      "packets_sha256": "1c5518842faa408b322b3a08560bae08ffae928fb25b6510e0a82ed3f1d7ebed"
+    },
+    {
+      "role": "dual_ble",
+      "iq": "python/sync_validation/results/single_dual_20261027_173809/dual_ble.ci8",
+      "iq_sha256": "ca1cada89f804d88de15042389b729a734dcf5a3e20931c903f8a33d44b23864",
+      "summary_sha256": "a63e447fb07180dd69a1c20dbd8bfe35c160c31a610a8fa06da1bd9b10032d53",
+      "packets_sha256": "c3e530567ab6c929946fa7c3d03c879f77203f2e97f3289d2a218141663f89ae"
+    }
+  ],
+  "master_summary_sha256": "ee9c07f5c87675facafc37c67cb6f427d9b6e88ee82b1bc49a2a683f1b052c19",
+  "wireless_prr": null,
+  "wireless_prr_reason": "no matching board TX completion counts merged; continuous capture stages are not Sequence 0..149",
+  "independent_clock_synchronization_result": null,
+  "limitations": [
+    "only one completed ABA run",
+    "sequential stages contain different payload sequences and times; temporal variation not controlled",
+    "no common hardware trigger/clock calibration, do not subtract sample indices across captures as timing precision",
+    "fixed-frequency secondary reception; strict primary/AuxPtr pairing remains zero",
+    "same performance payload association, not separate BLE/ZigBee control commands or measured execution"
+  ]
+}

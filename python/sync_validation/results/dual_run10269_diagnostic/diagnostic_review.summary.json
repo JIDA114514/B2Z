@@ -1,0 +1,300 @@
+{
+  "run_id": 10269,
+  "assessment": "700k offline gain did not generalize to the new live run; no stable fix established",
+  "full_stream_matrix": [
+    {
+      "iq_device": "2926a0c3",
+      "ble_valid_test": 3,
+      "zigbee_700k": 70
+    },
+    {
+      "iq_device": "3348a6c3",
+      "ble_valid_test": 0,
+      "zigbee_700k": 0
+    }
+  ],
+  "positive_control": {
+    "run_id": 10268,
+    "unique": 68,
+    "exact_sequence_frame_sample_match": true,
+    "source_hashes_equal_new_live_and_old_success": true
+  },
+  "new_live_parameters": {
+    "channel": 26,
+    "serial": "000000000000000017c467dc3348a6c3",
+    "sample_rate": 8000000,
+    "center_hz": 2480000000,
+    "iq_file": null,
+    "format": "ci8",
+    "lna": 24,
+    "vga": 20,
+    "amp": false,
+    "duration": 40.0,
+    "block_samples": 65536,
+    "queue_blocks": 64,
+    "stall_timeout": 10,
+    "dc_block_hz": 1000.0,
+    "cutoff_hz": 700000.0,
+    "cfo_hz": 0,
+    "demod": "phase",
+    "symbol_order": "project",
+    "soft_retry": true,
+    "preamble_max_distance": 80,
+    "run_id": 10269,
+    "payload_len": 30,
+    "expected_packets": 150,
+    "board_log": null,
+    "full_run_covered": false,
+    "save_iq": true,
+    "output": null,
+    "quiet": false
+  },
+  "new_live_capture": {
+    "status": "complete",
+    "counts": {
+      "clipped_components": 3531,
+      "samples_processed": 320000000
+    },
+    "stats": {
+      "bytes_read": 640000000,
+      "queue_high_water": 12
+    }
+  },
+  "inputs": [
+    {
+      "role": "BLE",
+      "path": "python/exadv_rx/results/rx_20261027_161604_978887.ci8",
+      "bytes": 640000000,
+      "sha256": "38d38aea07f7a3a05b15be29cba266133b0fd26b8432fef9b219bed7e785e431"
+    },
+    {
+      "role": "ZigBee",
+      "path": "python/zigbee_rx/results/rx_20261027_161603_006777.ci8",
+      "bytes": 640000000,
+      "sha256": "09819436f20c9d35a58dcdd56642c0d2f004af425efd801b144e0523d5416228"
+    }
+  ],
+  "commands": {
+    "zigbee_iq_zigbee_700k": {
+      "config": {
+        "channel": 26,
+        "serial": null,
+        "sample_rate": 8000000,
+        "center_hz": 2480000000,
+        "iq_file": "python/zigbee_rx/results/rx_20261027_161603_006777.ci8",
+        "format": "ci8",
+        "lna": 24,
+        "vga": 20,
+        "amp": false,
+        "duration": 0.0,
+        "block_samples": 65536,
+        "queue_blocks": 64,
+        "stall_timeout": 10,
+        "dc_block_hz": 1000,
+        "cutoff_hz": 700000.0,
+        "cfo_hz": 0,
+        "demod": "phase",
+        "symbol_order": "project",
+        "soft_retry": true,
+        "preamble_max_distance": 80,
+        "run_id": 10269,
+        "payload_len": 30,
+        "expected_packets": 150,
+        "board_log": null,
+        "full_run_covered": false,
+        "save_iq": false,
+        "output": "python/sync_validation/results/dual_run10269_diagnostic/zigbee_iq_zigbee_700k",
+        "quiet": true
+      },
+      "source_hashes": {
+        "zigbee_rx/receive.py": "635fe8e924dc346ce2310a6db9daa9024d067595c576bed6d77a35b559eacc0d",
+        "zigbee_rx/zigbee_decoder.py": "6b134e6988a38bdbc04c2051f93894236719a91b1d8574b09c7b32d3cb610f26",
+        "zigbee_rx/zigbee_protocol.py": "0901c76cc29253f85c5437f87fa6f62bc13a79d9a7a1278b67509195ce6045b1",
+        "zigbee_rx/dsp.py": "834240c91c7e4b0723fe8c3607a13f34a8dc2038c2991902c3eae41dd9f4c353",
+        "zigbee_rx/hackrf_capture.py": "274ed2819c9a152b9ca4f0dc34c0c4b6a2bf079f9a6bf414f024767afc085698",
+        "perf_test/bluebee_perf_protocol.py": "8aae24b33b412a88a4faec8659c4dcdaec6ab903e3a77eec5f1acc270f868aac"
+      },
+      "counts": {
+        "clipped_components": 3531,
+        "samples_processed": 320000000
+      },
+      "decoder": {
+        "preamble_candidates": 1,
+        "rejected_candidates": 1
+      }
+    },
+    "zigbee_iq_ble": {
+      "config": {
+        "channels": [
+          39
+        ],
+        "whitening_channels": [
+          39
+        ],
+        "sample_rate": 8000000,
+        "center_hz": 2480000000.0,
+        "iq_file": "python/zigbee_rx/results/rx_20261027_161603_006777.ci8",
+        "format": "ci8",
+        "serial": null,
+        "lna": 24,
+        "vga": 20,
+        "amp": false,
+        "duration": 0.0,
+        "block_samples": 65536,
+        "queue_blocks": 64,
+        "stall_timeout": 10,
+        "sync_threshold": 0.84,
+        "dc_block_hz": 1000,
+        "timing_retry": true,
+        "channel_cutoff_hz": 850000,
+        "pair_tolerance_us": 20,
+        "diagnostic_pairs": true,
+        "diagnostic_pair_window_us": 2000,
+        "save_iq": false,
+        "output": "python/sync_validation/results/dual_run10269_diagnostic/zigbee_iq_ble",
+        "quiet": true
+      },
+      "source_hashes": null,
+      "counts": {
+        "clipped_components": 3531,
+        "samples_processed": 320000000,
+        "packets": 640,
+        "primary": 640
+      },
+      "decoder": null
+    },
+    "ble_iq_zigbee_700k": {
+      "config": {
+        "channel": 26,
+        "serial": null,
+        "sample_rate": 8000000,
+        "center_hz": 2480000000,
+        "iq_file": "python/exadv_rx/results/rx_20261027_161604_978887.ci8",
+        "format": "ci8",
+        "lna": 24,
+        "vga": 20,
+        "amp": false,
+        "duration": 0.0,
+        "block_samples": 65536,
+        "queue_blocks": 64,
+        "stall_timeout": 10,
+        "dc_block_hz": 1000,
+        "cutoff_hz": 700000.0,
+        "cfo_hz": 0,
+        "demod": "phase",
+        "symbol_order": "project",
+        "soft_retry": true,
+        "preamble_max_distance": 80,
+        "run_id": 10269,
+        "payload_len": 30,
+        "expected_packets": 150,
+        "board_log": null,
+        "full_run_covered": false,
+        "save_iq": false,
+        "output": "python/sync_validation/results/dual_run10269_diagnostic/ble_iq_zigbee_700k",
+        "quiet": true
+      },
+      "source_hashes": {
+        "zigbee_rx/receive.py": "635fe8e924dc346ce2310a6db9daa9024d067595c576bed6d77a35b559eacc0d",
+        "zigbee_rx/zigbee_decoder.py": "6b134e6988a38bdbc04c2051f93894236719a91b1d8574b09c7b32d3cb610f26",
+        "zigbee_rx/zigbee_protocol.py": "0901c76cc29253f85c5437f87fa6f62bc13a79d9a7a1278b67509195ce6045b1",
+        "zigbee_rx/dsp.py": "834240c91c7e4b0723fe8c3607a13f34a8dc2038c2991902c3eae41dd9f4c353",
+        "zigbee_rx/hackrf_capture.py": "274ed2819c9a152b9ca4f0dc34c0c4b6a2bf079f9a6bf414f024767afc085698",
+        "perf_test/bluebee_perf_protocol.py": "8aae24b33b412a88a4faec8659c4dcdaec6ab903e3a77eec5f1acc270f868aac"
+      },
+      "counts": {
+        "clipped_components": 4613,
+        "samples_processed": 320000000,
+        "fcs_valid_packets": 70,
+        "unique": 70
+      },
+      "decoder": {
+        "preamble_candidates": 390,
+        "rejected_candidates": 267,
+        "fcs_failure_candidates": 53,
+        "fcs_valid_packets": 70,
+        "hard_dsss_packets": 66,
+        "soft_dsss_packets": 4
+      }
+    },
+    "positive_control_10268_700k": {
+      "config": {
+        "channel": 26,
+        "serial": null,
+        "sample_rate": 8000000,
+        "center_hz": 2480000000,
+        "iq_file": "python/zigbee_rx/results/rx_20261027_154453_216417.ci8",
+        "format": "ci8",
+        "lna": 24,
+        "vga": 20,
+        "amp": false,
+        "duration": 0.0,
+        "block_samples": 65536,
+        "queue_blocks": 64,
+        "stall_timeout": 10,
+        "dc_block_hz": 1000,
+        "cutoff_hz": 700000.0,
+        "cfo_hz": 0,
+        "demod": "phase",
+        "symbol_order": "project",
+        "soft_retry": true,
+        "preamble_max_distance": 80,
+        "run_id": 10268,
+        "payload_len": 30,
+        "expected_packets": 150,
+        "board_log": null,
+        "full_run_covered": false,
+        "save_iq": false,
+        "output": "python/sync_validation/results/dual_run10269_diagnostic/positive_control_10268_700k",
+        "quiet": true
+      },
+      "source_hashes": {
+        "zigbee_rx/receive.py": "635fe8e924dc346ce2310a6db9daa9024d067595c576bed6d77a35b559eacc0d",
+        "zigbee_rx/zigbee_decoder.py": "6b134e6988a38bdbc04c2051f93894236719a91b1d8574b09c7b32d3cb610f26",
+        "zigbee_rx/zigbee_protocol.py": "0901c76cc29253f85c5437f87fa6f62bc13a79d9a7a1278b67509195ce6045b1",
+        "zigbee_rx/dsp.py": "834240c91c7e4b0723fe8c3607a13f34a8dc2038c2991902c3eae41dd9f4c353",
+        "zigbee_rx/hackrf_capture.py": "274ed2819c9a152b9ca4f0dc34c0c4b6a2bf079f9a6bf414f024767afc085698",
+        "perf_test/bluebee_perf_protocol.py": "8aae24b33b412a88a4faec8659c4dcdaec6ab903e3a77eec5f1acc270f868aac"
+      },
+      "counts": {
+        "clipped_components": 1859,
+        "samples_processed": 320000000,
+        "fcs_valid_packets": 68,
+        "unique": 68
+      },
+      "decoder": {
+        "preamble_candidates": 381,
+        "rejected_candidates": 260,
+        "fcs_valid_packets": 68,
+        "hard_dsss_packets": 66,
+        "fcs_failure_candidates": 53,
+        "soft_dsss_packets": 2
+      }
+    }
+  },
+  "next_test": {
+    "script": "python/sync_validation/capture_single_dual.py",
+    "status": "dry-run and mocked tests only, actual radio control experiment pending",
+    "sequence": [
+      "single_before",
+      "dual",
+      "single_after"
+    ]
+  },
+  "hardware_state_query": {
+    "time_scope": "post-experiment; not continuous monitoring; association with last capture inferred from counts, not guaranteed",
+    "device_3348a6c3": {
+      "requested_mode": "IDLE",
+      "active_mode": "IDLE",
+      "m0_bytes": 640172960,
+      "m4_bytes": 640163840,
+      "shortfalls": 0,
+      "longest_shortfall_bytes": 0,
+      "error": "NONE"
+    },
+    "device_2926a0c3": {
+      "error": "feature not supported by installed firmware (-1005)"
+    },
+    "usb_topology": "both under USB2 hub 1-3.2, at paths 1-3.2.3 and 1-3.2.1; shared hub alone is not proof of a fault"
+  }
+}

@@ -1,0 +1,269 @@
+{
+  "scope": "native hackrf_transfer RX into /dev/null; no Python decoder, IQ file saving or target packet measurement",
+  "phase_seconds": 30,
+  "phases": [
+    {
+      "name": "ble_alone_8m",
+      "sample_rate": 8000000,
+      "start_utc": "2026-10-27T09:30:25.081759+00:00",
+      "device_check": {
+        "command": [
+          "/usr/bin/hackrf_info"
+        ],
+        "returncode": 0,
+        "raw_output": "hackrf_info version: 2026.01.3\nlibhackrf version: 2026.01.3 (0.9.2)\nFound HackRF\nIndex: 0\nSerial number: 000000000000000017c467dc3348a6c3\nBoard ID Number: 2 (HackRF One)\nFirmware Version: 2023.01.1 (API:1.07)\nPart ID Number: 0xa000cb3c 0x00544754\nHardware Revision: older than r6\nHardware supported by installed firmware:\n    HackRF One\nThere are 9 other devices on the same USB bus.\nYou may have problems at high sample rates.\n\nFound HackRF\nIndex: 1\nSerial number: 000000000000000017c467dc2926a0c3\nBoard ID Number: 2 (HackRF One)\nFirmware Version: 2021.03.1 (API:1.04)\nPart ID Number: 0xa000cb3c 0x004b4761\nThere are 9 other devices on the same USB bus.\nYou may have problems at high sample rates.\n\n",
+        "detected_serials": [
+          "000000000000000017c467dc2926a0c3",
+          "000000000000000017c467dc3348a6c3"
+        ],
+        "missing_serials": []
+      },
+      "devices": {
+        "ble": {
+          "serial": "000000000000000017c467dc2926a0c3",
+          "command": [
+            "hackrf_transfer",
+            "-d",
+            "000000000000000017c467dc2926a0c3",
+            "-r",
+            "/dev/null",
+            "-f",
+            "2480000000",
+            "-s",
+            "8000000",
+            "-l",
+            "24",
+            "-g",
+            "20",
+            "-a",
+            "0",
+            "-p",
+            "0",
+            "-n",
+            "240000000"
+          ],
+          "returncode": 0,
+          "log": "python/sync_validation/results/usb_transport_20261027_173025/ble_alone_8m_ble.log",
+          "tail": [
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -25.9 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.1 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -26.8 dBfs",
+            " 0.5 MB / 0.018 sec = 29.7 MB/second, average power -27.0 dBfs",
+            "",
+            "Exiting...",
+            "Total time: 30.01778 s",
+            "hackrf_stop_rx() done",
+            "hackrf_close() done",
+            "hackrf_exit() done",
+            "fclose() done",
+            "exit"
+          ]
+        }
+      },
+      "end_utc": "2026-10-27T09:30:55.143831+00:00",
+      "status": "complete"
+    },
+    {
+      "name": "dual_8m",
+      "sample_rate": 8000000,
+      "start_utc": "2026-10-27T09:30:55.144458+00:00",
+      "device_check": {
+        "command": [
+          "/usr/bin/hackrf_info"
+        ],
+        "returncode": 0,
+        "raw_output": "hackrf_info version: 2026.01.3\nlibhackrf version: 2026.01.3 (0.9.2)\nFound HackRF\nIndex: 0\nSerial number: 000000000000000017c467dc3348a6c3\nBoard ID Number: 2 (HackRF One)\nFirmware Version: 2023.01.1 (API:1.07)\nPart ID Number: 0xa000cb3c 0x00544754\nHardware Revision: older than r6\nHardware supported by installed firmware:\n    HackRF One\nThere are 9 other devices on the same USB bus.\nYou may have problems at high sample rates.\n\nFound HackRF\nIndex: 1\nSerial number: 000000000000000017c467dc2926a0c3\nBoard ID Number: 2 (HackRF One)\nFirmware Version: 2021.03.1 (API:1.04)\nPart ID Number: 0xa000cb3c 0x004b4761\nThere are 9 other devices on the same USB bus.\nYou may have problems at high sample rates.\n\n",
+        "detected_serials": [
+          "000000000000000017c467dc2926a0c3",
+          "000000000000000017c467dc3348a6c3"
+        ],
+        "missing_serials": []
+      },
+      "devices": {
+        "ble": {
+          "serial": "000000000000000017c467dc2926a0c3",
+          "command": [
+            "hackrf_transfer",
+            "-d",
+            "000000000000000017c467dc2926a0c3",
+            "-r",
+            "/dev/null",
+            "-f",
+            "2480000000",
+            "-s",
+            "8000000",
+            "-l",
+            "24",
+            "-g",
+            "20",
+            "-a",
+            "0",
+            "-p",
+            "0",
+            "-n",
+            "240000000"
+          ],
+          "returncode": 0,
+          "log": "python/sync_validation/results/usb_transport_20261027_173025/dual_8m_ble.log",
+          "tail": [
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -27.3 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -25.6 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.0 dBfs",
+            " 0.5 MB / 0.018 sec = 29.4 MB/second, average power -26.4 dBfs",
+            "",
+            "Exiting...",
+            "Total time: 30.01794 s",
+            "hackrf_stop_rx() done",
+            "hackrf_close() done",
+            "hackrf_exit() done",
+            "fclose() done",
+            "exit"
+          ]
+        },
+        "zigbee": {
+          "serial": "000000000000000017c467dc3348a6c3",
+          "command": [
+            "hackrf_transfer",
+            "-d",
+            "000000000000000017c467dc3348a6c3",
+            "-r",
+            "/dev/null",
+            "-f",
+            "2480000000",
+            "-s",
+            "8000000",
+            "-l",
+            "24",
+            "-g",
+            "20",
+            "-a",
+            "0",
+            "-p",
+            "0",
+            "-n",
+            "240000000"
+          ],
+          "returncode": 0,
+          "log": "python/sync_validation/results/usb_transport_20261027_173025/dual_8m_zigbee.log",
+          "tail": [
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -33.2 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -31.7 dBfs",
+            "16.0 MB / 1.000 sec = 16.0 MB/second, average power -33.2 dBfs",
+            " 0.5 MB / 0.018 sec = 29.5 MB/second, average power -33.5 dBfs",
+            "",
+            "Exiting...",
+            "Total time: 30.01794 s",
+            "hackrf_stop_rx() done",
+            "hackrf_close() done",
+            "hackrf_exit() done",
+            "fclose() done",
+            "exit"
+          ]
+        }
+      },
+      "end_utc": "2026-10-27T09:31:25.210529+00:00",
+      "status": "complete"
+    },
+    {
+      "name": "dual_4m",
+      "sample_rate": 4000000,
+      "start_utc": "2026-10-27T09:31:25.211274+00:00",
+      "device_check": {
+        "command": [
+          "/usr/bin/hackrf_info"
+        ],
+        "returncode": 0,
+        "raw_output": "hackrf_info version: 2026.01.3\nlibhackrf version: 2026.01.3 (0.9.2)\nFound HackRF\nIndex: 0\nSerial number: 000000000000000017c467dc3348a6c3\nBoard ID Number: 2 (HackRF One)\nFirmware Version: 2023.01.1 (API:1.07)\nPart ID Number: 0xa000cb3c 0x00544754\nHardware Revision: older than r6\nHardware supported by installed firmware:\n    HackRF One\nThere are 9 other devices on the same USB bus.\nYou may have problems at high sample rates.\n\nFound HackRF\nIndex: 1\nSerial number: 000000000000000017c467dc2926a0c3\nBoard ID Number: 2 (HackRF One)\nFirmware Version: 2021.03.1 (API:1.04)\nPart ID Number: 0xa000cb3c 0x004b4761\nThere are 9 other devices on the same USB bus.\nYou may have problems at high sample rates.\n\n",
+        "detected_serials": [
+          "000000000000000017c467dc2926a0c3",
+          "000000000000000017c467dc3348a6c3"
+        ],
+        "missing_serials": []
+      },
+      "devices": {
+        "ble": {
+          "serial": "000000000000000017c467dc2926a0c3",
+          "command": [
+            "hackrf_transfer",
+            "-d",
+            "000000000000000017c467dc2926a0c3",
+            "-r",
+            "/dev/null",
+            "-f",
+            "2480000000",
+            "-s",
+            "4000000",
+            "-l",
+            "24",
+            "-g",
+            "20",
+            "-a",
+            "0",
+            "-p",
+            "0",
+            "-n",
+            "120000000"
+          ],
+          "returncode": 0,
+          "log": "python/sync_validation/results/usb_transport_20261027_173025/dual_4m_ble.log",
+          "tail": [
+            " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -25.8 dBfs",
+            " 7.9 MB / 1.000 sec =  7.9 MB/second, average power -28.5 dBfs",
+            " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -26.1 dBfs",
+            " 0.3 MB / 0.018 sec = 14.7 MB/second, average power -28.0 dBfs",
+            "",
+            "Exiting...",
+            "Total time: 30.01794 s",
+            "hackrf_stop_rx() done",
+            "hackrf_close() done",
+            "hackrf_exit() done",
+            "fclose() done",
+            "exit"
+          ]
+        },
+        "zigbee": {
+          "serial": "000000000000000017c467dc3348a6c3",
+          "command": [
+            "hackrf_transfer",
+            "-d",
+            "000000000000000017c467dc3348a6c3",
+            "-r",
+            "/dev/null",
+            "-f",
+            "2480000000",
+            "-s",
+            "4000000",
+            "-l",
+            "24",
+            "-g",
+            "20",
+            "-a",
+            "0",
+            "-p",
+            "0",
+            "-n",
+            "120000000"
+          ],
+          "returncode": 0,
+          "log": "python/sync_validation/results/usb_transport_20261027_173025/dual_4m_zigbee.log",
+          "tail": [
+            " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -28.0 dBfs",
+            " 7.9 MB / 1.000 sec =  7.9 MB/second, average power -33.1 dBfs",
+            " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -29.3 dBfs",
+            " 0.3 MB / 0.018 sec = 14.7 MB/second, average power -33.5 dBfs",
+            "",
+            "Exiting...",
+            "Total time: 30.01798 s",
+            "hackrf_stop_rx() done",
+            "hackrf_close() done",
+            "hackrf_exit() done",
+            "fclose() done",
+            "exit"
+          ]
+        }
+      },
+      "end_utc": "2026-10-27T09:31:55.277150+00:00",
+      "status": "complete"
+    }
+  ]
+}

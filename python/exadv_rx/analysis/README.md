@@ -10,12 +10,12 @@
 
 ```bash
 python3 python/exadv_rx/analysis/replay_4m.py \
-  --iq-file python/exadv_rx/results/rx_20261026_162114_151247.ci8 \
+  --iq-file python/experiments/history_ble_rx_20261026_162114_151247/captures/ble/rx_20261026_162114_151247.ci8 \
   --channels 39 --duration 0 --quiet --output /tmp/assess_10266_full4m
 ```
 
-前四个脚本会重新生成各自命名的派生分析 summary；不会覆盖原始 IQ 或原始接收结果。不要在需要保留多次分析版本时直接复用派生文件名，应先另存结果。`replay_4m.py` 继承接收器的输出文件防覆盖规则。
+前四个脚本通过迁移清单定位固定历史输入，每次在 `python/experiments/` 新建时间命名的分析目录，生成派生 summary、入口报告并更新索引；不覆盖原始 IQ 或已有分析结果。`replay_4m.py` 要求显式 `--output`，继承接收器的输出文件防覆盖规则；输出到归档目录中才自动加入中央索引。
 
 候选诊断通过固定版本接收器方法的源码插入只读记录钩子，依赖 `2026-10-26-window-retry1` 的结构，接收器重构后需重新检查钩子。BlueBee 反解/期望帧仅针对当前板端固定 AdvData、地址及编码表，不能视为通用 BLE/ZigBee 解码器。
 
-结论与限制见 `../results/iq_optimization_feasibility_review.md`。本分析不能仅凭接收 IQ 证明板端 DMA 全部完成，也不能证明某个具体设备或 Wi-Fi 是干扰源。
+结论与限制见 `../../experiments/history_exadv_rx_reviews/analyses/legacy/iq_optimization_feasibility_review.md`。本分析不能仅凭接收 IQ 证明板端 DMA 全部完成，也不能证明某个具体设备或 Wi-Fi 是干扰源。

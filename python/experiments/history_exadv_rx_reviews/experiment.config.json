@@ -1,0 +1,6 @@
+{
+  "schema": "experiment_v1",
+  "experiment_id": "history_exadv_rx_reviews",
+  "origin": "legacy_cross_run_analysis",
+  "legacy_source": "python/exadv_rx/results"
+}

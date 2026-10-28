@@ -19,6 +19,8 @@ import numpy as np
 
 HERE = Path(__file__).resolve().parent
 PROJECT = HERE.parents[1]
+sys.path.insert(0, str(HERE.parent))
+from experiment_tools.reporting import new_directory, refresh_session, resolve_recorded_path
 sys.path.insert(0, str(HERE.parent / 'zigbee_rx'))
 from zigbee_protocol import frame_payload, parse_test_payload, symbols_to_bytes
 
@@ -151,8 +153,12 @@ def assign_calibration(rows, calibration):
             'scope':'one constant only, no slope fit or per-packet alignment; no validation sample used for calibration'}
 
 
+def replay_prefix(directory, rid, role):
+    return directory/'analyses'/f'run_{rid}'/role/'rx'
+
+
 def replay(recording, config, directory):
-    iq = PROJECT / recording['iq']
+    iq = resolve_recorded_path(PROJECT / recording['iq'])
     source_summary = iq.with_suffix('.summary.json')
     meta = json.loads(source_summary.read_text())
     if meta['status']!='complete' or iq.stat().st_size % 2 or iq.stat().st_size==0:
@@ -167,20 +173,22 @@ def replay(recording, config, directory):
     rid = recording['run_id']
     commands = {
         'ble':[sys.executable,str(HERE.parent/'exadv_rx/receive.py'),*common,'--channels','39',
-               '--whitening-channels','39','--output',str(directory/f'run_{rid}_ble')],
+               '--whitening-channels','39','--output',str(replay_prefix(directory,rid,'ble'))],
         'zigbee':[sys.executable,str(HERE.parent/'zigbee_rx/receive.py'),*common,'--channel','26',
                   '--demod','phase','--symbol-order','project','--run-id',str(rid),
                   '--payload-len',str(recording['payload_len']),'--expected-packets',str(recording['expected_packets']),
-                  '--output',str(directory/f'run_{rid}_zigbee')]
+                  '--output',str(replay_prefix(directory,rid,'zigbee'))]
     }
     def run(item):
         name, command = item
         print(f'run {rid}: independent {name} replay started',flush=True)
-        with (directory/f'run_{rid}_{name}.replay.log').open('x') as log:
+        prefix = replay_prefix(directory,rid,name)
+        prefix.parent.mkdir(parents=True,exist_ok=True)
+        with Path(str(prefix)+'.console.log').open('x') as log:
             result = subprocess.run(command,stdout=log,stderr=subprocess.STDOUT,cwd=PROJECT)
         if result.returncode:
             raise RuntimeError(f'{name} replay failed; see {log.name}')
-        summary = json.loads((directory/f'run_{rid}_{name}.summary.json').read_text())
+        summary = json.loads(Path(str(prefix)+'.summary.json').read_text())
         if summary['status']!='complete' or summary['counts']['samples_processed']*2 != iq.stat().st_size:
             raise ValueError('replay incomplete')
         print(f'run {rid}: {name} replay complete',flush=True)
@@ -193,7 +201,7 @@ def replay(recording, config, directory):
 def analyze(recording, directory, sample_rate):
     rid = recording['run_id']
     ble, zigbee, errors = [], [], Counter()
-    for line in (directory/f'run_{rid}_ble.packets.jsonl').read_text().splitlines():
+    for line in Path(str(replay_prefix(directory,rid,'ble'))+'.packets.jsonl').read_text().splitlines():
         packet = json.loads(line)
         try:
             identities = ble_identity(packet)
@@ -204,7 +212,7 @@ def analyze(recording, directory, sample_rate):
                     errors['ble_identity_filter'] += 1
         except ValueError as exc:
             errors[str(exc)] += 1
-    for line in (directory/f'run_{rid}_zigbee.packets.jsonl').read_text().splitlines():
+    for line in Path(str(replay_prefix(directory,rid,'zigbee'))+'.packets.jsonl').read_text().splitlines():
         packet = json.loads(line)
         payload = frame_payload(bytes.fromhex(packet['frame_hex']))
         parsed = parse_test_payload(payload)
@@ -251,7 +259,7 @@ def figures(rows, destination):
 def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config',type=Path,default=HERE/'recordings.config.json')
-    parser.add_argument('--output',type=Path,default=HERE/'results'/datetime.now().strftime('validation_%Y%m%d_%H%M%S'))
+    parser.add_argument('--output',type=Path,default=new_directory('same_iq_validation'))
     args=parser.parse_args(argv)
     config=json.loads(args.config.read_text())
     directory=args.output.resolve();directory.mkdir(parents=True,exist_ok=False)
@@ -305,7 +313,9 @@ def main(argv=None):
     manifest['end_utc']=datetime.now(timezone.utc).isoformat()
     manifest['artifacts_sha256']={p.name:sha256(p) for p in directory.iterdir() if p.is_file() and p.suffix in ('.csv','.png','.pdf')}
     dump(directory/'validation.manifest.json',manifest)
-    print(json.dumps(summary,ensure_ascii=False,indent=2),flush=True)
+    refresh_session(directory)
+    print('同 IQ 参考验证已完成；不代表独立设备时钟或执行同步。',flush=True)
+    print('完整报告：',directory/'report.md',flush=True)
     return 0
 
 

@@ -1,0 +1,6 @@
+{
+  "schema": "experiment_v1",
+  "experiment_id": "history_zigbee_rx_20261027_104243_311380",
+  "origin": "legacy_capture",
+  "legacy_source": "python/zigbee_rx/results/rx_20261027_104243_311380"
+}

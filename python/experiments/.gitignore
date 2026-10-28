@@ -1,0 +1,31 @@
+# Traverse session/phase/replay directories, but only retain reviewable evidence.
+*
+!*/
+!.gitignore
+!*.md
+!*.summary.json
+!*.summary.txt
+!*.summary.csv
+!*.metrics.csv
+!*.config.json
+!*.manifest.json
+!*.payload_validation.json
+!*.board.log
+!*.hackrf.log
+!*.events.jsonl
+!*.commands.jsonl
+!*.packets.sample.jsonl
+!*.png
+!*.pdf
+!index.csv
+!runs.csv
+!artifacts.csv
+
+# Full packet streams, console logs, raw IQ, lock/temp files stay local.
+*.packets.jsonl
+*.console.log
+*.ci8
+*.cf32
+*.iq
+.index.lock
+.writing-*

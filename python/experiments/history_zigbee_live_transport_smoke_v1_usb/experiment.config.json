@@ -1,0 +1,6 @@
+{
+  "schema": "experiment_v1",
+  "experiment_id": "history_zigbee_live_transport_smoke_v1_usb",
+  "origin": "legacy_capture",
+  "legacy_source": "python/zigbee_rx/results/live_transport_smoke_v1_usb"
+}

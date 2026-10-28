@@ -19,6 +19,8 @@ import time
 
 HERE=Path(__file__).resolve().parent
 ROOT=HERE.parents[1]
+sys.path.insert(0,str(HERE.parent))
+from experiment_tools.reporting import new_directory, refresh_session
 
 
 def inspect_devices(args):
@@ -34,8 +36,9 @@ def inspect_devices(args):
 
 
 def receiver_result(directory,stage,kind,proc):
-    path=directory/(stage+'_'+kind+'.summary.json')
-    info={'summary':str(path),'console_log':str(directory/(stage+'_'+kind+'.console.log')),
+    prefix=receiver_prefix(directory,stage,kind)
+    path=Path(str(prefix)+'.summary.json')
+    info={'summary':str(path),'console_log':str(Path(str(prefix)+'.console.log')),
           'process_returncode':proc.returncode}
     try:
         value=json.loads(path.read_text())
@@ -51,7 +54,8 @@ def receiver_result(directory,stage,kind,proc):
 def failure_message(directory,stage,failed):
     reasons=[]
     for kind,code in failed:
-        path=directory/(stage+'_'+kind+'.summary.json')
+        prefix=receiver_prefix(directory,stage,kind)
+        path=Path(str(prefix)+'.summary.json')
         try:
             value=json.loads(path.read_text())
             lines=value.get('stderr_tail',[])
@@ -61,8 +65,12 @@ def failure_message(directory,stage,failed):
             cause='; '.join(relevant[:3] or lines[-3:]) or value.get('error') or 'unknown error'
         except (OSError,ValueError):
             cause='no receiver summary available'
-        reasons.append(f'{kind} exited {code}: {cause}; log={directory/(stage+"_"+kind+".console.log")}')
+        reasons.append(f'{kind} exited {code}: {cause}; log={prefix}.console.log')
     return 'receiver failed: '+' | '.join(reasons)
+
+
+def receiver_prefix(directory,stage,kind):
+    return directory/'captures'/stage/kind/'rx'
 
 
 def commands(args, directory, stage, dual):
@@ -72,11 +80,11 @@ def commands(args, directory, stage, dual):
     result={'zigbee':[sys.executable,str(HERE.parent/'zigbee_rx/receive.py'),
         '--serial',args.zigbee_serial,'--channel','26','--demod','phase','--symbol-order','project',
         '--cutoff-hz','700000','--dc-block-hz','1000','--run-id',str(args.run_id),
-        '--payload-len',str(args.payload_len),'--quiet',*common,'--output',str(directory/(stage+'_zigbee'))]}
+        '--payload-len',str(args.payload_len),'--quiet',*common,'--output',str(receiver_prefix(directory,stage,'zigbee'))]}
     if dual:
         result['ble']=[sys.executable,str(HERE.parent/'exadv_rx/receive.py'),
             '--serial',args.ble_serial,'--channels','39','--quiet',*common,
-            '--output',str(directory/(stage+'_ble'))]
+            '--output',str(receiver_prefix(directory,stage,'ble'))]
     return result
 
 
@@ -88,7 +96,7 @@ def main(argv=None):
     p.add_argument('--payload-len',type=int,default=30)
     p.add_argument('--phase-seconds',type=int,default=30)
     p.add_argument('--save-iq',action=argparse.BooleanOptionalAction,default=True)
-    p.add_argument('--output',type=Path,default=HERE/'results'/datetime.now().strftime('single_dual_%Y%m%d_%H%M%S'))
+    p.add_argument('--output',type=Path,default=new_directory('single_dual'))
     p.add_argument('--dry-run',action='store_true')
     args=p.parse_args(argv)
     if args.ble_serial.lower()==args.zigbee_serial.lower():
@@ -115,6 +123,7 @@ def main(argv=None):
             'source_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'stages':[]}
     def save():
         (directory/'single_dual.summary.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+        refresh_session(directory)
     save()
     active=[]
     try:
@@ -134,7 +143,9 @@ def main(argv=None):
             logs=[];active=[]
             try:
                 for kind,command in entry['commands'].items():
-                    log=(directory/(stage+'_'+kind+'.console.log')).open('x');logs.append(log)
+                    prefix=receiver_prefix(directory,stage,kind)
+                    prefix.parent.mkdir(parents=True,exist_ok=True)
+                    log=Path(str(prefix)+'.console.log').open('x');logs.append(log)
                     active.append((kind,subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT,cwd=ROOT)))
                 deadline=time.monotonic()+args.phase_seconds+40
                 while any(proc.poll() is None for _,proc in active):

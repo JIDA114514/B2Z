@@ -1,0 +1,2010 @@
+{
+  "schema": "experiment_migration_v1",
+  "status": "complete",
+  "paths": {
+    "python/exadv_rx/results/rx_20261026_150021_003660.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_150021_003660/captures/ble/rx_20261026_150021_003660.hackrf.log",
+      "bytes": 4189,
+      "sha256": "91049edd9a9986ecde1190f1128c3bd35d3d2b70c98e252c493895e6a81bc193"
+    },
+    "python/exadv_rx/results/rx_20261026_150021_003660.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_150021_003660/captures/ble/rx_20261026_150021_003660.summary.json",
+      "bytes": 5220,
+      "sha256": "3d3140deddb0677c1d4e7e76b553797965d73c86237fce5a52e93fc982429b63"
+    },
+    "python/exadv_rx/results/rx_20261026_150021_003660.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_150021_003660/captures/ble/rx_20261026_150021_003660.events.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/rx_20261026_150021_003660.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_150021_003660/captures/ble/rx_20261026_150021_003660.packets.jsonl",
+      "bytes": 297231,
+      "sha256": "001c481a80323e62e551edbb6f3d647a2ccdce427ef9c2677a7079ce602247f0"
+    },
+    "python/exadv_rx/results/rx_20261026_150021_003660.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_150021_003660/captures/ble/rx_20261026_150021_003660.summary.txt",
+      "bytes": 564,
+      "sha256": "7829f2547764f64f820138d0d0a6c576ddecfd8cdd528bc2063232542f6b1b43"
+    },
+    "python/exadv_rx/results/rx_20261026_150507_618440.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_150507_618440/captures/ble/rx_20261026_150507_618440.events.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/rx_20261026_150507_618440.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_150507_618440/captures/ble/rx_20261026_150507_618440.packets.jsonl",
+      "bytes": 253211,
+      "sha256": "64187a5bc7c602a2d9b28220fe951be69969038f6b3a5c5cab388ceefecc9119"
+    },
+    "python/exadv_rx/results/rx_20261026_150507_618440.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_150507_618440/captures/ble/rx_20261026_150507_618440.summary.txt",
+      "bytes": 550,
+      "sha256": "eb8918856d083fe370c199394560c0c8be2562d787cdf095be586333a62fd227"
+    },
+    "python/exadv_rx/results/rx_20261026_150507_618440.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_150507_618440/captures/ble/rx_20261026_150507_618440.hackrf.log",
+      "bytes": 2299,
+      "sha256": "d0ed04971e8619083d9d2cac563dc8ea178a0eda946f7108e2244f5ab7ca95e8"
+    },
+    "python/exadv_rx/results/rx_20261026_150507_618440.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_150507_618440/captures/ble/rx_20261026_150507_618440.summary.json",
+      "bytes": 5128,
+      "sha256": "2aba1b57cc84e8e1d3ae19bc16c3e13f4861b9c075841877a2be39853c85d2be"
+    },
+    "python/exadv_rx/results/rx_20261026_152018_750312.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/captures/ble/rx_20261026_152018_750312.events.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/rx_20261026_152018_750312.payload_validation.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/captures/ble/rx_20261026_152018_750312.payload_validation.json",
+      "bytes": 30800,
+      "sha256": "3c643b0a7a55447776cc8f59fda0afe9172ebec8d24b5aba91a33b4e82db5283"
+    },
+    "python/exadv_rx/results/rx_20261026_152018_750312.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/captures/ble/rx_20261026_152018_750312.hackrf.log",
+      "bytes": 2299,
+      "sha256": "39194d3af58bbe491a9284cc379355c0e89c0f75b5f2738c4a6030946fd0c468"
+    },
+    "python/exadv_rx/results/rx_20261026_152018_750312.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/captures/ble/rx_20261026_152018_750312.summary.txt",
+      "bytes": 598,
+      "sha256": "844af5ebbd8fdf1c08343579be6bd6510d25537845db608d9985f5e681638f27"
+    },
+    "python/exadv_rx/results/rx_20261026_152018_750312.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/captures/ble/rx_20261026_152018_750312.packets.jsonl",
+      "bytes": 528481,
+      "sha256": "cb3bad1e675beb7e955b826b7a19c512b704065b36ff03621bbf6203bd41f995"
+    },
+    "python/exadv_rx/results/rx_20261026_152018_750312.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/captures/ble/rx_20261026_152018_750312.summary.json",
+      "bytes": 5343,
+      "sha256": "eb1037f9817cda85be0740e8c953c91e94e8bd3204336b4adc834a8d5260059a"
+    },
+    "python/exadv_rx/results/rx_20261026_154536_120754.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_154536_120754/captures/ble/rx_20261026_154536_120754.summary.txt",
+      "bytes": 599,
+      "sha256": "1e416925d29bd26d1b41d75b814c98315f996b0b28d87db45111d92d0faabc1f"
+    },
+    "python/exadv_rx/results/rx_20261026_154536_120754.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_154536_120754/captures/ble/rx_20261026_154536_120754.hackrf.log",
+      "bytes": 2299,
+      "sha256": "b46af27dbd40213b3f34a7cc118d74606e292c21e56bfc94981151f0600462cd"
+    },
+    "python/exadv_rx/results/rx_20261026_154536_120754.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_154536_120754/captures/ble/rx_20261026_154536_120754.packets.jsonl",
+      "bytes": 557760,
+      "sha256": "281a57bdbdf819c44d79c7e22cfa601f42a8a54e0aef8d23e5abadce475b8647"
+    },
+    "python/exadv_rx/results/rx_20261026_154536_120754.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_154536_120754/captures/ble/rx_20261026_154536_120754.events.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/rx_20261026_154536_120754.payload_validation.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_154536_120754/captures/ble/rx_20261026_154536_120754.payload_validation.json",
+      "bytes": 29397,
+      "sha256": "934dcd8a1c145591095c1f7d465276eacc8f51b0a3024c2092db2106a6765545"
+    },
+    "python/exadv_rx/results/rx_20261026_154536_120754.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_154536_120754/captures/ble/rx_20261026_154536_120754.summary.json",
+      "bytes": 5343,
+      "sha256": "9c95116c6fae3fc6ee97ca9c79af8524412ccd928aa65d5922cadf6153f49732"
+    },
+    "python/exadv_rx/results/rx_20261026_155043_397830.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/captures/ble/rx_20261026_155043_397830.packets.jsonl",
+      "bytes": 676304,
+      "sha256": "966372b8c2fdbaf5c951804164b92696fb57726571619eb0ab13a66ffcc2c8e5"
+    },
+    "python/exadv_rx/results/rx_20261026_155043_397830.payload_validation.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/captures/ble/rx_20261026_155043_397830.payload_validation.json",
+      "bytes": 32538,
+      "sha256": "683279a340690dafa8cca2a05672420f2f4d92ea575ee6b046fc53c077881dce"
+    },
+    "python/exadv_rx/results/rx_20261026_155043_397830.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/captures/ble/rx_20261026_155043_397830.summary.txt",
+      "bytes": 598,
+      "sha256": "e056a66486c13bfbb013f015c73881d9bb01a44b311e60ae29f3371ddf594cff"
+    },
+    "python/exadv_rx/results/rx_20261026_155043_397830.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/captures/ble/rx_20261026_155043_397830.hackrf.log",
+      "bytes": 2929,
+      "sha256": "c9769fe016acb5ff99ac1d3151266d61aad905199434e9da58f13c8869f799e4"
+    },
+    "python/exadv_rx/results/rx_20261026_155043_397830.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/captures/ble/rx_20261026_155043_397830.summary.json",
+      "bytes": 5421,
+      "sha256": "978cb63d2323ad160a5d67f9f23e7899200097429d82dd294e3b1170df934357"
+    },
+    "python/exadv_rx/results/rx_20261026_155043_397830.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/captures/ble/rx_20261026_155043_397830.events.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/rx_20261026_161955_853914.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/captures/ble/rx_20261026_161955_853914.summary.txt",
+      "bytes": 652,
+      "sha256": "e49f91c70fa7e4fd1d8bdc7f39ac749ffc308fec6236b7975a7684dc773e64ff"
+    },
+    "python/exadv_rx/results/rx_20261026_161955_853914.ci8": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/captures/ble/rx_20261026_161955_853914.ci8",
+      "bytes": 640000000,
+      "sha256": "bbaf60f1542d8af8155a03a5c5240d81111bbd3990659c3ffb641cafb599badf"
+    },
+    "python/exadv_rx/results/rx_20261026_161955_853914.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/captures/ble/rx_20261026_161955_853914.hackrf.log",
+      "bytes": 2929,
+      "sha256": "cfaf611beb6a31993421494c31233afcd8b1ff80858d1d11ec5e73c8ca0611d1"
+    },
+    "python/exadv_rx/results/rx_20261026_161955_853914.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/captures/ble/rx_20261026_161955_853914.summary.json",
+      "bytes": 5766,
+      "sha256": "361e06883139de69413ef1d3d5180395f51dcdf5cac78c0033a7d9cfc646996d"
+    },
+    "python/exadv_rx/results/rx_20261026_161955_853914.payload_validation.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/captures/ble/rx_20261026_161955_853914.payload_validation.json",
+      "bytes": 28772,
+      "sha256": "e97391a529f5a8e1339673daf644f24a67e00b8c717a566fc0598a0afc3a0357"
+    },
+    "python/exadv_rx/results/rx_20261026_161955_853914.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/captures/ble/rx_20261026_161955_853914.packets.jsonl",
+      "bytes": 677957,
+      "sha256": "26790f9d03281c52fb5fb15a15daf332436ccbfa88c4b4fd219ad655b962e49d"
+    },
+    "python/exadv_rx/results/rx_20261026_161955_853914.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/captures/ble/rx_20261026_161955_853914.events.jsonl",
+      "bytes": 30363,
+      "sha256": "f81553b9498fd26b08a436796e2a8632734a59b7afd851ea029cc7c12c55f751"
+    },
+    "python/exadv_rx/results/rx_20261026_162114_151247.ci8": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/captures/ble/rx_20261026_162114_151247.ci8",
+      "bytes": 640000000,
+      "sha256": "55e691811a0009732f5d6c9c99c6d11ab7e07fbc38c230eb7f0b450bcf45b98d"
+    },
+    "python/exadv_rx/results/rx_20261026_162114_151247.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/captures/ble/rx_20261026_162114_151247.summary.txt",
+      "bytes": 654,
+      "sha256": "cc28cb815319b650e96a97d5486077bf5070a2b03594025496605b7e5afb96c6"
+    },
+    "python/exadv_rx/results/rx_20261026_162114_151247.payload_validation.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/captures/ble/rx_20261026_162114_151247.payload_validation.json",
+      "bytes": 21422,
+      "sha256": "0c57d6ebc5d21a318804c5194802fe44f198ea29e99548e7c271b62334cba8e2"
+    },
+    "python/exadv_rx/results/rx_20261026_162114_151247.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/captures/ble/rx_20261026_162114_151247.summary.json",
+      "bytes": 5734,
+      "sha256": "f14e0eb1f740eb46f90c51a35251ca5b0c0d629398e19609fd0232b834be923a"
+    },
+    "python/exadv_rx/results/rx_20261026_162114_151247.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/captures/ble/rx_20261026_162114_151247.packets.jsonl",
+      "bytes": 638482,
+      "sha256": "455f6febbaf6fad0c30045a0e337fd0257e50a646ea060c3e22c5d75fcfeeb62"
+    },
+    "python/exadv_rx/results/rx_20261026_162114_151247.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/captures/ble/rx_20261026_162114_151247.hackrf.log",
+      "bytes": 2929,
+      "sha256": "c30b5c0d031041ec593884c7d76cb5c2038b5d322782019429c76d1c833349dc"
+    },
+    "python/exadv_rx/results/rx_20261026_162114_151247.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/captures/ble/rx_20261026_162114_151247.events.jsonl",
+      "bytes": 20390,
+      "sha256": "4a43fe9b3ac730dcb1f56860e2ae13998aa6aca15046ec310038661914156575"
+    },
+    "python/exadv_rx/results/rx_20261027_153224_561670.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261027_153224_561670/captures/ble/rx_20261027_153224_561670.hackrf.log",
+      "bytes": 44,
+      "sha256": "f11eb42211f3c34fd9e0196731f4b618640afe850fd7bd2444c0b90a6b6cb58e"
+    },
+    "python/exadv_rx/results/rx_20261027_153224_561670.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261027_153224_561670/captures/ble/rx_20261027_153224_561670.packets.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/rx_20261027_153224_561670.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261027_153224_561670/captures/ble/rx_20261027_153224_561670.summary.txt",
+      "bytes": 551,
+      "sha256": "537dae3b4647fb5b875a1d93b8b2b303b25b27b7bf4f50f1faa50afcb4ebc798"
+    },
+    "python/exadv_rx/results/rx_20261027_153224_561670.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261027_153224_561670/captures/ble/rx_20261027_153224_561670.summary.json",
+      "bytes": 2906,
+      "sha256": "1174624dbed3f4c542457475f0ccee6e025c2a80cf00e9a9286b83f504fc1256"
+    },
+    "python/exadv_rx/results/rx_20261027_153224_561670.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261027_153224_561670/captures/ble/rx_20261027_153224_561670.events.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/rx_20261027_154450_562661.ci8": {
+      "destination": "python/experiments/history_ble_rx_20261027_154450_562661/captures/ble/rx_20261027_154450_562661.ci8",
+      "bytes": 640000000,
+      "sha256": "d53d977005e5605753a17ccf168c15293eba04f74b09779811b9c4f1245293bb"
+    },
+    "python/exadv_rx/results/rx_20261027_154450_562661.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261027_154450_562661/captures/ble/rx_20261027_154450_562661.packets.jsonl",
+      "bytes": 600008,
+      "sha256": "fdc5cae14538f7cb7676e0136c5b0cce774409f0dbdf90652796705094b8b1d4"
+    },
+    "python/exadv_rx/results/rx_20261027_154450_562661.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261027_154450_562661/captures/ble/rx_20261027_154450_562661.summary.txt",
+      "bytes": 650,
+      "sha256": "6528102a45a49ec6db18e6c4b89d9c9645479cba80f72ff6ed4f8376b1974e3f"
+    },
+    "python/exadv_rx/results/rx_20261027_154450_562661.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261027_154450_562661/captures/ble/rx_20261027_154450_562661.summary.json",
+      "bytes": 5846,
+      "sha256": "a939fdadfedff024ca498bd8d364c5de027b3ddcb9348076623bc64e025903d1"
+    },
+    "python/exadv_rx/results/rx_20261027_154450_562661.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261027_154450_562661/captures/ble/rx_20261027_154450_562661.events.jsonl",
+      "bytes": 3456,
+      "sha256": "06948b7f0d2eaed1b8aad5181a5abbc2efd76e868245a3669617e75496ada671"
+    },
+    "python/exadv_rx/results/rx_20261027_154450_562661.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261027_154450_562661/captures/ble/rx_20261027_154450_562661.hackrf.log",
+      "bytes": 2929,
+      "sha256": "75d75d37741fc35ed4b299a926ce6d9d16311cd050a81d010bbab4f8fc0d8f68"
+    },
+    "python/exadv_rx/results/rx_20261027_161604_978887.ci8": {
+      "destination": "python/experiments/history_ble_rx_20261027_161604_978887/captures/ble/rx_20261027_161604_978887.ci8",
+      "bytes": 640000000,
+      "sha256": "38d38aea07f7a3a05b15be29cba266133b0fd26b8432fef9b219bed7e785e431"
+    },
+    "python/exadv_rx/results/rx_20261027_161604_978887.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261027_161604_978887/captures/ble/rx_20261027_161604_978887.summary.json",
+      "bytes": 5850,
+      "sha256": "6525b1d6354bf548cd2e2c66008cafd3573fddc364e9bb26e52a11ed43ffef92"
+    },
+    "python/exadv_rx/results/rx_20261027_161604_978887.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261027_161604_978887/captures/ble/rx_20261027_161604_978887.hackrf.log",
+      "bytes": 2929,
+      "sha256": "35666e9d65e7bd26afc7a0167ad2c0a4e41a9710a2ad897bf19ede21a409bc29"
+    },
+    "python/exadv_rx/results/rx_20261027_161604_978887.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261027_161604_978887/captures/ble/rx_20261027_161604_978887.packets.jsonl",
+      "bytes": 455454,
+      "sha256": "4bff0c9e5b794c2c8e5e6fc2263451e284a3a2866015661d19dc86e5ae609486"
+    },
+    "python/exadv_rx/results/rx_20261027_161604_978887.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261027_161604_978887/captures/ble/rx_20261027_161604_978887.summary.txt",
+      "bytes": 651,
+      "sha256": "371b8da0d57ed1a7901161a1064be4153b3d6a303b22b79c706fbfcb1797d0cf"
+    },
+    "python/exadv_rx/results/rx_20261027_161604_978887.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261027_161604_978887/captures/ble/rx_20261027_161604_978887.events.jsonl",
+      "bytes": 768,
+      "sha256": "af6fd1898ceb1797d778465121817a869c38253ab8a9e1e941182106f1cf845f"
+    },
+    "python/zigbee_rx/results/live_transport_smoke_v1.summary.txt": {
+      "destination": "python/experiments/history_zigbee_live_transport_smoke_v1/captures/zigbee/live_transport_smoke_v1.summary.txt",
+      "bytes": 440,
+      "sha256": "22912885a0e5f8ffe545b51c697bd39ceac2562a32931b530435a31d97eafb07"
+    },
+    "python/zigbee_rx/results/live_transport_smoke_v1.summary.json": {
+      "destination": "python/experiments/history_zigbee_live_transport_smoke_v1/captures/zigbee/live_transport_smoke_v1.summary.json",
+      "bytes": 4441,
+      "sha256": "a8df168a055ddd6421968ad586ef1fad771cca26c14b81c662f66b764f436faa"
+    },
+    "python/zigbee_rx/results/live_transport_smoke_v1.hackrf.log": {
+      "destination": "python/experiments/history_zigbee_live_transport_smoke_v1/captures/zigbee/live_transport_smoke_v1.hackrf.log",
+      "bytes": 42,
+      "sha256": "d2292f63c90673daacb425f5c507000bef0d3bd532cff1b8cc7a25c1a3d7d1d0"
+    },
+    "python/zigbee_rx/results/live_transport_smoke_v1.packets.jsonl": {
+      "destination": "python/experiments/history_zigbee_live_transport_smoke_v1/captures/zigbee/live_transport_smoke_v1.packets.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/zigbee_rx/results/live_transport_smoke_v1_usb.summary.json": {
+      "destination": "python/experiments/history_zigbee_live_transport_smoke_v1_usb/captures/zigbee/live_transport_smoke_v1_usb.summary.json",
+      "bytes": 5113,
+      "sha256": "f2a35b4c85a6a54c18081984edb4f119d492f4701783fcea96ac1d3d0668bcdf"
+    },
+    "python/zigbee_rx/results/live_transport_smoke_v1_usb.hackrf.log": {
+      "destination": "python/experiments/history_zigbee_live_transport_smoke_v1_usb/captures/zigbee/live_transport_smoke_v1_usb.hackrf.log",
+      "bytes": 595,
+      "sha256": "8cddf58f4afae1aebd4d9d1b0ebba19e4e4af130177728217fad768429dd76f8"
+    },
+    "python/zigbee_rx/results/live_transport_smoke_v1_usb.summary.txt": {
+      "destination": "python/experiments/history_zigbee_live_transport_smoke_v1_usb/captures/zigbee/live_transport_smoke_v1_usb.summary.txt",
+      "bytes": 427,
+      "sha256": "bd20ede35cf077fe91d90922d297ffd4e2ffcaaec18aebeef02e91acf44ed734"
+    },
+    "python/zigbee_rx/results/live_transport_smoke_v1_usb.packets.jsonl": {
+      "destination": "python/experiments/history_zigbee_live_transport_smoke_v1_usb/captures/zigbee/live_transport_smoke_v1_usb.packets.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/zigbee_rx/results/rx_20261027_104243_311380.summary.txt": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_104243_311380/captures/zigbee/rx_20261027_104243_311380.summary.txt",
+      "bytes": 475,
+      "sha256": "b0df1c3ba91e26a41a2c6433a7d8356c1772660b7bbdb962a058bce8bf14b8a3"
+    },
+    "python/zigbee_rx/results/rx_20261027_104243_311380.ci8": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_104243_311380/captures/zigbee/rx_20261027_104243_311380.ci8",
+      "bytes": 1733,
+      "sha256": "88e2c840c9530f58e68ce2e9edde8a69863cb26d26cdfd2c328c9cb67dccb0e6"
+    },
+    "python/zigbee_rx/results/rx_20261027_104243_311380.hackrf.log": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_104243_311380/captures/zigbee/rx_20261027_104243_311380.hackrf.log",
+      "bytes": 44,
+      "sha256": "754cab53810c13b9088e40e0ba389368b8e172d892fb24b71143af8106baafc2"
+    },
+    "python/zigbee_rx/results/rx_20261027_104243_311380.summary.json": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_104243_311380/captures/zigbee/rx_20261027_104243_311380.summary.json",
+      "bytes": 4890,
+      "sha256": "267ca8347a25dd57dcee0c5799c98d5bc5d5d7285a990bff3900d7ccb65c5df1"
+    },
+    "python/zigbee_rx/results/rx_20261027_104243_311380.packets.jsonl": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_104243_311380/captures/zigbee/rx_20261027_104243_311380.packets.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/zigbee_rx/results/rx_20261027_104502_973395.summary.json": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_104502_973395/captures/zigbee/rx_20261027_104502_973395.summary.json",
+      "bytes": 10068,
+      "sha256": "9fca27391e63a7eb423dafb2aa8488d612bbf5712e258dc75a978fe05386b8ab"
+    },
+    "python/zigbee_rx/results/rx_20261027_104502_973395.packets.jsonl": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_104502_973395/captures/zigbee/rx_20261027_104502_973395.packets.jsonl",
+      "bytes": 74824,
+      "sha256": "6b15668f35677c83fa19ba188f06281e3551cfcee14cbf5be6d4ecac22eea393"
+    },
+    "python/zigbee_rx/results/rx_20261027_104502_973395.summary.txt": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_104502_973395/captures/zigbee/rx_20261027_104502_973395.summary.txt",
+      "bytes": 466,
+      "sha256": "2007fc28bb86ba18ce5258cf20e372aa63604b066f623aaf3814e114a80c927d"
+    },
+    "python/zigbee_rx/results/rx_20261027_104502_973395.ci8": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_104502_973395/captures/zigbee/rx_20261027_104502_973395.ci8",
+      "bytes": 640000000,
+      "sha256": "16b2b76e67c8e04031e32e24eb91fe9893a63bff17d249849bd671d911d9ba63"
+    },
+    "python/zigbee_rx/results/rx_20261027_104502_973395.hackrf.log": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_104502_973395/captures/zigbee/rx_20261027_104502_973395.hackrf.log",
+      "bytes": 2929,
+      "sha256": "9b88547341112f805a9194c95365263fcab12e987251235c0023f3ae0a207b40"
+    },
+    "python/zigbee_rx/results/rx_20261027_153222_394522.packets.jsonl": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_153222_394522/captures/zigbee/rx_20261027_153222_394522.packets.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/zigbee_rx/results/rx_20261027_153222_394522.summary.txt": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_153222_394522/captures/zigbee/rx_20261027_153222_394522.summary.txt",
+      "bytes": 461,
+      "sha256": "bc62bbeafacdd9a56997d90ea8d6ec7e4b243273480041fcfceabff8f5c1b598"
+    },
+    "python/zigbee_rx/results/rx_20261027_153222_394522.hackrf.log": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_153222_394522/captures/zigbee/rx_20261027_153222_394522.hackrf.log",
+      "bytes": 881,
+      "sha256": "c70839b44cebd25531b4883ec87c2a769cac23bda62ad095d927f2c955e40658"
+    },
+    "python/zigbee_rx/results/rx_20261027_153222_394522.summary.json": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_153222_394522/captures/zigbee/rx_20261027_153222_394522.summary.json",
+      "bytes": 5799,
+      "sha256": "5e3ea6be5a71541824f574493231835f7e4d7f2ea0dfb76c7ad2aa81718e5358"
+    },
+    "python/zigbee_rx/results/rx_20261027_154453_216417.hackrf.log": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_154453_216417/captures/zigbee/rx_20261027_154453_216417.hackrf.log",
+      "bytes": 2929,
+      "sha256": "cb9d9decaf939d280d6a7b155f80d49f810a1564fb28049d2c142a1039f50e48"
+    },
+    "python/zigbee_rx/results/rx_20261027_154453_216417.packets.jsonl": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_154453_216417/captures/zigbee/rx_20261027_154453_216417.packets.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/zigbee_rx/results/rx_20261027_154453_216417.ci8": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_154453_216417/captures/zigbee/rx_20261027_154453_216417.ci8",
+      "bytes": 640000000,
+      "sha256": "177d952dbb825e517d0a5e079331917323e98b8d94ca2a17908a96676ac27e86"
+    },
+    "python/zigbee_rx/results/rx_20261027_154453_216417.summary.txt": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_154453_216417/captures/zigbee/rx_20261027_154453_216417.summary.txt",
+      "bytes": 460,
+      "sha256": "473d5165bd1835c482bbbe2db6dd39fec70e7915105a832cc36678e8c7a5fca9"
+    },
+    "python/zigbee_rx/results/rx_20261027_154453_216417.summary.json": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_154453_216417/captures/zigbee/rx_20261027_154453_216417.summary.json",
+      "bytes": 7403,
+      "sha256": "8abcc514f10e8093b6aad3151a400a5b12f47fcdfce1f05606c89013fb402359"
+    },
+    "python/zigbee_rx/results/rx_20261027_161603_006777.summary.txt": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_161603_006777/captures/zigbee/rx_20261027_161603_006777.summary.txt",
+      "bytes": 460,
+      "sha256": "d79d0d7c7040a96f4f8a76641f0ee9a500305405b49c3ad58414c985d3bcab80"
+    },
+    "python/zigbee_rx/results/rx_20261027_161603_006777.hackrf.log": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_161603_006777/captures/zigbee/rx_20261027_161603_006777.hackrf.log",
+      "bytes": 2929,
+      "sha256": "ba12d92e4635f08d7757711c4e339a9f80207052e0f8eb31fe8a5cd0f167c04c"
+    },
+    "python/zigbee_rx/results/rx_20261027_161603_006777.packets.jsonl": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_161603_006777/captures/zigbee/rx_20261027_161603_006777.packets.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/zigbee_rx/results/rx_20261027_161603_006777.summary.json": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_161603_006777/captures/zigbee/rx_20261027_161603_006777.summary.json",
+      "bytes": 7368,
+      "sha256": "19023774d2d830565377379f3e6380112fe1248910c50398a64f5d7c3357374c"
+    },
+    "python/zigbee_rx/results/rx_20261027_161603_006777.ci8": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_161603_006777/captures/zigbee/rx_20261027_161603_006777.ci8",
+      "bytes": 640000000,
+      "sha256": "09819436f20c9d35a58dcdd56642c0d2f004af425efd801b144e0523d5416228"
+    },
+    "python/exadv_rx/results/assess_10265_full4m.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/analyses/exadv_rx_assess_10265_full4m/ble/assess_10265_full4m.summary.json",
+      "bytes": 3064,
+      "sha256": "1cfe53de35620b8406e0cc9686806dd5f793cbc2080ffeb42fdbd526041ac690"
+    },
+    "python/exadv_rx/results/assess_10265_full4m.payload_validation.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/analyses/exadv_rx_assess_10265_full4m/ble/assess_10265_full4m.payload_validation.json",
+      "bytes": 47153,
+      "sha256": "067a5249e59ab4f41593db07838f7191ffcf9731c2e25fcabdb2c669b1512157"
+    },
+    "python/exadv_rx/results/assess_10265_full4m.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/analyses/exadv_rx_assess_10265_full4m/ble/assess_10265_full4m.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/assess_10265_full4m.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/analyses/exadv_rx_assess_10265_full4m/ble/assess_10265_full4m.packets.jsonl",
+      "bytes": 683317,
+      "sha256": "57f9004c0017da2afb3fb08442b844303ddf83276e9a0fb71bdd73a126a4242c"
+    },
+    "python/exadv_rx/results/assess_10265_full4m.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/analyses/exadv_rx_assess_10265_full4m/ble/assess_10265_full4m.events.jsonl",
+      "bytes": 30837,
+      "sha256": "04555bb8763c3bbddd0be61b30549a8e3c6f84da0d882198ada2ad312b001a45"
+    },
+    "python/exadv_rx/results/assess_10265_full4m.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/analyses/exadv_rx_assess_10265_full4m/ble/assess_10265_full4m.summary.txt",
+      "bytes": 616,
+      "sha256": "fbdcb74d9d530578675461738b691f09b49bb2c46d6e1517dfbe1db6722281d1"
+    },
+    "python/exadv_rx/results/assess_10266_full4m.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/analyses/exadv_rx_assess_10266_full4m/ble/assess_10266_full4m.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/assess_10266_full4m.payload_validation.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/analyses/exadv_rx_assess_10266_full4m/ble/assess_10266_full4m.payload_validation.json",
+      "bytes": 38594,
+      "sha256": "4467a50c58ab2cbcfb8fc148692b7d3d3658e835554dee1b40de8aa53a9ab17e"
+    },
+    "python/exadv_rx/results/assess_10266_full4m.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/analyses/exadv_rx_assess_10266_full4m/ble/assess_10266_full4m.events.jsonl",
+      "bytes": 22401,
+      "sha256": "8ba524ea20264f9c1fc3263b70919295f5c07767d1fcedb8221261498a201a8b"
+    },
+    "python/exadv_rx/results/assess_10266_full4m.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/analyses/exadv_rx_assess_10266_full4m/ble/assess_10266_full4m.packets.jsonl",
+      "bytes": 660933,
+      "sha256": "6a55a78f0ac815b11163ada921129baa7d5dc7144da83bc4eb4a0581fe45b9ef"
+    },
+    "python/exadv_rx/results/assess_10266_full4m.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/analyses/exadv_rx_assess_10266_full4m/ble/assess_10266_full4m.summary.txt",
+      "bytes": 618,
+      "sha256": "b25e72c013b38cf05acff5a29d305f99c5db69f040c95d83a217c3aa0f1c3ca3"
+    },
+    "python/exadv_rx/results/assess_10266_full4m.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/analyses/exadv_rx_assess_10266_full4m/ble/assess_10266_full4m.summary.json",
+      "bytes": 3104,
+      "sha256": "aa5ac9f972df1c5e9b3d92c1a2cf1a54b4333a6a93a28e1ad14de9bb195a8f20"
+    },
+    "python/exadv_rx/results/benchmark_10264_hard.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/analyses/exadv_rx_benchmark_10264_hard/ble/benchmark_10264_hard.events.jsonl",
+      "bytes": 28870,
+      "sha256": "ad8f95d9bf7fa383ec6ae16ea7869d563afc0a2e37992b81a03408dfbf5780a1"
+    },
+    "python/exadv_rx/results/benchmark_10264_hard.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/analyses/exadv_rx_benchmark_10264_hard/ble/benchmark_10264_hard.summary.txt",
+      "bytes": 619,
+      "sha256": "422244f2ad380ba09713d0496e5362cb550d216fdb9007efc510b56b7de247b1"
+    },
+    "python/exadv_rx/results/benchmark_10264_hard.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/analyses/exadv_rx_benchmark_10264_hard/ble/benchmark_10264_hard.summary.json",
+      "bytes": 2852,
+      "sha256": "42f4ed7ccdb73e93750baa781f5554e1f975be0294f4ea4c203b1549740a6e09"
+    },
+    "python/exadv_rx/results/benchmark_10264_hard.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/analyses/exadv_rx_benchmark_10264_hard/ble/benchmark_10264_hard.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/benchmark_10264_hard.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/analyses/exadv_rx_benchmark_10264_hard/ble/benchmark_10264_hard.packets.jsonl",
+      "bytes": 499644,
+      "sha256": "8b51f7dbcbcd57cdb682fa51012d4d2ced8f3ded7760044712ccdad552dee761"
+    },
+    "python/exadv_rx/results/benchmark_10264_retry.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/analyses/exadv_rx_benchmark_10264_retry/ble/benchmark_10264_retry.packets.jsonl",
+      "bytes": 503190,
+      "sha256": "13eda328d4ed8169f55bc4a8417043b1312d54e57eefb487450aabb895b15383"
+    },
+    "python/exadv_rx/results/benchmark_10264_retry.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/analyses/exadv_rx_benchmark_10264_retry/ble/benchmark_10264_retry.events.jsonl",
+      "bytes": 29661,
+      "sha256": "a8fe9af0e6cbc05fab938bdea99dbb0f3bc13c86d59f6a3d7c644f60ea2c0b9d"
+    },
+    "python/exadv_rx/results/benchmark_10264_retry.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/analyses/exadv_rx_benchmark_10264_retry/ble/benchmark_10264_retry.summary.txt",
+      "bytes": 620,
+      "sha256": "6229283a31bc81ba90f52bddbf6816b38433a78781dfb1e52aaba3acab1e8a7b"
+    },
+    "python/exadv_rx/results/benchmark_10264_retry.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/analyses/exadv_rx_benchmark_10264_retry/ble/benchmark_10264_retry.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/benchmark_10264_retry.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/analyses/exadv_rx_benchmark_10264_retry/ble/benchmark_10264_retry.summary.json",
+      "bytes": 2925,
+      "sha256": "a4b9d29ee562aa4887d622d8f5225c515464177b116f074e2389497ca55aae98"
+    },
+    "python/exadv_rx/results/replay_10262_threshold070.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/analyses/exadv_rx_replay_10262_threshold070/ble/replay_10262_threshold070.events.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/replay_10262_threshold070.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/analyses/exadv_rx_replay_10262_threshold070/ble/replay_10262_threshold070.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/replay_10262_threshold070.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/analyses/exadv_rx_replay_10262_threshold070/ble/replay_10262_threshold070.packets.jsonl",
+      "bytes": 531129,
+      "sha256": "ce45b0d98cb8d7af047c87a384c9080bb66ea126aa74c2cae365e0366eb653c4"
+    },
+    "python/exadv_rx/results/replay_10262_threshold070.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/analyses/exadv_rx_replay_10262_threshold070/ble/replay_10262_threshold070.summary.txt",
+      "bytes": 568,
+      "sha256": "435225c7f757efb51963e8400e69191575add0aa96766af351b1c0bd376c2ad6"
+    },
+    "python/exadv_rx/results/replay_10262_threshold070.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/analyses/exadv_rx_replay_10262_threshold070/ble/replay_10262_threshold070.summary.json",
+      "bytes": 2604,
+      "sha256": "b1c4f24787335c85f70ce4f71ef5824ef3be82670c3d5ad85e6faa89fa03b4b0"
+    },
+    "python/exadv_rx/results/replay_10262_window_retry1.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/analyses/exadv_rx_replay_10262_window_retry1/ble/replay_10262_window_retry1.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/replay_10262_window_retry1.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/analyses/exadv_rx_replay_10262_window_retry1/ble/replay_10262_window_retry1.summary.txt",
+      "bytes": 627,
+      "sha256": "a2f87b452357767ab3b9e1182484c8e65e8a75a5f1f33fffcac869c45c3e19d9"
+    },
+    "python/exadv_rx/results/replay_10262_window_retry1.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/analyses/exadv_rx_replay_10262_window_retry1/ble/replay_10262_window_retry1.events.jsonl",
+      "bytes": 38486,
+      "sha256": "c0d764d19a97eebe9a199fb35e1f6d1a976d45a081230aa267892f4a8b12b30a"
+    },
+    "python/exadv_rx/results/replay_10262_window_retry1.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/analyses/exadv_rx_replay_10262_window_retry1/ble/replay_10262_window_retry1.packets.jsonl",
+      "bytes": 566104,
+      "sha256": "ecbd021f3f267946f67b5988a0b0f7d3c103497dffda7ac395d9ca92bffdee38"
+    },
+    "python/exadv_rx/results/replay_10262_window_retry1.payload_validation.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/analyses/exadv_rx_replay_10262_window_retry1/ble/replay_10262_window_retry1.payload_validation.json",
+      "bytes": 57115,
+      "sha256": "ed250de4f5b670d05cd4fd84196b78fa19eaf1a9b005e1ad557db34f14f4cb4e"
+    },
+    "python/exadv_rx/results/replay_10262_window_retry1.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_152018_750312/analyses/exadv_rx_replay_10262_window_retry1/ble/replay_10262_window_retry1.summary.json",
+      "bytes": 2958,
+      "sha256": "85cf685ecfc653a28704a31fea6d09afa8905b9c3038a9a8020c4c96445ad94f"
+    },
+    "python/exadv_rx/results/replay_10263_window_retry1.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_154536_120754/analyses/exadv_rx_replay_10263_window_retry1/ble/replay_10263_window_retry1.summary.json",
+      "bytes": 2961,
+      "sha256": "a17ac1d4900aeee2201a6d9a9832b2fbd329d94695ecdbb28122af58fb5ede93"
+    },
+    "python/exadv_rx/results/replay_10263_window_retry1.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_154536_120754/analyses/exadv_rx_replay_10263_window_retry1/ble/replay_10263_window_retry1.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/replay_10263_window_retry1.payload_validation.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_154536_120754/analyses/exadv_rx_replay_10263_window_retry1/ble/replay_10263_window_retry1.payload_validation.json",
+      "bytes": 58750,
+      "sha256": "1cd605e9f0946086925299573f5346384803c70b2d88c5b19949f95b0d9a75ef"
+    },
+    "python/exadv_rx/results/replay_10263_window_retry1.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_154536_120754/analyses/exadv_rx_replay_10263_window_retry1/ble/replay_10263_window_retry1.summary.txt",
+      "bytes": 628,
+      "sha256": "d5410de92395311f69981a8284a41360ed5e0ae3d88f6daeb6776192acc88c47"
+    },
+    "python/exadv_rx/results/replay_10263_window_retry1.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_154536_120754/analyses/exadv_rx_replay_10263_window_retry1/ble/replay_10263_window_retry1.packets.jsonl",
+      "bytes": 598799,
+      "sha256": "41bcfa4f755c28666e5b25b73ac46bfad92afeecbf4e2010efb7ac0c88926050"
+    },
+    "python/exadv_rx/results/replay_10263_window_retry1.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_154536_120754/analyses/exadv_rx_replay_10263_window_retry1/ble/replay_10263_window_retry1.events.jsonl",
+      "bytes": 38832,
+      "sha256": "b8b7671d630cc90666be7f23af971335541edd316acc9d85d21c14e5be7afc43"
+    },
+    "python/exadv_rx/results/replay_10264_window_retry1.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/analyses/exadv_rx_replay_10264_window_retry1/ble/replay_10264_window_retry1.summary.txt",
+      "bytes": 627,
+      "sha256": "7668d191e6d6a2c4eb73cb76a17af3f42345d21330ca1b8960fbf52aab9a691b"
+    },
+    "python/exadv_rx/results/replay_10264_window_retry1.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/analyses/exadv_rx_replay_10264_window_retry1/ble/replay_10264_window_retry1.events.jsonl",
+      "bytes": 40843,
+      "sha256": "b34b3ef485961615a5d5df5e8863e2156ecc141aac5ac4e7f6df0e8c4cfdf885"
+    },
+    "python/exadv_rx/results/replay_10264_window_retry1.payload_validation.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/analyses/exadv_rx_replay_10264_window_retry1/ble/replay_10264_window_retry1.payload_validation.json",
+      "bytes": 64226,
+      "sha256": "258c3b63be7a776d7c4aa98e15a621b2a6ead356904c7624fbf28d898c5d2d65"
+    },
+    "python/exadv_rx/results/replay_10264_window_retry1.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/analyses/exadv_rx_replay_10264_window_retry1/ble/replay_10264_window_retry1.summary.json",
+      "bytes": 2961,
+      "sha256": "109d6716048b57660072103369a641616b4137be3bf9dcdda0fe838e770c241e"
+    },
+    "python/exadv_rx/results/replay_10264_window_retry1.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/analyses/exadv_rx_replay_10264_window_retry1/ble/replay_10264_window_retry1.packets.jsonl",
+      "bytes": 728686,
+      "sha256": "4cbcbc3a6f6b4d26e28a98aef75ea75b11d07f12ff6a65096ba30a470d68c20e"
+    },
+    "python/exadv_rx/results/replay_10264_window_retry1.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_155043_397830/analyses/exadv_rx_replay_10264_window_retry1/ble/replay_10264_window_retry1.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/replay_150021_dc1.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_150021_003660/analyses/exadv_rx_replay_150021_dc1/ble/replay_150021_dc1.summary.txt",
+      "bytes": 533,
+      "sha256": "b2f97a950061665febfdd1befccc612389f699a5b6c786c4691d79b736fa9813"
+    },
+    "python/exadv_rx/results/replay_150021_dc1.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_150021_003660/analyses/exadv_rx_replay_150021_dc1/ble/replay_150021_dc1.events.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/replay_150021_dc1.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_150021_003660/analyses/exadv_rx_replay_150021_dc1/ble/replay_150021_dc1.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/replay_150021_dc1.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_150021_003660/analyses/exadv_rx_replay_150021_dc1/ble/replay_150021_dc1.packets.jsonl",
+      "bytes": 68689502,
+      "sha256": "558ce41087fea7a92222d5d2cb3d0ca48b6d057ffbe67348e2651139cbcdbc2c"
+    },
+    "python/exadv_rx/results/replay_150021_dc1.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_150021_003660/analyses/exadv_rx_replay_150021_dc1/ble/replay_150021_dc1.summary.json",
+      "bytes": 2530,
+      "sha256": "3d4c98b3684c0ab6c2c854ceeba2437d9631d53ff4dde17da3d1ee6e13389031"
+    },
+    "python/exadv_rx/results/replay_150507_dc1.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_150507_618440/analyses/exadv_rx_replay_150507_dc1/ble/replay_150507_dc1.summary.txt",
+      "bytes": 557,
+      "sha256": "eaaaa3d96b26e366855a8d04e9f3bef2ffda574967f654293b7c61b6d4291c0c"
+    },
+    "python/exadv_rx/results/replay_150507_dc1.events.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_150507_618440/analyses/exadv_rx_replay_150507_dc1/ble/replay_150507_dc1.events.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/exadv_rx/results/replay_150507_dc1.payload_validation.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_150507_618440/analyses/exadv_rx_replay_150507_dc1/ble/replay_150507_dc1.payload_validation.json",
+      "bytes": 28681,
+      "sha256": "4b8352dcce13902c7eefac141e5be321feeea991b90d6647d523e2f9c77e2e1a"
+    },
+    "python/exadv_rx/results/replay_150507_dc1.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_150507_618440/analyses/exadv_rx_replay_150507_dc1/ble/replay_150507_dc1.summary.json",
+      "bytes": 2553,
+      "sha256": "8411cb4cfe6b0e71073bec10d2004f91a4a906af74358db48bdbb3cb05faba8f"
+    },
+    "python/exadv_rx/results/replay_150507_dc1.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_150507_618440/analyses/exadv_rx_replay_150507_dc1/ble/replay_150507_dc1.packets.jsonl",
+      "bytes": 568946,
+      "sha256": "10408db4f8704e55bf6b121f820b6229fd2f25a03978eea32887e3ce85820ba9"
+    },
+    "python/exadv_rx/results/replay_150507_dc1.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_150507_618440/analyses/exadv_rx_replay_150507_dc1/ble/replay_150507_dc1.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/zigbee_rx/results/assessment_10267_replay.hackrf.log": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_104502_973395/analyses/zigbee_rx_assessment_10267_replay/zigbee/assessment_10267_replay.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/zigbee_rx/results/assessment_10267_replay.summary.txt": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_104502_973395/analyses/zigbee_rx_assessment_10267_replay/zigbee/assessment_10267_replay.summary.txt",
+      "bytes": 435,
+      "sha256": "7a90d3aa2b7d4f4da56a79bd8531817d0c0e9a8207256e7f0da0bfdcac409639"
+    },
+    "python/zigbee_rx/results/assessment_10267_replay.summary.json": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_104502_973395/analyses/zigbee_rx_assessment_10267_replay/zigbee/assessment_10267_replay.summary.json",
+      "bytes": 7192,
+      "sha256": "87341877dda752e9a2180858fee806053830af95a287564cee77a9d4324581d0"
+    },
+    "python/zigbee_rx/results/assessment_10267_replay.packets.jsonl": {
+      "destination": "python/experiments/history_zigbee_rx_20261027_104502_973395/analyses/zigbee_rx_assessment_10267_replay/zigbee/assessment_10267_replay.packets.jsonl",
+      "bytes": 74824,
+      "sha256": "6b15668f35677c83fa19ba188f06281e3551cfcee14cbf5be6d4ecac22eea393"
+    },
+    "python/zigbee_rx/results/replay_10265_phase_v1.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/analyses/zigbee_rx_replay_10265_phase_v1/zigbee/replay_10265_phase_v1.summary.txt",
+      "bytes": 434,
+      "sha256": "394f1d74586123b1c8d719b0abddfdd353ef741687b0a3fbf8c9933d75f1cbe3"
+    },
+    "python/zigbee_rx/results/replay_10265_phase_v1.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/analyses/zigbee_rx_replay_10265_phase_v1/zigbee/replay_10265_phase_v1.summary.json",
+      "bytes": 7106,
+      "sha256": "4322b864e90ee16fffafffc7d1c9e087913097ab51425b956014ec64a8f1538b"
+    },
+    "python/zigbee_rx/results/replay_10265_phase_v1.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/analyses/zigbee_rx_replay_10265_phase_v1/zigbee/replay_10265_phase_v1.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/zigbee_rx/results/replay_10265_phase_v1.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_161955_853914/analyses/zigbee_rx_replay_10265_phase_v1/zigbee/replay_10265_phase_v1.packets.jsonl",
+      "bytes": 82379,
+      "sha256": "12224e261ef8c402c860abc1ad10f8df5594bf8a9b23c8e0938f31317f011ef8"
+    },
+    "python/zigbee_rx/results/replay_10266_phase_v1.hackrf.log": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/analyses/zigbee_rx_replay_10266_phase_v1/zigbee/replay_10266_phase_v1.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/zigbee_rx/results/replay_10266_phase_v1.summary.txt": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/analyses/zigbee_rx_replay_10266_phase_v1/zigbee/replay_10266_phase_v1.summary.txt",
+      "bytes": 433,
+      "sha256": "0160d374e0fc2fd73c35635af820092c67a2ff41e205533c11c4c0ef9009fb07"
+    },
+    "python/zigbee_rx/results/replay_10266_phase_v1.summary.json": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/analyses/zigbee_rx_replay_10266_phase_v1/zigbee/replay_10266_phase_v1.summary.json",
+      "bytes": 7151,
+      "sha256": "2450ecd9302d6e61180f7983a728ec9d7f453982c873ae0a7c1e3c76051f781a"
+    },
+    "python/zigbee_rx/results/replay_10266_phase_v1.packets.jsonl": {
+      "destination": "python/experiments/history_ble_rx_20261026_162114_151247/analyses/zigbee_rx_replay_10266_phase_v1/zigbee/replay_10266_phase_v1.packets.jsonl",
+      "bytes": 56767,
+      "sha256": "1d55c1ad1641a1224b19e372f5d3a17bfa86f52c7e44fb9e6a553530dff8b4c1"
+    },
+    "python/exadv_rx/results/experiment_review_20261026.md": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/experiment_review_20261026.md",
+      "bytes": 6506,
+      "sha256": "7b22eca23bc566cbfac3a42092dba4f17b40f2aa622b07233feb275f7cd4966f"
+    },
+    "python/exadv_rx/results/iq_optimization_energy_diagnostic.summary.json": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/iq_optimization_energy_diagnostic.summary.json",
+      "bytes": 91808,
+      "sha256": "d5eaf4ecdc5c64d373d5b9583ba1bccd9bc0713b921da0c93e2b92f1e7c351b5"
+    },
+    "python/exadv_rx/results/iq_optimization_error_energy_alignment.summary.json": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/iq_optimization_error_energy_alignment.summary.json",
+      "bytes": 83313,
+      "sha256": "f9f81e19c60351628ccf7d189297c1ffa57211905315d0f1439b2a8a1299cf32"
+    },
+    "python/exadv_rx/results/iq_optimization_feasibility_losses.summary.json": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/iq_optimization_feasibility_losses.summary.json",
+      "bytes": 62750,
+      "sha256": "dc708cd2abb1275aceee07db0a1c12685551d95f05a119812fd80e96f228f485"
+    },
+    "python/exadv_rx/results/iq_optimization_feasibility_probes.packets.jsonl": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/iq_optimization_feasibility_probes.packets.jsonl",
+      "bytes": 2711780,
+      "sha256": "235402d7f2f145562cf21635b4f8fc9539a77304084e84c2e51299ccdc29736b"
+    },
+    "python/exadv_rx/results/iq_optimization_feasibility_probes.summary.json": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/iq_optimization_feasibility_probes.summary.json",
+      "bytes": 30790,
+      "sha256": "518c7e37c4d121cf945ad579064d3e8b6d22c73f63ffd62696bf46f6fac20294"
+    },
+    "python/exadv_rx/results/iq_optimization_feasibility_review.md": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/iq_optimization_feasibility_review.md",
+      "bytes": 5749,
+      "sha256": "ece61e7013a9730459c24ebad40c25fa5434bdb2571f8c7d8ac43504b48c4a5e"
+    },
+    "python/exadv_rx/results/iq_optimization_full4m_comparison.summary.json": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/iq_optimization_full4m_comparison.summary.json",
+      "bytes": 474,
+      "sha256": "858e4d7e93d153a247451f8b5d8bce158774d10d14a895e433fc03c845c9480f"
+    },
+    "python/exadv_rx/results/iq_optimization_rate_benchmark.summary.json": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/iq_optimization_rate_benchmark.summary.json",
+      "bytes": 692,
+      "sha256": "6290cc192360ac75462f9b48b507e2d9ef74ab88d965cae10fb53de970b436f3"
+    },
+    "python/exadv_rx/results/payload30_40_comparison.summary.json": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/payload30_40_comparison.summary.json",
+      "bytes": 4957,
+      "sha256": "0e582ab74c797a4a2c3bee077f0cdf3266bcbd842345057bd5ccf9f33dda4ec9"
+    },
+    "python/exadv_rx/results/payload30_40_comparison_review.md": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/payload30_40_comparison_review.md",
+      "bytes": 4348,
+      "sha256": "a52a2affccfbd26d648157ca9859cb257bed55239501790961dff7c23fae218d"
+    },
+    "python/exadv_rx/results/run_10262_review.md": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/run_10262_review.md",
+      "bytes": 3822,
+      "sha256": "ec9d2645637f0b5bbc4c967e9addbd5931a1721faa7dd9226cc3e8c22289a3c7"
+    },
+    "python/exadv_rx/results/run_10263_review.md": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/run_10263_review.md",
+      "bytes": 3071,
+      "sha256": "04987492e6e800a512aac1b51e2980c6ed9ea97a5486a444d43cd4c2cb9fb541"
+    },
+    "python/exadv_rx/results/run_10264_review.md": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/run_10264_review.md",
+      "bytes": 2934,
+      "sha256": "1e8dfbaf140d708f24fa6943283a7077e6e709e965c913058621c159839b3391"
+    },
+    "python/exadv_rx/results/window_retry_comparison.summary.json": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/window_retry_comparison.summary.json",
+      "bytes": 2820,
+      "sha256": "6688d61fd0abd50bf775e605333a0f0277d04a53b1df81cf2262b802fc25da22"
+    },
+    "python/exadv_rx/results/window_retry_loss_diagnosis.summary.json": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/window_retry_loss_diagnosis.summary.json",
+      "bytes": 10665,
+      "sha256": "71ade38c8c020deb646527ac320dab651f5f10dcee4bb43c1fc4a415309c66cf"
+    },
+    "python/exadv_rx/results/window_retry_optimization_review.md": {
+      "destination": "python/experiments/history_exadv_rx_reviews/analyses/legacy/window_retry_optimization_review.md",
+      "bytes": 5107,
+      "sha256": "df9f5072ebf9e06f5caafee54dbd05b48b4617522f649cb25405dc90c52e0885"
+    },
+    "python/zigbee_rx/results/assessment_10267_review.md": {
+      "destination": "python/experiments/history_zigbee_rx_reviews/analyses/legacy/assessment_10267_review.md",
+      "bytes": 5250,
+      "sha256": "fe3f53c5389a601042645a5347c54ecf07bab50f902dd10994a873c58a95c812"
+    },
+    "python/zigbee_rx/results/assessment_10267_review.summary.json": {
+      "destination": "python/experiments/history_zigbee_rx_reviews/analyses/legacy/assessment_10267_review.summary.json",
+      "bytes": 2272,
+      "sha256": "c469bfd2c91ecf179cff6151a9794879d403c4b1487526fbf6ee9b0a9bba7a63"
+    },
+    "python/zigbee_rx/results/validation_comparison.summary.json": {
+      "destination": "python/experiments/history_zigbee_rx_reviews/analyses/legacy/validation_comparison.summary.json",
+      "bytes": 1963,
+      "sha256": "ea358b08946f6eb3a1a8f0d612a38bb128107cb13326a7bed710080bb6c7b712"
+    },
+    "python/zigbee_rx/results/validation_review.md": {
+      "destination": "python/experiments/history_zigbee_rx_reviews/analyses/legacy/validation_review.md",
+      "bytes": 3200,
+      "sha256": "d75a1cb0fb2c2a42abcec5ea63c6f559552b3ec9882be740ed4e2cd6737e9f78"
+    },
+    "python/sync_validation/results/dual_device_smoke_20261027_153756/dual_device_check.summary.json": {
+      "destination": "python/experiments/history_sync_dual_device_smoke_20261027_153756/analyses/legacy/dual_device_check.summary.json",
+      "bytes": 2449,
+      "sha256": "926ac2a94e3c025260f391bdf936df3d4e0aa8021d8a871fb3dbaae2f4c3cd1d"
+    },
+    "python/sync_validation/results/dual_device_smoke_20261027_153756/exadv_rx.console.log": {
+      "destination": "python/experiments/history_sync_dual_device_smoke_20261027_153756/analyses/legacy/exadv_rx.console.log",
+      "bytes": 765,
+      "sha256": "d103a8b454f733ba0295947165f9d412abd65e4f885cadddbb0ed36bc6d13288"
+    },
+    "python/sync_validation/results/dual_device_smoke_20261027_153756/exadv_rx.events.jsonl": {
+      "destination": "python/experiments/history_sync_dual_device_smoke_20261027_153756/analyses/legacy/exadv_rx.events.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/dual_device_smoke_20261027_153756/exadv_rx.hackrf.log": {
+      "destination": "python/experiments/history_sync_dual_device_smoke_20261027_153756/analyses/legacy/exadv_rx.hackrf.log",
+      "bytes": 595,
+      "sha256": "49610f91234740948ca31d742620d8cb3750c5e200ecfa95094c893177422dad"
+    },
+    "python/sync_validation/results/dual_device_smoke_20261027_153756/exadv_rx.packets.jsonl": {
+      "destination": "python/experiments/history_sync_dual_device_smoke_20261027_153756/analyses/legacy/exadv_rx.packets.jsonl",
+      "bytes": 33657,
+      "sha256": "efd79cd62789dfc8b27ef1374afdb069032c2c7bf00a7d14812cea4210700193"
+    },
+    "python/sync_validation/results/dual_device_smoke_20261027_153756/exadv_rx.summary.json": {
+      "destination": "python/experiments/history_sync_dual_device_smoke_20261027_153756/analyses/legacy/exadv_rx.summary.json",
+      "bytes": 4099,
+      "sha256": "2237c5aa303aa227a86950c4072ac623f70af484784b9bda5c70821537ac3fd6"
+    },
+    "python/sync_validation/results/dual_device_smoke_20261027_153756/exadv_rx.summary.txt": {
+      "destination": "python/experiments/history_sync_dual_device_smoke_20261027_153756/analyses/legacy/exadv_rx.summary.txt",
+      "bytes": 597,
+      "sha256": "dc1cfd624d3493d94e2ffbf4d4f20fe986d3f656839a76323fda6e32e9e48d0c"
+    },
+    "python/sync_validation/results/dual_device_smoke_20261027_153756/zigbee_rx.console.log": {
+      "destination": "python/experiments/history_sync_dual_device_smoke_20261027_153756/analyses/legacy/zigbee_rx.console.log",
+      "bytes": 680,
+      "sha256": "82f5c6426a7933335f0c3db980268b8e04236432e276ee2c4b2e05f430cddd70"
+    },
+    "python/sync_validation/results/dual_device_smoke_20261027_153756/zigbee_rx.hackrf.log": {
+      "destination": "python/experiments/history_sync_dual_device_smoke_20261027_153756/analyses/legacy/zigbee_rx.hackrf.log",
+      "bytes": 595,
+      "sha256": "40c71a1f1057171b05c1ddf4b4f75a06b652e005ee703b1fdd6ed56b6a5d91b6"
+    },
+    "python/sync_validation/results/dual_device_smoke_20261027_153756/zigbee_rx.packets.jsonl": {
+      "destination": "python/experiments/history_sync_dual_device_smoke_20261027_153756/analyses/legacy/zigbee_rx.packets.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/dual_device_smoke_20261027_153756/zigbee_rx.summary.json": {
+      "destination": "python/experiments/history_sync_dual_device_smoke_20261027_153756/analyses/legacy/zigbee_rx.summary.json",
+      "bytes": 5378,
+      "sha256": "f2092e1f1e3a4e8a72defbdef37a392c34e3dcde341f04039e3c90ff5cd0be2f"
+    },
+    "python/sync_validation/results/dual_device_smoke_20261027_153756/zigbee_rx.summary.txt": {
+      "destination": "python/experiments/history_sync_dual_device_smoke_20261027_153756/analyses/legacy/zigbee_rx.summary.txt",
+      "bytes": 479,
+      "sha256": "2a4faa0b3bfaab9e137b055dd69a16e3e1406f680c6fdea4a7ab8956bd390687"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/ble_iq_zigbee.hackrf.log": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/ble_iq_zigbee.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/ble_iq_zigbee.packets.jsonl": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/ble_iq_zigbee.packets.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/ble_iq_zigbee.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/ble_iq_zigbee.summary.json",
+      "bytes": 4628,
+      "sha256": "54f29ff9e78bd73c838b955dcf0c3118003c0346ad691409996728000618d4df"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/ble_iq_zigbee.summary.txt": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/ble_iq_zigbee.summary.txt",
+      "bytes": 449,
+      "sha256": "555301cd9bbfd8df8c2b2b0ae262c90e9ec6c25142358ca48a3b5312c2c8db72"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/ble_iq_zigbee_700k.hackrf.log": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/ble_iq_zigbee_700k.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/ble_iq_zigbee_700k.packets.jsonl": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/ble_iq_zigbee_700k.packets.jsonl",
+      "bytes": 68928,
+      "sha256": "1503742678f74df60913b00aaa9516c1e0b9ada2160378e26b891009b5b82989"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/ble_iq_zigbee_700k.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/ble_iq_zigbee_700k.summary.json",
+      "bytes": 7141,
+      "sha256": "60c33306642b771d8aceabfe8635f1ab41a2cb014eb2329ae068ca5b465ddfb0"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/ble_iq_zigbee_700k.summary.txt": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/ble_iq_zigbee_700k.summary.txt",
+      "bytes": 462,
+      "sha256": "3faffe403fc53ed328d7f595f20149e2a696e529d835d3f867b201b7ea5cb5c0"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/ble_live_identity.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/ble_live_identity.summary.json",
+      "bytes": 6696,
+      "sha256": "4aa49eb063cff5cf91c17ef5fc333dc7520ace811b8806c4e0832ebdbabda6de"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/diagnostic_review.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/diagnostic_review.summary.json",
+      "bytes": 10476,
+      "sha256": "478824555b187837c29bf1599aa8d0501d59ee6f1bdab78901b07a67e694e669"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/iq_spectrum.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/iq_spectrum.summary.json",
+      "bytes": 1299148,
+      "sha256": "b7c1696d1130306206fa5fb0d76fa4b69ce5094a094e1565545cc880f880df39"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/per_sequence.metrics.csv": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/per_sequence.metrics.csv",
+      "bytes": 4690,
+      "sha256": "a14c86ed5767c1eaafca3941d8242576ef0968cb8654e20daf4ee8685c7c3927"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/review.md": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/review.md",
+      "bytes": 6372,
+      "sha256": "6379eee003d94287d12b746595efa742e1a5c0735b5cf8b6bf42b07859841738"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/window_parameter_probe.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/window_parameter_probe.summary.json",
+      "bytes": 12357,
+      "sha256": "9b463b77d7cb47ea536e27442dbf4c7a04e07c8aaf606a7cd439b801082abf18"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/zigbee_device_ble_identity.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/zigbee_device_ble_identity.summary.json",
+      "bytes": 4834,
+      "sha256": "3b124caa15fac338ebd787de10da7a403b2d5d1a19405d169c159a885c953d22"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/zigbee_iq_ble.events.jsonl": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/zigbee_iq_ble.events.jsonl",
+      "bytes": 3479,
+      "sha256": "340803811296f2b0d871d4e8b5c05b80d3778db136a4e277ad29aac1a562a58a"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/zigbee_iq_ble.hackrf.log": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/zigbee_iq_ble.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/zigbee_iq_ble.packets.jsonl": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/zigbee_iq_ble.packets.jsonl",
+      "bytes": 575364,
+      "sha256": "b18ce1fca600e199a7e9341b13d5c9a186e645153c12711bae7103749bdb092d"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/zigbee_iq_ble.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/zigbee_iq_ble.summary.json",
+      "bytes": 3072,
+      "sha256": "8bd792f50e8bab01a410392d4005b8bb0f8eea93b67f298b92e2d5090ecebae9"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/zigbee_iq_ble.summary.txt": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/zigbee_iq_ble.summary.txt",
+      "bytes": 642,
+      "sha256": "2b9f535bbaf8d3ec8a4ba53d67fda02d4756c1eab0cc20d0b89b070b79325687"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/zigbee_iq_zigbee.hackrf.log": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/zigbee_iq_zigbee.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/zigbee_iq_zigbee.packets.jsonl": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/zigbee_iq_zigbee.packets.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/zigbee_iq_zigbee.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/zigbee_iq_zigbee.summary.json",
+      "bytes": 4646,
+      "sha256": "475753d898ef340a07457edf8197ac07031d6fb25d527726ed0e86ab2d845c83"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/zigbee_iq_zigbee.summary.txt": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/zigbee_iq_zigbee.summary.txt",
+      "bytes": 452,
+      "sha256": "7d6c035dda11e703d62412c53703d1293a94c9c242c535c01ec1af58f25164b9"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/zigbee_iq_zigbee_700k.hackrf.log": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/zigbee_iq_zigbee_700k.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/zigbee_iq_zigbee_700k.packets.jsonl": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/zigbee_iq_zigbee_700k.packets.jsonl",
+      "bytes": 57769,
+      "sha256": "c62f206668c504920ecc6fe56c945f42840dd0120a113c12c323c199ff273ef8"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/zigbee_iq_zigbee_700k.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/zigbee_iq_zigbee_700k.summary.json",
+      "bytes": 7338,
+      "sha256": "c05e250229d63d01d2ec259e10e665f85b39279c90cdb5f54103f0eec73e9375"
+    },
+    "python/sync_validation/results/dual_run10268_diagnostic/zigbee_iq_zigbee_700k.summary.txt": {
+      "destination": "python/experiments/history_sync_dual_run10268_diagnostic/analyses/legacy/zigbee_iq_zigbee_700k.summary.txt",
+      "bytes": 465,
+      "sha256": "b2658bb63d42d5e03bd60f66e503a397fa4e46ae3af26eb47380dc9ca24e8e31"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/ble_identity.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/ble_identity.summary.json",
+      "bytes": 1146,
+      "sha256": "1c0d1e777c3e61f787b21604476d4e2c8ca1c755bd3516b373eb7d8725ae2507"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/ble_iq_zigbee_700k.hackrf.log": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/ble_iq_zigbee_700k.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/ble_iq_zigbee_700k.packets.jsonl": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/ble_iq_zigbee_700k.packets.jsonl",
+      "bytes": 59587,
+      "sha256": "65e00a41d39bacf646080e418ba039398d64157caeb3d62f3e7f4d96128539ca"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/ble_iq_zigbee_700k.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/ble_iq_zigbee_700k.summary.json",
+      "bytes": 7856,
+      "sha256": "e76b3de4eba7b5fb3a9ef108bf7bb1120236854b948fa34510324c147c70f9b1"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/ble_iq_zigbee_700k.summary.txt": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/ble_iq_zigbee_700k.summary.txt",
+      "bytes": 461,
+      "sha256": "ba1548d9b83ff543a3ff2d46a837a07cb348ae8724746902e88cef33c2acb3d6"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/diagnostic_review.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/diagnostic_review.summary.json",
+      "bytes": 9748,
+      "sha256": "79c9c4ef92da14c085927433b1dd03c379019d20d0983ed20cc043da28b789ac"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/positive_control_10268_700k.hackrf.log": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/positive_control_10268_700k.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/positive_control_10268_700k.packets.jsonl": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/positive_control_10268_700k.packets.jsonl",
+      "bytes": 57769,
+      "sha256": "c62f206668c504920ecc6fe56c945f42840dd0120a113c12c323c199ff273ef8"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/positive_control_10268_700k.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/positive_control_10268_700k.summary.json",
+      "bytes": 7369,
+      "sha256": "b96546847b9b54134b5cd3773c6047f90f9a8c5db91c364ff5155cc8e90e67ee"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/positive_control_10268_700k.summary.txt": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/positive_control_10268_700k.summary.txt",
+      "bytes": 471,
+      "sha256": "84c65034fb89b3d5f4fb3297cdfa0a51a3390c55819036b6d1a02b4216cc5c4c"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/review.md": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/review.md",
+      "bytes": 5225,
+      "sha256": "95180198e51b7d02d7820fed3676b0d3cf422b33bed09501e0c56778793a3cf4"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/usb_topology.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/usb_topology.summary.json",
+      "bytes": 541,
+      "sha256": "604e986bccb886cb8cad90615324e9d3aee68256c4f7a6db60475ad984805922"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/usb_tree.summary.txt": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/usb_tree.summary.txt",
+      "bytes": 1121,
+      "sha256": "e4de5d9127c733a41e21a33b0874d136666b0e830816d90f824b76f999491026"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/zigbee_iq_ble.events.jsonl": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/zigbee_iq_ble.events.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/zigbee_iq_ble.hackrf.log": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/zigbee_iq_ble.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/zigbee_iq_ble.packets.jsonl": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/zigbee_iq_ble.packets.jsonl",
+      "bytes": 460057,
+      "sha256": "8c9561e6336d77b85c2f88d47b82e908de7fc08410ab80952f18a07c814a047c"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/zigbee_iq_ble.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/zigbee_iq_ble.summary.json",
+      "bytes": 2957,
+      "sha256": "73ac3c17d6de983eb3a539a06e8c2a1753e805434e3c3edb6585daac85574136"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/zigbee_iq_ble.summary.txt": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/zigbee_iq_ble.summary.txt",
+      "bytes": 569,
+      "sha256": "492c65bc02b9cfada4553b20a9bd872272b57fdb3b1a2f365d8650e5847a1595"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/zigbee_iq_zigbee_700k.hackrf.log": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/zigbee_iq_zigbee_700k.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/zigbee_iq_zigbee_700k.packets.jsonl": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/zigbee_iq_zigbee_700k.packets.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/zigbee_iq_zigbee_700k.summary.json": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/zigbee_iq_zigbee_700k.summary.json",
+      "bytes": 4633,
+      "sha256": "a2eebaecbc52546ff7970d6983407e1c0d6e636c024a74c3fa5ec404420868bd"
+    },
+    "python/sync_validation/results/dual_run10269_diagnostic/zigbee_iq_zigbee_700k.summary.txt": {
+      "destination": "python/experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/zigbee_iq_zigbee_700k.summary.txt",
+      "bytes": 457,
+      "sha256": "9f85798a5ab2a59fe9b8a4e588e6d72fc13bce47e4ee5fdf9d0413c3a7d689f7"
+    },
+    "python/sync_validation/results/same_iq_20261027/per_sequence.metrics.csv": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/per_sequence.metrics.csv",
+      "bytes": 53379,
+      "sha256": "f945c1da6204f0ef46ded5cb7739433b8a5f3d7a9ae19b6c8f920c970c7fe406"
+    },
+    "python/sync_validation/results/same_iq_20261027/reference_validation.pdf": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/reference_validation.pdf",
+      "bytes": 29375,
+      "sha256": "395298137b62968f2e2da13510afc0796cdb928de77672353dedbce448d8c93b"
+    },
+    "python/sync_validation/results/same_iq_20261027/reference_validation.png": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/reference_validation.png",
+      "bytes": 192338,
+      "sha256": "5270ad158da0359bb0df2338fff851076c1f39b811dcbc4612066e1b676bcdad"
+    },
+    "python/sync_validation/results/same_iq_20261027/reference_validation.summary.json": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/reference_validation.summary.json",
+      "bytes": 8430,
+      "sha256": "b5b020e1184ce9988f9a55eead4c0ea0ce6b1fce4d4514a85c9edcbddb2e7274"
+    },
+    "python/sync_validation/results/same_iq_20261027/review.md": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/review.md",
+      "bytes": 6875,
+      "sha256": "2c09eb0cc7da62af762ec7f04708360d28759086adfda37c47330b152c77f2e5"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10265_ble.events.jsonl": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10265_ble.events.jsonl",
+      "bytes": 30363,
+      "sha256": "f81553b9498fd26b08a436796e2a8632734a59b7afd851ea029cc7c12c55f751"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10265_ble.hackrf.log": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10265_ble.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10265_ble.packets.jsonl": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10265_ble.packets.jsonl",
+      "bytes": 677957,
+      "sha256": "26790f9d03281c52fb5fb15a15daf332436ccbfa88c4b4fd219ad655b962e49d"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10265_ble.replay.log": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10265_ble.replay.log",
+      "bytes": 1189,
+      "sha256": "e949fd50a95f49c03a9892c29179409d2cdf0e7aa4ea9cad0aa9fd08684aac81"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10265_ble.summary.json": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10265_ble.summary.json",
+      "bytes": 3234,
+      "sha256": "6e4ff7133aaf3b97039b705a0faead491bad816d885387c7ebff5d6ae9154178"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10265_ble.summary.txt": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10265_ble.summary.txt",
+      "bytes": 664,
+      "sha256": "3c951041b86620c1926f7e7f5229dc060109a2493c07954a709eac76544b7788"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10265_zigbee.hackrf.log": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10265_zigbee.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10265_zigbee.packets.jsonl": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10265_zigbee.packets.jsonl",
+      "bytes": 82379,
+      "sha256": "12224e261ef8c402c860abc1ad10f8df5594bf8a9b23c8e0938f31317f011ef8"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10265_zigbee.replay.log": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10265_zigbee.replay.log",
+      "bytes": 1102,
+      "sha256": "940063882eb3c7b8fb45f7d41684942261a928efcdf9b7b99ff917d8d53ef7ef"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10265_zigbee.summary.json": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10265_zigbee.summary.json",
+      "bytes": 7379,
+      "sha256": "b1d66906a1a1b2d176215c09f623973f32e8c50b6a162e358481ae3367098330"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10265_zigbee.summary.txt": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10265_zigbee.summary.txt",
+      "bytes": 482,
+      "sha256": "089b414cee39694f53736f86c2239d59b9b8e8f8cf7fa234567aeb921f7c9101"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10266_ble.events.jsonl": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10266_ble.events.jsonl",
+      "bytes": 20390,
+      "sha256": "4a43fe9b3ac730dcb1f56860e2ae13998aa6aca15046ec310038661914156575"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10266_ble.hackrf.log": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10266_ble.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10266_ble.packets.jsonl": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10266_ble.packets.jsonl",
+      "bytes": 638482,
+      "sha256": "455f6febbaf6fad0c30045a0e337fd0257e50a646ea060c3e22c5d75fcfeeb62"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10266_ble.replay.log": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10266_ble.replay.log",
+      "bytes": 1191,
+      "sha256": "81a75fbbac853feff78d48874ec1fabc6beca74366391a032c6fb5ee093332a4"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10266_ble.summary.json": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10266_ble.summary.json",
+      "bytes": 3201,
+      "sha256": "44c850db94e77a7e0cf12eda947e328d91598e4ffefac00c01cefca82c0911d3"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10266_ble.summary.txt": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10266_ble.summary.txt",
+      "bytes": 666,
+      "sha256": "dda2a051d771270c5e6eb420e0e5f8f5e865f72f023427d6096d729393d5ed97"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10266_zigbee.hackrf.log": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10266_zigbee.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10266_zigbee.packets.jsonl": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10266_zigbee.packets.jsonl",
+      "bytes": 56767,
+      "sha256": "1d55c1ad1641a1224b19e372f5d3a17bfa86f52c7e44fb9e6a553530dff8b4c1"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10266_zigbee.replay.log": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10266_zigbee.replay.log",
+      "bytes": 1099,
+      "sha256": "179a26ee83d5b2b15379438d22d1372d54958345fef8602942c213ac31e07405"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10266_zigbee.summary.json": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10266_zigbee.summary.json",
+      "bytes": 7422,
+      "sha256": "61e6f44a7a6b15d789cb80939305ae7ccfe7cde4f40ec3f77f5fc5fbea8f0de7"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10266_zigbee.summary.txt": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10266_zigbee.summary.txt",
+      "bytes": 481,
+      "sha256": "e3b109780d20459084bcfb137eae971aa8c1e23b40787b96b35a9a859787c124"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10267_ble.events.jsonl": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10267_ble.events.jsonl",
+      "bytes": 30750,
+      "sha256": "d064e6bfea1f434c5e14a8821a5e3df37939fc2feab3415398e742b8c025f59e"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10267_ble.hackrf.log": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10267_ble.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10267_ble.packets.jsonl": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10267_ble.packets.jsonl",
+      "bytes": 457074,
+      "sha256": "3ae04a27cfe8e2f851f5ea8736946a15af67a7882c239fec30474c54408fe7bf"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10267_ble.replay.log": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10267_ble.replay.log",
+      "bytes": 1189,
+      "sha256": "e6778764ba4fcae7129f58f4493f6331fdba89acf065c6deccc1f4f6ee4bd5fe"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10267_ble.summary.json": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10267_ble.summary.json",
+      "bytes": 3234,
+      "sha256": "8b10e38651a269864c803f17d25d6b58cf76d82dd3b01b102e93340e68057c28"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10267_ble.summary.txt": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10267_ble.summary.txt",
+      "bytes": 666,
+      "sha256": "5d9a135c694c31232349af625ec744c41ee5afd5d2739c6c5e425c27bca0274b"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10267_zigbee.hackrf.log": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10267_zigbee.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10267_zigbee.packets.jsonl": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10267_zigbee.packets.jsonl",
+      "bytes": 74824,
+      "sha256": "6b15668f35677c83fa19ba188f06281e3551cfcee14cbf5be6d4ecac22eea393"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10267_zigbee.replay.log": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10267_zigbee.replay.log",
+      "bytes": 1099,
+      "sha256": "e1ad349e4cbd4d11c644abc8f61605043c3ec750f77824a7a97953317adde8af"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10267_zigbee.summary.json": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10267_zigbee.summary.json",
+      "bytes": 7453,
+      "sha256": "767eba03c4d48d6b68454f83b0f79f3a33903b3c8548b47d3621160ef269b6dc"
+    },
+    "python/sync_validation/results/same_iq_20261027/run_10267_zigbee.summary.txt": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/run_10267_zigbee.summary.txt",
+      "bytes": 481,
+      "sha256": "fba856f8f7051fd86b8cd0f32ca307933d8f68e4863510575b8ab23521fae19d"
+    },
+    "python/sync_validation/results/same_iq_20261027/validation.manifest.json": {
+      "destination": "python/experiments/history_sync_same_iq_20261027/analyses/legacy/validation.manifest.json",
+      "bytes": 8410,
+      "sha256": "a6a2b3b28a6e3e11a6448ae6f7bf2d78682e2ebd10073b5e035d763e42c6dc61"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/dual_ble.ci8": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/dual_ble.ci8",
+      "bytes": 1733,
+      "sha256": "88e2c840c9530f58e68ce2e9edde8a69863cb26d26cdfd2c328c9cb67dccb0e6"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/dual_ble.console.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/dual_ble.console.log",
+      "bytes": 775,
+      "sha256": "1749e8d55e325bb372c23431dec12115c2601705cc44aeb3e482319f78c0ba54"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/dual_ble.events.jsonl": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/dual_ble.events.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/dual_ble.hackrf.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/dual_ble.hackrf.log",
+      "bytes": 44,
+      "sha256": "754cab53810c13b9088e40e0ba389368b8e172d892fb24b71143af8106baafc2"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/dual_ble.packets.jsonl": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/dual_ble.packets.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/dual_ble.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/dual_ble.summary.json",
+      "bytes": 3287,
+      "sha256": "c5fc4ad4402aed3b5eb754b58b7c6e4d0fe00967779309403a5438164a67d517"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/dual_ble.summary.txt": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/dual_ble.summary.txt",
+      "bytes": 569,
+      "sha256": "8c426a9f4b9259c3cd6bb00a4f4587b38f2a830704a6ed6998dec80b1b0b4b33"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/dual_zigbee.ci8": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/dual_zigbee.ci8",
+      "bytes": 5767168,
+      "sha256": "43a129c471a0389eddf5432b9136490b697bbcae3d95e81767c7aa0b364ae9db"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/dual_zigbee.console.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/dual_zigbee.console.log",
+      "bytes": 733,
+      "sha256": "e7a0277551727d93816a4061160517feed2197686eae3404af36d9285ae766da"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/dual_zigbee.hackrf.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/dual_zigbee.hackrf.log",
+      "bytes": 424,
+      "sha256": "c026de6a774b18548270a5f97ea9c421439a922d0a1abdfe01eae71f12ad38bb"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/dual_zigbee.packets.jsonl": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/dual_zigbee.packets.jsonl",
+      "bytes": 850,
+      "sha256": "cbd975af3ca3deceb42f21ebcd221093d3c3a00dc4f26d15b6960c984fc9d07b"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/dual_zigbee.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/dual_zigbee.summary.json",
+      "bytes": 5518,
+      "sha256": "2c3023c375733c240c09a5754dcd465ea12534690bd79bff6f1ed4ff0ff6a394"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/dual_zigbee.summary.txt": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/dual_zigbee.summary.txt",
+      "bytes": 536,
+      "sha256": "e4fad77b3fe6b9cacb94a9288ac8e83acb150346645338a0fdbf696eaf18ffae"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/failure_review.md": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/failure_review.md",
+      "bytes": 1710,
+      "sha256": "6af635a8cfcfc3c1438dc0b1baa27db577191542f3729c8173e2ef4742057c40"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/single_before_zigbee.ci8": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/single_before_zigbee.ci8",
+      "bytes": 480000000,
+      "sha256": "1c37fc50b51fb575d4d17d18b24134cd4a24560ffe1207f8e74f398133a32867"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/single_before_zigbee.console.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/single_before_zigbee.console.log",
+      "bytes": 1174,
+      "sha256": "78c5301fa3041ba42b75617b31ba8960ce11ac968a1419ea6788db48230431d5"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/single_before_zigbee.hackrf.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/single_before_zigbee.hackrf.log",
+      "bytes": 2299,
+      "sha256": "25369dcb27afed28e96a92edb83fc6b2b1ef73891c7f45d54ef0d8f3fc470564"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/single_before_zigbee.packets.jsonl": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/single_before_zigbee.packets.jsonl",
+      "bytes": 47701,
+      "sha256": "8bad7411e9cc06d7745de7f995cdc2b839c9513b90221d96806d6f712083dcf1"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/single_before_zigbee.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/single_before_zigbee.summary.json",
+      "bytes": 7442,
+      "sha256": "5b525a4d44b367245a3ee571abce4be114192e2b6481a956ce2d5154abe76774"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/single_before_zigbee.summary.txt": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/single_before_zigbee.summary.txt",
+      "bytes": 522,
+      "sha256": "c2318fdcb887d4262addf823b3b600c43bc9540fbcdab338c5185740fc724c75"
+    },
+    "python/sync_validation/results/single_dual_20261027_170547/single_dual.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_170547/analyses/legacy/single_dual.summary.json",
+      "bytes": 4222,
+      "sha256": "849f8bd3ba6a16b6d88c3181512debe19b24b04c2e939f0e64d26abe862cd055"
+    },
+    "python/sync_validation/results/single_dual_20261027_171837/single_dual.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171837/analyses/legacy/single_dual.summary.json",
+      "bytes": 2260,
+      "sha256": "71be63374059d7f1379f2faec104a909e63fd1feee1f86bfedcac06c2752f36c"
+    },
+    "python/sync_validation/results/single_dual_20261027_171914/single_dual.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171914/analyses/legacy/single_dual.summary.json",
+      "bytes": 2260,
+      "sha256": "7b71173c6a35b286dce1bd3e8b6a0648f032acd14fef598e842518b4abc6ff18"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/dual_ble.ci8": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/dual_ble.ci8",
+      "bytes": 239599616,
+      "sha256": "f9c1c806afccff225cd0a9d6327edc9a88817beae9b7c8a4d2ee17f98c4febd8"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/dual_ble.console.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/dual_ble.console.log",
+      "bytes": 2560,
+      "sha256": "031ffc52c07ac27e2432f555955d24680ddcad84a8b0d80c438a92615678e8dc"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/dual_ble.events.jsonl": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/dual_ble.events.jsonl",
+      "bytes": 768,
+      "sha256": "3585eb71622ac50395cc8af0bda11f4e95c7e41897537c4abc9a1fd59961e814"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/dual_ble.hackrf.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/dual_ble.hackrf.log",
+      "bytes": 1570,
+      "sha256": "58cf0db106e92dacf7be9912367d399523fcc58ebbf5ad7e26226e20763fb43d"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/dual_ble.packets.jsonl": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/dual_ble.packets.jsonl",
+      "bytes": 176542,
+      "sha256": "300dd3021d03293087bb288edefa8669c6112e99deda6cf3a6bbe94212d6c483"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/dual_ble.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/dual_ble.summary.json",
+      "bytes": 5405,
+      "sha256": "8b06c2c35ceadabe9d8eab4a51d842a42a8dbba1a60bc388caadb6eb84d17ac1"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/dual_ble.summary.txt": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/dual_ble.summary.txt",
+      "bytes": 687,
+      "sha256": "0f0b53ef4a508d1f7ebcb97f513b84000d3edfbe716cc61c96f7bfc69c1032e2"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/dual_zigbee.ci8": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/dual_zigbee.ci8",
+      "bytes": 260571136,
+      "sha256": "506b35d9d5fee9c5f926290b118589fcf337da2860ef9af6c12148c460159ece"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/dual_zigbee.console.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/dual_zigbee.console.log",
+      "bytes": 950,
+      "sha256": "ff8de92309e3f799494a00b5c3a12ad5b45dc7f21c7a2f2ad3b428137007aa4e"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/dual_zigbee.hackrf.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/dual_zigbee.hackrf.log",
+      "bytes": 1433,
+      "sha256": "b6ee5b31eda9ab4fa108ab17a40275aac8c610f677fc2eb40bfc40730531642b"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/dual_zigbee.packets.jsonl": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/dual_zigbee.packets.jsonl",
+      "bytes": 4266,
+      "sha256": "27cba2d34d56a829e14380096a022b8b6779757f43590ce2786c6b5f7ab21427"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/dual_zigbee.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/dual_zigbee.summary.json",
+      "bytes": 6710,
+      "sha256": "a16f9055fa54711a8165006acfa3a99695056926abd58d081bae5765f161d636"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/dual_zigbee.summary.txt": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/dual_zigbee.summary.txt",
+      "bytes": 536,
+      "sha256": "f698835e728073f7952e0258f3dd98b3b30e692361a0e9e93b363763f613af6e"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/failure_review.md": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/failure_review.md",
+      "bytes": 4241,
+      "sha256": "17db7c9c31cf79db05a19acb7dfcf5e5fa3b77ed77a5d504680cdb1ee4f7c0d4"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/single_before_zigbee.ci8": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/single_before_zigbee.ci8",
+      "bytes": 480000000,
+      "sha256": "be81469a651a787ab919bfccc1601c0cf5de805b9343680fcca93ee6dba7edba"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/single_before_zigbee.console.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/single_before_zigbee.console.log",
+      "bytes": 1159,
+      "sha256": "eb743ba7d9e33a804afee89db034303b432bc52fc30e3997798e94727a8bd156"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/single_before_zigbee.hackrf.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/single_before_zigbee.hackrf.log",
+      "bytes": 2299,
+      "sha256": "c315c7e6d2a02d780094c7f158ae2b178ca0840ef20b49a44a13235f3997a6de"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/single_before_zigbee.packets.jsonl": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/single_before_zigbee.packets.jsonl",
+      "bytes": 1700,
+      "sha256": "3ae4bb6994a5f3d299c644addcafe2f1c4941918d6b61d1f9b1e268be3ccd2ef"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/single_before_zigbee.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/single_before_zigbee.summary.json",
+      "bytes": 7435,
+      "sha256": "98f41f74a11e967fdd20d24557a059fa17eaedd5a61b7a789596492139dcfbc0"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/single_before_zigbee.summary.txt": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/single_before_zigbee.summary.txt",
+      "bytes": 517,
+      "sha256": "89810d08e2a44652f9dcb34909bdb6a292182cee089d9465bec5592eca2fc7b6"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/single_dual.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/single_dual.summary.json",
+      "bytes": 16153,
+      "sha256": "c4e8418a45fca10d186e8986b5c283ea7858c37c515d6ba4986e01dd7a1eeeb7"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/usb_disconnect.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/usb_disconnect.summary.json",
+      "bytes": 592,
+      "sha256": "74e1f6a494a072797e3626464e2291844f4604acd4e38134f202c8848f669dc2"
+    },
+    "python/sync_validation/results/single_dual_20261027_171955/usb_disconnect.summary.txt": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_171955/analyses/legacy/usb_disconnect.summary.txt",
+      "bytes": 3188,
+      "sha256": "e40095723b55e54ddcf4255b80a5e4c27e656c7c66b6ea152022969f6016eb6b"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/assessment.pdf": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/assessment.pdf",
+      "bytes": 19113,
+      "sha256": "afae28b3395a66783469f3beb77c66a66998ea0474283d4057cfe475e5cdbb65"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/assessment.png": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/assessment.png",
+      "bytes": 84269,
+      "sha256": "1cd9156309a056496b901009dea64c7855cbbb4f4f872968908ceb44168dc1bf"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/assessment.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/assessment.summary.json",
+      "bytes": 6488,
+      "sha256": "e17089628bbf5109f5367b2b30d08bf8db26f8763cbfa68039dbe5598dceb2ca"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/assessment_replay_ble.events.jsonl": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/assessment_replay_ble.events.jsonl",
+      "bytes": 23855,
+      "sha256": "3e380c083b4a409a5e64704416d1561d50ad21a1611e712ec4cda4eed463d855"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/assessment_replay_ble.hackrf.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/assessment_replay_ble.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/assessment_replay_ble.packets.jsonl": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/assessment_replay_ble.packets.jsonl",
+      "bytes": 567651,
+      "sha256": "c3e530567ab6c929946fa7c3d03c879f77203f2e97f3289d2a218141663f89ae"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/assessment_replay_ble.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/assessment_replay_ble.summary.json",
+      "bytes": 3121,
+      "sha256": "5aff1b77697009cbc41d7f401446f19aaf8a4df168809d73406cc82cf2f360ae"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/assessment_replay_ble.summary.txt": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/assessment_replay_ble.summary.txt",
+      "bytes": 655,
+      "sha256": "9e0fc9187cfba84b6001bcc3f695b56b801f0ab5520b077bf748c386ca5ef76d"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/assessment_replay_zigbee.hackrf.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/assessment_replay_zigbee.hackrf.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/assessment_replay_zigbee.packets.jsonl": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/assessment_replay_zigbee.packets.jsonl",
+      "bytes": 80023,
+      "sha256": "78a7b8f6fdd3287d3c6404796528c4407c181c4564e99818a3a7c3d5d48d68db"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/assessment_replay_zigbee.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/assessment_replay_zigbee.summary.json",
+      "bytes": 4583,
+      "sha256": "a4d1901dfbe3a89ee2863b1b4a4ae517e7a6510f208c916f9b90c4a9b2de86a7"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/assessment_replay_zigbee.summary.txt": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/assessment_replay_zigbee.summary.txt",
+      "bytes": 496,
+      "sha256": "544f360daca8e992f19a8b170bb0c599cefb5cef6a94afeced87e504b7bf6116"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/assessment_review.md": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/assessment_review.md",
+      "bytes": 6747,
+      "sha256": "cc9ce8bea2d5680420f4cd5a4d2ece8b02aeddde0b45e675132f5b4163775cb0"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/dual_ble.ci8": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/dual_ble.ci8",
+      "bytes": 480000000,
+      "sha256": "ca1cada89f804d88de15042389b729a734dcf5a3e20931c903f8a33d44b23864"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/dual_ble.console.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/dual_ble.console.log",
+      "bytes": 1270,
+      "sha256": "1a8c2ca809e42f55be511e298ce7ca30d6f354600c683985ceaf05a0c5117f1e"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/dual_ble.events.jsonl": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/dual_ble.events.jsonl",
+      "bytes": 23855,
+      "sha256": "3e380c083b4a409a5e64704416d1561d50ad21a1611e712ec4cda4eed463d855"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/dual_ble.hackrf.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/dual_ble.hackrf.log",
+      "bytes": 2299,
+      "sha256": "07663852f24650c4ad2f4c7e2040aff4fd28191bda5a90c1721fddaf7cc58ca8"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/dual_ble.packets.jsonl": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/dual_ble.packets.jsonl",
+      "bytes": 567651,
+      "sha256": "c3e530567ab6c929946fa7c3d03c879f77203f2e97f3289d2a218141663f89ae"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/dual_ble.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/dual_ble.summary.json",
+      "bytes": 5937,
+      "sha256": "a63e447fb07180dd69a1c20dbd8bfe35c160c31a610a8fa06da1bd9b10032d53"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/dual_ble.summary.txt": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/dual_ble.summary.txt",
+      "bytes": 672,
+      "sha256": "a605e48da087392f8c4fe8f0d5037cf73dac518e0f4499f79b57f1a918adb4b9"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/dual_zigbee.ci8": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/dual_zigbee.ci8",
+      "bytes": 480000000,
+      "sha256": "bf8cc3a926bc1c8cfc8ad18d1deeb2b0530b8f93ce5309245fb0735bd3976e64"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/dual_zigbee.console.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/dual_zigbee.console.log",
+      "bytes": 1157,
+      "sha256": "09a246b186b78f1ab18f27865eb1371aad00ae858aab16d37025eb65845a65dd"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/dual_zigbee.hackrf.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/dual_zigbee.hackrf.log",
+      "bytes": 2299,
+      "sha256": "369f1c3ee87c703377234bb7dba597429e6bde49ad25d5533b10e512a63bb825"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/dual_zigbee.packets.jsonl": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/dual_zigbee.packets.jsonl",
+      "bytes": 80023,
+      "sha256": "78a7b8f6fdd3287d3c6404796528c4407c181c4564e99818a3a7c3d5d48d68db"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/dual_zigbee.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/dual_zigbee.summary.json",
+      "bytes": 7385,
+      "sha256": "9bb600c1c4d916756d7af2e9dcb9057a6cb3a772654b533738032c41cb01605c"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/dual_zigbee.summary.txt": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/dual_zigbee.summary.txt",
+      "bytes": 512,
+      "sha256": "82f57f7aa543465c8b21a66d60fa9f00b9eba3fdbae150658c9551f902f841e0"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/joint_sequence.metrics.csv": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/joint_sequence.metrics.csv",
+      "bytes": 18349,
+      "sha256": "4c803687098661be6017a66801070d829b01319aace41edd6ec24e206762b2fb"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/kernel_usb_check.summary.txt": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/kernel_usb_check.summary.txt",
+      "bytes": 20,
+      "sha256": "c4564bafb49dc50b47f5e381540360185dd6beef2c50384060faea7d20a3f63c"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/phase.metrics.csv": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/phase.metrics.csv",
+      "bytes": 754,
+      "sha256": "cb038b568f573258d7532166842bdf1175bae18ba74261a76012d2eb95bfb4ab"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/single_after_zigbee.ci8": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/single_after_zigbee.ci8",
+      "bytes": 480000000,
+      "sha256": "a41f304632b19e160ee344ad0008a54eae5bcd09dc50c4558e219db0614eae20"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/single_after_zigbee.console.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/single_after_zigbee.console.log",
+      "bytes": 1153,
+      "sha256": "850c260119357bf5699dc0e43bd8afea65acd492feee3af4f7fb2e7a72d4fe7d"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/single_after_zigbee.hackrf.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/single_after_zigbee.hackrf.log",
+      "bytes": 2299,
+      "sha256": "29dc3626f8e01426ce08d59244e08da807d9d94ac49ac04de699e29ce6e449d8"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/single_after_zigbee.packets.jsonl": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/single_after_zigbee.packets.jsonl",
+      "bytes": 91000,
+      "sha256": "1c5518842faa408b322b3a08560bae08ffae928fb25b6510e0a82ed3f1d7ebed"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/single_after_zigbee.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/single_after_zigbee.summary.json",
+      "bytes": 7445,
+      "sha256": "269a9edd6189616de3559be2a1fbb884c8e110bb485451e6022edba049744ab5"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/single_after_zigbee.summary.txt": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/single_after_zigbee.summary.txt",
+      "bytes": 498,
+      "sha256": "e48bc9f8274c7b211bff565b029d8e8c3b6c70f899b4b4ac0221634b7de02b4c"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/single_before_zigbee.ci8": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/single_before_zigbee.ci8",
+      "bytes": 480000000,
+      "sha256": "c08cf75ba8c8d58fe40118a2151d9e0640e916548f8bd0d76b496d0efd44d8eb"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/single_before_zigbee.console.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/single_before_zigbee.console.log",
+      "bytes": 1180,
+      "sha256": "fdf147cd37d6a4b4f431768f7804936260228645af8113257e44f7d86c42761a"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/single_before_zigbee.hackrf.log": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/single_before_zigbee.hackrf.log",
+      "bytes": 2299,
+      "sha256": "809dc0e42ee5e456ac865ac4bf06b81d6d42ebab2f9f31b8ffc734fb39b27a98"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/single_before_zigbee.packets.jsonl": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/single_before_zigbee.packets.jsonl",
+      "bytes": 87411,
+      "sha256": "a160c9b9ae8610f99c9730f4ae27ec81018b53b7ac1811bf1b205ba6bb5c8934"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/single_before_zigbee.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/single_before_zigbee.summary.json",
+      "bytes": 7447,
+      "sha256": "70e7dfe636d4627fc1ed52098ece5c00c627065e861bc959eb3eec54259c5826"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/single_before_zigbee.summary.txt": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/single_before_zigbee.summary.txt",
+      "bytes": 524,
+      "sha256": "ef74d1194f80f9beaeaf91ec34a3ccbdbb4ccb235b9e0987906816a80d356de4"
+    },
+    "python/sync_validation/results/single_dual_20261027_173809/single_dual.summary.json": {
+      "destination": "python/experiments/history_sync_single_dual_20261027_173809/analyses/legacy/single_dual.summary.json",
+      "bytes": 23855,
+      "sha256": "ee9c07f5c87675facafc37c67cb6f427d9b6e88ee82b1bc49a2a683f1b052c19"
+    },
+    "python/sync_validation/results/usb_transport_20261027_173025/ble_alone_8m_ble.log": {
+      "destination": "python/experiments/history_sync_usb_transport_20261027_173025/analyses/legacy/ble_alone_8m_ble.log",
+      "bytes": 2313,
+      "sha256": "f52c111ed8af3bd48d6181668e531754bd45ea675af6a447df3ab1ef964fb9f3"
+    },
+    "python/sync_validation/results/usb_transport_20261027_173025/dual_4m_ble.log": {
+      "destination": "python/experiments/history_sync_usb_transport_20261027_173025/analyses/legacy/dual_4m_ble.log",
+      "bytes": 2313,
+      "sha256": "d3ff4725f40ae819fa54ec7b48cc60917ac39a8292d5e601bbc2cf37a742b992"
+    },
+    "python/sync_validation/results/usb_transport_20261027_173025/dual_4m_zigbee.log": {
+      "destination": "python/experiments/history_sync_usb_transport_20261027_173025/analyses/legacy/dual_4m_zigbee.log",
+      "bytes": 2313,
+      "sha256": "822462770bfaf583c23036055cbb37aeefacebb0b02de535c27c4bfa42658e3a"
+    },
+    "python/sync_validation/results/usb_transport_20261027_173025/dual_8m_ble.log": {
+      "destination": "python/experiments/history_sync_usb_transport_20261027_173025/analyses/legacy/dual_8m_ble.log",
+      "bytes": 2313,
+      "sha256": "4bc5032b3eaa6c82e877c1d4b5fb129ac5ef3ea76d2021d87fae8b81eacf11ac"
+    },
+    "python/sync_validation/results/usb_transport_20261027_173025/dual_8m_zigbee.log": {
+      "destination": "python/experiments/history_sync_usb_transport_20261027_173025/analyses/legacy/dual_8m_zigbee.log",
+      "bytes": 2313,
+      "sha256": "e1cfabb012d4dad3be83b81d691a2469c740cd860d51cbdd9372827e6badec2d"
+    },
+    "python/sync_validation/results/usb_transport_20261027_173025/transport_check.summary.json": {
+      "destination": "python/experiments/history_sync_usb_transport_20261027_173025/analyses/legacy/transport_check.summary.json",
+      "bytes": 10132,
+      "sha256": "897d65953872f3c2fd7a3cfaadea2ffcfd33d1c7b52149f131e759a0895790dc"
+    }
+  },
+  "groups": {
+    "python/experiments/history_ble_rx_20261026_150021_003660": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/exadv_rx/results/rx_20261026_150021_003660"
+    },
+    "python/experiments/history_ble_rx_20261026_150507_618440": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/exadv_rx/results/rx_20261026_150507_618440"
+    },
+    "python/experiments/history_ble_rx_20261026_152018_750312": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/exadv_rx/results/rx_20261026_152018_750312"
+    },
+    "python/experiments/history_ble_rx_20261026_154536_120754": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/exadv_rx/results/rx_20261026_154536_120754"
+    },
+    "python/experiments/history_ble_rx_20261026_155043_397830": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/exadv_rx/results/rx_20261026_155043_397830"
+    },
+    "python/experiments/history_ble_rx_20261026_161955_853914": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/exadv_rx/results/rx_20261026_161955_853914"
+    },
+    "python/experiments/history_ble_rx_20261026_162114_151247": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/exadv_rx/results/rx_20261026_162114_151247"
+    },
+    "python/experiments/history_ble_rx_20261027_153224_561670": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/exadv_rx/results/rx_20261027_153224_561670"
+    },
+    "python/experiments/history_ble_rx_20261027_154450_562661": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/exadv_rx/results/rx_20261027_154450_562661"
+    },
+    "python/experiments/history_ble_rx_20261027_161604_978887": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/exadv_rx/results/rx_20261027_161604_978887"
+    },
+    "python/experiments/history_zigbee_live_transport_smoke_v1": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/zigbee_rx/results/live_transport_smoke_v1"
+    },
+    "python/experiments/history_zigbee_live_transport_smoke_v1_usb": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/zigbee_rx/results/live_transport_smoke_v1_usb"
+    },
+    "python/experiments/history_zigbee_rx_20261027_104243_311380": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/zigbee_rx/results/rx_20261027_104243_311380"
+    },
+    "python/experiments/history_zigbee_rx_20261027_104502_973395": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/zigbee_rx/results/rx_20261027_104502_973395"
+    },
+    "python/experiments/history_zigbee_rx_20261027_153222_394522": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/zigbee_rx/results/rx_20261027_153222_394522"
+    },
+    "python/experiments/history_zigbee_rx_20261027_154453_216417": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/zigbee_rx/results/rx_20261027_154453_216417"
+    },
+    "python/experiments/history_zigbee_rx_20261027_161603_006777": {
+      "origin": "legacy_capture",
+      "legacy_source": "python/zigbee_rx/results/rx_20261027_161603_006777"
+    },
+    "python/experiments/history_exadv_rx_reviews": {
+      "origin": "legacy_cross_run_analysis",
+      "legacy_source": "python/exadv_rx/results"
+    },
+    "python/experiments/history_zigbee_rx_reviews": {
+      "origin": "legacy_cross_run_analysis",
+      "legacy_source": "python/zigbee_rx/results"
+    },
+    "python/experiments/history_sync_dual_device_smoke_20261027_153756": {
+      "origin": "legacy_group",
+      "legacy_source": "python/sync_validation/results/dual_device_smoke_20261027_153756",
+      "scope": "Original grouping preserved; live/replay remain distinguished by each receiver config."
+    },
+    "python/experiments/history_sync_dual_run10268_diagnostic": {
+      "origin": "legacy_group",
+      "legacy_source": "python/sync_validation/results/dual_run10268_diagnostic",
+      "scope": "Original grouping preserved; live/replay remain distinguished by each receiver config."
+    },
+    "python/experiments/history_sync_dual_run10269_diagnostic": {
+      "origin": "legacy_group",
+      "legacy_source": "python/sync_validation/results/dual_run10269_diagnostic",
+      "scope": "Original grouping preserved; live/replay remain distinguished by each receiver config."
+    },
+    "python/experiments/history_sync_same_iq_20261027": {
+      "origin": "legacy_group",
+      "legacy_source": "python/sync_validation/results/same_iq_20261027",
+      "scope": "Original grouping preserved; live/replay remain distinguished by each receiver config."
+    },
+    "python/experiments/history_sync_single_dual_20261027_170547": {
+      "origin": "legacy_group",
+      "legacy_source": "python/sync_validation/results/single_dual_20261027_170547",
+      "scope": "Original grouping preserved; live/replay remain distinguished by each receiver config."
+    },
+    "python/experiments/history_sync_single_dual_20261027_171837": {
+      "origin": "legacy_group",
+      "legacy_source": "python/sync_validation/results/single_dual_20261027_171837",
+      "scope": "Original grouping preserved; live/replay remain distinguished by each receiver config."
+    },
+    "python/experiments/history_sync_single_dual_20261027_171914": {
+      "origin": "legacy_group",
+      "legacy_source": "python/sync_validation/results/single_dual_20261027_171914",
+      "scope": "Original grouping preserved; live/replay remain distinguished by each receiver config."
+    },
+    "python/experiments/history_sync_single_dual_20261027_171955": {
+      "origin": "legacy_group",
+      "legacy_source": "python/sync_validation/results/single_dual_20261027_171955",
+      "scope": "Original grouping preserved; live/replay remain distinguished by each receiver config."
+    },
+    "python/experiments/history_sync_single_dual_20261027_173809": {
+      "origin": "legacy_group",
+      "legacy_source": "python/sync_validation/results/single_dual_20261027_173809",
+      "scope": "Original grouping preserved; live/replay remain distinguished by each receiver config."
+    },
+    "python/experiments/history_sync_usb_transport_20261027_173025": {
+      "origin": "legacy_group",
+      "legacy_source": "python/sync_validation/results/usb_transport_20261027_173025",
+      "scope": "Original grouping preserved; live/replay remain distinguished by each receiver config."
+    }
+  },
+  "policy": "Original artifact bytes preserved. Paths in historical evidence are resolved via this manifest. No grouping by Run ID alone."
+}

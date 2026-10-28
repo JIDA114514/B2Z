@@ -1,0 +1,6 @@
+{
+  "schema": "experiment_v1",
+  "experiment_id": "history_ble_rx_20261026_161955_853914",
+  "origin": "legacy_capture",
+  "legacy_source": "python/exadv_rx/results/rx_20261026_161955_853914"
+}

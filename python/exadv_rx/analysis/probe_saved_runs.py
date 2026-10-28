@@ -1,5 +1,7 @@
 import sys,json,time,inspect,collections,numpy as np
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from experiment_tools.reporting import new_directory, refresh_session, resolve_recorded_path
 sys.path.insert(0,'python/exadv_rx')
 import decoder
 from decoder import ChannelDecoder,IQDCBlocker
@@ -11,10 +13,10 @@ src=src.replace('bits = ((values - cfo) * amplitude > 0).astype(np.uint8)', '''i
                 cfo = float((low + high) / 2)
             bits = ((values - cfo) * amplitude > 0).astype(np.uint8)''')
 ns=decoder.__dict__.copy();exec('class RobustThreshold(ChannelDecoder):\n'+src,ns);RobustThreshold=ns['RobustThreshold']
-root=Path('python/exadv_rx/results');stems=['rx_20261026_161955_853914','rx_20261026_162114_151247'];out=[]
+root=new_directory('probe_saved_runs');root.mkdir(parents=True,exist_ok=False);stems=['rx_20261026_161955_853914','rx_20261026_162114_151247'];out=[]
 for stem in stems:
- data=json.loads((root/(stem+'.payload_validation.json')).read_text());s=data['summary'];rid=int(next(iter(s['run_ids'])));length=int(next(iter(s['payload_lengths'])));anchor=s['fitted_sequence_zero_time_s'];step=s['fitted_interval_s'];records=[]
- with open(root/(stem+'.ci8'),'rb') as h:
+ data=json.loads((resolve_recorded_path(Path('python/exadv_rx/results')/(stem+'.payload_validation.json'))).read_text());s=data['summary'];rid=int(next(iter(s['run_ids'])));length=int(next(iter(s['payload_lengths'])));anchor=s['fitted_sequence_zero_time_s'];step=s['fitted_interval_s'];records=[]
+ with open(resolve_recorded_path(Path('python/exadv_rx/results')/(stem+'.ci8')),'rb') as h:
   for seq in range(150):
    begin=int((anchor+seq*step-.005)*8e6);h.seek(begin*2);raw=h.read(96000*2);v=np.frombuffer(raw,np.int8).astype(np.float32).reshape(-1,2);records.append((seq,begin,(v[:,0]+1j*v[:,1])/128))
  baseline={r['sequence'] for r in data['rows']};result={'stem':stem,'run_id':rid,'payload_len':length,'full_stream_baseline_count':len(baseline),'probes':[]}
@@ -38,3 +40,6 @@ with packet_archive.open('w') as archive:
    packets=probe.pop('packets',[]);probe['packet_records']=len(packets)
    for packet in packets:archive.write(json.dumps({'run_id':run['run_id'],'variant':{k:probe[k] for k in ['output_rate','cutoff_hz','manual_cfo_shift_hz','algorithm']},'packet':packet})+'\n')
 (root/'iq_optimization_feasibility_probes.summary.json').write_text(json.dumps({'method':'12 ms independently initialized snippets on 150 predicted slots; baseline vs full-stream may differ; manual CFO is diagnostic only','runs':out},ensure_ascii=False,indent=2)+'\n')
+
+refresh_session(root)
+print("完整报告：",root/"report.md",flush=True)

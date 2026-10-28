@@ -23,6 +23,10 @@ from zigbee_decoder import ZigBeeDecoder
 from zigbee_protocol import (SequenceTracker, channel_frequency, parse_board_stats_text,
                              parse_test_payload, ratio)
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from experiment_tools.reporting import (add_output_arguments, output_prefix,
+                                        validate_output_arguments, write_receiver_reports)
+
 
 def parse_args(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
@@ -53,9 +57,10 @@ def parse_args(argv=None):
     p.add_argument("--board-log", type=Path, help="serial text containing matching final PERF_STATS")
     p.add_argument("--full-run-covered", action="store_true", help="explicit confirmation RX covers the entire board run")
     p.add_argument("--save-iq", action="store_true")
-    p.add_argument("--output", type=Path)
+    add_output_arguments(p)
     p.add_argument("--quiet", action="store_true")
     a = p.parse_args(argv)
+    validate_output_arguments(p, a)
     try:
         frequency = channel_frequency(a.channel)
         if a.center_hz is None:
@@ -107,11 +112,11 @@ def main(argv=None):
                             args.demod, args.symbol_order, args.cutoff_hz, args.cfo_hz,
                             args.soft_retry, args.preamble_max_distance)
     dc = IQDCBlocker(args.sample_rate, args.dc_block_hz)
-    prefix = args.output or Path(__file__).parent / "results" / datetime.now().strftime("rx_%Y%m%d_%H%M%S_%f")
+    prefix = output_prefix(args, "zigbee")
     prefix.parent.mkdir(parents=True, exist_ok=True)
     files = {key: Path(str(prefix) + suffix) for key, suffix in
              (("packets", ".packets.jsonl"), ("summary", ".summary.json"),
-              ("text", ".summary.txt"), ("hackrf", ".hackrf.log"))}
+              ("text", ".summary.txt"), ("report", ".report.md"), ("hackrf", ".hackrf.log"))}
     if args.save_iq:
         files["iq"] = Path(str(prefix) + "." + args.format)
     if any(path.exists() for path in files.values()):
@@ -258,16 +263,7 @@ def main(argv=None):
                               "relative nominal sample timing; USB gaps and sample clock errors not ruled out",
                               "two HackRF captures have independent time origins; do not subtract their timestamps as synchronization error",
                               "no command execution or common control command schema implemented"]}
-    files["summary"].write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
-    wireless = ratios["wireless_prr"]
-    text = (f"Status: {result['status']}\nError: {error}\nFCS-valid PHY packets: {counts['fcs_valid_packets']}\n"
-            f"Run ID: {tracker.locked_run_id}; unique={tracker.unique} duplicate={tracker.duplicate} "
-            f"out_of_order={tracker.out_of_order} longest_loss={result['receiver']['longest_loss_burst']}\n"
-            f"IQ observation: {observation:.6f}s; queue high-water: {capture.stats['queue_high_water']}\n"
-            f"Wireless PRR: {wireless['numerator']}/{wireless['denominator']} = "
-            f"{wireless['value'] if wireless['value'] is not None else 'N/A'}\n"
-            f"Throughput: {result['throughput']}\nJSON: {files['summary']}\n")
-    files["text"].write_text(text)
+    text = write_receiver_reports(result, files, args.experiment_dir)
     print(text, end="")
     if error and capture.stderr_tail:
         print("\n".join(capture.stderr_tail), file=sys.stderr)

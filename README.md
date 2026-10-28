@@ -2,7 +2,7 @@
 
 主要开发基于 BLE 的跨技术通信（cross technology communication, CTC），具体原理基于 [BlueBee](https://doi.org/10.1145/3131672.3131678)。
 
-当前主线是 FreeRTOS 分支：在 Zynq-7020 / AD9363 上运行 `app_FreeRTOS/`下的代码，使用 BLE extended advertising 的 primary/secondary 双包调度外壳，将 BlueBee 构造的 ZigBee frame 放入 secondary 包。常用工作流有两类：
+当前研究主线是基于 BLE extended advertising 的双协议共包控制与同步：在同一个 secondary `AUX_ADV_IND` 中承载 BLE 与 BlueBee/IEEE 802.15.4 信息。当前接收原型和性能测试用于支撑该方向；正式控制格式、独立设备同步及相对基线收益仍需实现或验证。板端现有工作主要位于 `app_FreeRTOS/`。常用工作流有两类：
 
 - Python 端离线生成 IQ/C 头文件，用于分析、SDK 集成或 HackRF/接收链路验证。
 - FreeRTOS 串口命令在板端启动 legacy BLE、切换共享 TX DMA 波形，或运行时生成 BlueBee / BLE exadv secondary 波形。
@@ -10,6 +10,87 @@
 使用的硬件为 MicroPhase 的 e310，上面搭载 Zynq-7020 和 AD9363。
 
 代码来自于 [MicroPhase 官方](https://github.com/MicroPhase/antsdr_standalone)的裸机代码程序，需要注意 hdl 中用于 e310 开发板的 Vivado 项目为 `antsdre310` 而非 `e310v2`。`e310v2` 的代码生成后在下板执行时可能会报错。
+
+## 接收结果与实验归档
+
+实验统一存放在 [`python/experiments/`](python/experiments/)。先看[实验索引](python/experiments/index.md)，进入某一轮的 `report.md`，再按需查看两侧接收报告、结构化数据和人工记录。
+
+```text
+python/experiments/
+├── index.md / index.csv              # 每个归档目录一行，区分实时、回放和分析数量
+├── runs.csv                         # 每次接收/回放一行，便于按配置筛选
+├── artifacts.csv                    # 本机文件清单、大小及历史路径映射
+├── migration.manifest.json          # 历史文件旧/新路径、字节数和SHA-256
+└── <experiment_id>/
+    ├── experiment.config.json       # 目录标识及来源；可补充实验条件
+    ├── report.md                    # 自动生成的本轮阅读入口
+    ├── notes.md                     # 人工观察、任务目标与结论，按需建立
+    ├── board/                       # 板端原始日志，按需保存 *.board.log
+    ├── captures/
+    │   ├── ble/rx.*                 # BLE 独立实时接收
+    │   └── zigbee/rx.*              # IEEE 802.15.4 独立实时接收
+    └── analyses/
+        └── <analysis_id>/
+            ├── ble/rx.*             # 相应解码器的独立回放结果
+            └── zigbee/rx.*
+```
+
+每个 `rx.*` 前缀包含 `.summary.json`（完整配置、原始计数及统计）、`.summary.txt`（简短文本）、`.report.md`（可读报告）、`.packets.jsonl`（完整逐包流）及 `.hackrf.log`；BLE 另有 `.events.jsonl`。启用 `--save-iq` 才保存对应 IQ。终端显示运行状态、主要结果、数据质量和报告路径，完整计数保留在 JSON 中。
+
+`experiment_id` 是文件归档标识，与空口 `run_id` 分开。两个独立启动的接收器默认分别创建 UTC 时间命名的目录；要归档为同一轮，给它们传入相同的 `--experiment-dir`。例如在两个终端分别执行（替换设备序列号）：
+
+```bash
+python3 python/exadv_rx/receive.py --serial SERIAL_A \
+  --channels 39 --duration 40 --save-iq --quiet \
+  --experiment-dir python/experiments/20261028_run10270_dual
+
+python3 python/zigbee_rx/receive.py --serial SERIAL_B \
+  --channel 26 --demod phase --symbol-order project --cutoff-hz 700000 \
+  --run-id 10270 --payload-len 30 --expected-packets 150 \
+  --duration 40 --save-iq --quiet \
+  --experiment-dir python/experiments/20261028_run10270_dual
+```
+
+先启动接收，再启动匹配的板端实验。上例 `150` 是显式计划范围，不由 40 秒接收时长推断；板端任务应为对应的 30 秒、200000 us 间隔。接收参数只是示例，不表示已经满足稳定性要求。
+
+离线回放同样指定实验目录，并用 `--analysis-id` 标记一次分析；不指定时自动生成唯一回放目录：
+
+```bash
+python3 python/zigbee_rx/receive.py \
+  --iq-file python/experiments/20261028_run10270_dual/captures/zigbee/rx.ci8 \
+  --channel 26 --demod phase --symbol-order project --cutoff-hz 700000 \
+  --run-id 10270 --payload-len 30 --expected-packets 150 --duration 0 --quiet \
+  --experiment-dir python/experiments/20261028_run10270_dual \
+  --analysis-id replay_001
+```
+
+两接收器的 `--output <prefix>` 仍保持旧的前缀语义，与 `--experiment-dir` 互斥；已有结果拒绝覆盖。显式输出到归档树内时自动更新本轮报告和总索引；树外的旧前缀输出不会自动加入中央索引。`capture_single_dual.py` 与 `validate_saved_iq.py` 的默认输出也进入该归档树；前者按 `captures/<stage>/<receiver>/` 分阶段保存。
+
+### 历史结果与可复查性
+
+原 `exadv_rx/results`、`zigbee_rx/results` 及 `sync_validation/results` 中的 375 个实验文件已归档到 29 个 `history_*` 目录。实时采集按原前缀分组；有明确输入 IQ 路径的回放放入该采集的 `analyses/`；跨轮分析集中在 `history_*_reviews`。既有组合实验保留原分组及文件名，位于 `history_sync_*/analyses/legacy/`，其中每条接收记录仍按自身配置区分 live/replay。归档目录数不能当作独立实验重复次数。
+
+历史 JSON、文本、人工报告和 IQ 内容均保持原样，因此其中可能仍写着旧路径。迁移清单保存所有旧/新路径及原始 SHA-256；接收器的 `--iq-file` 可解析清单中的旧路径，也可手动查询。历史目录中的 `.report.md` 和顶层 `report.md` 是新生成的阅读层，不覆盖原有报告。
+
+```bash
+# 重建报告与索引；不会重新解码 IQ 或更改历史统计
+python3 python/experiment_tools/manage.py index
+
+# 查找旧记录的新位置
+python3 python/experiment_tools/manage.py locate \
+  python/exadv_rx/results/rx_20261026_161955_853914.ci8
+
+# 逐文件复核本机迁移结果（需要原始大文件仍在本机）
+python3 python/experiment_tools/manage.py verify
+```
+
+正常结束只代表程序完成；没有匹配板端计数及完整观察窗口时无线 PRR 为 `N/A`，不将它显示为 0%。同目录分组不自动产生联合成功率，也不能将独立设备时间戳直接相减。现有联合分析必须依据逐 Run ID/Sequence 匹配结果；未来控制命令另按正式定义的 command_id 关联。指标单位、分子分母和观测边界见各报告。
+
+### Git 与大文件
+
+[`python/experiments/.gitignore`](python/experiments/.gitignore) 递归放行小型摘要、配置、清单、指标 CSV、Markdown、设备/板端日志及已有分析图；完整 IQ、完整 `.packets.jsonl`、控制台日志、锁和临时文件默认忽略。`artifacts.csv` 描述本机扫描到的文件，不是 Git 收录清单，也不是外部备份证明；新文件尚未计算哈希时显示 `N/A`。`.events.jsonl` 可提交，但需检查大小。
+
+Git clone 不会恢复忽略的大文件。关键 IQ 和完整逐包流需另外备份；移动到外部存储时保存对应 `*.manifest.json`，记录位置、字节数、哈希及采样率/中心频率/格式。原 results 目录保留说明和兼容规则，后续实验优先使用统一归档。
 
 ## 当前 Python 波形脚本
 

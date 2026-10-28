@@ -4,11 +4,11 @@
 
 ```bash
 python3 python/sync_validation/validate_saved_iq.py \
-  --output python/sync_validation/results/new_validation
+  --output python/experiments/new_validation
 python3 -m unittest discover -s python/sync_validation/tests -v
 ```
 
-输出目录必须不存在，防止覆盖已有实验。依赖现有两接收器的 NumPy/SciPy 以及绘图用 Matplotlib。默认输入、样本率、中心频率和预先固定的校准划分见 `recordings.config.json`。
+输出目录必须不存在，防止覆盖已有实验；省略时在 `python/experiments/` 自动生成 UTC 时间命名的目录，完成后生成 `report.md` 和索引。结构及历史迁移说明见[项目 README](../../README.md#接收结果与实验归档)。依赖现有两接收器的 NumPy/SciPy 以及绘图用 Matplotlib。默认输入、样本率、中心频率和预先固定的校准划分见 `recordings.config.json`。
 
 ## 数据和独立性
 
@@ -45,7 +45,7 @@ calibrated_error_us = layout_error_us - bias
 ## 结果文件
 
 - `validation.manifest.json`：输入配置、原始 IQ SHA-256、原始采集摘要散列、完整重放命令、源码散列及结果文件散列。
-- `run_*_{ble,zigbee}.summary.json`：独立重放摘要；完整逐包流和重放控制台日志默认忽略。
+- `analyses/run_<run_id>/{ble,zigbee}/rx.summary.json`：独立重放摘要；对应 `.report.md` 为阅读层，完整逐包流和重放控制台日志默认忽略。
 - `reference_validation.summary.json`：逐轮四种解码结果、计划分母、条件时间统计和带容差的计划时隙恢复数量。
 - `per_sequence.metrics.csv`：包括两侧均缺失的全部 450 个计划时隙；同时标记 calibration/validation、配对状态、结构偏移和误差。
 - `reference_validation.png/.pdf`：原始位置差、验证集残差、绝对残差 CDF 和四种解码结果。
@@ -65,6 +65,8 @@ calibrated_error_us = layout_error_us - bias
 `capture_single_dual.py` 用于目标信号在双设备运行时异常的排查：依次运行 ZigBee 设备单台、两台同时、ZigBee 设备单台。默认每段 30 s，保持设备、天线和 USB 线不移动，只改变接收进程活动状态。保存四份独立 IQ（总计约 1.92 GB）、原始设备日志、逐包结果和阶段摘要。
 
 “单台”只指一个接收进程工作，**两块 HackRF 在所有阶段都必须保持 USB 连接**。脚本在每个阶段开始前通过 `hackrf_info` 核对两个指定序列号；缺少设备时立即停止并保存枚举结果，避免等待第一段结束才发现第二台不可用。子进程故障时会显示 HackRF 原始原因和日志路径，并保留失败阶段的两侧摘要。
+
+新运行按 `captures/<single_before|dual|single_after>/<ble|zigbee>/rx.*` 保存；`single_dual.summary.json` 保留阶段与设备检查记录，`report.md` 为统一入口。历史分组仍保留原文件名，不据本次目录整理重新解码或改写旧数据。
 
 先停止已有接收进程，在板端启动持续发送：
 

@@ -1,0 +1,7 @@
+{
+  "schema": "experiment_v1",
+  "experiment_id": "history_sync_single_dual_20261027_173809",
+  "origin": "legacy_group",
+  "legacy_source": "python/sync_validation/results/single_dual_20261027_173809",
+  "scope": "Original grouping preserved; live/replay remain distinguished by each receiver config."
+}

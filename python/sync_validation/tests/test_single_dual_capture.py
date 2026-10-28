@@ -105,7 +105,9 @@ class CaptureTests(unittest.TestCase):
     def test_error_message_preserves_transfer_failure_before_cleanup(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory)
-            (root/'dual_ble.summary.json').write_text(json.dumps({'stderr_tail':[
+            prefix=m.receiver_prefix(root,'dual','ble')
+            prefix.parent.mkdir(parents=True)
+            Path(str(prefix)+'.summary.json').write_text(json.dumps({'stderr_tail':[
                 "Couldn't transfer any bytes for one second.",
                 'Exiting... hackrf_is_streaming() result: streaming stopped (-1003)',
                 'hackrf_stop_rx() failed: No such device (-1000)',
@@ -114,7 +116,7 @@ class CaptureTests(unittest.TestCase):
             message=m.failure_message(root,'dual',[('ble',1)])
         self.assertIn("Couldn't transfer any bytes",message)
         self.assertIn('No such device',message)
-        self.assertIn('dual_ble.console.log',message)
+        self.assertIn('captures/dual/ble/rx.console.log',message)
 
 
 if __name__=='__main__':

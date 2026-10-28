@@ -1,0 +1,7 @@
+{
+  "schema": "experiment_v1",
+  "experiment_id": "history_sync_usb_transport_20261027_173025",
+  "origin": "legacy_group",
+  "legacy_source": "python/sync_validation/results/usb_transport_20261027_173025",
+  "scope": "Original grouping preserved; live/replay remain distinguished by each receiver config."
+}

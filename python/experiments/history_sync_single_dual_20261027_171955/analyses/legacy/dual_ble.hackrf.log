@@ -1,0 +1,32 @@
+call hackrf_set_sample_rate(8000000 Hz/8.000 MHz)
+call hackrf_set_hw_sync_mode(0)
+call hackrf_set_freq(2480000000 Hz/2480.000 MHz)
+call hackrf_set_amp_enable(0)
+call hackrf_set_antenna_enable(0)
+samples_to_xfer 240000000/240Mio
+Stop with Ctrl-C
+15.7 MB / 1.000 sec = 15.7 MB/second, average power -27.6 dBfs
+16.3 MB / 1.000 sec = 16.3 MB/second, average power -25.5 dBfs
+16.0 MB / 1.000 sec = 16.0 MB/second, average power -27.7 dBfs
+16.0 MB / 1.000 sec = 16.0 MB/second, average power -23.9 dBfs
+16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.0 dBfs
+16.0 MB / 1.000 sec = 16.0 MB/second, average power -24.8 dBfs
+16.0 MB / 1.000 sec = 16.0 MB/second, average power -27.8 dBfs
+16.0 MB / 1.000 sec = 16.0 MB/second, average power -25.0 dBfs
+16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.2 dBfs
+16.0 MB / 1.000 sec = 16.0 MB/second, average power -26.5 dBfs
+16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.4 dBfs
+16.0 MB / 1.000 sec = 16.0 MB/second, average power -27.2 dBfs
+16.0 MB / 1.000 sec = 16.0 MB/second, average power -28.1 dBfs
+16.0 MB / 1.000 sec = 16.0 MB/second, average power -26.3 dBfs
+15.7 MB / 1.000 sec = 15.7 MB/second, average power -28.4 dBfs
+ 0.0 MB / 1.000 sec =  0.0 MB/second, average power -nan dBfs
+
+Couldn't transfer any bytes for one second.
+
+Exiting... hackrf_is_streaming() result: streaming stopped (-1003)
+Total time: 16.00005 s
+hackrf_stop_rx() failed: No such device (it may have been disconnected) (-1000)
+hackrf_close() failed: No such device (it may have been disconnected) (-1000)
+hackrf_exit() done
+exit

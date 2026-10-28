@@ -16,6 +16,7 @@ __pycache__/
 !/python/perf_test/results/*.csv
 
 # Raw SDR recordings stay outside normal Git history.
+# python/experiments/.gitignore selects reviewable nested experiment artifacts.
 *.ci8
 *.cf32
 *.iq

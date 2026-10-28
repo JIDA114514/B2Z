@@ -1,5 +1,7 @@
 # Small, reviewable experiment evidence only. Rules here override root defaults.
+# Compatibility location for explicit --output; default/history use python/experiments.
 *
+!*/
 !.gitignore
 !*.md
 !*.summary.json

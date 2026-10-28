@@ -21,6 +21,10 @@ import numpy as np
 from decoder import ChannelDecoder, IQDCBlocker
 from protocol import DiagnosticEventMatcher, EventMatcher, channel_frequency
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from experiment_tools.reporting import (add_output_arguments, output_prefix,
+                                        validate_output_arguments, write_receiver_reports)
+
 
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
@@ -51,9 +55,10 @@ def parse_args(argv=None):
     parser.add_argument("--diagnostic-pair-window-us", type=float, default=2000,
                         help="maximum absolute error from advertised offset for diagnostic pairs, default 2000us")
     parser.add_argument("--save-iq", action="store_true", help="save input bytes and metadata beside output")
-    parser.add_argument("--output", type=Path, help="output prefix; files are never overwritten")
+    add_output_arguments(parser)
     parser.add_argument("--quiet", action="store_true", help="only periodic status and final summary")
     args = parser.parse_args(argv)
+    validate_output_arguments(parser, args)
     try:
         args.channels = [int(value) for value in args.channels.split(",")]
         if not args.channels or len(set(args.channels)) != len(args.channels):
@@ -201,11 +206,11 @@ class Capture:
 
 def main(argv=None):
     args = parse_args(argv)
-    prefix = args.output or Path(__file__).parent / "results" / datetime.now().strftime("rx_%Y%m%d_%H%M%S_%f")
+    prefix = output_prefix(args, "ble")
     prefix.parent.mkdir(parents=True, exist_ok=True)
     paths = {name: Path(str(prefix) + suffix) for name, suffix in
              (("packets", ".packets.jsonl"), ("events", ".events.jsonl"),
-              ("summary", ".summary.json"), ("text", ".summary.txt"),
+              ("summary", ".summary.json"), ("text", ".summary.txt"), ("report", ".report.md"),
               ("stderr", ".hackrf.log"))}
     if args.save_iq:
         paths["iq"] = Path(str(prefix) + "." + args.format)
@@ -339,18 +344,7 @@ def main(argv=None):
                         "CRC-failure counts refer to sync candidates, not uniquely identified transmitted packets",
                         "no PRR without independently supplied TX counts and matched observation window"],
     }
-    paths["summary"].write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n")
-    text_report = (f"Status: {summary['status']}\nError: {error}\n"
-                   f"CRC-valid exadv packets: {counts['packets']}\nCounts: {dict(counts)}\n"
-                   f"Matched primary/auxiliary events: {matcher.matched}\n"
-                   f"Same-channel diagnostic pairs (not AuxPtr compliant): {diagnostic_matcher.matched}\n"
-                   f"Processed IQ: {summary['processed_sample_duration_s']:.6f} s; wall: {wall:.3f} s\n"
-                   f"Application queue overflow: {capture.stats['queue_overflow']}\n"
-                   f"AuxPtr pointing to unsupported PHY: {counts['aux_ptr_unsupported_phy']}\n"
-                   "PRR: N/A (TX count/window not merged)\n"
-                   "Timing: relative nominal IQ sample timeline; USB gaps are not ruled out.\n"
-                   f"JSON summary: {paths['summary']}\n")
-    paths["text"].write_text(text_report)
+    text_report = write_receiver_reports(summary, paths, args.experiment_dir)
     print(text_report, end="")
     if error and capture.stderr_tail:
         print("\n".join(capture.stderr_tail), file=sys.stderr)

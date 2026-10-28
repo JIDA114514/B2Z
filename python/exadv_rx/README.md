@@ -28,7 +28,9 @@ python3 python/exadv_rx/receive.py \
 - `--duration 0` 持续接收到 Ctrl-C；离线模式表示读到 EOF。
 - 默认启用 `--timing-retry`：原始完整符号窗口通过 CRC 时直接提交，失败时只对最多两个采样候选和三个小幅时钟偏差，用 0.75 符号宽度的中心窗口重判。重试仍须通过完整 BLE CRC24 和扩展头校验，不使用已知 Run ID/Sequence/填充恢复负载，也不翻转弱位来凑 CRC。`--no-timing-retry` 关闭以做同 IQ 对照。
 - `--channel-cutoff-hz` 允许在 400000–950000 Hz 范围内显式设置通道 FIR 截止频率，默认仍为 850000 Hz。较窄滤波在不同记录上有得有失，未自动改为新的默认值。
-- `--output python/exadv_rx/results/run001` 指定结果前缀，已有文件时拒绝覆盖。
+- 默认按 UTC 时间在 `python/experiments/` 新建实验目录；`--experiment-dir <目录>` 可让两条接收链归档到同一轮。
+- `--output <前缀>` 保持旧前缀语义，已有文件时拒绝覆盖；与 `--experiment-dir` 互斥。
+- 回放通过 `--analysis-id <名称>` 指定 `analyses/` 子目录；该参数需同时提供 `--experiment-dir` 和 `--iq-file`，省略则自动生成。
 - 默认射频放大器关闭，LNA=24 dB、VGA=20 dB 只是初始设置，不是稳定性保证；根据距离和饱和情况调整。
 - `--whitening-channels 39` 可显式设置与 RF 信道不同的白化信道，仅用于诊断或特殊发射配置，结果会保留两者。
 - 默认启用 `--dc-block-hz 1000`：在数字下变频和非线性相位解调之前去除 IQ 直流偏置，滤波状态跨块连续。`--dc-block-hz 0` 可关闭以进行同一 IQ 的 A/B 对照。滤波器初始状态需要收敛，开始处的包可能受瞬态影响；滤波对时间估计的影响也需校准。
@@ -45,11 +47,11 @@ python3 python/exadv_rx/receive.py \
 
 ## 输出与时间口径
 
-默认保存到本目录 `results/`，每轮生成：
+默认保存到 `python/experiments/<experiment_id>/captures/ble/rx.*`；回放保存到同轮 `analyses/<analysis_id>/ble/rx.*`。组织方式、两设备示例和历史迁移说明见[顶层 README](../../README.md#接收结果与实验归档)，历史入口见[实验索引](../experiments/index.md)。每次生成：
 
 - `.packets.jsonl`：CRC 正确且扩展头可解析的逐包记录，包括完整 PDU/AdvData、AD 字段、AdvA、ADI、AuxPtr、相对采样时刻、频偏和同步评分。
 - `.events.jsonl`：通过 `match_type` 区分严格 AuxPtr 匹配和同频诊断匹配，不能将两类事件合并为规范符合的事件数。
-- `.summary.json`、`.summary.txt`：配置、计数、处理耗时、队列压力和运行状态；JSONL 作为原始结构化数据。
+- `.summary.json`：完整配置、计数、处理耗时、队列压力和运行状态；`.summary.txt` 为简短文本，`.report.md` 为可读接收报告。本轮顶层 `report.md` 汇总各接收记录；JSONL 保留原始逐包数据。
 - `.hackrf.log`：`hackrf_transfer` 原始 stderr，保留设备错误和可能的传输异常。
 - 开启 `--save-iq` 时输出 `.ci8`（或离线输入对应的 `.cf32`），录制参数在 summary 中。
 
@@ -105,13 +107,13 @@ HackRF 原始 IQ 不保证提供可定位每次 USB 丢样的序列号/硬件时
 
 当前验证覆盖：CRC/白化与项目旧编码器交叉检查、严格扩展头边界、完整 8 位长度、跨任意数据块、频偏、IQ 反相、小幅采样时钟偏差、坏 CRC、噪声、真实重复包、数字信道平移、同一 IQ 中 primary/secondary 配对、旧 30.72 Msps 生成器 IQ 回归及离线 CLI。
 
-窗口重试另有一个约 19 KB 的真实 IQ 回归片段，验证完整窗口失败、窄窗口成功且 CRC 条件不变；同频诊断匹配覆盖身份不符、窗口超限、重复提交和严格/诊断计数隔离。完整 IQ 对照结果保存在 `results/window_retry_comparison.summary.json`，不以分段窗口探针的收益代替连续回放结果。
+窗口重试另有一个约 19 KB 的真实 IQ 回归片段，验证完整窗口失败、窄窗口成功且 CRC 条件不变；同频诊断匹配覆盖身份不符、窗口超限、重复提交和严格/诊断计数隔离。完整 IQ 对照结果保存在 `../experiments/history_exadv_rx_reviews/analyses/legacy/window_retry_comparison.summary.json`，不以分段窗口探针的收益代替连续回放结果。
 
 ```bash
 python3 -m unittest discover -s python/exadv_rx/tests -v
 ```
 
-初版开发环境未连接设备。2026-10-26 已收到两轮实际 HackRF IQ：4 B 循环 secondary，以及 `bluebee_exadv_perf_start?30 200000 60 10261`。初版缺少直流抑制，导致弱目标大量漏检；同一 IQ 的补偿回放确认能显著恢复短包并恢复部分 30 B 测试包。当前版本默认加入连续 IQ 高通及相关回归测试，原始结果保留，补偿回放使用独立前缀。这是既有硬件录制的离线验证，尚不能代替修复版本的实时长测或声称达到稳定点；详细计数见 `results/experiment_review_20261026.md`。
+初版开发环境未连接设备。2026-10-26 已收到两轮实际 HackRF IQ：4 B 循环 secondary，以及 `bluebee_exadv_perf_start?30 200000 60 10261`。初版缺少直流抑制，导致弱目标大量漏检；同一 IQ 的补偿回放确认能显著恢复短包并恢复部分 30 B 测试包。当前版本默认加入连续 IQ 高通及相关回归测试，原始结果保留，补偿回放使用独立前缀。这是既有硬件录制的离线验证，尚不能代替修复版本的实时长测或声称达到稳定点；详细计数见 `../experiments/history_exadv_rx_reviews/analyses/legacy/experiment_review_20261026.md`。
 
 旧 `python/std_ble/generate_ble_exadv_iq_30_72M.py` 当前把 `BLE_AUX_PHY_LE_1M` 设为 `0x01` 并写入 AuxPtr；规范 Aux PHY 编码是 `0=LE 1M`、`1=LE 2M`、`2=LE Coded`。新接收器按规范解释该字段，不会把声明为 2M 的指针当作已验证的 1M 配对。即使 secondary 的 1M 波形可以独立收到，错误的指针仍会导致配对失败。本次仅新增接收目录，未修改旧发送脚本或板端波形。
 

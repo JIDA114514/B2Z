@@ -17,16 +17,21 @@ from dsp import IQDCBlocker
 from zigbee_decoder import ZigBeeDecoder
 from zigbee_protocol import parse_test_payload
 from validate_saved_iq import ble_identity
+from experiment_tools.reporting import new_directory, refresh_session, resolve_recorded_path
 
 
 def main():
-    output=HERE/'results/dual_run10268_diagnostic'
+    original=HERE/'results/dual_run10268_diagnostic'
+    output=new_directory('window_parameter_probe')
+    output.mkdir(parents=True,exist_ok=False)
     sources=[('ble_device',ROOT/'python/exadv_rx/results/rx_20261027_154450_562661.ci8',
               ROOT/'python/exadv_rx/results/rx_20261027_154450_562661.packets.jsonl'),
              ('zigbee_device',ROOT/'python/zigbee_rx/results/rx_20261027_154453_216417.ci8',
-              output/'zigbee_iq_ble.packets.jsonl')]
+              original/'zigbee_iq_ble.packets.jsonl')]
     reports=[]
     for name,path,packets in sources:
+        path=resolve_recorded_path(path)
+        packets=resolve_recorded_path(packets)
         windows=[]
         with path.open('rb') as handle:
             for line in packets.read_text().splitlines():
@@ -67,6 +72,8 @@ def main():
         'scope':'BLE-located 10ms windows; reset DC/FIR state; diagnostic only, not an independent full-stream receive result',
         'decoder_input':'raw IQ only; no expected frame/Sequence/payload supplied to DSP',
         'runs':reports},indent=2)+'\n')
+    refresh_session(output)
+    print('完整报告：',output/'report.md',flush=True)
 
 
 if __name__=='__main__':

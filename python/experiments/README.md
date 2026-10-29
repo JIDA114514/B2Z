@@ -2,6 +2,8 @@
 
 从 [index.md](index.md) 选择实验，再打开该目录的 `report.md`。完整结构、启动示例、统计边界和备份规则见[项目 README](../../README.md#接收结果与实验归档)。
 
+两接收器的短命令分别为 `python3 python/exadv_rx/receive.py --run-id 10270` 和 `python3 python/zigbee_rx/receive.py --run-id 10270 --payload-len 30 --expected-packets 150`。默认使用主机本地日期建立 `YYYYMMDD_run10270/`，每次实时启动单独保存到 `captures/<接收链>/<启动时间_唯一后缀>/`。长期参数与两块 HackRF 的序列号见 [`receiver_defaults.py`](../experiment_tools/receiver_defaults.py)。
+
 - `index.csv`：每个归档目录一行，实时、回放、分析数量分开。
 - `runs.csv`：每条 BLE/ZigBee 接收记录一行；有效 PDU 数不等于目标测试包数。
 - `artifacts.csv`：本机文件清单、字节数及历史文件 SHA-256/旧路径；不是外部备份证明。

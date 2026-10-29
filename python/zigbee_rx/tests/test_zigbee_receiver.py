@@ -171,11 +171,12 @@ class ReceiverTests(unittest.TestCase):
             self.assertIsNone(partial['ratios']['wireless_prr']['value'])
             (root/'missing_id.log').write_text('PERF_STATS final=1 scheduled=3 tx_completed=3\n')
             with self.assertRaisesRegex(ValueError, 'valid run_id'):
-                cli.main(['--iq-file',str(root/'input.ci8'),'--board-log',str(root/'missing_id.log')])
+                cli.main(['--iq-file',str(root/'input.ci8'),'--board-log',str(root/'missing_id.log'),
+                          '--output',str(root/'missing_id')])
 
     def test_cli_invalid_and_partial_iq(self):
         with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
-            cli.parse_args([])  # no accidental first-HackRF selection
+            cli.parse_args([])  # automatic date/Run archive requires an explicit Run ID
         with self.assertRaises(ValueError):
             channel_frequency(27)
         with tempfile.TemporaryDirectory() as directory:

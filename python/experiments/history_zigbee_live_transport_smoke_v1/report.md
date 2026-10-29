@@ -4,9 +4,9 @@
 
 ## 接收结果
 
-| 记录 | 接收链 | 模式 | 程序状态 | Run ID | 有效包 | 唯一测试包 | IQ时长(s) |
-|---|---|---|---|---|---|---|---|
-| [captures/zigbee/live_transport_smoke_v1](captures/zigbee/live_transport_smoke_v1.report.md) | zigbee | live | error | N/A | 0 | 0 | 0.000108 |
+| 记录 | 接收链 | 模式 | 程序状态 | 实验Run ID | 解码Run ID | 有效包 | 唯一测试包 | IQ时长(s) |
+|---|---|---|---|---|---|---|---|---|
+| [captures/zigbee/live_transport_smoke_v1](captures/zigbee/live_transport_smoke_v1.report.md) | zigbee | live | error | N/A | N/A | 0 | 0 | 0.000108 |
 
 同目录不自动计算联合成功率；联合结果须依据已保存的逐标识匹配分析。独立设备的相对时间不能直接相减。
 

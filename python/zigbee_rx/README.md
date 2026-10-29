@@ -15,26 +15,17 @@ hackrf_info
 python3 python/zigbee_rx/receive.py --help
 ```
 
-实时模式必须显式提供 `--serial`，避免两个接收进程都选择第一块 HackRF。将下面的 `SERIAL_A` / `SERIAL_B` 替换为两块**不同设备**的完整序列号。
+实时模式默认选择与 BLE 端不同的 HackRF：BLE 端 `...2926a0c3`，ZigBee 端 `...3348a6c3`。当前板端同频实验在 2480 MHz，BLE ch39 对应 IEEE 802.15.4 ch26。设备分工和长期配置集中在 [`receiver_defaults.py`](../experiment_tools/receiver_defaults.py)，可用 `--serial` 等选项覆盖。
 
-当前板端同频实验位于 2480 MHz：BLE ch39 对应 IEEE 802.15.4 **ch26**，两个协议的信道编号不是同一编号。
-
-终端 A，保持现有 BLE 接收器：
+先在两个终端启动接收：
 
 ```bash
-python3 python/exadv_rx/receive.py --serial SERIAL_A \
-  --channels 39 --duration 40 --save-iq --quiet
+python3 python/exadv_rx/receive.py --run-id 10267
+python3 python/zigbee_rx/receive.py --run-id 10267 \
+  --payload-len 30 --expected-packets 150
 ```
 
-终端 B，针对当前板端 BlueBee 负载：
-
-```bash
-python3 python/zigbee_rx/receive.py --serial SERIAL_B \
-  --channel 26 --demod phase --symbol-order project \
-  --cutoff-hz 700000 --dc-block-hz 1000 \
-  --run-id 10267 --payload-len 30 --expected-packets 150 \
-  --duration 40 --save-iq --quiet
-```
+默认采样率 8 Msps、时长 40 s、ZigBee phase/project、截止频率 700 kHz、DC 抑制 1 kHz，实时保存 IQ、仅输出简要状态。`--no-save-iq`、`--no-quiet`、`--duration`、`--cutoff-hz` 均可覆盖。700 kHz 是当前 BlueBee 测试配置，不代表通用 ZigBee 最优值。
 
 然后在板端输入对应配置，例如：
 
@@ -50,10 +41,10 @@ bluebee_exadv_perf_start?30 200000 30 10267
 
 - `--demod phase`：差分相位符号直接按标准 16 项 `CHIP_MAP` 解扩，适用于本项目 BlueBee PHY 仿真。不使用发射端 optimized/emulated 芯片码本。
 - `--demod oqpsk`：对真正半正弦 O-QPSK 利用 MSK 等价关系形成差分参考。参考仍从同一标准芯片码本推导，忽略每个符号首个依赖前一符号的差分 chip；不使用 BLE 解码。
-- `--demod auto`（默认）：尝试两种观测，按完整 FCS 接受，并将同一物理突发的多采样/多观测结果只提交一次。该模式成本更高；针对当前板端建议固定 `phase`。
+- `--demod auto`：尝试两种观测，按完整 FCS 接受，并将同一物理突发的多采样/多观测结果只提交一次。该模式成本更高；针对当前板端建议固定 `phase`。
 - `--symbol-order project`：兼容板端及既有 Python 生成器“每字节 LSB bit 字符串、每四位按字符串解释 symbol”的顺序。
 - `--symbol-order ieee`：按低 nibble、再高 nibble 的数值直接映射符号；用于对应格式的标准 O-QPSK 输入。
-- `--symbol-order auto`（默认）：根据恢复的 preamble/SFD/PHR 和 FCS 选择，逐包记录最终顺序，不靠已知 payload 猜测。
+- `--symbol-order auto`：根据恢复的 preamble/SFD/PHR 和 FCS 选择，逐包记录最终顺序，不靠已知 payload 猜测。
 
 保留 project/ieee 区分是为了不把项目内表示约定直接等同于外部芯片的完整互操作性。合成 O-QPSK 验证不代替真实 ZigBee 芯片测试。
 
@@ -66,21 +57,19 @@ bluebee_exadv_perf_start?30 200000 30 10267
 ```bash
 python3 python/zigbee_rx/receive.py \
   --iq-file python/experiments/history_ble_rx_20261026_161955_853914/captures/ble/rx_20261026_161955_853914.ci8 \
-  --channel 26 --demod phase --symbol-order project \
   --run-id 10265 --payload-len 30 --expected-packets 150 \
-  --duration 0 --quiet \
-  --experiment-dir python/experiments/replay_run10265 --analysis-id phase_v1
+  --analysis-id phase_v1
 ```
 
 `.ci8` 为交错有符号 int8 I/Q，`--format cf32` 为小端 complex64。必须提供实际采样率（默认 8 Msps）和录制中心频率（默认所选 ZigBee 信道频率）；`--duration 0` 表示读到 EOF。不要直接读取板端双通道 DMA C 数组。
 
-参数包括 `--center-hz`、`--cutoff-hz`（默认 1.3 MHz）、`--cfo-hz`（默认 0，数字频偏补偿）、`--dc-block-hz`（默认 1 kHz）、LNA/VGA、块大小、有界队列容量及停滞超时。频偏参数不改变时间基准。配置不在采集带宽内时直接拒绝。
+参数包括 `--center-hz`、`--cutoff-hz`（当前 BlueBee 默认 700 kHz）、`--cfo-hz`（默认 0，数字频偏补偿）、`--dc-block-hz`（默认 1 kHz）、LNA/VGA、块大小、有界队列容量及停滞超时。频偏参数不改变时间基准。配置不在采集带宽内时直接拒绝。
 
-上例显式使用 `--cutoff-hz 700000 --dc-block-hz 1000`，用于保留 Run 10268 中已验证的离线改善配置：两份完整 IQ 在原 1.3 MHz 截止频率下均恢复 0 个 ZigBee 有效包，改为 700 kHz 后分别恢复 81 和 68 包。但后续 Run 10269 实时实验已正确采用该参数，ZigBee 设备仍为 0 包；相同程序回放旧 IQ 仍恢复 68 包，新 BLE 设备 IQ 则能恢复 70 包。因此 700 kHz 尚不是稳定解决方案，应优先做单台/双台接收对照，定位目标信号的接收路径。通用默认值 1.3 MHz 保留，历史结果不覆盖，也不能将收窄带宽视为对所有原生 O-QPSK 输入都最优。参见 `../experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/review.md`。
+上例显式使用 `--cutoff-hz 700000 --dc-block-hz 1000`，用于保留 Run 10268 中已验证的离线改善配置：两份完整 IQ 在原 1.3 MHz 截止频率下均恢复 0 个 ZigBee 有效包，改为 700 kHz 后分别恢复 81 和 68 包。但后续 Run 10269 实时实验已正确采用该参数，ZigBee 设备仍为 0 包；相同程序回放旧 IQ 仍恢复 68 包，新 BLE 设备 IQ 则能恢复 70 包。因此 700 kHz 尚不是稳定解决方案，应优先做单台/双台接收对照，定位目标信号的接收路径。底层解码器的通用 1.3 MHz 默认值不变，接收命令采用 700 kHz 项目配置；历史结果不覆盖，也不能将收窄带宽视为对所有原生 O-QPSK 输入都最优。参见 `../experiments/history_sync_dual_run10269_diagnostic/analyses/legacy/review.md`。
 
 ## 输出与统计
 
-默认在 `python/experiments/` 新建 UTC 时间命名的实验目录，实时结果为 `captures/zigbee/rx.*`，回放为 `analyses/<analysis_id>/zigbee/rx.*`。两端传入相同 `--experiment-dir <目录>` 可合并归档；回放可加 `--analysis-id <名称>`，省略则自动命名。原 `--output <前缀>` 仍可使用，与 `--experiment-dir` 互斥，拒绝覆盖已有结果。
+默认按主机本地日期和 `--run-id` 保存到 `python/experiments/YYYYMMDD_run<run_id>/`，实时结果为 `captures/zigbee/<启动时间_唯一后缀>/rx.*`，回放为 `analyses/<analysis_id>/zigbee/rx.*`。两端相同日期和 Run ID 自动进入同一目录；也可显式指定相同 `--experiment-dir <目录>`；回放可加 `--analysis-id <名称>`，省略则自动命名。原 `--output <前缀>` 仍可使用，与 `--experiment-dir` 互斥，拒绝覆盖已有结果。
 
 完整结构、联合归档示例和索引命令见[顶层 README](../../README.md#接收结果与实验归档)，历史入口见[实验索引](../experiments/index.md)。
 

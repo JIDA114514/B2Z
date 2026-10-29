@@ -4,11 +4,11 @@
 
 ## 接收结果
 
-| 记录 | 接收链 | 模式 | 程序状态 | Run ID | 有效包 | 唯一测试包 | IQ时长(s) |
-|---|---|---|---|---|---|---|---|
-| [analyses/exadv_rx_replay_10262_threshold070/ble/replay_10262_threshold070](analyses/exadv_rx_replay_10262_threshold070/ble/replay_10262_threshold070.report.md) | ble | replay | complete | N/A | 640 | N/A | 30.000000 |
-| [analyses/exadv_rx_replay_10262_window_retry1/ble/replay_10262_window_retry1](analyses/exadv_rx_replay_10262_window_retry1/ble/replay_10262_window_retry1.report.md) | ble | replay | complete | N/A | 637 | N/A | 30.000000 |
-| [captures/ble/rx_20261026_152018_750312](captures/ble/rx_20261026_152018_750312.report.md) | ble | live | complete | N/A | 636 | N/A | 30.000000 |
+| 记录 | 接收链 | 模式 | 程序状态 | 实验Run ID | 解码Run ID | 有效包 | 唯一测试包 | IQ时长(s) |
+|---|---|---|---|---|---|---|---|---|
+| [analyses/exadv_rx_replay_10262_threshold070/ble/replay_10262_threshold070](analyses/exadv_rx_replay_10262_threshold070/ble/replay_10262_threshold070.report.md) | ble | replay | complete | N/A | N/A | 640 | N/A | 30.000000 |
+| [analyses/exadv_rx_replay_10262_window_retry1/ble/replay_10262_window_retry1](analyses/exadv_rx_replay_10262_window_retry1/ble/replay_10262_window_retry1.report.md) | ble | replay | complete | N/A | N/A | 637 | N/A | 30.000000 |
+| [captures/ble/rx_20261026_152018_750312](captures/ble/rx_20261026_152018_750312.report.md) | ble | live | complete | N/A | N/A | 636 | N/A | 30.000000 |
 
 同目录不自动计算联合成功率；联合结果须依据已保存的逐标识匹配分析。独立设备的相对时间不能直接相减。
 

@@ -15,22 +15,22 @@ hackrf_info
 python3 python/exadv_rx/receive.py --help
 ```
 
-固定接收 ch39（2480 MHz），适合当前板端同频调试路径：
+固定接收 ch39（2480 MHz）的当前板端同频调试路径，只需指定本轮 Run ID：
 
 ```bash
-python3 python/exadv_rx/receive.py \
-  --channels 39 --sample-rate 8000000 --duration 60 \
-  --lna 24 --vga 20 --save-iq --quiet
+python3 python/exadv_rx/receive.py --run-id 10270
 ```
+
+默认使用 BLE HackRF 序列号 `000000000000000017c467dc2926a0c3`、8 Msps、40 s、LNA=24 dB、VGA=20 dB，保存 IQ 并仅显示简要状态。设备分工与长期配置集中在 [`receiver_defaults.py`](../experiment_tools/receiver_defaults.py)；`--serial`、`--duration`、`--no-save-iq`、`--no-quiet` 可按实验覆盖。
 
 标准 secondary 固定在 BLE data ch3（2410 MHz）时改成 `--channels 3`。必须核实实际 RF 频率和白化信道，不能仅从 AuxPtr 推断板端实际发射配置。两块 HackRF 并用时通过 `--serial <序列号>` 选择设备。
 
 - `--duration 0` 持续接收到 Ctrl-C；离线模式表示读到 EOF。
 - 默认启用 `--timing-retry`：原始完整符号窗口通过 CRC 时直接提交，失败时只对最多两个采样候选和三个小幅时钟偏差，用 0.75 符号宽度的中心窗口重判。重试仍须通过完整 BLE CRC24 和扩展头校验，不使用已知 Run ID/Sequence/填充恢复负载，也不翻转弱位来凑 CRC。`--no-timing-retry` 关闭以做同 IQ 对照。
 - `--channel-cutoff-hz` 允许在 400000–950000 Hz 范围内显式设置通道 FIR 截止频率，默认仍为 850000 Hz。较窄滤波在不同记录上有得有失，未自动改为新的默认值。
-- 默认按 UTC 时间在 `python/experiments/` 新建实验目录；`--experiment-dir <目录>` 可让两条接收链归档到同一轮。
+- 默认按主机本地日期和 `--run-id` 归档至 `python/experiments/YYYYMMDD_run<run_id>/`；每次启动新建独立采集子目录。BLE 的 Run ID 只作归档标签，不参与 BLE 负载解码。`--experiment-dir <目录>` 可覆盖默认目录。
 - `--output <前缀>` 保持旧前缀语义，已有文件时拒绝覆盖；与 `--experiment-dir` 互斥。
-- 回放通过 `--analysis-id <名称>` 指定 `analyses/` 子目录；该参数需同时提供 `--experiment-dir` 和 `--iq-file`，省略则自动生成。
+- 回放通过 `--analysis-id <名称>` 指定 `analyses/` 子目录；该参数需要 `--iq-file`，省略则自动生成。
 - 默认射频放大器关闭，LNA=24 dB、VGA=20 dB 只是初始设置，不是稳定性保证；根据距离和饱和情况调整。
 - `--whitening-channels 39` 可显式设置与 RF 信道不同的白化信道，仅用于诊断或特殊发射配置，结果会保留两者。
 - 默认启用 `--dc-block-hz 1000`：在数字下变频和非线性相位解调之前去除 IQ 直流偏置，滤波状态跨块连续。`--dc-block-hz 0` 可关闭以进行同一 IQ 的 A/B 对照。滤波器初始状态需要收敛，开始处的包可能受瞬态影响；滤波对时间估计的影响也需校准。
@@ -40,14 +40,14 @@ python3 python/exadv_rx/receive.py \
 
 ```bash
 python3 python/exadv_rx/receive.py \
-  --channels 37,0 --sample-rate 8000000 --duration 60 --quiet
+  --run-id 10270 --channels 37,0 --duration 60
 ```
 
 中心频率默认取所选信道中点，要求每侧保留 1.2 MHz 边缘余量，越界直接报错。ch39/ch3 相隔 70 MHz，不能由一个 HackRF 同时覆盖；不要对该配置声称已实现 AuxPtr 跟随。宽带接收是同时监听指定频点，不是调谐跟随的验证。
 
 ## 输出与时间口径
 
-默认保存到 `python/experiments/<experiment_id>/captures/ble/rx.*`；回放保存到同轮 `analyses/<analysis_id>/ble/rx.*`。组织方式、两设备示例和历史迁移说明见[顶层 README](../../README.md#接收结果与实验归档)，历史入口见[实验索引](../experiments/index.md)。每次生成：
+默认保存到 `python/experiments/YYYYMMDD_run<run_id>/captures/ble/<启动时间_唯一后缀>/rx.*`；回放保存到同轮 `analyses/<analysis_id>/ble/rx.*`。组织方式、两设备示例和历史迁移说明见[顶层 README](../../README.md#接收结果与实验归档)，历史入口见[实验索引](../experiments/index.md)。每次生成：
 
 - `.packets.jsonl`：CRC 正确且扩展头可解析的逐包记录，包括完整 PDU/AdvData、AD 字段、AdvA、ADI、AuxPtr、相对采样时刻、频偏和同步评分。
 - `.events.jsonl`：通过 `match_type` 区分严格 AuxPtr 匹配和同频诊断匹配，不能将两类事件合并为规范符合的事件数。
@@ -89,8 +89,7 @@ status samples=... packets=... pairs=0 diagnostic_pairs=... queue=...
 hackrf_transfer -r /tmp/exadv.ci8 -f 2480000000 -s 8000000 \
   -l 24 -g 20 -a 0 -p 0 -n 80000000
 python3 python/exadv_rx/receive.py \
-  --iq-file /tmp/exadv.ci8 --channels 39 --sample-rate 8000000 \
-  --duration 0 --quiet
+  --iq-file /tmp/exadv.ci8 --run-id 10270
 ```
 
 `.ci8` 为交错有符号 int8 I/Q；`--format cf32` 读取小端 complex64。外部 IQ 文件必须提供正确采样率、中心频率、信道和白化参数；30.72 Msps 的板端双通道 DMA C 数组不是可直接输入的 IQ 文件，需去交织并正确重采样。

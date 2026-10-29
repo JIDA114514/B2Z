@@ -173,7 +173,7 @@ def replay(recording, config, directory):
     rid = recording['run_id']
     commands = {
         'ble':[sys.executable,str(HERE.parent/'exadv_rx/receive.py'),*common,'--channels','39',
-               '--whitening-channels','39','--output',str(replay_prefix(directory,rid,'ble'))],
+               '--whitening-channels','39','--run-id',str(rid),'--output',str(replay_prefix(directory,rid,'ble'))],
         'zigbee':[sys.executable,str(HERE.parent/'zigbee_rx/receive.py'),*common,'--channel','26',
                   '--demod','phase','--symbol-order','project','--run-id',str(rid),
                   '--payload-len',str(recording['payload_len']),'--expected-packets',str(recording['expected_packets']),

@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 """Independent HackRF IEEE 802.15.4 / BlueBee PHY receiver."""
 from __future__ import annotations
-import argparse
 from collections import Counter
 from dataclasses import asdict
 from datetime import datetime, timezone
 import hashlib
 import json
-import math
 from pathlib import Path
 import platform
 import queue
@@ -24,79 +22,10 @@ from zigbee_protocol import (SequenceTracker, channel_frequency, parse_board_sta
                              parse_test_payload, ratio)
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from experiment_tools.reporting import (add_output_arguments, output_prefix,
-                                        validate_output_arguments, write_receiver_reports)
+from experiment_tools.reporting import output_prefix, write_receiver_reports
+from zigbee_rx.arguments import parse_args
 
 
-def parse_args(argv=None):
-    p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--channel", type=int, default=26, help="802.15.4 channel 11..26, default26=2480MHz")
-    p.add_argument("--serial", help="required for live capture; choose the second HackRF explicitly")
-    p.add_argument("--sample-rate", type=int, default=8000000,
-                   choices=[4000000, 8000000, 12000000, 16000000, 20000000])
-    p.add_argument("--center-hz", type=float, help="actual capture center, default channel frequency")
-    p.add_argument("--iq-file", type=Path, help="offline raw IQ; omit to use HackRF")
-    p.add_argument("--format", choices=["ci8", "cf32"], default="ci8")
-    p.add_argument("--lna", type=int, choices=range(0, 41, 8), default=24)
-    p.add_argument("--vga", type=int, choices=range(0, 63, 2), default=20)
-    p.add_argument("--amp", action="store_true")
-    p.add_argument("--duration", type=float, default=40, help="sample duration; 0 until Ctrl-C/EOF")
-    p.add_argument("--block-samples", type=int, default=65536)
-    p.add_argument("--queue-blocks", type=int, default=64)
-    p.add_argument("--stall-timeout", type=float, default=10)
-    p.add_argument("--dc-block-hz", type=float, default=1000)
-    p.add_argument("--cutoff-hz", type=float, default=1300000)
-    p.add_argument("--cfo-hz", type=float, default=0, help="digital CFO correction, not a timestamp correction")
-    p.add_argument("--demod", choices=["auto", "phase", "oqpsk"], default="auto")
-    p.add_argument("--symbol-order", choices=["auto", "project", "ieee"], default="auto")
-    p.add_argument("--soft-retry", action=argparse.BooleanOptionalAction, default=True)
-    p.add_argument("--preamble-max-distance", type=int, default=80, help="max errors over 8 preamble symbols")
-    p.add_argument("--run-id", type=int, help="test payload Run ID filter, after PHY decoding only")
-    p.add_argument("--payload-len", type=int, help="test payload length filter, after FCS only")
-    p.add_argument("--expected-packets", type=int, help="explicit planned range 0..N-1, never inferred from RX duration")
-    p.add_argument("--board-log", type=Path, help="serial text containing matching final PERF_STATS")
-    p.add_argument("--full-run-covered", action="store_true", help="explicit confirmation RX covers the entire board run")
-    p.add_argument("--save-iq", action="store_true")
-    add_output_arguments(p)
-    p.add_argument("--quiet", action="store_true")
-    a = p.parse_args(argv)
-    validate_output_arguments(p, a)
-    try:
-        frequency = channel_frequency(a.channel)
-        if a.center_hz is None:
-            a.center_hz = frequency
-        if not math.isfinite(a.center_hz) or not 1000000 <= a.center_hz <= 6000000000:
-            raise ValueError("invalid center-hz")
-        for name in ["duration", "stall_timeout", "dc_block_hz", "cutoff_hz", "cfo_hz"]:
-            if not math.isfinite(getattr(a, name)):
-                raise ValueError(f"{name} must be finite")
-        if a.duration < 0 or a.stall_timeout <= 0 or not 0 <= a.dc_block_hz < a.sample_rate / 2:
-            raise ValueError("invalid duration, stall timeout or DC cutoff")
-        if a.block_samples < 1024 or a.queue_blocks < 1:
-            raise ValueError("block-samples >=1024 and queue-blocks >=1 required")
-        if not 0 <= a.preamble_max_distance <= 88:
-            raise ValueError("preamble-max-distance must be in 0..88")
-        if a.run_id is not None and not 0 <= a.run_id <= 65535:
-            raise ValueError("run-id must be in 0..65535")
-        if a.payload_len is not None and not 10 <= a.payload_len <= 46:
-            raise ValueError("test payload-len must be 10..46; general PHY frames may be larger")
-        if a.expected_packets is not None and a.expected_packets < 0:
-            raise ValueError("expected-packets must be nonnegative")
-        if a.iq_file:
-            if not a.iq_file.is_file():
-                raise ValueError("iq-file not found")
-        elif not a.serial:
-            raise ValueError("live capture requires --serial; use hackrf_info to select the second HackRF")
-        elif a.format != "ci8":
-            raise ValueError("live HackRF input is ci8")
-        if a.board_log and not a.board_log.is_file():
-            raise ValueError("board-log not found")
-        # Validate all DSP settings before opening files or starting USB capture.
-        ZigBeeDecoder(a.sample_rate, a.center_hz, frequency, a.demod, a.symbol_order,
-                      a.cutoff_hz, a.cfo_hz, a.soft_retry, a.preamble_max_distance)
-    except ValueError as exc:
-        p.error(str(exc))
-    return a
 
 
 def main(argv=None):
@@ -232,8 +161,9 @@ def main(argv=None):
         return {"byte_s": byte_count / observation if observation else None,
                 "bit_s": byte_count * 8 / observation if observation else None}
     here = Path(__file__).resolve().parent
-    source_paths = [here / name for name in ("receive.py", "zigbee_decoder.py", "zigbee_protocol.py", "dsp.py", "hackrf_capture.py")]
+    source_paths = [here / name for name in ("receive.py", "arguments.py", "zigbee_decoder.py", "zigbee_protocol.py", "dsp.py", "hackrf_capture.py")]
     source_paths.append(here.parent / "perf_test" / "bluebee_perf_protocol.py")
+    source_paths += [here.parent / "experiment_tools" / name for name in ("receiver_defaults.py", "reporting.py")]
     result = {"schema": "zigbee_rx_v1", "receiver_version": "2026-10-26-independent1",
               "status": "error" if error else "interrupted" if interrupted else "complete", "error": error,
               "start_utc": start_utc, "end_utc": datetime.now(timezone.utc).isoformat(),

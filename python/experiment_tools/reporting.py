@@ -68,13 +68,36 @@ def resolve_recorded_path(path):
 
 
 def output_prefix(args, role):
-    """Keep explicit --output semantics; default to a unique session directory."""
+    """Archive by host-local date + requested Run ID; reserve every attempt."""
     if args.output:
         return args.output
-    directory = args.experiment_dir or new_directory(role)
+    automatic = args.experiment_dir is None
+    now = datetime.now().astimezone()
+    directory = args.experiment_dir or EXPERIMENTS / f"{now:%Y%m%d}_run{args.run_id}"
+    if automatic:
+        args.experiment_dir = directory
+        with archive_lock(EXPERIMENTS):
+            metadata = directory / "experiment.config.json"
+            if not metadata.exists():
+                write_json(metadata, {"schema": "experiment_v1", "experiment_id": directory.name,
+                                      "origin": "date_run_id", "run_id": args.run_id,
+                                      "archive_date": now.strftime("%Y-%m-%d"),
+                                      "created_local": now.isoformat(),
+                                      "scope": "Daily Run ID collection; each receiver invocation is separate, not an inferred paired trial."})
     if args.iq_file:
-        analysis = args.analysis_id or datetime.now(timezone.utc).strftime("replay_%Y%m%dT%H%M%S_%fZ")
+        if automatic and not args.analysis_id:
+            parent = directory / "analyses"
+            parent.mkdir(parents=True, exist_ok=True)
+            analysis = Path(tempfile.mkdtemp(prefix=now.strftime("replay_%H%M%S_%f_"), dir=parent)).name
+        else:
+            analysis = args.analysis_id or now.strftime("replay_%H%M%S_%f")
         return directory / "analyses" / analysis / role / "rx"
+    if automatic:
+        # Atomic reservation avoids overwriting repeated/concurrent invocations.
+        parent = directory / "captures" / role
+        parent.mkdir(parents=True, exist_ok=True)
+        attempt = Path(tempfile.mkdtemp(prefix=now.strftime("%H%M%S_%f_"), dir=parent))
+        return attempt / "rx"
     return directory / "captures" / role / "rx"
 
 
@@ -82,12 +105,16 @@ def add_output_arguments(parser):
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--output", type=Path, help="legacy output prefix; never overwrite existing artifacts")
     group.add_argument("--experiment-dir", type=Path, help="shared experiment directory; each receiver has its own subdirectory")
-    parser.add_argument("--analysis-id", help="offline analysis subdirectory name; only with --experiment-dir and --iq-file")
+    parser.add_argument("--analysis-id", help="offline analysis subdirectory name; requires --iq-file, incompatible with --output")
 
 
 def validate_output_arguments(parser, args):
-    if args.analysis_id and (not args.experiment_dir or not args.iq_file):
-        parser.error("--analysis-id requires --experiment-dir and --iq-file")
+    if args.run_id is not None and not 0 <= args.run_id <= 65535:
+        parser.error("--run-id must be in 0..65535")
+    if args.run_id is None and not (args.output or args.experiment_dir):
+        parser.error("--run-id is required for automatic date/Run ID archiving")
+    if args.analysis_id and (not args.iq_file or args.output):
+        parser.error("--analysis-id requires --iq-file and cannot be combined with --output")
     if args.analysis_id and (Path(args.analysis_id).name != args.analysis_id or args.analysis_id in (".", "..")):
         parser.error("--analysis-id must be a single directory name")
     if args.iq_file:
@@ -128,6 +155,7 @@ def receiver_lines(summary):
     capture = summary.get("capture_stats", {})
     state = {"complete": "正常结束", "interrupted": "用户中断", "error": "异常结束"}.get(summary.get("status"), "未知")
     lines = [f"接收链：{'BLE exadv' if role == 'ble' else 'IEEE 802.15.4 / BlueBee'}",
+             f"实验 Run ID：{show(config.get('run_id'))}（{'归档标签，未校验 BLE 包内标识' if role == 'ble' else '解码后测试负载过滤条件'}）",
              f"模式：{'离线回放' if config.get('iq_file') else '实时采集'}",
              f"运行状态：{state}（仅表示程序状态）",
              f"有效包：{show(counts.get('packets' if role == 'ble' else 'fcs_valid_packets', 0))}（{'BLE CRC及扩展头有效' if role == 'ble' else 'PHY FCS有效'}）",
@@ -227,8 +255,8 @@ def build_session(directory):
         write_json(metadata, {"schema": "experiment_v1", "experiment_id": directory.name,
                               "origin": "automatic", "scope": "See individual receiver and analysis records; grouping alone does not establish joint reception."})
     lines = [f"# 实验：{directory.name}", "", "本页自动生成；人工观察请写入 notes.md。运行正常结束不代表达到实验目标。", "",
-             "## 接收结果", "", "| 记录 | 接收链 | 模式 | 程序状态 | Run ID | 有效包 | 唯一测试包 | IQ时长(s) |",
-             "|---|---|---|---|---|---|---|---|"]
+             "## 接收结果", "", "| 记录 | 接收链 | 模式 | 程序状态 | 实验Run ID | 解码Run ID | 有效包 | 唯一测试包 | IQ时长(s) |",
+             "|---|---|---|---|---|---|---|---|---|"]
     runs = []
     for path, value in records:
         role = receiver_role(value)
@@ -240,12 +268,13 @@ def build_session(directory):
         relative = relative_link(path, directory)
         count = value.get("counts", {}).get("packets" if role == "ble" else "fcs_valid_packets", 0)
         unique = value.get("receiver", {}).get("unique")
-        lines.append(f"| [{relative.removesuffix('.summary.json')}]({relative_link(markdown, directory)}) | {role} | {mode} | {show(value.get('status'))} | {show(value.get('run_id'))} | {count} | {show(unique)} | {show(observation(value), 6)} |")
+        lines.append(f"| [{relative.removesuffix('.summary.json')}]({relative_link(markdown, directory)}) | {role} | {mode} | {show(value.get('status'))} | {show(value.get('config', {}).get('run_id'))} | {show(value.get('run_id'))} | {count} | {show(unique)} | {show(observation(value), 6)} |")
         rate = value.get("throughput", {}).get("application", {})
         config = value.get("config", {})
         wireless = value.get("ratios", {}).get("wireless_prr", {})
         runs.append({"experiment_id": directory.name, "record": relative, "receiver": role, "mode": mode,
                      "start_utc": value.get("start_utc"), "status": value.get("status"), "run_id": value.get("run_id"),
+                     "experiment_run_id": config.get("run_id"),
                      "payload_len": config.get("payload_len"), "expected_packets": config.get("expected_packets"),
                      "sample_rate": config.get("sample_rate"), "center_hz": config.get("center_hz"), "serial": config.get("serial"),
                      "cutoff_hz": config.get("cutoff_hz", config.get("channel_cutoff_hz")), "valid_packets": count,
@@ -274,7 +303,8 @@ def build_session(directory):
     atomic_text(directory / "report.md", "\n".join(lines))
     statuses = {value["status"] for _, value in records if value.get("status")}
     state = next((status for status in ("error", "unreadable", "running", "interrupted", "complete") if status in statuses), "unrecorded")
-    row = {"experiment_id": directory.name, "run_ids": ";".join(sorted({str(r["run_id"]) for r in runs if r["run_id"] is not None})),
+    run_ids = {str(r[key]) for r in runs for key in ("experiment_run_id", "run_id") if r[key] is not None}
+    row = {"experiment_id": directory.name, "run_ids": ";".join(sorted(run_ids)),
            "status": state, "receiver_records": len(runs), "live_records": sum(r["mode"] == "live" for r in runs),
            "replay_records": sum(r["mode"] == "replay" for r in runs), "analysis_records": len(records) - len(runs),
            "report": f"{directory.name}/report.md"}
@@ -282,7 +312,7 @@ def build_session(directory):
 
 
 INDEX_FIELDS = ["experiment_id", "run_ids", "status", "receiver_records", "live_records", "replay_records", "analysis_records", "report"]
-RUN_FIELDS = ["experiment_id", "record", "receiver", "mode", "start_utc", "status", "run_id", "payload_len", "expected_packets",
+RUN_FIELDS = ["experiment_id", "record", "receiver", "mode", "start_utc", "status", "experiment_run_id", "run_id", "payload_len", "expected_packets",
               "sample_rate", "center_hz", "serial", "cutoff_hz", "valid_packets", "unique", "duplicate", "iq_duration_s",
               "wireless_prr", "wireless_prr_numerator", "wireless_prr_denominator", "wireless_prr_reason",
               "application_byte_s", "application_bit_s", "queue_overflow"]

@@ -2,11 +2,10 @@
 """HackRF exadv receiver: fixed RF capture, optionally several in-band channels."""
 from __future__ import annotations
 
-import argparse
 from collections import Counter, deque
 from datetime import datetime, timezone
+import hashlib
 import json
-import math
 from pathlib import Path
 import queue
 import shutil
@@ -22,83 +21,10 @@ from decoder import ChannelDecoder, IQDCBlocker
 from protocol import DiagnosticEventMatcher, EventMatcher, channel_frequency
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from experiment_tools.reporting import (add_output_arguments, output_prefix,
-                                        validate_output_arguments, write_receiver_reports)
+from experiment_tools.reporting import output_prefix, write_receiver_reports
+from exadv_rx.arguments import parse_args
 
 
-def parse_args(argv=None):
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--channels", default="39", help="RF BLE channels, comma separated; default 39")
-    parser.add_argument("--whitening-channels", help="optional whitening channels, one per RF channel")
-    parser.add_argument("--sample-rate", type=int, default=8000000, choices=[4000000, 8000000, 12000000, 16000000, 20000000])
-    parser.add_argument("--center-hz", type=float, help="default: midpoint of selected RF channels")
-    parser.add_argument("--iq-file", type=Path, help="offline input; omit to receive from HackRF")
-    parser.add_argument("--format", choices=["ci8", "cf32"], default="ci8", help="offline IQ: signed int8 I/Q or complex64 little endian")
-    parser.add_argument("--serial", help="HackRF serial number (recommended with two devices)")
-    parser.add_argument("--lna", type=int, default=24, choices=range(0, 41, 8))
-    parser.add_argument("--vga", type=int, default=20, choices=range(0, 63, 2))
-    parser.add_argument("--amp", action="store_true", help="enable RX RF amplifier; default off")
-    parser.add_argument("--duration", type=float, default=60, help="capture/sample duration in seconds; 0 until Ctrl-C/EOF")
-    parser.add_argument("--block-samples", type=int, default=65536)
-    parser.add_argument("--queue-blocks", type=int, default=64)
-    parser.add_argument("--stall-timeout", type=float, default=10)
-    parser.add_argument("--sync-threshold", type=float, default=.84)
-    parser.add_argument("--dc-block-hz", type=float, default=1000,
-                        help="continuous IQ high-pass cutoff before demodulation; default 1000 Hz, 0 disables")
-    parser.add_argument("--timing-retry", action=argparse.BooleanOptionalAction, default=True,
-                        help="bounded narrower symbol-window retry after hard CRC failure; default enabled")
-    parser.add_argument("--channel-cutoff-hz", type=float, default=850000,
-                        help="channel low-pass cutoff in Hz; default 850000")
-    parser.add_argument("--pair-tolerance-us", type=float, default=20)
-    parser.add_argument("--diagnostic-pairs", action=argparse.BooleanOptionalAction, default=True,
-                        help="separate same-channel debug pairing counter; does not relax strict pairs")
-    parser.add_argument("--diagnostic-pair-window-us", type=float, default=2000,
-                        help="maximum absolute error from advertised offset for diagnostic pairs, default 2000us")
-    parser.add_argument("--save-iq", action="store_true", help="save input bytes and metadata beside output")
-    add_output_arguments(parser)
-    parser.add_argument("--quiet", action="store_true", help="only periodic status and final summary")
-    args = parser.parse_args(argv)
-    validate_output_arguments(parser, args)
-    try:
-        args.channels = [int(value) for value in args.channels.split(",")]
-        if not args.channels or len(set(args.channels)) != len(args.channels):
-            raise ValueError("channels must be nonempty and distinct")
-        freqs = [channel_frequency(channel) for channel in args.channels]
-        args.whitening_channels = ([int(value) for value in args.whitening_channels.split(",")]
-                                   if args.whitening_channels else args.channels[:])
-        if len(args.whitening_channels) != len(args.channels):
-            raise ValueError("need one whitening channel per RF channel")
-        for channel in args.whitening_channels:
-            channel_frequency(channel)
-        if args.center_hz is None:
-            args.center_hz = (min(freqs) + max(freqs)) / 2
-        if not math.isfinite(args.center_hz) or not 1000000 <= args.center_hz <= 6000000000:
-            raise ValueError("center-hz outside 1 MHz..6 GHz")
-        if any(abs(freq - args.center_hz) + 1200000 >= args.sample_rate / 2 for freq in freqs):
-            raise ValueError("RF channels do not fit capture bandwidth with 1.2 MHz edge margin; use a fixed secondary or closer channels")
-        if not math.isfinite(args.duration) or args.duration < 0:
-            raise ValueError("duration must be finite and nonnegative")
-        if args.block_samples < 1024 or args.queue_blocks < 1:
-            raise ValueError("block-samples >= 1024 and queue-blocks >= 1 required")
-        if not math.isfinite(args.stall_timeout) or args.stall_timeout <= 0:
-            raise ValueError("stall-timeout must be positive")
-        if not .6 <= args.sync_threshold < 1:
-            raise ValueError("sync-threshold must be in [0.6, 1)")
-        if not math.isfinite(args.dc_block_hz) or not 0 <= args.dc_block_hz < args.sample_rate / 2:
-            raise ValueError("dc-block-hz must be finite and in [0, Fs/2)")
-        if not math.isfinite(args.channel_cutoff_hz) or not 400000 <= args.channel_cutoff_hz <= 950000:
-            raise ValueError("channel-cutoff-hz must be in [400000, 950000]")
-        if not math.isfinite(args.pair_tolerance_us) or args.pair_tolerance_us < 0:
-            raise ValueError("pair-tolerance-us must be finite and nonnegative")
-        if not math.isfinite(args.diagnostic_pair_window_us) or not 0 < args.diagnostic_pair_window_us <= 10000:
-            raise ValueError("diagnostic-pair-window-us must be in (0, 10000]")
-        if not args.iq_file and args.format != "ci8":
-            raise ValueError("HackRF live capture uses ci8")
-        if args.iq_file and not args.iq_file.is_file():
-            raise ValueError("iq-file does not exist")
-    except ValueError as exc:
-        parser.error(str(exc))
-    return args
 
 
 class Capture:
@@ -319,6 +245,9 @@ def main(argv=None):
                 error = error or "truncated IQ sample at end of capture"
             process(np.empty(0, np.complex64), final=True)
     wall = time.monotonic() - started
+    here = Path(__file__).resolve().parent
+    source_paths = [here / name for name in ("receive.py", "arguments.py", "decoder.py", "protocol.py")]
+    source_paths += [here.parent / "experiment_tools" / name for name in ("receiver_defaults.py", "reporting.py")]
     summary = {
         "schema": "exadv_rx_v3", "receiver_version": "2026-10-26-window-retry1", "start_utc": start_utc,
         "end_utc": datetime.now(timezone.utc).isoformat(),
@@ -337,6 +266,7 @@ def main(argv=None):
                                  "p99": float(np.percentile(processing, 99) * 1000) if processing else None,
                                  "max": max(processing) * 1000 if processing else None},
         "stderr_tail": list(capture.stderr_tail), "files": {key: str(value) for key, value in paths.items()},
+        "sources_sha256": {str(path.relative_to(here.parent)): hashlib.sha256(path.read_bytes()).hexdigest() for path in source_paths},
         "limitations": ["LE 1M only; fixed RF capture, no host-timed frequency hopping",
                         "DC blocker/filter and demodulation timing require calibration before synchronization claims",
                         "sample timestamps are relative to capture, not hardware/UTC timestamps",

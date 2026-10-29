@@ -137,7 +137,7 @@ class ProtocolTests(unittest.TestCase):
                 self.assertEqual(test_matcher.feed(secondary), [])
 
     def test_live_queue_overflow_is_explicit(self):
-        args = parse_args(["--queue-blocks", "1", "--block-samples", "1024", "--duration", "0"])
+        args = parse_args(["--run-id", "1", "--queue-blocks", "1", "--block-samples", "1024", "--duration", "0"])
         capture = Capture(args)
         capture.proc = object()  # only the live/offline branch discriminator
         capture.stream = io.BytesIO(b"\x00" * 8192)

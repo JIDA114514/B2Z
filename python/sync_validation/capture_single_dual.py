@@ -74,12 +74,11 @@ def receiver_prefix(directory,stage,kind):
 
 
 def commands(args, directory, stage, dual):
-    common=['--duration',str(args.phase_seconds)]
-    if args.save_iq:
-        common+=['--save-iq']
+    common=['--duration',str(args.phase_seconds),'--run-id',str(args.run_id),
+            '--save-iq' if args.save_iq else '--no-save-iq']
     result={'zigbee':[sys.executable,str(HERE.parent/'zigbee_rx/receive.py'),
         '--serial',args.zigbee_serial,'--channel','26','--demod','phase','--symbol-order','project',
-        '--cutoff-hz','700000','--dc-block-hz','1000','--run-id',str(args.run_id),
+        '--cutoff-hz','700000','--dc-block-hz','1000',
         '--payload-len',str(args.payload_len),'--quiet',*common,'--output',str(receiver_prefix(directory,stage,'zigbee'))]}
     if dual:
         result['ble']=[sys.executable,str(HERE.parent/'exadv_rx/receive.py'),

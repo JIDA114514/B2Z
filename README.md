@@ -4,6 +4,8 @@
 
 当前研究主线是基于 BLE extended advertising 的双协议共包控制与同步：在同一个 secondary `AUX_ADV_IND` 中承载 BLE 与 BlueBee/IEEE 802.15.4 信息。当前接收原型和性能测试用于支撑该方向；正式控制格式、独立设备同步及相对基线收益仍需实现或验证。板端现有工作主要位于 `app_FreeRTOS/`。常用工作流有两类：
 
+下一阶段以连续单包实现粗粒度时间同步和简单软件控制；工作包、验收条件及测量边界见[下一阶段计划](doc/next_stage_plan.md)，相关先例与格式约束见[设计研究笔记](doc/sync_control_payload_research.md)。
+
 - Python 端离线生成 IQ/C 头文件，用于分析、SDK 集成或 HackRF/接收链路验证。
 - FreeRTOS 串口命令在板端启动 legacy BLE、切换共享 TX DMA 波形，或运行时生成 BlueBee / BLE exadv secondary 波形。
 

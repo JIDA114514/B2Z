@@ -1,0 +1,3 @@
+CONTROL_START state=armed run_id=1004 command_id=43 period_ms=200 attempts=100 execute_at_ms=30000 valid_until_ms=25000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=1 rf_mode=same_channel_diagnostic
+
+CONTROL_STATS final=1 state=complete run_id=1004 command_id=43 period_ms=200 attempts=100 elapsed_us=20000005 scheduled=100 generated=100 primary_started=100 primary_completed=100 tx_started=100 tx_completed=100 deadline_miss=0 dma_timeout=0 secondary_dma_late_samples=100 secondary_dma_late_max_us=80341 secondary_dma_late_avg_us=80157 time_reference=planned_secondary_start rf_mode=same_channel_diagnostic

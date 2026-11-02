@@ -1,0 +1,150 @@
+"""Host checks for the board's v1 dual-protocol packet builder."""
+
+import ctypes
+from pathlib import Path
+import subprocess
+import tempfile
+import unittest
+
+
+ROOT = Path(__file__).resolve().parents[3]
+APP = ROOT / "app_FreeRTOS" / "app"
+
+
+class Packet(ctypes.Structure):
+    _fields_ = [
+        ("run_id", ctypes.c_uint16),
+        ("slot_index", ctypes.c_uint32),
+        ("ref_tick_ms", ctypes.c_uint32),
+        ("period_ms", ctypes.c_uint16),
+        ("command_id", ctypes.c_uint32),
+        ("execute_at_ms", ctypes.c_uint32),
+        ("valid_until_ms", ctypes.c_uint32),
+        ("ble_target", ctypes.c_uint16),
+        ("ble_opcode", ctypes.c_uint8),
+        ("ble_arg", ctypes.c_uint16),
+        ("zigbee_target", ctypes.c_uint16),
+        ("zigbee_opcode", ctypes.c_uint8),
+        ("zigbee_arg", ctypes.c_uint16),
+    ]
+
+
+class Meta(ctypes.Structure):
+    _fields_ = [
+        ("zigbee_payload", ctypes.POINTER(ctypes.c_uint8)),
+        ("zigbee_payload_len", ctypes.c_uint32),
+        ("zigbee_frame", ctypes.POINTER(ctypes.c_uint8)),
+        ("zigbee_frame_len", ctypes.c_uint32),
+        ("bluebee_bytes", ctypes.POINTER(ctypes.c_uint8)),
+        ("bluebee_byte_count", ctypes.c_uint32),
+        ("adv_data", ctypes.POINTER(ctypes.c_uint8)),
+        ("adv_data_len", ctypes.c_uint32),
+        ("pdu", ctypes.POINTER(ctypes.c_uint8)),
+        ("pdu_len", ctypes.c_uint32),
+        ("crc", ctypes.POINTER(ctypes.c_uint8)),
+        ("crc_len", ctypes.c_uint32),
+        ("ll_payload", ctypes.POINTER(ctypes.c_uint8)),
+        ("ll_payload_len", ctypes.c_uint32),
+        ("iq_words", ctypes.POINTER(ctypes.c_uint32)),
+        ("iq_word_count", ctypes.c_uint32),
+        ("iq_byte_count", ctypes.c_uint32),
+        ("air_us", ctypes.c_uint32),
+        ("post_pad_us", ctypes.c_uint32),
+        ("frame_time_us", ctypes.c_uint32),
+        ("mapping_time_us", ctypes.c_uint32),
+        ("gfsk_time_us", ctypes.c_uint32),
+        ("total_time_us", ctypes.c_uint32),
+        ("whitening_channel", ctypes.c_uint32),
+        ("tx_lo_hz", ctypes.c_uint64),
+        ("ble_control_record", ctypes.POINTER(ctypes.c_uint8)),
+        ("primary_iq_words", ctypes.POINTER(ctypes.c_uint32)),
+        ("primary_iq_byte_count", ctypes.c_uint32),
+        ("primary_air_us", ctypes.c_uint32),
+    ]
+
+
+def read_bytes(pointer, length):
+    return bytes(pointer[i] for i in range(length))
+
+
+class ControlGeneratorTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.temp = tempfile.TemporaryDirectory()
+        library = Path(cls.temp.name) / "libb2z_control.so"
+        subprocess.run(
+            [
+                "cc", "-std=c99", "-O0", "-shared", "-fPIC", "-DCONFIG_H_",
+                f"-I{APP}", str(APP / "ble_exadv_secondary_gen.c"),
+                "-lm", "-o", str(library),
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        cls.lib = ctypes.CDLL(str(library))
+        cls.lib.ble_exadv_secondary_gen_build_control.argtypes = [ctypes.POINTER(Packet)]
+        cls.lib.ble_exadv_secondary_gen_build_control.restype = ctypes.c_int32
+        cls.lib.ble_exadv_secondary_gen_build_default.restype = ctypes.c_int32
+        cls.lib.ble_exadv_secondary_gen_get_last_meta.restype = ctypes.POINTER(Meta)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.temp.cleanup()
+
+    def test_v1_vectors_and_wire_budget(self):
+        packet = Packet(
+            1001, 7, 1400, 200, 42, 3000, 2500,
+            1, 1, 1, 2, 1, 2,
+        )
+        self.assertEqual(self.lib.ble_exadv_secondary_gen_build_control(ctypes.byref(packet)), 0)
+        meta = self.lib.ble_exadv_secondary_gen_get_last_meta().contents
+        ble = read_bytes(meta.ble_control_record, 35)
+        zigbee = read_bytes(meta.zigbee_payload, meta.zigbee_payload_len)
+        frame = read_bytes(meta.zigbee_frame, meta.zigbee_frame_len)
+        pdu = read_bytes(meta.pdu, meta.pdu_len)
+        ll = read_bytes(meta.ll_payload, meta.ll_payload_len)
+        bluebee = read_bytes(meta.bluebee_bytes, meta.bluebee_byte_count)
+        self.assertEqual(
+            ble.hex(),
+            "b2430101e9030700000078050000c8002a0000000100010100b80b0000c40900008098",
+        )
+        self.assertEqual(
+            zigbee.hex(),
+            "b2430101e9030700000078050000c8002a0000000200010200b80b0000c4090000eae6",
+        )
+        self.assertEqual(frame[:6].hex(), "00000000a725")
+        self.assertEqual(frame[-2:].hex(), "973d")
+        self.assertEqual((meta.zigbee_frame_len, meta.bluebee_byte_count), (43, 172))
+        self.assertEqual((meta.adv_data_len, meta.pdu_len, pdu[1]), (214, 226, 224))
+        self.assertEqual(pdu[2:4].hex(), "0909")
+        self.assertEqual(pdu[10:12].hex(), "0700")
+        self.assertEqual(pdu[12:19].hex(), "020106d2ffffff")
+        self.assertEqual(pdu[19:54], ble)
+        # The BlueBee region appears unchanged in the on-air byte stream.
+        self.assertEqual(ll[59:59 + 172], bluebee)
+        self.assertEqual((meta.air_us, meta.primary_air_us), (1872, 136))
+        self.assertGreater(meta.primary_iq_byte_count, 0)
+
+    def test_sync_only_and_invalid_deadline(self):
+        packet = Packet(1001, 1, 200, 200, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        self.assertEqual(self.lib.ble_exadv_secondary_gen_build_control(ctypes.byref(packet)), 0)
+        packet.command_id = 42
+        packet.ble_target = 1
+        packet.zigbee_target = 2
+        packet.execute_at_ms = 100
+        packet.valid_until_ms = 200
+        self.assertEqual(self.lib.ble_exadv_secondary_gen_build_control(ctypes.byref(packet)), -1)
+
+    def test_legacy_default_budget_unchanged(self):
+        self.assertEqual(self.lib.ble_exadv_secondary_gen_build_default(), 0)
+        meta = self.lib.ble_exadv_secondary_gen_get_last_meta().contents
+        self.assertEqual(meta.zigbee_payload_len, 46)
+        self.assertEqual(meta.zigbee_frame_len, 54)
+        self.assertEqual(meta.bluebee_byte_count, 216)
+        self.assertEqual((meta.pdu_len, meta.ll_payload_len), (238, 246))
+        self.assertFalse(bool(meta.primary_iq_words))
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -20,3 +20,22 @@ __pycache__/
 *.ci8
 *.cf32
 *.iq
+
+# LaTeX build artifacts
+paper/build/
+build/
+*.aux
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.xdv
+
+# custom configuration
+
+.vscode/settings.json
+/doc/framework
+
+*.str
+*.log

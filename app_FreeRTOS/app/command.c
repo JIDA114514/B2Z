@@ -146,6 +146,7 @@ command cmd_list[] = {
 #ifdef FREERTOS_INTEGRATION
 	{"bluebee_pure_perf_start?", "Starts Phase-1 pure BlueBee performance test.", "bluebee_pure_perf_start? 46 10000 60 1 0", NULL, bluebee_pure_perf_start_cmdline},
 	{"bluebee_exadv_perf_start?", "Starts Phase-1 extended-advertising BlueBee performance test.", "bluebee_exadv_perf_start? 46 100000 60 1 0", NULL, bluebee_exadv_perf_start_cmdline},
+	{"b2z_control_start?", "Starts finite v1 BLE/802.15.4 control and time broadcasts (same-channel diagnostic).", "b2z_control_start? 1001 42", NULL, b2z_control_start_cmdline},
 	{"bluebee_perf_stop?", "Stops the active BlueBee performance test.", "bluebee_perf_stop?", NULL, bluebee_perf_stop_cmdline},
 	{"bluebee_perf_status?", "Reports BlueBee performance configuration and counters.", "bluebee_perf_status?", NULL, bluebee_perf_status_cmdline},
 #endif
@@ -702,6 +703,12 @@ int32_t ble_exadv_secondary_gen_start_payload(const uint8_t *payload,
 	const struct ble_exadv_secondary_gen_meta *meta;
 	int32_t ret;
 
+#ifdef FREERTOS_INTEGRATION
+	if (bluebee_perf_is_active()) {
+		console_print("ble_exadv_secondary_gen busy\r\n");
+		return -1;
+	}
+#endif
 	console_print("ble_exadv_secondary_gen: generating waveform...\n");
 
 	if (payload && payload_len > 0u)

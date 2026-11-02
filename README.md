@@ -4,7 +4,7 @@
 
 当前研究主线是基于 BLE extended advertising 的双协议共包控制与同步：在同一个 secondary `AUX_ADV_IND` 中承载 BLE 与 BlueBee/IEEE 802.15.4 信息。当前接收原型和性能测试用于支撑该方向；正式控制格式、独立设备同步及相对基线收益仍需实现或验证。板端现有工作主要位于 `app_FreeRTOS/`。常用工作流有两类：
 
-下一阶段以连续单包实现粗粒度时间同步和简单软件控制；工作包、验收条件及测量边界见[下一阶段计划](doc/next_stage_plan.md)，相关先例与格式约束见[设计研究笔记](doc/sync_control_payload_research.md)。
+下一阶段以连续单包实现粗粒度时间同步和简单软件控制；工作包、验收条件及测量边界见[下一阶段计划](doc/next_stage_plan.md)，具体字段与单包预算见[v1 负载草案](doc/control_sync_packet_v1_draft.md)，相关先例见[设计研究笔记](doc/sync_control_payload_research.md)。
 
 - Python 端离线生成 IQ/C 头文件，用于分析、SDK 集成或 HackRF/接收链路验证。
 - FreeRTOS 串口命令在板端启动 legacy BLE、切换共享 TX DMA 波形，或运行时生成 BlueBee / BLE exadv secondary 波形。
@@ -196,8 +196,9 @@ FreeRTOS 运行时入口在 `app_FreeRTOS/`。串口 console task 会先处理�
 | `ble_exadv_secondary_gen? [hex ZigBee payload]` | 运行时构造 BLE exadv secondary + BlueBee/ZigBee 波形并启动 cyclic TX DMA。无 payload 时使用默认 46 字节负载。执行时会先输出 `ble_exadv_secondary_gen: generating waveform...`。 |
 | `bluebee_pure_perf_start? <payload_len> <interval_us> <duration_s> [run_id] [mode] [batch_size]` | 启动 pure BlueBee 性能实验；当前已实现 `mode=0` realtime。 |
 | `bluebee_exadv_perf_start? <payload_len> <interval_us> <duration_s> [run_id] [mode] [batch_size]` | 启动 exadv primary/secondary 性能实验；当前已实现 `mode=0` realtime。 |
+| `b2z_control_start? <run_id> <command_id> [...]` | 启动有限次数的 v1 双协议控制与时间广播；当前为 ch39 同频诊断发送，参数见 [FreeRTOS 命令说明](app_FreeRTOS/README.md#十六v1-双协议控制与时间广播命令待上板验证)。 |
 | `bluebee_perf_status?` | 输出当前配置、运行状态、板端计数器和分阶段生成耗时。 |
-| `bluebee_perf_stop?` | 停止当前实验并输出最终 `PERF_STATS` 和 `PERF_TIMING`。 |
+| `bluebee_perf_stop?` | 停止当前性能实验或控制广播；分别输出 `PERF_STATS` 或 `CONTROL_STATS`。 |
 
 十六进制 payload 每个 token 最多 1 字节，可使用空格、逗号、冒号或分号分隔，`0x` 前缀可选。当前运行时 BlueBee payload 上限为 46 字节。
 
@@ -215,6 +216,7 @@ ble_exadv_secondary_gen?
 ble_exadv_secondary_gen? 00 01 02 03 04
 bluebee_pure_perf_start? 10 1000000 60 1234 0
 bluebee_exadv_perf_start? 46 100000 60 1235 0
+b2z_control_start? 1001 42
 bluebee_perf_status?
 bluebee_perf_stop?
 ```

@@ -18,8 +18,10 @@ void bluebee_perf_task(void *pvParameters);
 /* Strict decimal-only command handlers used by command_dispatch_line(). */
 int32_t bluebee_pure_perf_start_cmdline(const char *args);
 int32_t bluebee_exadv_perf_start_cmdline(const char *args);
+int32_t b2z_control_start_cmdline(const char *args);
 int32_t bluebee_perf_stop_cmdline(const char *args);
 int32_t bluebee_perf_status_cmdline(const char *args);
+uint8_t bluebee_perf_is_active(void);
 #endif
 
 #endif

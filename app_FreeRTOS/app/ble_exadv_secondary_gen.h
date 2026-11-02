@@ -5,6 +5,23 @@
 
 #define BLE_EXADV_SECONDARY_GEN_TX_LO_HZ 2480000000ULL
 #define BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES 46u
+#define B2Z_CONTROL_RECORD_BYTES 35u
+
+struct b2z_control_packet {
+	uint16_t run_id;
+	uint32_t slot_index;
+	uint32_t ref_tick_ms;
+	uint16_t period_ms;
+	uint32_t command_id;
+	uint32_t execute_at_ms;
+	uint32_t valid_until_ms;
+	uint16_t ble_target;
+	uint8_t ble_opcode;
+	uint16_t ble_arg;
+	uint16_t zigbee_target;
+	uint8_t zigbee_opcode;
+	uint16_t zigbee_arg;
+};
 
 struct ble_exadv_secondary_gen_meta {
 	const uint8_t *zigbee_payload;
@@ -32,11 +49,18 @@ struct ble_exadv_secondary_gen_meta {
 	uint32_t total_time_us;
 	uint32_t whitening_channel;
 	uint64_t tx_lo_hz;
+	const uint8_t *ble_control_record;
+	const uint32_t *primary_iq_words;
+	uint32_t primary_iq_byte_count;
+	uint32_t primary_air_us;
 };
 
 int32_t ble_exadv_secondary_gen_build_default(void);
 int32_t ble_exadv_secondary_gen_build_payload(const uint8_t *payload,
 					      uint32_t payload_len);
+/* Builds v1 control data plus a same-channel diagnostic primary (ch39 RF). */
+int32_t ble_exadv_secondary_gen_build_control(
+	const struct b2z_control_packet *packet);
 const struct ble_exadv_secondary_gen_meta *
 ble_exadv_secondary_gen_get_last_meta(void);
 

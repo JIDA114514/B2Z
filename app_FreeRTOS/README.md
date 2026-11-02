@@ -578,3 +578,25 @@ hdl/projects/antsdre310/antsdre310.sdk/app/src/app/
 | [app/ble_exadv_secondary_gen.c](app/ble_exadv_secondary_gen.c) | exadv secondary/BlueBee 波形生成和分阶段耗时元数据 |
 | [drivers/delay.c](drivers/delay.c) | 调度感知的 `no_os_mdelay()` |
 | [drivers/xilinx_irq.c](drivers/xilinx_irq.c) | IRQ 初始化（跳过 `Xil_ExceptionInit`、暴露 GIC 实例） |
+
+## 十六、v1 双协议控制与时间广播命令（待上板验证）
+
+新命令使用同一个性能任务的时隙调度与 DMA 轮询，但生成独立的 35 B BLE 控制记录和 35 B IEEE 802.15.4 实验控制负载，不改变旧性能命令的测试头、填充和 Sequence 规则。格式见[负载草案](../doc/control_sync_packet_v1_draft.md)。
+
+```text
+b2z_control_start? <run_id> <command_id>
+b2z_control_start? <run_id> <command_id> <period_ms> <attempts> <execute_at_ms> <valid_until_ms>
+b2z_control_start? <run_id> <command_id> <period_ms> <attempts> <execute_at_ms> <valid_until_ms> <ble_target> <ble_opcode> <ble_arg> <zigbee_target> <zigbee_opcode> <zigbee_arg>
+```
+
+全部参数为十进制整数。最短命令默认 `period_ms=200`、`attempts=10`、`execute_at_ms=3000`、`valid_until_ms=2500`，BLE 节点 1 和 IEEE 802.15.4 节点 2 都执行 `SET_STATE(1)`。例如：
+
+```text
+b2z_control_start? 1001 42
+b2z_control_start? 1002 43 200 10 3000 2500 1 1 1 2 1 2
+b2z_control_start? 1003 0
+```
+
+最后一个示例的 `command_id=0` 表示纯时间更新，所有命令字段和目标时刻在空口为 0。`opcode` 为 0=`NOOP`、1=`SET_STATE`、2=`TRIGGER`。命令运行时仍可用 `bluebee_perf_status?` 查看 `CONTROL_STATS`，用 `bluebee_perf_stop?` 提前停止。一次命令最多运行 600 秒，`period_ms` 为 50–65535，尝试次数为正整数；命令包要求最后一次计划广播不晚于 `valid_until_ms`，且 `valid_until_ms < execute_at_ms`。`run_id` 必须为 1–65535，串口形式的 `command_id` 为 0–2147483647；命令编号在同一轮重发时保持不变，计划时隙和 `ref_tick_ms` 按周期增长。串口输出的 `primary_started/primary_completed` 与 `tx_started/tx_completed` 分别统计两种 DMA 提交和轮询完成，`secondary_dma_late_*` 统计计划 secondary 时刻到 DMA 提交函数返回的延迟；这些都不是实际空口发射时间的直接测量。
+
+每个时隙动态生成 primary 和一个共包 secondary，BLE 记录、BlueBee 区域、ADI/DID 随时隙更新；单 secondary 的 PDU payload 为 224 B。当前两个波形均在 **ch39 / 2480 MHz** 发送，primary AuxPtr 声明 ch3、LE 1M 和 30 ms，因此输出明确标记 `rf_mode=same_channel_diagnostic`。这可用于当前两块 HackRF 的固定频点共包实验，**不是跨信道 AuxPtr 跟随验证**。`ref_tick_ms` 是计划的 secondary 前导码起点相对本轮首个计划 secondary 起点的毫秒数；板端尚未测得它与实际空口起点的误差，不能将其当作已校准发送时间戳。主机测试已核对打包、CRC、FCS 和字节预算；实际构建、上板和空口结果待验证。

@@ -57,7 +57,8 @@ void bluebee_perf_build_payload(uint8_t *payload, uint32_t payload_len,
 #include <xil_cache.h>
 #endif
 
-#define BLUEBEE_PERF_MAX_ARGS             6u
+#define BLUEBEE_PERF_MAX_ARGS             12u
+#define BLUEBEE_PERF_LEGACY_ARGS          6u
 #define BLUEBEE_PERF_MAX_DURATION_S       600u
 #define BLUEBEE_PERF_DMA_MARGIN_US        5000u
 #define BLUEBEE_PERF_PRIMARY_TIMEOUT_US   10000u
@@ -75,6 +76,7 @@ void bluebee_perf_build_payload(uint8_t *payload, uint32_t payload_len,
 enum bluebee_perf_test {
 	BLUEBEE_PERF_TEST_PURE = 0,
 	BLUEBEE_PERF_TEST_EXADV,
+	BLUEBEE_PERF_TEST_CONTROL,
 };
 
 enum bluebee_perf_state {
@@ -96,15 +98,21 @@ struct bluebee_perf_config {
 	uint8_t mode;
 	uint32_t batch_size;
 	uint32_t expected_packets;
+	struct b2z_control_packet control;
 };
 
 struct bluebee_perf_counters {
 	uint32_t scheduled;
 	uint32_t generated;
+	uint32_t primary_started;
+	uint32_t primary_completed;
 	uint32_t tx_started;
 	uint32_t tx_completed;
 	uint32_t deadline_miss;
 	uint32_t dma_timeout;
+	uint32_t secondary_dma_late_samples;
+	uint32_t secondary_dma_late_max_us;
+	uint64_t secondary_dma_late_sum_us;
 };
 
 struct bluebee_perf_time_stats {
@@ -156,7 +164,16 @@ g_perf_iq_arena[BLUEBEE_PERF_BATCH_MAX_SIZE][BLUEBEE_PERF_IQ_WORD_CAPACITY]
 
 static const char *bluebee_perf_test_name(enum bluebee_perf_test test)
 {
-	return test == BLUEBEE_PERF_TEST_EXADV ? "exadv" : "pure";
+	switch (test) {
+	case BLUEBEE_PERF_TEST_PURE:
+		return "pure";
+	case BLUEBEE_PERF_TEST_EXADV:
+		return "exadv";
+	case BLUEBEE_PERF_TEST_CONTROL:
+		return "control";
+	default:
+		return "unknown";
+	}
 }
 
 static const char *bluebee_perf_state_name(enum bluebee_perf_state state)
@@ -205,6 +222,16 @@ static uint8_t bluebee_perf_is_busy(enum bluebee_perf_state state)
 	return (uint8_t)(state == BLUEBEE_PERF_STATE_ARMED ||
 			 state == BLUEBEE_PERF_STATE_RUNNING ||
 			 state == BLUEBEE_PERF_STATE_STOPPING);
+}
+
+uint8_t bluebee_perf_is_active(void)
+{
+	uint8_t active;
+
+	taskENTER_CRITICAL();
+	active = bluebee_perf_is_busy(g_perf.state);
+	taskEXIT_CRITICAL();
+	return active;
 }
 
 static XTime bluebee_perf_ticks_from_us(uint32_t us)
@@ -266,6 +293,40 @@ static void bluebee_perf_print_stats(uint8_t final)
 	struct bluebee_perf_runtime snapshot;
 
 	bluebee_perf_snapshot(&snapshot);
+	if (snapshot.config.test == BLUEBEE_PERF_TEST_CONTROL) {
+		console_print("CONTROL_STATS final=%d state=%s run_id=%d "
+			      "command_id=%d period_ms=%d attempts=%d "
+			      "elapsed_us=%d scheduled=%d generated=%d "
+			      "primary_started=%d primary_completed=%d "
+			      "tx_started=%d tx_completed=%d "
+			      "deadline_miss=%d dma_timeout=%d "
+			      "secondary_dma_late_samples=%d "
+			      "secondary_dma_late_max_us=%d "
+			      "secondary_dma_late_avg_us=%d "
+			      "time_reference=planned_secondary_start "
+			      "rf_mode=same_channel_diagnostic\r\n",
+			      (long)final,
+			      (char *)bluebee_perf_state_name(snapshot.state),
+			      (long)snapshot.config.run_id,
+			      (long)snapshot.config.control.command_id,
+			      (long)snapshot.config.control.period_ms,
+			      (long)snapshot.config.expected_packets,
+			      (long)bluebee_perf_elapsed_us(&snapshot),
+			      (long)snapshot.counters.scheduled,
+			      (long)snapshot.counters.generated,
+			      (long)snapshot.counters.primary_started,
+			      (long)snapshot.counters.primary_completed,
+			      (long)snapshot.counters.tx_started,
+			      (long)snapshot.counters.tx_completed,
+			      (long)snapshot.counters.deadline_miss,
+			      (long)snapshot.counters.dma_timeout,
+			      (long)snapshot.counters.secondary_dma_late_samples,
+			      (long)snapshot.counters.secondary_dma_late_max_us,
+			      (long)(snapshot.counters.secondary_dma_late_samples ?
+				(snapshot.counters.secondary_dma_late_sum_us /
+				 snapshot.counters.secondary_dma_late_samples) : 0u));
+		return;
+	}
 	console_print("PERF_STATS final=%d test=%s state=%s payload_len=%d "
 		      "interval_us=%d duration_s=%d run_id=%d mode=%s mode_id=%d "
 		      "batch_size=%d expected_packets=%d elapsed_us=%d "
@@ -366,7 +427,7 @@ static int32_t bluebee_perf_start_cmdline(enum bluebee_perf_test test,
 	XTime now;
 
 	if (bluebee_perf_parse_args(args, values, &count) < 0 ||
-	    count < 3u || count > BLUEBEE_PERF_MAX_ARGS) {
+	    count < 3u || count > BLUEBEE_PERF_LEGACY_ARGS) {
 		bluebee_perf_print_start_usage(test);
 		return -1;
 	}
@@ -456,6 +517,132 @@ int32_t bluebee_exadv_perf_start_cmdline(const char *args)
 	return bluebee_perf_start_cmdline(BLUEBEE_PERF_TEST_EXADV, args);
 }
 
+int32_t b2z_control_start_cmdline(const char *args)
+{
+	uint32_t values[BLUEBEE_PERF_MAX_ARGS] = { 0u };
+	uint32_t count = 0u;
+	uint32_t period_ms;
+	uint32_t attempts;
+	uint64_t total_ms;
+	struct bluebee_perf_config config;
+	struct b2z_control_packet *packet = &config.control;
+
+	if (bluebee_perf_parse_args(args, values, &count) < 0 ||
+	    (count != 2u && count != 6u && count != 12u)) {
+		console_print("Usage: b2z_control_start? <run_id> <command_id> "
+			      "[period_ms attempts execute_at_ms valid_until_ms "
+			      "[ble_target ble_opcode ble_arg zigbee_target "
+			      "zigbee_opcode zigbee_arg]]\r\n");
+		return -1;
+	}
+
+	memset(&config, 0, sizeof(config));
+	period_ms = count >= 6u ? values[2] : 200u;
+	attempts = count >= 6u ? values[3] : 10u;
+	if (values[0] == 0u || values[0] > 0xFFFFu ||
+	    values[1] > 0x7FFFFFFFu ||
+	    period_ms < 50u || period_ms > 0xFFFFu ||
+	    attempts == 0u) {
+		console_print("CONTROL_ERROR invalid run, command, period or attempts\r\n");
+		return -1;
+	}
+	total_ms = (uint64_t)period_ms * attempts;
+	if (total_ms > 600000ULL) {
+		console_print("CONTROL_ERROR schedule exceeds 600 seconds\r\n");
+		return -1;
+	}
+
+	config.test = BLUEBEE_PERF_TEST_CONTROL;
+	config.payload_len = B2Z_CONTROL_RECORD_BYTES;
+	config.interval_us = period_ms * 1000u;
+	config.duration_s = (uint32_t)((total_ms + 999ULL) / 1000ULL);
+	config.run_id = (uint16_t)values[0];
+	config.mode = 0u;
+	config.expected_packets = attempts;
+	packet->run_id = config.run_id;
+	packet->period_ms = (uint16_t)period_ms;
+	packet->command_id = values[1];
+	packet->execute_at_ms = count >= 6u ? values[4] : 3000u;
+	packet->valid_until_ms = count >= 6u ? values[5] : 2500u;
+	packet->ble_target = 1u;
+	packet->ble_opcode = 1u;
+	packet->ble_arg = 1u;
+	packet->zigbee_target = 2u;
+	packet->zigbee_opcode = 1u;
+	packet->zigbee_arg = 1u;
+	if (count == 12u) {
+		if (values[6] > 0xFFFFu || values[7] > 2u ||
+		    values[8] > 0xFFFFu || values[9] > 0xFFFFu ||
+		    values[10] > 2u || values[11] > 0xFFFFu) {
+			console_print("CONTROL_ERROR invalid side command\r\n");
+			return -1;
+		}
+		packet->ble_target = (uint16_t)values[6];
+		packet->ble_opcode = (uint8_t)values[7];
+		packet->ble_arg = (uint16_t)values[8];
+		packet->zigbee_target = (uint16_t)values[9];
+		packet->zigbee_opcode = (uint8_t)values[10];
+		packet->zigbee_arg = (uint16_t)values[11];
+	}
+	if (packet->command_id == 0u) {
+		if (count >= 6u && (values[4] != 0u || values[5] != 0u)) {
+			console_print("CONTROL_ERROR sync-only needs zero times\r\n");
+			return -1;
+		}
+		if (count == 12u &&
+		    (values[6] != 0u || values[7] != 0u ||
+		     values[8] != 0u || values[9] != 0u ||
+		     values[10] != 0u || values[11] != 0u)) {
+			console_print("CONTROL_ERROR sync-only needs zero side fields\r\n");
+			return -1;
+		}
+		packet->execute_at_ms = 0u;
+		packet->valid_until_ms = 0u;
+		packet->ble_target = 0u;
+		packet->ble_opcode = 0u;
+		packet->ble_arg = 0u;
+		packet->zigbee_target = 0u;
+		packet->zigbee_opcode = 0u;
+		packet->zigbee_arg = 0u;
+	} else if (packet->ble_target == 0u ||
+		   packet->zigbee_target == 0u ||
+		   (packet->ble_opcode == 0u && packet->ble_arg != 0u) ||
+		   (packet->zigbee_opcode == 0u && packet->zigbee_arg != 0u) ||
+		   packet->valid_until_ms <
+			(uint32_t)((uint64_t)(attempts - 1u) * period_ms) ||
+		   packet->valid_until_ms >= packet->execute_at_ms ||
+		   packet->execute_at_ms > 86400000u) {
+		console_print("CONTROL_ERROR invalid target, deadline or opcode\r\n");
+		return -1;
+	}
+
+	taskENTER_CRITICAL();
+	if (!g_perf_task || bluebee_perf_is_busy(g_perf.state)) {
+		taskEXIT_CRITICAL();
+		console_print("CONTROL_ERROR busy\r\n");
+		return -1;
+	}
+	memset(&g_perf, 0, sizeof(g_perf));
+	g_perf.config = config;
+	g_perf.state = BLUEBEE_PERF_STATE_ARMED;
+	taskEXIT_CRITICAL();
+	console_print("CONTROL_START state=armed run_id=%d command_id=%d "
+		      "period_ms=%d attempts=%d execute_at_ms=%d "
+		      "valid_until_ms=%d ble_target=%d ble_opcode=%d ble_arg=%d "
+		      "zigbee_target=%d zigbee_opcode=%d zigbee_arg=%d "
+		      "rf_mode=same_channel_diagnostic\r\n",
+		      (long)packet->run_id, (long)packet->command_id,
+		      (long)period_ms, (long)attempts,
+		      (long)packet->execute_at_ms,
+		      (long)packet->valid_until_ms,
+		      (long)packet->ble_target, (long)packet->ble_opcode,
+		      (long)packet->ble_arg, (long)packet->zigbee_target,
+		      (long)packet->zigbee_opcode,
+		      (long)packet->zigbee_arg);
+	xTaskNotifyGive(g_perf_task);
+	return 0;
+}
+
 static int32_t bluebee_perf_require_no_args(const char *args,
 					    const char *usage)
 {
@@ -485,7 +672,9 @@ int32_t bluebee_perf_stop_cmdline(const char *args)
 	taskEXIT_CRITICAL();
 
 	if (bluebee_perf_is_busy(state)) {
-		console_print("PERF_STOP requested\r\n");
+		console_print(g_perf.config.test == BLUEBEE_PERF_TEST_CONTROL ?
+			      "CONTROL_STOP requested\r\n" :
+			      "PERF_STOP requested\r\n");
 		return 0;
 	}
 
@@ -975,31 +1164,60 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 {
 	uint8_t payload[BLUEBEE_PERF_MAX_PAYLOAD];
 	const uint32_t *iq_words = NULL;
+	const uint32_t *primary_iq_words = ble_exadv_primary_iq_ch39;
+	uint32_t primary_iq_byte_count =
+		BLE_EXADV_PRIMARY_IQ_CH39_WORDS * sizeof(uint32_t);
 	uint32_t iq_byte_count = 0u;
 	uint32_t tx_time_us = 0u;
 	struct bluebee_perf_gen_timing timing;
 
-	bluebee_perf_build_payload(payload, config->payload_len,
-				    config->run_id, sequence);
-	if (bluebee_perf_generate(config->test, payload, config->payload_len,
-				  &iq_words, &iq_byte_count, &tx_time_us,
-				  &timing) < 0)
-		return -1;
+	if (config->test == BLUEBEE_PERF_TEST_CONTROL) {
+		struct b2z_control_packet packet = config->control;
+		const struct ble_exadv_secondary_gen_meta *meta;
+
+		packet.slot_index = sequence;
+		packet.ref_tick_ms = (uint32_t)((uint64_t)sequence *
+						 packet.period_ms);
+		if (ble_exadv_secondary_gen_build_control(&packet) < 0)
+			return -1;
+		meta = ble_exadv_secondary_gen_get_last_meta();
+		iq_words = meta->iq_words;
+		iq_byte_count = meta->iq_byte_count;
+		tx_time_us = meta->air_us + meta->post_pad_us;
+		primary_iq_words = meta->primary_iq_words;
+		primary_iq_byte_count = meta->primary_iq_byte_count;
+		timing.frame_us = meta->frame_time_us;
+		timing.mapping_us = meta->mapping_time_us;
+		timing.gfsk_us = meta->gfsk_time_us;
+		timing.total_us = meta->total_time_us;
+	} else {
+		bluebee_perf_build_payload(payload, config->payload_len,
+					    config->run_id, sequence);
+		if (bluebee_perf_generate(config->test, payload,
+					  config->payload_len, &iq_words,
+					  &iq_byte_count, &tx_time_us,
+					  &timing) < 0)
+			return -1;
+	}
 	bluebee_perf_record_timing(&timing);
 	bluebee_perf_count(&g_perf.counters.generated);
 
-	if (config->test == BLUEBEE_PERF_TEST_EXADV) {
+	if (config->test == BLUEBEE_PERF_TEST_EXADV ||
+	    config->test == BLUEBEE_PERF_TEST_CONTROL) {
 		XTime primary_start;
 
 		XTime_GetTime(&primary_start);
-		if (bluebee_perf_dma_start(ble_exadv_primary_iq_ch39,
-					    BLE_EXADV_PRIMARY_IQ_CH39_WORDS *
-						    sizeof(uint32_t)) < 0)
+		if (bluebee_perf_dma_start(primary_iq_words,
+					    primary_iq_byte_count) < 0)
 			return -1;
+		if (config->test == BLUEBEE_PERF_TEST_CONTROL)
+			bluebee_perf_count(&g_perf.counters.primary_started);
 		if (bluebee_perf_dma_wait(BLUEBEE_PERF_PRIMARY_TIMEOUT_US) < 0) {
 			bluebee_perf_count(&g_perf.counters.dma_timeout);
 			return -1;
 		}
+		if (config->test == BLUEBEE_PERF_TEST_CONTROL)
+			bluebee_perf_count(&g_perf.counters.primary_completed);
 		if (bluebee_perf_wait_until(
 			    primary_start +
 				    bluebee_perf_ticks_from_us(BLUEBEE_PERF_AUX_OFFSET_US),
@@ -1011,6 +1229,24 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 		return -1;
 	if (bluebee_perf_dma_start(iq_words, iq_byte_count) < 0)
 		return -1;
+	if (config->test == BLUEBEE_PERF_TEST_CONTROL) {
+		XTime now;
+		XTime planned = g_perf.start_time +
+			(XTime)((uint64_t)bluebee_perf_ticks_from_us(
+				config->interval_us) * sequence) +
+			bluebee_perf_ticks_from_us(BLUEBEE_PERF_AUX_OFFSET_US);
+		uint32_t late_us;
+
+		XTime_GetTime(&now);
+		late_us = now > planned ?
+			bluebee_perf_ticks_to_us(now - planned) : 0u;
+		taskENTER_CRITICAL();
+		g_perf.counters.secondary_dma_late_samples++;
+		g_perf.counters.secondary_dma_late_sum_us += late_us;
+		if (late_us > g_perf.counters.secondary_dma_late_max_us)
+			g_perf.counters.secondary_dma_late_max_us = late_us;
+		taskEXIT_CRITICAL();
+	}
 	bluebee_perf_count(&g_perf.counters.tx_started);
 	if (bluebee_perf_dma_wait(tx_time_us + BLUEBEE_PERF_DMA_MARGIN_US) < 0) {
 		bluebee_perf_count(&g_perf.counters.dma_timeout);

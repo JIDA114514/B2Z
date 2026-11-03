@@ -10,7 +10,7 @@ from zigbee_protocol import channel_frequency
 from zigbee_decoder import ZigBeeDecoder
 
 
-def parse_args(argv=None):
+def parse_args(argv=None, *, control_mode=False):
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     p.add_argument("--channel", type=int, help="802.15.4 channel 11..26, default26=2480MHz")
     p.add_argument("--serial", help="live HackRF device; defaults to the ZigBee bench SDR")
@@ -33,15 +33,22 @@ def parse_args(argv=None):
     p.add_argument("--symbol-order", choices=["auto", "project", "ieee"], help="symbol representation")
     p.add_argument("--soft-retry", action=argparse.BooleanOptionalAction)
     p.add_argument("--preamble-max-distance", type=int, help="max errors over 8 preamble symbols")
-    p.add_argument("--run-id", type=int, help="test payload Run ID filter, after PHY decoding only")
-    p.add_argument("--payload-len", type=int, help="test payload length filter, after FCS only")
+    p.add_argument("--run-id", type=int, help="Run ID filter, after PHY decoding only")
+    if control_mode:
+        p.add_argument("--command-id", type=int, required=True, help="B2 43 command ID filter, after FCS only")
+        p.set_defaults(payload_len=None)
+    else:
+        p.add_argument("--payload-len", type=int, help="test payload length filter, after FCS only")
     p.add_argument("--expected-packets", type=int, help="explicit planned range 0..N-1, never inferred from RX duration")
-    p.add_argument("--board-log", type=Path, help="serial text containing matching final PERF_STATS")
+    p.add_argument("--board-log", type=Path, help="serial text containing matching final CONTROL_STATS" if control_mode else
+                   "serial text containing matching final PERF_STATS")
     p.add_argument("--full-run-covered", action="store_true", help="explicit confirmation RX covers the entire board run")
     p.add_argument("--save-iq", action=argparse.BooleanOptionalAction, help="auto: save live IQ, do not copy offline input")
     add_output_arguments(p)
     p.add_argument("--quiet", action=argparse.BooleanOptionalAction, help="only periodic status and final summary; --no-quiet prints packets")
     apply_defaults(p, "zigbee")
+    if control_mode:
+        p.set_defaults(quiet=False)
     a = p.parse_args(argv)
     resolve_input_defaults(a)
     validate_output_arguments(p, a)
@@ -62,6 +69,9 @@ def parse_args(argv=None):
             raise ValueError("preamble-max-distance must be in 0..88")
         if a.payload_len is not None and not 10 <= a.payload_len <= 46:
             raise ValueError("test payload-len must be 10..46; general PHY frames may be larger")
+        if control_mode and (a.run_id is None or not 1 <= a.run_id <= 65535 or
+                             not 0 <= a.command_id <= 0x7fffffff):
+            raise ValueError("control mode requires --run-id 1..65535 and --command-id 0..2147483647")
         if a.expected_packets is not None and a.expected_packets < 0:
             raise ValueError("expected-packets must be nonnegative")
         if a.iq_file:

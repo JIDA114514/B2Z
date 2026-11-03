@@ -223,6 +223,8 @@ bluebee_perf_stop?
 
 `ble_exadv_secondary_gen?` 默认负载是当前手机可检测阈值内的 46 字节 ZigBee payload；nRF Connect 主要用于确认 ch39 primary 可见，HackRF 或其他接收链路用于确认 secondary/BlueBee 波形在 2480 MHz，`python/ctc_sim/std_zigbee/zigbee_rx.py` 或 BlueBee 接收脚本用于检查 ZigBee frame bytes/FCS。
 
+新命令的 ZigBee 侧 `B2 43` 控制记录可用 [实时接收脚本](python/zigbee_rx/README.md#b2-43-控制包实时分析)逐包校验；两侧保存的记录再用 [control_match 离线脚本](python/control_match/README.md)逐时隙匹配。它们与旧性能测试的 `B2 5A` 有效计数分开。只有两条接收链同时录制同一轮发送，才计算联合有效解码。
+
 ## BlueBee 性能测量链
 
 当前性能实现位于 `app_FreeRTOS/app/`，使用 Xilinx standalone BSP 驱动，并通过 `FREERTOS_INTEGRATION` 保持公共 HAL 的裸机兼容。`app_B2Z/` 尚未加入同名性能任务，不能把当前状态理解为 FreeRTOS 和裸机两个工程都已完成实现。

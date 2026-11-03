@@ -17,6 +17,34 @@ python3 python/zigbee_rx/receive.py --help
 
 实时模式默认选择与 BLE 端不同的 HackRF：BLE 端 `...2926a0c3`，ZigBee 端 `...3348a6c3`。当前板端同频实验在 2480 MHz，BLE ch39 对应 IEEE 802.15.4 ch26。设备分工和长期配置集中在 [`receiver_defaults.py`](../experiment_tools/receiver_defaults.py)，可用 `--serial` 等选项覆盖。
 
+## `B2 43` 控制包实时分析
+
+新命令使用 [`control_receive.py`](control_receive.py)。它与下文的旧性能接收入口复用 HackRF 和标准 DSSS/FCS 解码链，但在每个 FCS 正确帧到达时立即独立校验 35 B `B2 43` 控制记录、版本、应用 CRC16、命令和计划时戳，显示时隙及去重状态。例如先运行：
+
+```bash
+python3 python/zigbee_rx/control_receive.py \
+  --run-id 1100 --command-id 43 --expected-packets 100 \
+  --duration 30 --lna 32 --vga 20
+```
+
+接收启动后再在板端执行同一轮命令，例如：
+
+```text
+b2z_control_start? 1100 43 200 100 30000 25000
+```
+
+默认每个控制候选即时打印 `run/cmd/slot/ref/target/opcode/arg` 和本机 IQ 采样索引，每 5 秒打印唯一、重复和无效计数；`--quiet` 仅保留定期状态与最终报告。结果自动保存到 `python/experiments/YYYYMMDD_run1100/captures/zigbee/<接收尝试>/rx.*`。`--expected-packets` 仅规定计划时隙范围，不作为无线 PRR 的发射完成分母。需要报告有效解码 / DMA 完成时，离线回放可提供已经存在的 `--board-log <CONTROL_STATS 文件> --full-run-covered`；必须确认录制覆盖整个板端发送期。旧 `receive.py` 的 `B2 5A` 性能测试计数口径保持不变。
+
+历史 IQ 可用相同入口回放：
+
+```bash
+python3 python/zigbee_rx/control_receive.py \
+  --iq-file python/experiments/20261103_run1006/captures/zigbee/143027_116609_obv3m07c/rx.ci8 \
+  --run-id 1006 --command-id 43 --analysis-id control_replay
+```
+
+新脚本只证明 IEEE 802.15.4 软件接收侧的负载解析，不执行命令。两侧同时录制后的逐命令联合统计仍使用 [`control_match/analyze.py`](../control_match/README.md)，不得与不同 Run ID 的单侧实验合并。
+
 先在两个终端启动接收：
 
 ```bash
@@ -35,7 +63,7 @@ bluebee_exadv_perf_start?30 200000 30 10267
 
 先启动两侧接收，再启动板端。接收时长留出启动和结束余量；`--expected-packets 150` 是显式输入的计划时隙范围，不会因为接收器运行 40 s 而推断 200 个包。
 
-`--run-id` 和 `--payload-len` 仅用于解码后的测量过滤，不会把预期负载、帧长度或 Sequence 注入解调器。新控制包格式尚未定义，暂时解析现有 10 B 性能头；普通 FCS 正确的非测试 PHY 负载也会被输出。
+以下旧性能接收命令中的 `--run-id` 和 `--payload-len` 仅用于解码后的测量过滤，不会把预期负载、帧长度或 Sequence 注入解调器。它解析现有 10 B `B2 5A` 性能头；普通 FCS 正确的非测试 PHY 负载也会被输出。`B2 43` 新控制记录由上面的实时控制入口解析。
 
 ## 两种物理观测与字节顺序
 

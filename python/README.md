@@ -10,6 +10,7 @@
 | `ctc_sim/bluebee/` | 当前 BlueBee 论文复现实验、BlueBee/ZigBee 波形生成和接收验证代码。 |
 | `ctc_sim/std_zigbee/` | 当前标准 ZigBee 生成、GNU Radio 接收流图和 frame 解析代码。 |
 | `perf_test/` | BlueBee 性能测试协议、Run ID/Sequence 统计、phase 诊断接收、CSV/JSON 原始结果和单元测试。 |
+| `control_match/` | `B2 43` 双协议控制记录的离线校验、逐时隙匹配和报告；用法见该目录 README。 |
 | `ctc_sim/patternbee/` | 历史 PatternBee 实验代码，当前 FreeRTOS/BlueBee 主线不依赖。 |
 | `ctc_sim/` 顶层脚本 | 离线分析和旧实验辅助脚本，使用前先查看脚本 `--help` 或源码入口。 |
 
@@ -28,6 +29,8 @@
 | `std_ble/ble_packet_detector.py` | BLE packet 检测调试入口。 |
 | `ctc_sim/std_zigbee/generate_zigbee_iq_30_72M.py` | 标准 ZigBee 30.72 MSPS 头文件生成辅助入口。 |
 | `perf_test/zigbee_perf_rx.py` | 标准/五相位性能接收、FCS/payload 校验、序列统计及板端日志合并入口。 |
+| `control_match/analyze.py` | 新控制包的独立两侧解析和同次实验匹配入口。 |
+| `zigbee_rx/control_receive.py` | `B2 43` 控制包的 IEEE 802.15.4 实时接收、校验及去重入口。 |
 
 查看脚本参数时从仓库根目录执行：
 
@@ -38,6 +41,8 @@ python3 python/ctc_sim/bluebee/generate_bluebee_iq_30_72M.py --help
 python3 python/ctc_sim/std_zigbee/zigbee_rx.py --help
 python3 python/ctc_sim/bluebee/bluebee_rx.py --help
 python3 python/perf_test/zigbee_perf_rx.py --help
+python3 python/control_match/analyze.py --help
+python3 python/zigbee_rx/control_receive.py --help
 ```
 
 ## 运行约定

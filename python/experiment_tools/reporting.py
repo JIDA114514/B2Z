@@ -125,6 +125,8 @@ def receiver_role(summary):
     schema = summary.get("schema", "")
     if schema.startswith("exadv_rx_"):
         return "ble"
+    if schema.startswith("zigbee_control_rx_"):
+        return "zigbee_control"
     if schema.startswith("zigbee_rx_"):
         return "zigbee"
     return None
@@ -154,8 +156,12 @@ def receiver_lines(summary):
     counts = summary.get("counts", {})
     capture = summary.get("capture_stats", {})
     state = {"complete": "正常结束", "interrupted": "用户中断", "error": "异常结束"}.get(summary.get("status"), "未知")
-    lines = [f"接收链：{'BLE exadv' if role == 'ble' else 'IEEE 802.15.4 / BlueBee'}",
-             f"实验 Run ID：{show(config.get('run_id'))}（{'归档标签，未校验 BLE 包内标识' if role == 'ble' else '解码后测试负载过滤条件'}）",
+    label = {"ble": "BLE exadv", "zigbee": "IEEE 802.15.4 / BlueBee",
+             "zigbee_control": "IEEE 802.15.4 / B2Z 控制"}.get(role, "未知")
+    run_note = ("归档标签，未校验 BLE 包内标识" if role == "ble" else
+                "解码后控制记录过滤条件" if role == "zigbee_control" else "解码后测试负载过滤条件")
+    lines = [f"接收链：{label}",
+             f"实验 Run ID：{show(config.get('run_id'))}（{run_note}）",
              f"模式：{'离线回放' if config.get('iq_file') else '实时采集'}",
              f"运行状态：{state}（仅表示程序状态）",
              f"有效包：{show(counts.get('packets' if role == 'ble' else 'fcs_valid_packets', 0))}（{'BLE CRC及扩展头有效' if role == 'ble' else 'PHY FCS有效'}）",
@@ -164,6 +170,13 @@ def receiver_lines(summary):
         lines += [f"严格 AuxPtr 匹配：{show(summary.get('matched_events'))}",
                   f"同频诊断配对：{show(summary.get('diagnostic_pairs'))}（不代表规范跟随）",
                   "无线 PRR：N/A（未合并发送计数及一致观察窗口）"]
+    elif role == "zigbee_control":
+        rx = summary.get("receiver", {})
+        lines += [f"Command ID：{show(summary.get('command_id'))}",
+                  f"B2 43 候选：{show(counts.get('control_candidates', 0))}；记录有效：{show(counts.get('valid_control_records', 0))}",
+                  f"有效唯一时隙：{show(rx.get('unique'))}；重复：{show(rx.get('duplicate'))}；乱序：{show(rx.get('out_of_order'))}",
+                  f"最长连续缺失：{show(rx.get('longest_loss_burst'))}（{rx.get('loss_scope', '范围未记录')}）",
+                  f"有效解码 / DMA 完成：{ratio_text(summary.get('ratios', {}).get('control_decode_per_dma'))}"]
     else:
         rx = summary.get("receiver", {})
         lines += [f"Run ID：{show(summary.get('run_id'))}",
@@ -186,16 +199,19 @@ def receiver_lines(summary):
 
 
 def receiver_markdown(summary, summary_path):
+    role = receiver_role(summary)
     config = summary.get("config", {})
     lines = ["# 接收报告", "", *[f"- {line}" for line in receiver_lines(summary)], "",
              "## 关键配置", "", "| 参数 | 值 |", "|---|---|"]
-    for key in ("serial", "channels", "channel", "whitening_channels", "center_hz", "sample_rate", "format",
+    for key in ("serial", "channels", "channel", "whitening_channels", "center_hz", "sample_rate", "format", "command_id",
                 "payload_len", "expected_packets", "demod", "symbol_order", "cutoff_hz", "channel_cutoff_hz", "iq_file"):
         if key in config:
             lines.append(f"| {key} | {show(config[key]).replace('|', '&#124;')} |")
+    payload_note = ("当前报告描述解码与负载校验，不表示命令执行或执行器同步。" if role == "zigbee_control" else
+                    "当前报告描述解码与测试负载校验，不表示命令执行或执行器同步。")
     lines += ["", "## 数据与口径", "", f"完整结构化记录：[{summary_path.name}]({summary_path.name})。",
               "", "候选 CRC/FCS 失败计数不等于唯一物理坏包数；队列未溢出不证明 USB 无丢样。",
-              "当前报告描述解码与测试负载校验，不表示命令执行或执行器同步。", ""]
+              payload_note, ""]
     prefix = summary_path.name.removesuffix(".summary.json")
     for path in sorted(summary_path.parent.glob(prefix + ".*")):
         if path.name.endswith((".report.md", ".summary.json")):
@@ -254,8 +270,9 @@ def build_session(directory):
     if not metadata.exists():
         write_json(metadata, {"schema": "experiment_v1", "experiment_id": directory.name,
                               "origin": "automatic", "scope": "See individual receiver and analysis records; grouping alone does not establish joint reception."})
+    unique_heading = "唯一有效记录" if any(receiver_role(value) == "zigbee_control" for _, value in records) else "唯一测试包"
     lines = [f"# 实验：{directory.name}", "", "本页自动生成；人工观察请写入 notes.md。运行正常结束不代表达到实验目标。", "",
-             "## 接收结果", "", "| 记录 | 接收链 | 模式 | 程序状态 | 实验Run ID | 解码Run ID | 有效包 | 唯一测试包 | IQ时长(s) |",
+             "## 接收结果", "", f"| 记录 | 接收链 | 模式 | 程序状态 | 实验Run ID | 解码Run ID | 有效包 | {unique_heading} | IQ时长(s) |",
              "|---|---|---|---|---|---|---|---|---|"]
     runs = []
     for path, value in records:

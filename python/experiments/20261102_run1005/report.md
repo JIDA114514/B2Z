@@ -12,5 +12,6 @@
 
 ## 分析与原始记录
 
+- [board.board.log](board.board.log)
 
 配置：[experiment.config.json](experiment.config.json)。完整参数、分母依据和异常见各接收报告及原始 JSON。

@@ -15,3 +15,5 @@ run 1004 的 28 个 secondary 均在 BLE CRC 正确的前提下满足以下校�
 25 个同频诊断对的 secondary 相对宣告 30 ms 的偏差为 924.5–952.0 µs，中位数 943.5 µs。板端仍在 ch39 同频发送，而 primary AuxPtr 宣告 ch3；因此严格 `matched_events=0` 是预期结果，25 个 `diagnostic_pairs` 不能写成规范 exadv 跟随。三轮 `secondary_dma_late_avg_us` 分别为 80149、80157、80181 µs，约 80 ms 计划时刻偏移没有因接收增益而消失。
 
 结论：在这次交替顺序实验中，LNA 从 24 dB 提至 32 dB 与目标 primary、完整 secondary 恢复的明显提升同时出现，恢复率尚未稳定：高增益轮 primary 为 88/100，secondary 为 28/100。两次基线从 13/100 变到 31/100，说明环境或设备状态也有波动。当前证据支持继续做增益和接收链质量扫描，不能据此直接宣称已达到可靠控制，更不能报告 ZigBee 侧或同步执行成功。
+
+新的[控制包离线匹配报告](analyses/control_match_verified/control.report.md)复核了本轮 28 个 BLE 侧 `B2 43` 控制记录；这份单侧录制未计算联合有效解码。

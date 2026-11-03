@@ -1,0 +1,17 @@
+接收链：IEEE 802.15.4 / BlueBee
+实验 Run ID：1006（解码后测试负载过滤条件）
+模式：实时采集
+运行状态：正常结束（仅表示程序状态）
+有效包：35（PHY FCS有效）
+IQ观察时长：30.000000 s（全部已处理采样，含实验前后余量）
+Run ID：1006
+有效唯一测试包：0；重复：0；乱序：0
+最长连续缺失：0（min..max valid received Sequence）
+无线 PRR：N/A（分子 0；分母 N/A；matching board final counts and full-run coverage required）
+端到端接收率：N/A（分子 0；分母 N/A；matching board final counts and full-run coverage required）
+调度完成率：N/A（分子 0；分母 N/A；matching board final counts and full-run coverage required）
+总吞吐：0.000 B/s（0.000 bit/s）
+应用 goodput：0.000 B/s（0.000 bit/s）
+采集队列：溢出 0；高水位 6
+时间基准：相对 IQ 标称采样时间；独立采集未经校准不能直接相减。
+详细报告：/home/jida/Desktop/antsdr/B2Z/python/experiments/20261103_run1006/captures/zigbee/143027_116609_obv3m07c/rx.report.md

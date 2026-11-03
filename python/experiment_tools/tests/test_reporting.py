@@ -10,10 +10,20 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from experiment_tools.manage import legacy_plan
-from experiment_tools.reporting import PROJECT, rebuild_index, ratio_text
+from experiment_tools.reporting import PROJECT, rebuild_index, ratio_text, receiver_markdown
 
 
 class ReportingTests(unittest.TestCase):
+    def test_control_receiver_markdown_renders_after_capture(self):
+        summary = {"schema": "zigbee_control_rx_v1", "status": "complete",
+                   "config": {"run_id": 1007, "command_id": 43},
+                   "counts": {"fcs_valid_packets": 43, "control_candidates": 43,
+                              "valid_control_records": 43},
+                   "receiver": {"unique": 43, "duplicate": 0, "out_of_order": 0}}
+        report = receiver_markdown(summary, Path("rx.summary.json"))
+        self.assertIn("有效唯一时隙：43", report)
+        self.assertIn("当前报告描述解码与负载校验", report)
+
     def test_short_live_commands_use_distinct_devices_and_keep_every_attempt(self):
         # Exercise the actual receiver CLIs/capture processes with a fake SDR
         # executable. No connected radio or central experiment data is touched.

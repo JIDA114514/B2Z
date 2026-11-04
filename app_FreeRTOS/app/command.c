@@ -147,6 +147,9 @@ command cmd_list[] = {
 	{"bluebee_pure_perf_start?", "Starts Phase-1 pure BlueBee performance test.", "bluebee_pure_perf_start? 46 10000 60 1 0", NULL, bluebee_pure_perf_start_cmdline},
 	{"bluebee_exadv_perf_start?", "Starts Phase-1 extended-advertising BlueBee performance test.", "bluebee_exadv_perf_start? 46 100000 60 1 0", NULL, bluebee_exadv_perf_start_cmdline},
 	{"b2z_control_start?", "Starts finite v1 BLE/802.15.4 control and time broadcasts (same-channel diagnostic).", "b2z_control_start? 1001 42", NULL, b2z_control_start_cmdline},
+	{"b2z_plan_clear?", "Clears the staged multi-task control plan.", "b2z_plan_clear?", NULL, b2z_plan_clear_cmdline},
+	{"b2z_plan_add?", "Adds a task or sync-only entry to the staged control plan.", "b2z_plan_add? 43 3 3000 2500", NULL, b2z_plan_add_cmdline},
+	{"b2z_plan_start?", "Starts one multi-task control run (same-channel diagnostic).", "b2z_plan_start? 1101 200", NULL, b2z_plan_start_cmdline},
 	{"bluebee_perf_stop?", "Stops the active BlueBee performance test.", "bluebee_perf_stop?", NULL, bluebee_perf_stop_cmdline},
 	{"bluebee_perf_status?", "Reports BlueBee performance configuration and counters.", "bluebee_perf_status?", NULL, bluebee_perf_status_cmdline},
 #endif

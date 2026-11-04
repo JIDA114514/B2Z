@@ -2,9 +2,9 @@
 
 主要开发基于 BLE 的跨技术通信（cross technology communication, CTC），具体原理基于 [BlueBee](https://doi.org/10.1145/3131672.3131678)。
 
-当前研究主线是基于 BLE extended advertising 的双协议共包控制与同步：在同一个 secondary `AUX_ADV_IND` 中承载 BLE 与 BlueBee/IEEE 802.15.4 信息。当前接收原型和性能测试用于支撑该方向；正式控制格式、独立设备同步及相对基线收益仍需实现或验证。板端现有工作主要位于 `app_FreeRTOS/`。常用工作流有两类：
+当前研究主线是基于 BLE extended advertising 的双协议共包控制与同步：在同一个 secondary `AUX_ADV_IND` 中承载 BLE 与 BlueBee/IEEE 802.15.4 信息。v1 控制负载和同频诊断收发原型已实现；独立设备同步处理、规范 exadv 跟随及相对基线收益仍需实现或验证。板端现有工作主要位于 `app_FreeRTOS/`。常用工作流有两类：
 
-下一阶段以连续单包实现粗粒度时间同步和简单软件控制；工作包、验收条件及测量边界见[下一阶段计划](doc/next_stage_plan.md)，具体字段与单包预算见[v1 负载草案](doc/control_sync_packet_v1_draft.md)，相关先例见[设计研究笔记](doc/sync_control_payload_research.md)。
+下一阶段先完成连续单包的接收侧时间模型和简单软件控制；具体实现顺序见[功能完成路线](doc/control_sync_function_plan.md)，实验工作包与测量边界见[下一阶段计划](doc/next_stage_plan.md)，字段与单包预算见[v1 负载草案](doc/control_sync_packet_v1_draft.md)，相关先例见[设计研究笔记](doc/sync_control_payload_research.md)。
 
 - Python 端离线生成 IQ/C 头文件，用于分析、SDK 集成或 HackRF/接收链路验证。
 - FreeRTOS 串口命令在板端启动 legacy BLE、切换共享 TX DMA 波形，或运行时生成 BlueBee / BLE exadv secondary 波形。

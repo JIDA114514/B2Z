@@ -1,0 +1,116 @@
+{
+  "schema": "exadv_rx_v3",
+  "receiver_version": "2026-10-26-window-retry1",
+  "start_utc": "2026-11-04T06:37:57.098531+00:00",
+  "end_utc": "2026-11-04T06:37:57.307063+00:00",
+  "status": "error",
+  "error": "hackrf_transfer exited 1",
+  "config": {
+    "channels": [
+      39
+    ],
+    "whitening_channels": [
+      39
+    ],
+    "sample_rate": 8000000,
+    "center_hz": 2480000000.0,
+    "iq_file": null,
+    "format": "ci8",
+    "serial": "000000000000000017c467dc2926a0c3",
+    "lna": 32,
+    "vga": 24,
+    "amp": false,
+    "duration": 40.0,
+    "block_samples": 65536,
+    "queue_blocks": 64,
+    "stall_timeout": 10,
+    "sync_threshold": 0.84,
+    "dc_block_hz": 1000,
+    "timing_retry": true,
+    "channel_cutoff_hz": 850000,
+    "pair_tolerance_us": 20,
+    "diagnostic_pairs": true,
+    "diagnostic_pair_window_us": 2000,
+    "save_iq": true,
+    "output": null,
+    "experiment_dir": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261104_run1301",
+    "analysis_id": null,
+    "quiet": true,
+    "run_id": 1301
+  },
+  "capture_command": [
+    "/usr/bin/hackrf_transfer",
+    "-r",
+    "-",
+    "-f",
+    "2480000000",
+    "-s",
+    "8000000",
+    "-l",
+    "32",
+    "-g",
+    "24",
+    "-a",
+    "0",
+    "-p",
+    "0",
+    "-d",
+    "000000000000000017c467dc2926a0c3",
+    "-n",
+    "320000000"
+  ],
+  "capture_returncode": 1,
+  "capture_stats": {
+    "bytes_read": 1733,
+    "queue_high_water": 1
+  },
+  "counts": {
+    "clipped_components": 0,
+    "samples_processed": 866
+  },
+  "channels": {
+    "39": {}
+  },
+  "matched_events": 0,
+  "expired_primary": 0,
+  "diagnostic_pairs": 0,
+  "diagnostic_expired_primary": 0,
+  "diagnostic_pending_overflow": 0,
+  "pending_primary": 0,
+  "wall_duration_s": 0.20845350201125257,
+  "processed_sample_duration_s": 0.00010825,
+  "processing_ms_recent": {
+    "samples": 2,
+    "mean": 0.26595499366521835,
+    "p99": 0.34985475591383874,
+    "max": 0.35156699595972896
+  },
+  "stderr_tail": [
+    "hackrf_open() failed: HackRF not found (-5)"
+  ],
+  "files": {
+    "packets": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261104_run1301/captures/ble/143757_097447_9hljlkbu/rx.packets.jsonl",
+    "events": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261104_run1301/captures/ble/143757_097447_9hljlkbu/rx.events.jsonl",
+    "summary": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261104_run1301/captures/ble/143757_097447_9hljlkbu/rx.summary.json",
+    "text": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261104_run1301/captures/ble/143757_097447_9hljlkbu/rx.summary.txt",
+    "report": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261104_run1301/captures/ble/143757_097447_9hljlkbu/rx.report.md",
+    "stderr": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261104_run1301/captures/ble/143757_097447_9hljlkbu/rx.hackrf.log",
+    "iq": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261104_run1301/captures/ble/143757_097447_9hljlkbu/rx.ci8"
+  },
+  "sources_sha256": {
+    "exadv_rx/receive.py": "d385da25aca035a47990ee3d0d2d1dad96a8e8585bc067aec53dd8f3dcb97c30",
+    "exadv_rx/arguments.py": "527827e2dae1b198e2ee7e781710d419b51bb3261c5087749c0f0cc17225dda1",
+    "exadv_rx/decoder.py": "b0975b91d2e8997fb0a4c217cb771aba7661eeb671986163a9e8430f82bf6bd6",
+    "exadv_rx/protocol.py": "cf2cf405a303ce1f8087c0806f66ee3e2a82d72b317130113c9f78825fd9bff8",
+    "experiment_tools/receiver_defaults.py": "e9231cd5a7af2a945ab3b3675f19434133ce1739c446fcdac2e0bf0c20bd6a3b",
+    "experiment_tools/reporting.py": "957bcf9fc5f3f6838c02f26f70cd5a1af637b8d97409659fca176c35c546e1d2"
+  },
+  "limitations": [
+    "LE 1M only; fixed RF capture, no host-timed frequency hopping",
+    "DC blocker/filter and demodulation timing require calibration before synchronization claims",
+    "sample timestamps are relative to capture, not hardware/UTC timestamps",
+    "HackRF/USB sample losses may be unobservable in raw IQ; no guaranteed gap-free timeline",
+    "CRC-failure counts refer to sync candidates, not uniquely identified transmitted packets",
+    "no PRR without independently supplied TX counts and matched observation window"
+  ]
+}

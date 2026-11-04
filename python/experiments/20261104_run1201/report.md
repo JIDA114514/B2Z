@@ -7,6 +7,7 @@
 | 记录 | 接收链 | 模式 | 程序状态 | 实验Run ID | 解码Run ID | 有效包 | 唯一有效记录 | IQ时长(s) |
 |---|---|---|---|---|---|---|---|---|
 | [captures/ble/140856_485161_1twoxmz1/rx](captures/ble/140856_485161_1twoxmz1/rx.report.md) | ble | live | complete | 1201 | N/A | 640 | N/A | 40.000000 |
+| [captures/ble/144931_700624_tvadbj4m/rx](captures/ble/144931_700624_tvadbj4m/rx.report.md) | ble | live | complete | 1201 | N/A | 648 | N/A | 40.000000 |
 | [captures/zigbee/140853_459127_fh_f3dc9/rx](captures/zigbee/140853_459127_fh_f3dc9/rx.report.md) | zigbee_control | live | complete | 1201 | 1201 | 71 | 71 | 40.000000 |
 
 同目录不自动计算联合成功率；联合结果须依据已保存的逐标识匹配分析。独立设备的相对时间不能直接相减。

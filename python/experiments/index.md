@@ -13,9 +13,16 @@
 | [20261103_run1006](20261103_run1006/report.md) | 1006 | complete | 1 | 1 | 1 |
 | [20261103_run1007](20261103_run1007/report.md) | 1007 | complete | 1 | 0 | 0 |
 | [20261104_run1101](20261104_run1101/report.md) | 1101 | complete | 2 | 0 | 4 |
-| [20261104_run1201](20261104_run1201/report.md) | 1201 | complete | 2 | 0 | 3 |
+| [20261104_run1201](20261104_run1201/report.md) | 1201 | complete | 3 | 0 | 3 |
 | [20261104_run1202](20261104_run1202/report.md) | 1202 | complete | 2 | 0 | 3 |
 | [20261104_run1203](20261104_run1203/report.md) | 1203 | complete | 2 | 0 | 3 |
+| [20261104_run1301](20261104_run1301/report.md) | 1301 | error | 2 | 0 | 0 |
+| [20261104_run1302](20261104_run1302/report.md) | 1302 | complete | 1 | 0 | 0 |
+| [20261104_run1304](20261104_run1304/report.md) | 1304 | complete | 1 | 0 | 0 |
+| [20261104_run1305](20261104_run1305/report.md) | 1305 | complete | 1 | 0 | 0 |
+| [20261104_run1401](20261104_run1401/report.md) | 1401 | complete | 1 | 0 | 0 |
+| [20261104_run1402](20261104_run1402/report.md) | 1402 | complete | 1 | 0 | 0 |
+| [20261104_run1403](20261104_run1403/report.md) | 1403 | complete | 1 | 0 | 0 |
 | [history_ble_rx_20261026_150021_003660](history_ble_rx_20261026_150021_003660/report.md) | N/A | complete | 1 | 1 | 0 |
 | [history_ble_rx_20261026_150507_618440](history_ble_rx_20261026_150507_618440/report.md) | N/A | complete | 1 | 1 | 0 |
 | [history_ble_rx_20261026_152018_750312](history_ble_rx_20261026_152018_750312/report.md) | N/A | complete | 1 | 2 | 0 |

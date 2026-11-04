@@ -41,6 +41,12 @@ def parse_args(argv=None):
     add_output_arguments(parser)
     parser.add_argument("--quiet", action=argparse.BooleanOptionalAction, help="only periodic status and final summary")
     parser.add_argument("--run-id", type=int, help="experiment Run ID for archiving only; BLE payload is not filtered")
+    parser.add_argument("--control-target-id", type=int, action="append",
+                        help="enable B2 43 software-control processing for this node/group ID; repeatable")
+    parser.add_argument("--control-sender-id", default="configured_board")
+    parser.add_argument("--control-accept-broadcast", action="store_true")
+    parser.add_argument("--control-assumed-reference-bound-ms", type=float,
+                        help="explicit functional assumption; not measured synchronization accuracy")
     apply_defaults(parser, "ble")
     args = parser.parse_args(argv)
     resolve_input_defaults(args)
@@ -82,6 +88,17 @@ def parse_args(argv=None):
             raise ValueError("HackRF live capture uses ci8")
         if args.iq_file and not args.iq_file.is_file():
             raise ValueError("iq-file does not exist")
+        if args.control_target_id:
+            if args.run_id is None or not 1 <= args.run_id <= 65535:
+                raise ValueError("control processing requires --run-id 1..65535")
+            if any(not 1 <= value <= 0xfffe for value in args.control_target_id):
+                raise ValueError("control target IDs must be in 1..65534")
+        elif args.control_assumed_reference_bound_ms is not None or args.control_accept_broadcast:
+            raise ValueError("control options require --control-target-id")
+        if (args.control_assumed_reference_bound_ms is not None and
+                (not math.isfinite(args.control_assumed_reference_bound_ms) or
+                 args.control_assumed_reference_bound_ms < 0)):
+            raise ValueError("control assumed reference bound must be finite and nonnegative")
     except ValueError as exc:
         parser.error(str(exc))
     return args

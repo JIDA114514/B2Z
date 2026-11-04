@@ -35,7 +35,14 @@ def parse_args(argv=None, *, control_mode=False):
     p.add_argument("--preamble-max-distance", type=int, help="max errors over 8 preamble symbols")
     p.add_argument("--run-id", type=int, help="Run ID filter, after PHY decoding only")
     if control_mode:
-        p.add_argument("--command-id", type=int, required=True, help="B2 43 command ID filter, after FCS only")
+        p.add_argument("--command-id", type=int,
+                       help="optional B2 43 command ID filter; omit for a multi-task run")
+        p.add_argument("--control-target-id", type=int, action="append",
+                       help="enable B2 43 software-control processing for this node/group ID; repeatable")
+        p.add_argument("--control-sender-id", default="configured_board")
+        p.add_argument("--control-accept-broadcast", action="store_true")
+        p.add_argument("--control-assumed-reference-bound-ms", type=float,
+                       help="explicit functional assumption; not measured synchronization accuracy")
         p.set_defaults(payload_len=None)
     else:
         p.add_argument("--payload-len", type=int, help="test payload length filter, after FCS only")
@@ -70,8 +77,21 @@ def parse_args(argv=None, *, control_mode=False):
         if a.payload_len is not None and not 10 <= a.payload_len <= 46:
             raise ValueError("test payload-len must be 10..46; general PHY frames may be larger")
         if control_mode and (a.run_id is None or not 1 <= a.run_id <= 65535 or
-                             not 0 <= a.command_id <= 0x7fffffff):
-            raise ValueError("control mode requires --run-id 1..65535 and --command-id 0..2147483647")
+                             (a.command_id is not None and
+                              not 0 <= a.command_id <= 0x7fffffff)):
+            raise ValueError("control mode requires --run-id 1..65535; --command-id, if given, must be 0..2147483647")
+        if control_mode and a.board_log and a.command_id is None:
+            raise ValueError("legacy --board-log parsing requires --command-id; plan logs need separate analysis")
+        if control_mode:
+            if a.control_target_id and any(not 1 <= value <= 0xfffe for value in a.control_target_id):
+                raise ValueError("control target IDs must be in 1..65534")
+            if not a.control_target_id and (a.control_assumed_reference_bound_ms is not None or
+                                            a.control_accept_broadcast):
+                raise ValueError("control options require --control-target-id")
+            if (a.control_assumed_reference_bound_ms is not None and
+                    (not math.isfinite(a.control_assumed_reference_bound_ms) or
+                     a.control_assumed_reference_bound_ms < 0)):
+                raise ValueError("control assumed reference bound must be finite and nonnegative")
         if a.expected_packets is not None and a.expected_packets < 0:
             raise ValueError("expected-packets must be nonnegative")
         if a.iq_file:

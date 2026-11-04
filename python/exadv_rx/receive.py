@@ -22,6 +22,8 @@ from protocol import DiagnosticEventMatcher, EventMatcher, channel_frequency
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from experiment_tools.reporting import output_prefix, write_receiver_reports
+from control_match.control_engine import EngineConfig
+from control_match.live_control import ControlSession
 from exadv_rx.arguments import parse_args
 
 
@@ -140,9 +142,18 @@ def main(argv=None):
               ("stderr", ".hackrf.log"))}
     if args.save_iq:
         paths["iq"] = Path(str(prefix) + "." + args.format)
+    control_config = None
+    if args.control_target_id:
+        control_config = EngineConfig(side="ble", run_id=args.run_id, sample_rate=args.sample_rate,
+                                      target_ids=frozenset(args.control_target_id),
+                                      sender_id=args.control_sender_id,
+                                      accept_broadcast=args.control_accept_broadcast,
+                                      external_reference_bound_ms=args.control_assumed_reference_bound_ms)
+        paths.update(ControlSession.artifact_paths(prefix))
     for path in paths.values():
         if path.exists():
             raise FileExistsError(f"refusing to overwrite {path}")
+    control = ControlSession(prefix, control_config, offline=bool(args.iq_file)) if control_config else None
     decoders = [ChannelDecoder(args.sample_rate, args.center_hz, channel, white, args.sync_threshold,
                                args.timing_retry, args.channel_cutoff_hz)
                 for channel, white in zip(args.channels, args.whitening_channels)]
@@ -172,10 +183,13 @@ def main(argv=None):
                 counts[packet["kind"]] += 1
                 packet["packet_no"] = counts["packets"]
                 packet["timeline"] = "one_continuous_iq_capture_nominal_sample_rate"
+                packet["available_sample"] = counts["samples_processed"]
                 aux = packet["extended"].get("aux_ptr")
                 if aux and aux["phy"] != 0:
                     counts["aux_ptr_unsupported_phy"] += 1
                 packets_file.write(json.dumps(packet, ensure_ascii=False) + "\n")
+                if control:
+                    control.observe_packet(packet)
                 for event in matcher.feed(packet):
                     events_file.write(json.dumps(event) + "\n")
                 if args.diagnostic_pairs:
@@ -189,6 +203,8 @@ def main(argv=None):
                           f"CFO={packet['cfo_hz']:.0f}Hz ADI={ext.get('adi')} "
                           f"AuxPtr={ext.get('aux_ptr')} "
                           f"AdvData={ext['adv_data_hex']}", flush=True)
+            if control:
+                control.advance(counts["samples_processed"])
             packets_file.flush()
             events_file.flush()
             processing.append(time.monotonic() - before)
@@ -248,10 +264,15 @@ def main(argv=None):
     here = Path(__file__).resolve().parent
     source_paths = [here / name for name in ("receive.py", "arguments.py", "decoder.py", "protocol.py")]
     source_paths += [here.parent / "experiment_tools" / name for name in ("receiver_defaults.py", "reporting.py")]
+    if control:
+        source_paths += [here.parent / "control_match" / name for name in
+                         ("control_engine.py", "live_control.py", "packet_adapter.py", "protocol.py")]
+    receiver_status = "error" if error else "interrupted" if interrupted else "complete"
+    control_result = control.finish(receiver_status) if control else None
     summary = {
         "schema": "exadv_rx_v3", "receiver_version": "2026-10-26-window-retry1", "start_utc": start_utc,
         "end_utc": datetime.now(timezone.utc).isoformat(),
-        "status": "error" if error else "interrupted" if interrupted else "complete",
+        "status": receiver_status,
         "error": error, "config": {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()},
         "capture_command": capture.command, "capture_returncode": capture.proc.returncode if capture.proc else None,
         "capture_stats": dict(capture.stats), "counts": dict(counts),
@@ -266,6 +287,9 @@ def main(argv=None):
                                  "p99": float(np.percentile(processing, 99) * 1000) if processing else None,
                                  "max": max(processing) * 1000 if processing else None},
         "stderr_tail": list(capture.stderr_tail), "files": {key: str(value) for key, value in paths.items()},
+        "control_engine": ({"event_counts": control_result["event_counts"],
+                            "tasks": control_result["tasks"],
+                            "report": str(paths["control_report"])} if control_result else None),
         "sources_sha256": {str(path.relative_to(here.parent)): hashlib.sha256(path.read_bytes()).hexdigest() for path in source_paths},
         "limitations": ["LE 1M only; fixed RF capture, no host-timed frequency hopping",
                         "DC blocker/filter and demodulation timing require calibration before synchronization claims",

@@ -46,6 +46,20 @@ class ControlTrackerTests(unittest.TestCase):
         self.assertEqual(tracker.observe(slot3)[1], "out_of_range_control")
         self.assertEqual(tracker.counts["unique"], 2)
 
+    def test_unfiltered_run_keeps_distinct_tasks_and_global_slots(self):
+        tracker = ControlTracker(1006, None, 4)
+        self.assertEqual(tracker.observe(PAYLOAD)[1], "unique")
+        second = altered(altered(altered(PAYLOAD, 6, 10, 2), 10, 14, 400),
+                         16, 20, 44)
+        self.assertEqual(tracker.observe(second)[1], "unique")
+        self.assertEqual(tracker.observe(second)[1], "duplicate")
+        self.assertEqual(tracker.counts["unique"], 2)
+        self.assertEqual(set(tracker.task_keys), {43, 44})
+        self.assertEqual(tracker.longest_loss_burst(), 1)
+        changed_arg = altered(altered(altered(PAYLOAD, 6, 10, 3), 10, 14, 600),
+                              23, 25, 2)
+        self.assertEqual(tracker.observe(changed_arg)[1], "conflicting_task_fields")
+
 
 if __name__ == "__main__":
     unittest.main()

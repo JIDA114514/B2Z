@@ -20,6 +20,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from control_match.analyze import TASK_FIELDS, read_board
 from control_match.protocol import control_record
+from control_match.control_engine import EngineConfig
+from control_match.live_control import ControlSession
 from experiment_tools.reporting import output_prefix, write_receiver_reports
 from zigbee_rx.arguments import parse_args
 from zigbee_rx.dsp import IQDCBlocker
@@ -31,14 +33,14 @@ from zigbee_rx.zigbee_protocol import channel_frequency, ratio
 class ControlTracker:
     """Count only this receiver's independently decoded, FCS-correct payloads."""
 
-    def __init__(self, run_id: int, command_id: int, expected_packets: int | None):
+    def __init__(self, run_id: int, command_id: int | None, expected_packets: int | None):
         self.run_id = run_id
         self.command_id = command_id
         self.expected_packets = expected_packets
         self.counts = Counter()
         self.invalid_reasons = Counter()
         self.seen: dict[int, dict] = {}
-        self.task_key: tuple | None = None
+        self.task_keys: dict[int, tuple] = {}
         self.last_slot = -1
 
     def observe(self, payload: bytes) -> tuple[dict | None, str, str | None]:
@@ -54,7 +56,8 @@ class ControlTracker:
             self.invalid_reasons[reason] += 1
             return None, "invalid_control", reason
         self.counts["valid_control_records"] += 1
-        if (record["run_id"], record["command_id"]) != (self.run_id, self.command_id):
+        if record["run_id"] != self.run_id or (self.command_id is not None and
+                                                record["command_id"] != self.command_id):
             self.counts["foreign_control"] += 1
             return record, "foreign_control", None
         self.counts["matching_control_records"] += 1
@@ -62,8 +65,10 @@ class ControlTracker:
         if self.expected_packets is not None and slot >= self.expected_packets:
             self.counts["out_of_range_control"] += 1
             return record, "out_of_range_control", None
-        task_key = tuple(record[key] for key in TASK_FIELDS)
-        if self.task_key is not None and task_key != self.task_key:
+        task_key = tuple(record[key] for key in
+                         (*TASK_FIELDS, "target_id", "opcode", "arg"))
+        prior_task = self.task_keys.get(record["command_id"])
+        if prior_task is not None and task_key != prior_task:
             self.counts["conflicting_task_fields"] += 1
             return record, "conflicting_task_fields", None
         if slot in self.seen:
@@ -72,8 +77,8 @@ class ControlTracker:
                 return record, "duplicate", None
             self.counts["conflicting_slot"] += 1
             return record, "conflicting_slot", None
-        if self.task_key is None:
-            self.task_key = task_key
+        if prior_task is None:
+            self.task_keys[record["command_id"]] = task_key
         if slot < self.last_slot:
             self.counts["out_of_order"] += 1
         self.last_slot = slot
@@ -113,8 +118,17 @@ def main(argv=None) -> int:
               ("text", ".summary.txt"), ("report", ".report.md"), ("hackrf", ".hackrf.log"))}
     if args.save_iq:
         files["iq"] = Path(str(prefix) + "." + args.format)
+    control_config = None
+    if args.control_target_id:
+        control_config = EngineConfig(side="zigbee", run_id=args.run_id, sample_rate=args.sample_rate,
+                                      target_ids=frozenset(args.control_target_id),
+                                      sender_id=args.control_sender_id,
+                                      accept_broadcast=args.control_accept_broadcast,
+                                      external_reference_bound_ms=args.control_assumed_reference_bound_ms)
+        files.update(ControlSession.artifact_paths(prefix))
     if any(path.exists() for path in files.values()):
         raise FileExistsError(f"output prefix already exists: {prefix}")
+    control = ControlSession(prefix, control_config, offline=bool(args.iq_file)) if control_config else None
     counts = Counter()
     processing = []
     pending = b""
@@ -140,8 +154,11 @@ def main(argv=None) -> int:
                               command_id=record["command_id"] if record else None,
                               slot_index=record["slot_index"] if record else None,
                               disposition=disposition,
+                              available_sample=counts["samples_processed"],
                               timeline="independent_continuous_iq_nominal_rate")
                 output.write(json.dumps(packet, ensure_ascii=False) + "\n")
+                if control:
+                    control.observe_packet(packet)
                 if not args.quiet and disposition != "non_control":
                     detail = (f"run={record['run_id']} cmd={record['command_id']} "
                               f"slot={record['slot_index']} ref={record['ref_tick_ms']}ms "
@@ -150,6 +167,8 @@ def main(argv=None) -> int:
                     print(f"#{packet['packet_no']} FCS=OK {disposition} {detail} "
                           f"sample={packet['sample_start']:.3f} t={packet['sample_time_s']:.9f}s",
                           flush=True)
+            if control:
+                control.advance(counts["samples_processed"])
             output.flush()
             processing.append(time.monotonic() - before)
             if len(processing) > 10000:
@@ -217,14 +236,22 @@ def main(argv=None) -> int:
                                         "zigbee_protocol.py", "dsp.py", "hackrf_capture.py")]
     sources += [here.parent / "control_match" / name for name in ("protocol.py", "analyze.py")]
     sources += [here.parent / "experiment_tools" / name for name in ("receiver_defaults.py", "reporting.py")]
+    if control:
+        sources += [here.parent / "control_match" / name for name in
+                    ("control_engine.py", "live_control.py", "packet_adapter.py")]
+    receiver_status = "error" if error else "interrupted" if interrupted else "complete"
+    control_result = control.finish(receiver_status) if control else None
     result = {
         "schema": "zigbee_control_rx_v1", "receiver_version": "control-v1-live1",
-        "status": "error" if error else "interrupted" if interrupted else "complete", "error": error,
+        "status": receiver_status, "error": error,
         "start_utc": start_utc, "end_utc": datetime.now(timezone.utc).isoformat(),
         "config": {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()},
         "capture_command": capture.command, "capture_returncode": capture.proc.returncode if capture.proc else None,
         "capture_stats": dict(capture.stats), "stderr_tail": list(capture.stderr_tail),
         "counts": dict(counts), "decoder": dict(decoder.stats), "run_id": args.run_id,
+        "control_engine": ({"event_counts": control_result["event_counts"],
+                            "tasks": control_result["tasks"],
+                            "report": str(files["control_report"])} if control_result else None),
         "command_id": args.command_id,
         "receiver": {"unique": tracker.counts["unique"], "duplicate": tracker.counts["duplicate"],
                      "out_of_order": tracker.counts["out_of_order"],
@@ -244,7 +271,7 @@ def main(argv=None) -> int:
         "sources_sha256": {str(path.relative_to(here.parent)): hashlib.sha256(path.read_bytes()).hexdigest()
                            for path in sources},
         "files": {key: str(path) for key, path in files.items()},
-        "limitations": ["independent SDR PHY and application decode; no command execution",
+        "limitations": ["independent SDR PHY and application decode; no physical actuator execution",
                         "FCS-failure candidate counts are not uniquely identified transmitted packets",
                         "sample times are relative to this HackRF IQ and not UTC or another receiver clock",
                         "DMA completion is a proxy for TX; no calibrated RF-start timestamp"],

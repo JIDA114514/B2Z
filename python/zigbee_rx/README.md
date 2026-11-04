@@ -4,7 +4,7 @@
 
 接收路径：`hackrf_transfer → int8 IQ → 连续 DC 抑制 → 数字下变频与 FIR 抽取到 4 Msps → 差分相位 → 所有 chip 采样相位 → 标准 DSSS 解扩 → 动态 PHR → FCS → 可选测试头/填充校验`。
 
-本工具验证 PHY 与负载正确解析，不执行控制动作，也不实现 ZigBee MAC/NWK/APS/ZCL、安全入网或商用芯片兼容性认证。
+本工具验证 PHY 与负载正确解析；可选控制模块仅生成软件状态与处理事件，不驱动物理执行器，也不实现 ZigBee MAC/NWK/APS/ZCL、安全入网或商用芯片兼容性认证。
 
 ## 安装与设备选择
 
@@ -33,7 +33,11 @@ python3 python/zigbee_rx/control_receive.py \
 b2z_control_start? 1100 43 200 100 30000 25000
 ```
 
-默认每个控制候选即时打印 `run/cmd/slot/ref/target/opcode/arg` 和本机 IQ 采样索引，每 5 秒打印唯一、重复和无效计数；`--quiet` 仅保留定期状态与最终报告。结果自动保存到 `python/experiments/YYYYMMDD_run1100/captures/zigbee/<接收尝试>/rx.*`。`--expected-packets` 仅规定计划时隙范围，不作为无线 PRR 的发射完成分母。需要报告有效解码 / DMA 完成时，离线回放可提供已经存在的 `--board-log <CONTROL_STATS 文件> --full-run-covered`；必须确认录制覆盖整个板端发送期。旧 `receive.py` 的 `B2 5A` 性能测试计数口径保持不变。
+默认每个控制候选即时打印 `run/cmd/slot/ref/target/opcode/arg` 和本机 IQ 采样索引，每 5 秒打印唯一、重复和无效计数；`--quiet` 仅保留定期状态与最终报告。结果自动保存到 `python/experiments/YYYYMMDD_run1100/captures/zigbee/<接收尝试>/rx.*`。新逐包记录的 `available_sample` 表示解码器提交包时已处理的本机采样进度，供命令可用时刻判决，不是主机墙钟时间。`--expected-packets` 仅规定计划时隙范围，不作为无线 PRR 的发射完成分母。需要报告有效解码 / DMA 完成时，离线回放可提供已经存在的 `--board-log <CONTROL_STATS 文件> --full-run-covered`；必须确认录制覆盖整个板端发送期。旧 `receive.py` 的 `B2 5A` 性能测试计数口径保持不变。
+
+加 `--control-target-id 2` 可启用与 BLE 侧相同的单侧时间模型和软件命令状态机；目标 ID 可重复指定。接收目录新增 `rx.control.events.jsonl`、`rx.control.tasks.csv`、`rx.control.summary.json` 和 `rx.control.report.md`。默认没有参考误差上界，定时命令会被拒绝并记录 `time_quality_insufficient`；仅验证软件流程时可显式添加 `--control-assumed-reference-bound-ms 1`，报告会标明未经校准。`--control-accept-broadcast` 接受广播目标；`--control-sender-id` 只是本地来源标签，不是包内身份认证。实时事件有主机单调时间记录，但不能视为 RF 时间戳；离线 IQ 的处理事件仅是样本进度回放。详见[控制模块说明](../control_match/README.md#单侧时间与软件命令模块)。
+
+板端 `b2z_plan_start?` 一轮多任务时，省略 `--command-id`，即可按同一 Run ID 接收全部命令，逐任务字段一致性分别校验，时隙仍按全轮编号。旧单任务实验继续传 `--command-id` 过滤。旧 `--board-log` 解析器只识别单任务 `CONTROL_STATS`，多任务 `CONTROL_PLAN_*` 日志目前应原样保存，待联合分析功能接入；不能把累计 `tx_completed` 当成任一单个命令的发送数。
 
 历史 IQ 可用相同入口回放：
 
@@ -43,7 +47,7 @@ python3 python/zigbee_rx/control_receive.py \
   --run-id 1006 --command-id 43 --analysis-id control_replay
 ```
 
-新脚本只证明 IEEE 802.15.4 软件接收侧的负载解析，不执行命令。两侧同时录制后的逐命令联合统计仍使用 [`control_match/analyze.py`](../control_match/README.md)，不得与不同 Run ID 的单侧实验合并。
+新脚本证明 IEEE 802.15.4 软件接收侧的负载解析；启用控制模块后还能记录本侧软件命令处理。两侧同时录制后的逐命令联合统计仍使用 [`control_match/analyze.py`](../control_match/README.md)，不得与不同 Run ID 的单侧实验合并。
 
 先在两个终端启动接收：
 

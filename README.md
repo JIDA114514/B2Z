@@ -4,7 +4,7 @@
 
 当前研究主线是基于 BLE extended advertising 的双协议共包控制与同步：在同一个 secondary `AUX_ADV_IND` 中承载 BLE 与 BlueBee/IEEE 802.15.4 信息。v1 控制负载和同频诊断收发原型已实现；独立设备同步处理、规范 exadv 跟随及相对基线收益仍需实现或验证。板端现有工作主要位于 `app_FreeRTOS/`。常用工作流有两类：
 
-下一阶段先完成连续单包的接收侧时间模型和简单软件控制；具体实现顺序见[功能完成路线](doc/control_sync_function_plan.md)，实验工作包与测量边界见[下一阶段计划](doc/next_stage_plan.md)，字段与单包预算见[v1 负载草案](doc/control_sync_packet_v1_draft.md)，相关先例见[设计研究笔记](doc/sync_control_payload_research.md)。
+接收侧时间模型、单侧软件控制及两条实时接收链的逐任务报告已接入；板端一轮多任务计划和逐时隙统计代码已完成，待构建上板。下一项是双侧逐任务联合汇总与功能对照。上板后的步骤和判定口径见[多任务实验方案](doc/multi_task_control_experiment_plan.md)，实现顺序见[功能完成路线](doc/control_sync_function_plan.md)，实验工作包与测量边界见[下一阶段计划](doc/next_stage_plan.md)，字段与单包预算见[v1 负载草案](doc/control_sync_packet_v1_draft.md)，相关先例见[设计研究笔记](doc/sync_control_payload_research.md)。
 
 - Python 端离线生成 IQ/C 头文件，用于分析、SDK 集成或 HackRF/接收链路验证。
 - FreeRTOS 串口命令在板端启动 legacy BLE、切换共享 TX DMA 波形，或运行时生成 BlueBee / BLE exadv secondary 波形。
@@ -197,8 +197,9 @@ FreeRTOS 运行时入口在 `app_FreeRTOS/`。串口 console task 会先处理�
 | `bluebee_pure_perf_start? <payload_len> <interval_us> <duration_s> [run_id] [mode] [batch_size]` | 启动 pure BlueBee 性能实验；当前已实现 `mode=0` realtime。 |
 | `bluebee_exadv_perf_start? <payload_len> <interval_us> <duration_s> [run_id] [mode] [batch_size]` | 启动 exadv primary/secondary 性能实验；当前已实现 `mode=0` realtime。 |
 | `b2z_control_start? <run_id> <command_id> [...]` | 启动有限次数的 v1 双协议控制与时间广播；当前为 ch39 同频诊断发送，参数见 [FreeRTOS 命令说明](app_FreeRTOS/README.md#十六v1-双协议控制与时间广播命令待上板验证)。 |
+| `b2z_plan_clear?`、`b2z_plan_add? ...`、`b2z_plan_start? <run_id> <period_ms>` | 逐条建立并启动一轮多任务控制计划；逐任务与逐时隙日志见 [FreeRTOS 多任务说明](app_FreeRTOS/README.md#一轮多任务计划待上板验证)。 |
 | `bluebee_perf_status?` | 输出当前配置、运行状态、板端计数器和分阶段生成耗时。 |
-| `bluebee_perf_stop?` | 停止当前性能实验或控制广播；分别输出 `PERF_STATS` 或 `CONTROL_STATS`。 |
+| `bluebee_perf_stop?` | 停止当前性能实验或控制广播；分别输出 `PERF_STATS`、`CONTROL_STATS` 或 `CONTROL_PLAN_STATS`。 |
 
 十六进制 payload 每个 token 最多 1 字节，可使用空格、逗号、冒号或分号分隔，`0x` 前缀可选。当前运行时 BlueBee payload 上限为 46 字节。
 

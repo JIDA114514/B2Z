@@ -28,7 +28,7 @@ python3 python/exadv_rx/receive.py --run-id 10270
 - `--duration 0` 持续接收到 Ctrl-C；离线模式表示读到 EOF。
 - 默认启用 `--timing-retry`：原始完整符号窗口通过 CRC 时直接提交，失败时只对最多两个采样候选和三个小幅时钟偏差，用 0.75 符号宽度的中心窗口重判。重试仍须通过完整 BLE CRC24 和扩展头校验，不使用已知 Run ID/Sequence/填充恢复负载，也不翻转弱位来凑 CRC。`--no-timing-retry` 关闭以做同 IQ 对照。
 - `--channel-cutoff-hz` 允许在 400000–950000 Hz 范围内显式设置通道 FIR 截止频率，默认仍为 850000 Hz。较窄滤波在不同记录上有得有失，未自动改为新的默认值。
-- 默认按主机本地日期和 `--run-id` 归档至 `python/experiments/YYYYMMDD_run<run_id>/`；每次启动新建独立采集子目录。BLE 的 Run ID 只作归档标签，不参与 BLE 负载解码。`--experiment-dir <目录>` 可覆盖默认目录。
+- 默认按主机本地日期和 `--run-id` 归档至 `python/experiments/YYYYMMDD_run<run_id>/`；每次启动新建独立采集子目录。普通接收时 BLE 的 Run ID 只作归档标签；启用 `--control-target-id` 后，控制模块会独立核对包内 Run ID，异轮包标记为 `foreign_run`。`--experiment-dir <目录>` 可覆盖默认目录。
 - `--output <前缀>` 保持旧前缀语义，已有文件时拒绝覆盖；与 `--experiment-dir` 互斥。
 - 回放通过 `--analysis-id <名称>` 指定 `analyses/` 子目录；该参数需要 `--iq-file`，省略则自动生成。
 - 默认射频放大器关闭，LNA=24 dB、VGA=20 dB 只是初始设置，不是稳定性保证；根据距离和饱和情况调整。
@@ -54,16 +54,19 @@ python3 python/exadv_rx/receive.py \
 - `.summary.json`：完整配置、计数、处理耗时、队列压力和运行状态；`.summary.txt` 为简短文本，`.report.md` 为可读接收报告。本轮顶层 `report.md` 汇总各接收记录；JSONL 保留原始逐包数据。
 - `.hackrf.log`：`hackrf_transfer` 原始 stderr，保留设备错误和可能的传输异常。
 - 开启 `--save-iq` 时输出 `.ci8`（或离线输入对应的 `.cf32`），录制参数在 summary 中。
+- 指定 `--control-target-id <ID>` 时另输出 `.control.events.jsonl`、`.control.tasks.csv`、`.control.summary.json`、`.control.report.md`，记录本侧控制命令的软件状态与处理事件。
+
+控制模块示例：`python3 python/exadv_rx/receive.py --run-id 1101 --control-target-id 1`。目标 ID 可重复指定。默认缺少已校准参考误差界，定时命令会记录 `time_quality_insufficient`；只验证软件流程时可显式添加 `--control-assumed-reference-bound-ms 1`，报告会将该值标记为未经校准的假设。还可用 `--control-accept-broadcast` 接受广播目标、`--control-sender-id` 设置本地来源标签；该标签不是包内身份认证。离线 IQ 的软件处理事件是样本进度回放；实时事件附带主机单调时钟，但包含解码/排队时延，不是 RF 时间戳。详见[控制模块说明](../control_match/README.md#单侧时间与软件命令模块)。
 
 注意：
 
 1. 长度使用完整 8 位，支持最大 255 B PDU payload；不沿用旧接收器的 `length & 0x3f`。所有采样相位参与同步搜索，不依赖任意 bit 流恰好字节对齐。
 2. CRC 错包不提交为有效接收；`crc_failure_candidates` 只是同步候选 CRC 失败数，不能当成唯一物理坏包数。通过 CRC 但扩展头非法的候选另计。
 3. 真正重复发射的包逐个保留，不因 PDU 内容相同而丢弃；同一采样位置的多相位检测内部只提交一次。ADI/DID 不是逐包 Sequence。
-4. `sample_start` 为输入 IQ 的相对采样位置，已补偿 FIR 群延迟；`sample_time_s` 用标称采样率换算，不是硬件绝对时间或 UTC。接收选择相位、频偏和滤波仍有估计误差，不作为已校准同步精度。
+4. `sample_start` 为输入 IQ 的相对采样位置，已补偿 FIR 群延迟；`available_sample` 是解码器提交该包时已处理的采样进度，供命令可用时刻判决，不能充当主机实际回调时间。`sample_time_s` 用标称采样率换算，不是硬件绝对时间或 UTC。接收选择相位、频偏和滤波仍有估计误差，不作为已校准同步精度。
 5. 仅在同一连续 IQ 采集中按采样时间配对；不使用 USB 到达时间、进程墙钟或实验周期折叠伪造配对。不跨设备 summary 直接比较相对时间。
 6. AuxPtr 的偏移表示量化窗口，不是无误差的精确执行时刻；当前配对还允许配置的测量容差。多个 primary 指向同一个 secondary 时可产生多个指针匹配，不等于多个独立控制任务。
-7. `auxiliary` 不凭 type 7 或 ADI 猜测 AUX_ADV_IND/AUX_CHAIN_IND 等具体子类型；当前不重组链式数据，也不执行应用控制命令。
+7. `auxiliary` 不凭 type 7 或 ADI 猜测 AUX_ADV_IND/AUX_CHAIN_IND 等具体子类型；当前不重组链式数据。可选控制模块只产生软件状态事件，不驱动物理执行器。
 8. 未合并发送端有效计数与一致观察窗口时 PRR 为 N/A。新脚本不会从接收数量推测板端发送数。
 
 ### `pairs` 与 `diagnostic_pairs`

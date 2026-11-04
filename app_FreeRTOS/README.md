@@ -600,3 +600,22 @@ b2z_control_start? 1003 0
 最后一个示例的 `command_id=0` 表示纯时间更新，所有命令字段和目标时刻在空口为 0。`opcode` 为 0=`NOOP`、1=`SET_STATE`、2=`TRIGGER`。命令运行时仍可用 `bluebee_perf_status?` 查看 `CONTROL_STATS`，用 `bluebee_perf_stop?` 提前停止。一次命令最多运行 600 秒，`period_ms` 为 50–65535，尝试次数为正整数；命令包要求最后一次计划广播不晚于 `valid_until_ms`，且 `valid_until_ms < execute_at_ms`。`run_id` 必须为 1–65535，串口形式的 `command_id` 为 0–2147483647；命令编号在同一轮重发时保持不变，计划时隙和 `ref_tick_ms` 按周期增长。串口输出的 `primary_started/primary_completed` 与 `tx_started/tx_completed` 分别统计两种 DMA 提交和轮询完成，`secondary_dma_late_*` 统计计划 secondary 时刻到 DMA 提交函数返回的延迟；这些都不是实际空口发射时间的直接测量。
 
 每个时隙动态生成 primary 和一个共包 secondary，BLE 记录、BlueBee 区域、ADI/DID 随时隙更新；单 secondary 的 PDU payload 为 224 B。当前两个波形均在 **ch39 / 2480 MHz** 发送，primary AuxPtr 声明 ch3、LE 1M 和 30 ms，因此输出明确标记 `rf_mode=same_channel_diagnostic`。这可用于当前两块 HackRF 的固定频点共包实验，**不是跨信道 AuxPtr 跟随验证**。`ref_tick_ms` 是计划的 secondary 前导码起点相对本轮首个计划 secondary 起点的毫秒数；板端尚未测得它与实际空口起点的误差，不能将其当作已校准发送时间戳。主机测试已核对打包、CRC、FCS 和字节预算；实际构建、上板和空口结果待验证。
+
+### 一轮多任务计划（待上板验证）
+
+计划先在串口逐条加入，再一次启动；旧 `b2z_control_start?` 保持单任务用法：
+
+```text
+b2z_plan_clear?
+b2z_plan_add? 0 2 0 0
+b2z_plan_add? 43 3 2000 1600 1 1 1 2 1 1
+b2z_plan_add? 0 1 0 0
+b2z_plan_add? 44 3 3000 2500 1 1 2 2 1 2
+b2z_plan_start? 1501 200
+```
+
+`b2z_plan_add? <command_id> <repeats> <execute_at_ms> <valid_until_ms> [ble_target ble_opcode ble_arg zigbee_target zigbee_opcode zigbee_arg]` 按加入顺序排列连续时隙。`command_id=0` 是纯时间更新，时刻必须都为 0，不能附带目标字段；非零命令省略目标字段时仍默认 BLE 节点 1、IEEE 802.15.4 节点 2 执行 `SET_STATE(1)`。同一非零 `command_id` 在一轮内只能加入一次，其 K 次重发保持相同标识；纯时间更新可穿插多条。全轮 `slot_index` 从 0 连续编号，`ref_tick_ms=slot_index×period_ms`，`run_id` 和周期由 `b2z_plan_start?` 统一设定。每个命令的 `valid_until_ms` 必须覆盖它最后一次计划时隙，并早于 `execute_at_ms`。最多 16 条计划、1024 个时隙、600 秒；周期范围 50–65535 ms。
+
+`CONTROL_PLAN_START` 和逐条 `CONTROL_PLAN_ENTRY` 给出启动清单。运行中 `bluebee_perf_status?` 返回累计 `CONTROL_PLAN_STATS`；结束时依次输出最终累计统计、`CONTROL_PLAN_TASK` 和每个已到达时隙的 `CONTROL_PLAN_SLOT`。时隙记录包含生成、primary/secondary DMA 提交与完成、超时、deadline miss 和相对计划 secondary 的 DMA 延迟；未尝试的已到达时隙保留零标记。串口行在发送结束后输出，应完整保存原始日志。DMA 完成不等于已校准的空口发送时间，接收侧任务成功还需独立解码和关联。
+
+两块 HackRF 的启动顺序、首轮计划、数据归档和功能判定见[多任务共包实验方案](../doc/multi_task_control_experiment_plan.md)。

@@ -40,7 +40,6 @@
 候选 CRC/FCS 失败计数不等于唯一物理坏包数；队列未溢出不证明 USB 无丢样。
 当前报告描述解码与测试负载校验，不表示命令执行或执行器同步。
 
-- [single_before_zigbee.ci8](single_before_zigbee.ci8)
 - [single_before_zigbee.console.log](single_before_zigbee.console.log)
 - [single_before_zigbee.hackrf.log](single_before_zigbee.hackrf.log)
 - [single_before_zigbee.packets.jsonl](single_before_zigbee.packets.jsonl)

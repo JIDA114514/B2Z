@@ -33,3 +33,16 @@ python3 python/control_match/analyze.py \
 该选项要求两份接收摘要的录制墙钟区间有交集。脚本按 `(run_id, command_id, slot_index)` 计算同一物理尝试的两侧有效解码，同时报告同一命令是否分别被两侧至少恢复一次；后者允许来自不同的重发时隙。若未声明同次录制，脚本只报告标识重合，不报告联合有效解码。不能将不同 Run ID 的历史单侧实验合并。
 
 结果写入实验目录下新建的 `analyses/control_match_<UTC 时间>/`，包含 `control.report.md`、`control.summary.json` 和 `control.slots.metrics.csv`。`sample_start` 只作为各接收机自己的 IQ 索引保存，不直接相减测同步精度。完整恢复和匹配表示软件解码成功，不表示命令已被执行，也不表示规范 AuxPtr 跟随或商用 ZigBee 协议栈兼容。
+
+## 单轮离线同步回放
+
+`sync_replay.py` 对两侧已独立解码的控制包按时间切分。每侧只用切分点以前最近的 K 个有效包拟合 `ref_tick_ms → 本机 IQ 时间`；切分点以后两侧共同收到的包只用于检验，绝不回填训练。`natural` 使用各侧原本收到的包；`disjoint` 将 BLE 训练时隙从 ZigBee 训练候选中移除，以回放两侧收包完全不重合的情形。1 包只估计偏移，采用标称采样率；2 包及以上估计偏移和速率。
+
+```bash
+python3 python/control_match/sync_replay.py \
+  --experiment-dir python/experiments/20261104_run1101 \
+  --run-id 1101 --command-id 43 --cut-slot 60 \
+  --analysis-id sync_replay_packet_count_v1
+```
+
+结果写入 `sync.report.md`、`sync.summary.json`、`sync.sweep.csv` 和 `sync.validation.csv`，列出实际训练时隙、训练跨度、最近更新时隙、验证样本数及误差。所有配置使用同一批更晚的共同验证包。该误差是两个独立模型对共同 RF 事件的时间估计差，固定的包内标记和接收路径偏差尚未独立校准；不表示绝对同步精度或执行时差。单轮离线屏蔽包是回放实验，不能充当新的物理独立重复。

@@ -1,0 +1,80 @@
+{
+  "schema": "b2z_control_match_v1",
+  "run_id": 1101,
+  "command_id": 43,
+  "same_transmission_asserted": true,
+  "sources": {
+    "ble": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261104_run1101/captures/ble/113402_302822_14drolk1/rx.packets.jsonl",
+      "sha256": "416010440d0a8a91ccbae9da0e0fdd1c9654c8cc2024f2fea10345cafb146759"
+    },
+    "zigbee": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261104_run1101/captures/zigbee/113404_528523_dbnj0l3y/rx.packets.jsonl",
+      "sha256": "5ad5c5e3bfef27b6baaddea8a1afcb361e829f62a2c5dd324eda167c9fbcc603"
+    },
+    "board_log": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261104_run1101/board.board.log",
+      "sha256": "458c1ad7ebe21c0883bc1b03241c976bbf5025e04baeba83dedc8a4814186c1a"
+    }
+  },
+  "board": {
+    "final": "1",
+    "state": "complete",
+    "run_id": "1101",
+    "command_id": "43",
+    "period_ms": "200",
+    "attempts": "100",
+    "elapsed_us": "20000004",
+    "scheduled": 100,
+    "generated": 100,
+    "primary_started": "100",
+    "primary_completed": 100,
+    "tx_started": "100",
+    "tx_completed": 100,
+    "deadline_miss": 0,
+    "dma_timeout": 0,
+    "secondary_dma_late_samples": "100",
+    "secondary_dma_late_max_us": "80334",
+    "secondary_dma_late_avg_us": "80142",
+    "time_reference": "planned_secondary_start",
+    "rf_mode": "same_channel_diagnostic"
+  },
+  "sides": {
+    "ble": {
+      "rows": 653,
+      "control_candidates": 52,
+      "valid_records": 52,
+      "duplicates": 0,
+      "foreign_run_or_command": 0,
+      "invalid": {},
+      "unique_slots": 52
+    },
+    "zigbee": {
+      "rows": 74,
+      "control_candidates": 74,
+      "valid_records": 74,
+      "duplicates": 0,
+      "foreign_run_or_command": 0,
+      "invalid": {},
+      "unique_slots": 74
+    }
+  },
+  "planned_slots": 100,
+  "observed_union_slots": 74,
+  "identifier_overlap_slots": 52,
+  "joint_valid_decode_slots": 52,
+  "joint_valid_decode_denominator": 100,
+  "joint_command_recovered": true,
+  "task_semantics_consistent": true,
+  "cross_side_task_fields_match": true,
+  "shared_field_mismatches": 0,
+  "ble_only_slots": 0,
+  "zigbee_only_slots": 22,
+  "neither_slots": 26,
+  "limitations": [
+    "Receiver records prove decoding, not command execution.",
+    "Board tx_completed is a DMA-completion proxy, not measured RF airtime.",
+    "Independent HackRF sample times have separate origins and are not subtracted.",
+    "Same-channel diagnostic packets do not prove standards-compliant AuxPtr following."
+  ]
+}

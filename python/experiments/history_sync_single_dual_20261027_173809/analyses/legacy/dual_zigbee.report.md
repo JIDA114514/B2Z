@@ -40,7 +40,6 @@
 候选 CRC/FCS 失败计数不等于唯一物理坏包数；队列未溢出不证明 USB 无丢样。
 当前报告描述解码与测试负载校验，不表示命令执行或执行器同步。
 
-- [dual_zigbee.ci8](dual_zigbee.ci8)
 - [dual_zigbee.console.log](dual_zigbee.console.log)
 - [dual_zigbee.hackrf.log](dual_zigbee.hackrf.log)
 - [dual_zigbee.packets.jsonl](dual_zigbee.packets.jsonl)

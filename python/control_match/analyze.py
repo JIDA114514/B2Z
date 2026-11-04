@@ -226,7 +226,10 @@ def report(summary: dict) -> str:
         joint_text = f"{joint}/{denom}"
     lines.append(f"- 联合有效解码：{joint_text}")
     if joint is not None:
-        lines.append(f"- 同一命令两侧至少各恢复一次：{'是' if summary['joint_command_recovered'] else '否'}（可来自不同重发时隙；仅表示解析）")
+        if summary["command_id"] == 0:
+            lines.append(f"- 同一轮纯时间更新两侧至少各恢复一次：{'是' if summary['joint_command_recovered'] else '否'}（可来自不同发送时隙；不代表控制任务）")
+        else:
+            lines.append(f"- 同一命令两侧至少各恢复一次：{'是' if summary['joint_command_recovered'] else '否'}（可来自不同重发时隙；仅表示解析）")
         lines.append(f"- 仅 BLE / 仅 ZigBee / 两侧均缺：{summary['ble_only_slots']} / {summary['zigbee_only_slots']} / {summary['neither_slots'] if summary['neither_slots'] is not None else 'N/A'}")
     lines += ["", "`control.slots.metrics.csv` 逐时隙列出两侧独立结果；没有同次录制声明时，标识重合不作为联合成功。",
               "", *["- " + item for item in summary["limitations"]], ""]

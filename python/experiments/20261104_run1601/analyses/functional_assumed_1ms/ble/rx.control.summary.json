@@ -1,0 +1,100 @@
+{
+  "schema": "b2z_live_control_v1",
+  "side": "ble",
+  "run_id": 1601,
+  "sender_id": "configured_board",
+  "receiver_status": "complete",
+  "observation_mode": "offline_sample_replay",
+  "target_ids": [
+    1
+  ],
+  "accept_broadcast": false,
+  "external_reference_bound_ms": 1.0,
+  "reference_bound_status": "user supplied; calibration not verified by software",
+  "event_counts": {
+    "decoded": 9,
+    "clock_updated": 9,
+    "accepted": 2,
+    "scheduled": 2,
+    "rescheduled": 8,
+    "duplicate": 4,
+    "schedule_frozen": 2,
+    "software_processed": 2
+  },
+  "reasons": {},
+  "tasks": [
+    {
+      "run_id": 1601,
+      "command_id": 43,
+      "target_id": 1,
+      "opcode": 1,
+      "arg": 1,
+      "decoded_packets": 3,
+      "unique_slots": 3,
+      "duplicate_attempts": 2,
+      "first_decoded_sample": 25493504,
+      "last_decoded_sample": 28639232,
+      "accepted_sample": 25493504,
+      "target_sample": 62207582,
+      "processed_sample": 62259200,
+      "processing_lateness_ms": 6.45225,
+      "status": "software_processed",
+      "last_rejection_reason": null,
+      "cancellation_reason": null
+    },
+    {
+      "run_id": 1601,
+      "command_id": 44,
+      "target_id": 1,
+      "opcode": 1,
+      "arg": 2,
+      "decoded_packets": 3,
+      "unique_slots": 3,
+      "duplicate_attempts": 2,
+      "first_decoded_sample": 31850496,
+      "last_decoded_sample": 35061760,
+      "accepted_sample": 31850496,
+      "target_sample": 78200620,
+      "processed_sample": 78249984,
+      "processing_lateness_ms": 6.1705,
+      "status": "software_processed",
+      "last_rejection_reason": null,
+      "cancellation_reason": null
+    }
+  ],
+  "engine": {
+    "side": "ble",
+    "run_id": 1601,
+    "current_sample": 240000000,
+    "clock": {
+      "model_version": 9,
+      "training_packets": 9,
+      "latest_ref_ms": 1600,
+      "training_span_ms": 1600,
+      "rate_fitted": true,
+      "rate_ppm": -435.1249999999807,
+      "residual_ms": 0.6686222222219221
+    },
+    "task_status": {
+      "43": "processed",
+      "44": "processed"
+    },
+    "software_state": {
+      "1": 2
+    },
+    "software_triggers": []
+  },
+  "generated_utc": "2026-11-05T02:24:00.151932+00:00",
+  "files": {
+    "control_events": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/ble/rx.control.events.jsonl",
+    "control_tasks": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/ble/rx.control.tasks.csv",
+    "control_summary": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/ble/rx.control.summary.json",
+    "control_report": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/ble/rx.control.report.md"
+  },
+  "limitations": [
+    "one receiver's software events only",
+    "IQ sample progress is not a calibrated host or RF timestamp",
+    "offline events are simulated; live host timestamps include processing latency",
+    "no cross-device execution error or physical actuator measurement"
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "schema": "exadv_rx_v3",
+  "receiver_version": "2026-10-26-window-retry1",
+  "start_utc": "2026-11-05T02:23:40.931987+00:00",
+  "end_utc": "2026-11-05T02:24:00.153117+00:00",
+  "status": "complete",
+  "error": null,
+  "config": {
+    "channels": [
+      39
+    ],
+    "whitening_channels": [
+      39
+    ],
+    "sample_rate": 8000000,
+    "center_hz": 2480000000.0,
+    "iq_file": "python/experiments/20261104_run1601/captures/ble/rx.ci8",
+    "format": "ci8",
+    "serial": null,
+    "lna": 24,
+    "vga": 20,
+    "amp": false,
+    "duration": 0,
+    "block_samples": 65536,
+    "queue_blocks": 64,
+    "stall_timeout": 10,
+    "sync_threshold": 0.84,
+    "dc_block_hz": 1000,
+    "timing_retry": true,
+    "channel_cutoff_hz": 850000,
+    "pair_tolerance_us": 20,
+    "diagnostic_pairs": true,
+    "diagnostic_pair_window_us": 2000,
+    "save_iq": false,
+    "output": null,
+    "experiment_dir": "python/experiments/20261104_run1601",
+    "analysis_id": "functional_assumed_1ms",
+    "quiet": true,
+    "run_id": 1601,
+    "control_target_id": [
+      1
+    ],
+    "control_sender_id": "configured_board",
+    "control_accept_broadcast": false,
+    "control_assumed_reference_bound_ms": 1.0
+  },
+  "capture_command": null,
+  "capture_returncode": null,
+  "capture_stats": {
+    "bytes_read": 480000000,
+    "queue_high_water": 64
+  },
+  "counts": {
+    "clipped_components": 125050,
+    "samples_processed": 240000000,
+    "packets": 18,
+    "primary": 9,
+    "same_channel_auxiliary_diagnostic": 9
+  },
+  "channels": {
+    "39": {
+      "sync_candidates": 71,
+      "rejected_candidates": 53,
+      "packets": 18
+    }
+  },
+  "matched_events": 0,
+  "expired_primary": 9,
+  "diagnostic_pairs": 9,
+  "diagnostic_expired_primary": 0,
+  "diagnostic_pending_overflow": 0,
+  "pending_primary": 0,
+  "wall_duration_s": 19.21877793202293,
+  "processed_sample_duration_s": 30.0,
+  "processing_ms_recent": {
+    "samples": 3664,
+    "mean": 4.602649380397582,
+    "p99": 5.749665634066332,
+    "max": 8.27821099665016
+  },
+  "stderr_tail": [],
+  "files": {
+    "packets": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/ble/rx.packets.jsonl",
+    "events": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/ble/rx.events.jsonl",
+    "summary": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/ble/rx.summary.json",
+    "text": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/ble/rx.summary.txt",
+    "report": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/ble/rx.report.md",
+    "stderr": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/ble/rx.hackrf.log",
+    "control_events": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/ble/rx.control.events.jsonl",
+    "control_tasks": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/ble/rx.control.tasks.csv",
+    "control_summary": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/ble/rx.control.summary.json",
+    "control_report": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/ble/rx.control.report.md"
+  },
+  "control_engine": {
+    "event_counts": {
+      "decoded": 9,
+      "clock_updated": 9,
+      "accepted": 2,
+      "scheduled": 2,
+      "rescheduled": 8,
+      "duplicate": 4,
+      "schedule_frozen": 2,
+      "software_processed": 2
+    },
+    "tasks": [
+      {
+        "run_id": 1601,
+        "command_id": 43,
+        "target_id": 1,
+        "opcode": 1,
+        "arg": 1,
+        "decoded_packets": 3,
+        "unique_slots": 3,
+        "duplicate_attempts": 2,
+        "first_decoded_sample": 25493504,
+        "last_decoded_sample": 28639232,
+        "accepted_sample": 25493504,
+        "target_sample": 62207582,
+        "processed_sample": 62259200,
+        "processing_lateness_ms": 6.45225,
+        "status": "software_processed",
+        "last_rejection_reason": null,
+        "cancellation_reason": null
+      },
+      {
+        "run_id": 1601,
+        "command_id": 44,
+        "target_id": 1,
+        "opcode": 1,
+        "arg": 2,
+        "decoded_packets": 3,
+        "unique_slots": 3,
+        "duplicate_attempts": 2,
+        "first_decoded_sample": 31850496,
+        "last_decoded_sample": 35061760,
+        "accepted_sample": 31850496,
+        "target_sample": 78200620,
+        "processed_sample": 78249984,
+        "processing_lateness_ms": 6.1705,
+        "status": "software_processed",
+        "last_rejection_reason": null,
+        "cancellation_reason": null
+      }
+    ],
+    "report": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/ble/rx.control.report.md"
+  },
+  "sources_sha256": {
+    "exadv_rx/receive.py": "32ac150e0729eacc018edf8769a5e1f694e590b183a8d177b5835339e87c4168",
+    "exadv_rx/arguments.py": "100620f696cdc8973a4560832d39041f287732df73ad4fc0aaec91a527e68cb7",
+    "exadv_rx/decoder.py": "b0975b91d2e8997fb0a4c217cb771aba7661eeb671986163a9e8430f82bf6bd6",
+    "exadv_rx/protocol.py": "cf2cf405a303ce1f8087c0806f66ee3e2a82d72b317130113c9f78825fd9bff8",
+    "experiment_tools/receiver_defaults.py": "e9231cd5a7af2a945ab3b3675f19434133ce1739c446fcdac2e0bf0c20bd6a3b",
+    "experiment_tools/reporting.py": "957bcf9fc5f3f6838c02f26f70cd5a1af637b8d97409659fca176c35c546e1d2",
+    "control_match/control_engine.py": "a7d5210f1a77f4af8af245745e8fe19170d6a1312ae464bf2d975671669d2abe",
+    "control_match/live_control.py": "d263c31af985b6e0cec8666954a2bed5e7dbc328d64284df33eef262e226d495",
+    "control_match/packet_adapter.py": "9faf636c861a2c64f857c50e75691c408138f558eb8bd7e601117aed711b9c02",
+    "control_match/protocol.py": "436b05d1dfb6773b1a814ad65fd277a8fca29900fb42fcd7b4a4c90317d99e2f"
+  },
+  "limitations": [
+    "LE 1M only; fixed RF capture, no host-timed frequency hopping",
+    "DC blocker/filter and demodulation timing require calibration before synchronization claims",
+    "sample timestamps are relative to capture, not hardware/UTC timestamps",
+    "HackRF/USB sample losses may be unobservable in raw IQ; no guaranteed gap-free timeline",
+    "CRC-failure counts refer to sync candidates, not uniquely identified transmitted packets",
+    "no PRR without independently supplied TX counts and matched observation window"
+  ]
+}

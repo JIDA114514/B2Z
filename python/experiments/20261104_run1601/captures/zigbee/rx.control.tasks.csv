@@ -1,0 +1,2 @@
+run_id,command_id,target_id,opcode,arg,decoded_packets,unique_slots,duplicate_attempts,first_decoded_sample,last_decoded_sample,accepted_sample,target_sample,processed_sample,processing_lateness_ms,status,last_rejection_reason,cancellation_reason
+1601,43,2,1,1,1,1,0,51118080,51118080,,,,,rejected,time_quality_insufficient,

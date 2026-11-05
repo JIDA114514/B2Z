@@ -1,0 +1,5 @@
+entry,command_id,planned_attempts,board_tx_completed,ble_valid_slots,zigbee_valid_slots,joint_valid_slots,ble_task_decoded,zigbee_task_decoded
+0,0,2,2,2,1,1,0,0
+1,43,3,3,3,1,1,1,1
+2,0,1,1,1,0,0,0,0
+3,44,3,3,3,0,0,1,0

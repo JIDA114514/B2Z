@@ -1,0 +1,3 @@
+run_id,command_id,target_id,opcode,arg,decoded_packets,unique_slots,duplicate_attempts,first_decoded_sample,last_decoded_sample,accepted_sample,target_sample,processed_sample,processing_lateness_ms,status,last_rejection_reason,cancellation_reason
+1601,43,1,1,1,3,3,2,25493504,28639232,25493504,62207582,62259200,6.45225,software_processed,,
+1601,44,1,1,2,3,3,2,31850496,35061760,31850496,78200620,78249984,6.1705,software_processed,,

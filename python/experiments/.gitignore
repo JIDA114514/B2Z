@@ -7,6 +7,7 @@
 !*.summary.txt
 !*.summary.csv
 !*.metrics.csv
+!*.control.tasks.csv
 !*.config.json
 !*.manifest.json
 !*.payload_validation.json

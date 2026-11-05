@@ -1,0 +1,19 @@
+{
+  "schema": "local_iq_manifest_v1",
+  "run_id": 1601,
+  "purpose": "Identify locally retained IQ captures used for the run 1601 analysis; IQ bytes are excluded from Git.",
+  "files": [
+    {
+      "path": "ble/rx.ci8",
+      "bytes": 480000000,
+      "sha256": "17c2cb9e25d056c66dc94a4c955fa9747cb21506dc5a2f989ef0c42234853275",
+      "receiver_summary": "ble/rx.summary.json"
+    },
+    {
+      "path": "zigbee/rx.ci8",
+      "bytes": 480000000,
+      "sha256": "c78f0643a4a1304035ab1a99277b2bd39d1ead2d2bde14891153d70af953ca8c",
+      "receiver_summary": "zigbee/rx.summary.json"
+    }
+  ]
+}

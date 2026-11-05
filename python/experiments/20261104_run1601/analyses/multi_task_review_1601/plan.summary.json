@@ -1,0 +1,178 @@
+{
+  "schema": "b2z_plan_review_v1",
+  "run_id": 1601,
+  "generated_utc": "2026-11-05T02:30:32.355172+00:00",
+  "sources": {
+    "board": {
+      "path": "python/experiments/20261104_run1601/board.board.log",
+      "sha256": "8dca4c1a8dc7729d969891fa90327fe71eaa3aa4efd8e42e2b21414033179da4"
+    },
+    "ble_packets": {
+      "path": "python/experiments/20261104_run1601/captures/ble/rx.packets.jsonl",
+      "sha256": "19b8131f223397700894455b281b00ddbb1058e57e9c6b63a0770677f7f26037"
+    },
+    "zigbee_packets": {
+      "path": "python/experiments/20261104_run1601/captures/zigbee/rx.packets.jsonl",
+      "sha256": "97d690da157bdd60edea1bdf0e5166f47f0952702d996282d12a3c2aad3d03c7"
+    },
+    "same_iq_packets": {
+      "path": "python/experiments/20261104_run1601/analyses/same_iq/zigbee/rx.packets.jsonl",
+      "sha256": "ced89a65475a10672379859700f4b296720d3a74c45a3858bef55d0f69b9bd80"
+    },
+    "ble_receiver_summary": {
+      "path": "python/experiments/20261104_run1601/captures/ble/rx.summary.json",
+      "sha256": "1fe22ab8b0b40db01215fbd4533ac51ad22215ad66a9994bb065c20947bc9d3f"
+    },
+    "ble_control_summary": {
+      "path": "python/experiments/20261104_run1601/captures/ble/rx.control.summary.json",
+      "sha256": "ff35e76cb23f08efd59022cbc821e2fc850e25f9bbed7b9edd1c010caea7c876"
+    },
+    "ble_replay_summary": {
+      "path": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/ble/rx.control.summary.json",
+      "sha256": "178d066fbd6ca7a2a3721b53042892362092a8316abf5e4555a49bdc0682f30d"
+    },
+    "zigbee_receiver_summary": {
+      "path": "python/experiments/20261104_run1601/captures/zigbee/rx.summary.json",
+      "sha256": "a873d9d6cbe4952cc5f41aaeb9f42c837b078da91004e389a63488e0e96aee23"
+    },
+    "zigbee_control_summary": {
+      "path": "python/experiments/20261104_run1601/captures/zigbee/rx.control.summary.json",
+      "sha256": "f4adefc19701a5191b17a0d252b820fb9d3502def606d980ec2a8d331831a321"
+    },
+    "zigbee_replay_summary": {
+      "path": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/zigbee/rx.control.summary.json",
+      "sha256": "40e49013bd098fe67f3e3b0521c15606eaf5f84cc8fcd1cc827e3788b0898ff1"
+    },
+    "same_iq_summary": {
+      "path": "python/experiments/20261104_run1601/analyses/same_iq/zigbee/rx.summary.json",
+      "sha256": "f1c83f3a6ab24dbf65970449f6e3a15d5408372aae4685325f5cf1a66cd15fb0"
+    },
+    "same_iq_assumed_1ms_zigbee_control_summary": {
+      "path": "python/experiments/20261104_run1601/analyses/same_iq_assumed_1ms/zigbee/rx.control.summary.json",
+      "sha256": "218a1f74d3d7bea8e24f47d15d8c430c123b72f81c51b615ab0c2761698c891d"
+    },
+    "zigbee_iq_ble_diagnostic_summary": {
+      "path": "python/experiments/20261104_run1601/analyses/zigbee_iq_ble_diagnostic/ble/rx.summary.json",
+      "sha256": "885223823590d874d4a5b0a5830621276a2df8f104f0d10e4cf8610039a80f12"
+    },
+    "zigbee_iq_ble_diagnostic_packets": {
+      "path": "python/experiments/20261104_run1601/analyses/zigbee_iq_ble_diagnostic/ble/rx.packets.jsonl",
+      "sha256": "35acf75a9a822a60f27998c25fabb2877f5f4121ec8b32e0bd27b2ecf839967d"
+    },
+    "ble_control_packet_sample": {
+      "path": "python/experiments/20261104_run1601/captures/ble/rx.control.packets.sample.jsonl",
+      "sha256": "c1a6451069397cfea0e67bd281ae1d5ab10f2c46763633229b9c444a1ddb1e00"
+    },
+    "zigbee_control_packet_sample": {
+      "path": "python/experiments/20261104_run1601/captures/zigbee/rx.control.packets.sample.jsonl",
+      "sha256": "97d690da157bdd60edea1bdf0e5166f47f0952702d996282d12a3c2aad3d03c7"
+    },
+    "same_iq_zigbee_packet_sample": {
+      "path": "python/experiments/20261104_run1601/analyses/same_iq_assumed_1ms/zigbee/rx.control.packets.sample.jsonl",
+      "sha256": "ced89a65475a10672379859700f4b296720d3a74c45a3858bef55d0f69b9bd80"
+    },
+    "zigbee_iq_board_primary_packet_sample": {
+      "path": "python/experiments/20261104_run1601/analyses/zigbee_iq_ble_diagnostic/ble/rx.board_primary.packets.sample.jsonl",
+      "sha256": "816438a00ded362ff5898b2d702ca2a9d0ec98c1235872fa39edf76af7cc5fe8"
+    }
+  },
+  "board": {
+    "status": "complete",
+    "planned_slots": 9,
+    "reached_slots": 9,
+    "generated": 9,
+    "primary_completed": 9,
+    "tx_completed": 9,
+    "deadline_miss": 0,
+    "dma_timeout": 0,
+    "secondary_dma_late_avg_us": 80542,
+    "secondary_dma_late_min_us": 80182,
+    "secondary_dma_late_max_us": 81543
+  },
+  "capture": {
+    "ble": {
+      "status": "complete",
+      "sample_duration_s": 30.0,
+      "queue_overflow": 0,
+      "valid_control_slots": 9
+    },
+    "zigbee": {
+      "status": "complete",
+      "sample_duration_s": 30.0,
+      "queue_overflow": 0,
+      "valid_control_slots": 2
+    }
+  },
+  "joint_slots": {
+    "both": 2,
+    "ble_only": 7,
+    "zigbee_only": 0,
+    "neither": 0
+  },
+  "joint_valid_decode_tasks": {
+    "numerator": 1,
+    "denominator": 2
+  },
+  "same_iq": {
+    "zigbee_valid_slots": 9,
+    "analysis_status": "interrupted",
+    "independent_physical_receiver": false
+  },
+  "assumed_1ms_replay": {
+    "ble": {
+      "software_processed_tasks": 2,
+      "observed_tasks": [
+        43,
+        44
+      ]
+    },
+    "zigbee": {
+      "software_processed_tasks": 1,
+      "observed_tasks": [
+        43
+      ]
+    }
+  },
+  "limitations": [
+    "board log was supplied in conversation and copied into board.board.log; not an independently captured serial file",
+    "board tx_completed is DMA-completion proxy, not a calibrated RF-start timestamp",
+    "same-IQ ZigBee replay was interrupted after all nine target slots, so it is protocol-path evidence only",
+    "1 ms replay reference bound is assumed, not measured; software events are not physical execution",
+    "independent HackRF sample origins are uncalibrated; no cross-device synchronization error is reported"
+  ],
+  "same_iq_assumed_1ms": {
+    "analysis_status": "complete",
+    "valid_control_slots": 9,
+    "accepted_tasks": 2,
+    "software_processed_tasks": 2,
+    "command_ids": [
+      43,
+      44
+    ],
+    "software_state": {
+      "2": 1
+    },
+    "software_triggers": [
+      {
+        "target_id": 2,
+        "arg": 7,
+        "local_sample": 78249984
+      }
+    ],
+    "independent_physical_receiver": false,
+    "reference_bound_ms_is_assumed": true
+  },
+  "zigbee_iq_ble_diagnostic": {
+    "analysis_status": "complete",
+    "target_primary_slots": [
+      1,
+      2,
+      3,
+      4,
+      8
+    ],
+    "target_secondary_control_slots": [],
+    "independent_physical_receiver": false,
+    "input_iq_source": "independent ZigBee HackRF capture"
+  }
+}

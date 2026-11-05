@@ -18,6 +18,7 @@ experiment_id,run_ids,status,receiver_records,live_records,replay_records,analys
 20261104_run1401,1401,complete,1,1,0,0,20261104_run1401/report.md
 20261104_run1402,1402,complete,1,1,0,0,20261104_run1402/report.md
 20261104_run1403,1403,complete,1,1,0,0,20261104_run1403/report.md
+20261104_run1601,1601,interrupted,7,2,5,8,20261104_run1601/report.md
 history_ble_rx_20261026_150021_003660,,complete,2,1,1,0,history_ble_rx_20261026_150021_003660/report.md
 history_ble_rx_20261026_150507_618440,,complete,2,1,1,0,history_ble_rx_20261026_150507_618440/report.md
 history_ble_rx_20261026_152018_750312,,complete,3,1,2,0,history_ble_rx_20261026_152018_750312/report.md

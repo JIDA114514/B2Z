@@ -1,0 +1,78 @@
+{
+  "schema": "b2z_live_control_v1",
+  "side": "zigbee",
+  "run_id": 1601,
+  "sender_id": "configured_board",
+  "receiver_status": "complete",
+  "observation_mode": "offline_sample_replay",
+  "target_ids": [
+    2
+  ],
+  "accept_broadcast": false,
+  "external_reference_bound_ms": 1.0,
+  "reference_bound_status": "user supplied; calibration not verified by software",
+  "event_counts": {
+    "decoded": 2,
+    "clock_updated": 2,
+    "accepted": 1,
+    "scheduled": 1,
+    "schedule_frozen": 1,
+    "software_processed": 1
+  },
+  "reasons": {},
+  "tasks": [
+    {
+      "run_id": 1601,
+      "command_id": 43,
+      "target_id": 2,
+      "opcode": 1,
+      "arg": 1,
+      "decoded_packets": 1,
+      "unique_slots": 1,
+      "duplicate_attempts": 0,
+      "first_decoded_sample": 51118080,
+      "last_decoded_sample": 51118080,
+      "accepted_sample": 51118080,
+      "target_sample": 86253434,
+      "processed_sample": 86310912,
+      "processing_lateness_ms": 7.18475,
+      "status": "software_processed",
+      "last_rejection_reason": null,
+      "cancellation_reason": null
+    }
+  ],
+  "engine": {
+    "side": "zigbee",
+    "run_id": 1601,
+    "current_sample": 240000000,
+    "clock": {
+      "model_version": 2,
+      "training_packets": 2,
+      "latest_ref_ms": 600,
+      "training_span_ms": 400,
+      "rate_fitted": false,
+      "rate_ppm": 0.0,
+      "residual_ms": 0.024
+    },
+    "task_status": {
+      "43": "processed"
+    },
+    "software_state": {
+      "2": 1
+    },
+    "software_triggers": []
+  },
+  "generated_utc": "2026-11-05T02:24:28.927431+00:00",
+  "files": {
+    "control_events": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/zigbee/rx.control.events.jsonl",
+    "control_tasks": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/zigbee/rx.control.tasks.csv",
+    "control_summary": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/zigbee/rx.control.summary.json",
+    "control_report": "python/experiments/20261104_run1601/analyses/functional_assumed_1ms/zigbee/rx.control.report.md"
+  },
+  "limitations": [
+    "one receiver's software events only",
+    "IQ sample progress is not a calibrated host or RF timestamp",
+    "offline events are simulated; live host timestamps include processing latency",
+    "no cross-device execution error or physical actuator measurement"
+  ]
+}

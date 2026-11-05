@@ -1,0 +1,190 @@
+{
+  "schema": "zigbee_control_rx_v1",
+  "receiver_version": "control-v1-live1",
+  "status": "complete",
+  "error": null,
+  "start_utc": "2026-11-05T02:31:08.746979+00:00",
+  "end_utc": "2026-11-05T02:31:34.025807+00:00",
+  "config": {
+    "channel": 26,
+    "serial": null,
+    "sample_rate": 8000000,
+    "center_hz": 2480000000,
+    "iq_file": "python/experiments/20261104_run1601/captures/ble/rx.ci8",
+    "format": "ci8",
+    "lna": 24,
+    "vga": 20,
+    "amp": false,
+    "duration": 0,
+    "block_samples": 65536,
+    "queue_blocks": 64,
+    "stall_timeout": 10,
+    "dc_block_hz": 1000,
+    "cutoff_hz": 700000,
+    "cfo_hz": 0,
+    "demod": "phase",
+    "symbol_order": "project",
+    "soft_retry": true,
+    "preamble_max_distance": 80,
+    "run_id": 1601,
+    "command_id": null,
+    "control_target_id": [
+      2
+    ],
+    "control_sender_id": "configured_board",
+    "control_accept_broadcast": false,
+    "control_assumed_reference_bound_ms": 1.0,
+    "expected_packets": 9,
+    "board_log": null,
+    "full_run_covered": false,
+    "save_iq": false,
+    "output": null,
+    "experiment_dir": "python/experiments/20261104_run1601",
+    "analysis_id": "same_iq_assumed_1ms",
+    "quiet": true,
+    "payload_len": null
+  },
+  "capture_command": null,
+  "capture_returncode": null,
+  "capture_stats": {
+    "bytes_read": 480000000,
+    "queue_high_water": 64
+  },
+  "stderr_tail": [],
+  "counts": {
+    "clipped_components": 125050,
+    "samples_processed": 240000000,
+    "fcs_valid_packets": 9,
+    "control_candidates": 9,
+    "valid_control_records": 9,
+    "matching_control_records": 9,
+    "unique": 9
+  },
+  "decoder": {
+    "preamble_candidates": 27,
+    "rejected_candidates": 18,
+    "fcs_valid_packets": 9,
+    "hard_dsss_packets": 9
+  },
+  "run_id": 1601,
+  "control_engine": {
+    "event_counts": {
+      "decoded": 9,
+      "clock_updated": 9,
+      "accepted": 2,
+      "scheduled": 2,
+      "rescheduled": 8,
+      "duplicate": 4,
+      "schedule_frozen": 2,
+      "software_processed": 2
+    },
+    "tasks": [
+      {
+        "run_id": 1601,
+        "command_id": 43,
+        "target_id": 2,
+        "opcode": 1,
+        "arg": 1,
+        "decoded_packets": 3,
+        "unique_slots": 3,
+        "duplicate_attempts": 2,
+        "first_decoded_sample": 25493504,
+        "last_decoded_sample": 28704768,
+        "accepted_sample": 25493504,
+        "target_sample": 62207581,
+        "processed_sample": 62259200,
+        "processing_lateness_ms": 6.452375,
+        "status": "software_processed",
+        "last_rejection_reason": null,
+        "cancellation_reason": null
+      },
+      {
+        "run_id": 1601,
+        "command_id": 44,
+        "target_id": 2,
+        "opcode": 2,
+        "arg": 7,
+        "decoded_packets": 3,
+        "unique_slots": 3,
+        "duplicate_attempts": 2,
+        "first_decoded_sample": 31916032,
+        "last_decoded_sample": 35061760,
+        "accepted_sample": 31916032,
+        "target_sample": 78200617,
+        "processed_sample": 78249984,
+        "processing_lateness_ms": 6.170875,
+        "status": "software_processed",
+        "last_rejection_reason": null,
+        "cancellation_reason": null
+      }
+    ],
+    "report": "python/experiments/20261104_run1601/analyses/same_iq_assumed_1ms/zigbee/rx.control.report.md"
+  },
+  "command_id": null,
+  "receiver": {
+    "unique": 9,
+    "duplicate": 0,
+    "out_of_order": 0,
+    "longest_loss_burst": 0,
+    "loss_scope": "explicit planned range",
+    "invalid_reasons": {}
+  },
+  "planned_slots": 9,
+  "board": null,
+  "ratios": {
+    "control_decode_per_dma": {
+      "numerator": 9,
+      "denominator": null,
+      "value": null,
+      "reason": "matching final CONTROL_STATS and full-run coverage required"
+    }
+  },
+  "observation": {
+    "sample_duration_s": 30.0,
+    "wall_duration_s": 25.278888528991956,
+    "scope": "all processed capture samples, including experiment margins"
+  },
+  "processing_ms_recent": {
+    "samples": 3664,
+    "mean": 6.139580913862011,
+    "p99": 8.128688473661894,
+    "max": 10.379511018982157
+  },
+  "environment": {
+    "python": "3.14.4",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3"
+  },
+  "sources_sha256": {
+    "zigbee_rx/control_receive.py": "dd5661176f7e4914d439f380a9e95fe2768737c7fbea5ad4286f81f28dca356f",
+    "zigbee_rx/arguments.py": "91128de1550a2bcae06b171710d3fe91764d06570eeb7c9483f477f9cacb8102",
+    "zigbee_rx/zigbee_decoder.py": "6b134e6988a38bdbc04c2051f93894236719a91b1d8574b09c7b32d3cb610f26",
+    "zigbee_rx/zigbee_protocol.py": "0901c76cc29253f85c5437f87fa6f62bc13a79d9a7a1278b67509195ce6045b1",
+    "zigbee_rx/dsp.py": "834240c91c7e4b0723fe8c3607a13f34a8dc2038c2991902c3eae41dd9f4c353",
+    "zigbee_rx/hackrf_capture.py": "274ed2819c9a152b9ca4f0dc34c0c4b6a2bf079f9a6bf414f024767afc085698",
+    "control_match/protocol.py": "436b05d1dfb6773b1a814ad65fd277a8fca29900fb42fcd7b4a4c90317d99e2f",
+    "control_match/analyze.py": "b914c0cb16ffe05fa46eea72c2323d2fc58e01b029a2d5520e44124922dad7b3",
+    "experiment_tools/receiver_defaults.py": "e9231cd5a7af2a945ab3b3675f19434133ce1739c446fcdac2e0bf0c20bd6a3b",
+    "experiment_tools/reporting.py": "957bcf9fc5f3f6838c02f26f70cd5a1af637b8d97409659fca176c35c546e1d2",
+    "control_match/control_engine.py": "a7d5210f1a77f4af8af245745e8fe19170d6a1312ae464bf2d975671669d2abe",
+    "control_match/live_control.py": "d263c31af985b6e0cec8666954a2bed5e7dbc328d64284df33eef262e226d495",
+    "control_match/packet_adapter.py": "9faf636c861a2c64f857c50e75691c408138f558eb8bd7e601117aed711b9c02"
+  },
+  "files": {
+    "packets": "python/experiments/20261104_run1601/analyses/same_iq_assumed_1ms/zigbee/rx.packets.jsonl",
+    "summary": "python/experiments/20261104_run1601/analyses/same_iq_assumed_1ms/zigbee/rx.summary.json",
+    "text": "python/experiments/20261104_run1601/analyses/same_iq_assumed_1ms/zigbee/rx.summary.txt",
+    "report": "python/experiments/20261104_run1601/analyses/same_iq_assumed_1ms/zigbee/rx.report.md",
+    "hackrf": "python/experiments/20261104_run1601/analyses/same_iq_assumed_1ms/zigbee/rx.hackrf.log",
+    "control_events": "python/experiments/20261104_run1601/analyses/same_iq_assumed_1ms/zigbee/rx.control.events.jsonl",
+    "control_tasks": "python/experiments/20261104_run1601/analyses/same_iq_assumed_1ms/zigbee/rx.control.tasks.csv",
+    "control_summary": "python/experiments/20261104_run1601/analyses/same_iq_assumed_1ms/zigbee/rx.control.summary.json",
+    "control_report": "python/experiments/20261104_run1601/analyses/same_iq_assumed_1ms/zigbee/rx.control.report.md"
+  },
+  "limitations": [
+    "independent SDR PHY and application decode; no physical actuator execution",
+    "FCS-failure candidate counts are not uniquely identified transmitted packets",
+    "sample times are relative to this HackRF IQ and not UTC or another receiver clock",
+    "DMA completion is a proxy for TX; no calibrated RF-start timestamp"
+  ]
+}

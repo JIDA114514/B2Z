@@ -87,3 +87,23 @@ python3 python/control_match/replay_engine.py \
 ```
 
 输出 `control.events.jsonl` 与 `control.summary.json`。默认无参考误差上界，定时命令会被拒绝；仅作功能演示时可显式加 `--assumed-reference-bound-ms 1`，报告会标记该数值未经实测校准。IEEE 802.15.4 侧改用 `--side zigbee --target-id 2` 和本侧逐包文件，不能复用 BLE 文件。
+
+### 立即处理软件基线
+
+`replay_engine.py --policy immediate` 复用相同的独立解码输入、应用 CRC、Run ID、目标、操作码、任务字段一致性与去重规则。首次有效命令在该包的 `available_sample` 位置产生一次 `software_processed`；纯时间更新只记录为 `time_update_ignored`。此基线不建立时间模型、不等待 `execute_at_ms`，也不使用假设参考误差界；没有共同时间参考时不在线判断 `valid_until_ms`，报告明确标记截止时间未评估。它只用于样本域离线软件功能对照，不是实时主机处理时刻或物理执行。
+
+例如从 1801 的两份原始逐包文件各自回放：
+
+```bash
+python3 python/control_match/replay_engine.py \
+  --packets python/experiments/20261109_run1801/captures/ble/155243_684234_luouk7f9/rx.packets.jsonl \
+  --side ble --run-id 1801 --target-id 1 --policy immediate \
+  --output-dir python/experiments/20261109_run1801/analyses/immediate_baseline/ble
+python3 python/control_match/replay_engine.py \
+  --packets python/experiments/20261109_run1801/captures/zigbee/155241_736656_lrrof3kw/rx.packets.jsonl \
+  --side zigbee --run-id 1801 --target-id 2 --policy immediate \
+  --output-dir python/experiments/20261109_run1801/analyses/immediate_baseline/zigbee
+```
+
+输出目录必须尚不存在；每次分析使用新目录名。1801 的结果见[立即处理基线报告](../experiments/20261109_run1801/analyses/immediate_baseline/report.md)。
+该轮还从原始 `rx.ci8` 各重新解调一次，再运行同一基线；新旧逐包流的 300 个槽号、命令号、包起始与可用样本位置完全一致。重新解调是同一物理录制的复核，不算新一轮实验。

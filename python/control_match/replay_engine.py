@@ -17,14 +17,17 @@ from pathlib import Path
 
 try:
     from .control_engine import EngineConfig, SideControlEngine
+    from .immediate_engine import ImmediateControlEngine
     from .packet_adapter import control_payload
 except ImportError:
     from control_engine import EngineConfig, SideControlEngine
+    from immediate_engine import ImmediateControlEngine
     from packet_adapter import control_payload
 
 
 def replay_records(rows: list[dict], config: EngineConfig, total_samples: int,
-                   progress_step_samples: int | None = None) -> tuple[list[dict], dict]:
+                   progress_step_samples: int | None = None,
+                   policy: str = "scheduled") -> tuple[list[dict], dict]:
     """Run one side only, preserving decoder availability and IQ chronology."""
     if not isinstance(total_samples, int) or total_samples < 0:
         raise ValueError("total_samples must be nonnegative")
@@ -45,7 +48,9 @@ def replay_records(rows: list[dict], config: EngineConfig, total_samples: int,
         if packet["available_sample"] > total_samples:
             raise ValueError(f"packet row {line_no}: availability exceeds capture")
         observations.append((payload, packet["sample_start"], packet["available_sample"]))
-    engine = SideControlEngine(config)
+    if policy not in ("scheduled", "immediate"):
+        raise ValueError("policy must be scheduled or immediate")
+    engine = SideControlEngine(config) if policy == "scheduled" else ImmediateControlEngine(config)
     events = []
     cursor = 0
     for payload, start, available in observations:
@@ -63,7 +68,8 @@ def replay_records(rows: list[dict], config: EngineConfig, total_samples: int,
     reasons = Counter(event["reason"] for event in events if "reason" in event)
     foreign_runs = sorted({event["observed_run_id"] for event in events
                            if event["event"] == "foreign_run"})
-    return events, {"control_observations": len(observations), "events": dict(counts),
+    return events, {"control_observations": len(observations), "policy": policy,
+                    "events": dict(counts),
                     "reasons": dict(reasons), "engine": engine.snapshot(),
                     "foreign_run_ids": foreign_runs,
                     "time_reference": "one_receiver_iq_sample_domain",
@@ -81,6 +87,8 @@ def main(argv=None) -> int:
                         help="configured receiver node/group ID; repeat for several memberships")
     parser.add_argument("--sender-id", default="configured_board")
     parser.add_argument("--accept-broadcast", action="store_true")
+    parser.add_argument("--policy", choices=("scheduled", "immediate"), default="scheduled",
+                        help="immediate processes the first valid command at decoder availability")
     parser.add_argument("--assumed-reference-bound-ms", type=float,
                         help="functional replay assumption, not measured synchronization accuracy")
     parser.add_argument("--output-dir", type=Path, required=True)
@@ -101,6 +109,8 @@ def main(argv=None) -> int:
     if args.assumed_reference_bound_ms is not None and (not math.isfinite(args.assumed_reference_bound_ms) or
                                                         args.assumed_reference_bound_ms < 0):
         parser.error("assumed reference bound must be finite and nonnegative")
+    if args.policy == "immediate" and args.assumed_reference_bound_ms is not None:
+        parser.error("immediate policy does not use a reference bound")
     try:
         config = EngineConfig(side=args.side, run_id=args.run_id, sample_rate=sample_rate,
                               target_ids=frozenset(args.target_id), sender_id=args.sender_id,
@@ -109,7 +119,7 @@ def main(argv=None) -> int:
         rows = [json.loads(line) for line in args.packets.read_text(encoding="utf-8").splitlines()
                 if line.strip()]
         events, result = replay_records(rows, config, receiver["counts"]["samples_processed"],
-                                        receiver["config"].get("block_samples"))
+                                        receiver["config"].get("block_samples"), args.policy)
         if result["events"].get("decoded", 0) == 0 and result["foreign_run_ids"]:
             raise ValueError(f"requested run {args.run_id}, packet contents have run IDs "
                              f"{result['foreign_run_ids']}")
@@ -122,10 +132,13 @@ def main(argv=None) -> int:
     events_path = output / "control.events.jsonl"
     events_path.write_text("".join(json.dumps(event, ensure_ascii=False) + "\n" for event in events),
                            encoding="utf-8")
-    result.update(schema="b2z_control_engine_replay_v1", side=args.side, run_id=args.run_id,
+    result.update(schema=("b2z_control_engine_replay_v1" if args.policy == "scheduled" else
+                          "b2z_immediate_baseline_replay_v1"), side=args.side, run_id=args.run_id,
                   target_ids=sorted(config.target_ids), sample_rate=sample_rate,
                   assumed_reference_bound_ms=args.assumed_reference_bound_ms,
-                  assumption_status=("uncalibrated; timed actions denied" if args.assumed_reference_bound_ms is None
+                  assumption_status=("no time reference used; deadline and target-time checks not evaluated"
+                                     if args.policy == "immediate" else
+                                     "uncalibrated; timed actions denied" if args.assumed_reference_bound_ms is None
                                      else "user-supplied functional replay assumption; not a measured bound"),
                   generated_utc=datetime.now(timezone.utc).isoformat(),
                   sources={"packets": str(args.packets.resolve()),
@@ -133,7 +146,9 @@ def main(argv=None) -> int:
                            "receiver_summary": str(summary_path.resolve())},
                   limitations=["one receiver only; no cross-device execution error",
                                "software state/actions are sample-domain replay, not physical actuator events",
-                               "sender planned timestamp is not calibrated RF start"])
+                               "sender planned timestamp is not calibrated RF start",
+                               *(["immediate baseline does not schedule against execute_at_ms or evaluate runtime expiry"]
+                                  if args.policy == "immediate" else [])])
     (output / "control.summary.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n",
                                                  encoding="utf-8")
     print(f"side={args.side} run={args.run_id} observations={result['control_observations']} "

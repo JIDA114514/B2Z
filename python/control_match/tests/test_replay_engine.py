@@ -104,6 +104,53 @@ class ReplayEngineTests(unittest.TestCase):
             self.assertIn("packet contents have run IDs [1001]", stderr.getvalue())
             self.assertFalse(output.exists())
 
+    def test_immediate_baseline_uses_availability_and_deduplicates(self):
+        for side, target, value in (("ble", 1, 1), ("zigbee", 2, 2)):
+            with self.subTest(side=side):
+                config = EngineConfig(side=side, run_id=1001, sample_rate=1_000_000,
+                                      target_ids=frozenset((target,)))
+                first = packet(side)
+                second = packet(side)
+                second["sample_start"] += 1_000
+                second["available_sample"] += 1_000
+                events, summary = replay_records([first, second], config, 4_000_000,
+                                                 policy="immediate")
+                self.assertEqual(summary["events"].get("software_processed"), 1)
+                self.assertEqual(summary["events"].get("duplicate"), 1)
+                self.assertEqual(summary["engine"]["software_state"], {target: value})
+                processed = next(e for e in events if e["event"] == "software_processed")
+                self.assertEqual(processed["local_sample"], first["available_sample"])
+                self.assertEqual(processed["deadline_status"],
+                                 "not_evaluated_no_time_reference")
+
+    def test_immediate_baseline_keeps_target_check(self):
+        config = EngineConfig(side="ble", run_id=1001, sample_rate=1_000_000,
+                              target_ids=frozenset((2,)))
+        events, summary = replay_records([packet("ble")], config, 4_000_000,
+                                         policy="immediate")
+        self.assertEqual(summary["events"].get("software_processed", 0), 0)
+        self.assertEqual(next(e for e in events if e["event"] == "rejected")["reason"],
+                         "wrong_target")
+
+    def test_immediate_command_line_labels_policy_and_rejects_reference_bound(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            packets = root / "rx.packets.jsonl"
+            packets.write_text(json.dumps(packet("ble")) + "\n")
+            (root / "rx.summary.json").write_text(json.dumps({
+                "status": "complete", "counts": {"samples_processed": 4_000_000},
+                "config": {"sample_rate": 1_000_000}}))
+            output = root / "immediate"
+            args = ["--packets", str(packets), "--side", "ble", "--run-id", "1001",
+                    "--target-id", "1", "--policy", "immediate", "--output-dir", str(output)]
+            self.assertEqual(main(args), 0)
+            summary = json.loads((output / "control.summary.json").read_text())
+            self.assertEqual(summary["schema"], "b2z_immediate_baseline_replay_v1")
+            self.assertEqual(summary["events"]["software_processed"], 1)
+            with redirect_stderr(io.StringIO()) as stderr, self.assertRaises(SystemExit):
+                main(args + ["--assumed-reference-bound-ms", "1"])
+            self.assertIn("does not use a reference bound", stderr.getvalue())
+
 
 if __name__ == "__main__":
     unittest.main()

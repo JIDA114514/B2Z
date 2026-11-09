@@ -1,0 +1,16 @@
+{
+  "schema": "iq_manifest_v1",
+  "run_id_in_packets": 1704,
+  "files": {
+    "ble": {
+      "path": "ble/142410_606284_qu2nm9_l/rx.ci8",
+      "bytes": 640000000,
+      "sha256": "15751a9ced538f7ffb3a89ad1d166ecc47e18d0fa83ff6c986f6ec1d2bb01a1d"
+    },
+    "zigbee": {
+      "path": "zigbee/142408_872641_5bpx7ib7/rx.ci8",
+      "bytes": 640000000,
+      "sha256": "bfddec3d0386b81a7e130bbcd8b5103e8d09420ab2835605ca21e337706aca6e"
+    }
+  }
+}

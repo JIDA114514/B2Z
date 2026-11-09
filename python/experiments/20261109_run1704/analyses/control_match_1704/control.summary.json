@@ -1,0 +1,55 @@
+{
+  "schema": "b2z_control_match_v1",
+  "run_id": 1704,
+  "command_id": 0,
+  "same_transmission_asserted": true,
+  "sources": {
+    "ble": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1704/captures/ble/142410_606284_qu2nm9_l/rx.packets.jsonl",
+      "sha256": "ecb4a594715f65e79e25e6866c5341b302892f3dde8d6d17a66b45c1195fea89"
+    },
+    "zigbee": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1704/captures/zigbee/142408_872641_5bpx7ib7/rx.packets.jsonl",
+      "sha256": "fb31cfd2b4068c95caafa42e2077538281d65e207dcf15c82224428e7413b3f0"
+    }
+  },
+  "board": null,
+  "sides": {
+    "ble": {
+      "rows": 600,
+      "control_candidates": 300,
+      "valid_records": 300,
+      "duplicates": 0,
+      "foreign_run_or_command": 0,
+      "invalid": {},
+      "unique_slots": 300
+    },
+    "zigbee": {
+      "rows": 300,
+      "control_candidates": 300,
+      "valid_records": 300,
+      "duplicates": 0,
+      "foreign_run_or_command": 0,
+      "invalid": {},
+      "unique_slots": 300
+    }
+  },
+  "planned_slots": null,
+  "observed_union_slots": 300,
+  "identifier_overlap_slots": 300,
+  "joint_valid_decode_slots": 300,
+  "joint_valid_decode_denominator": null,
+  "joint_command_recovered": true,
+  "task_semantics_consistent": true,
+  "cross_side_task_fields_match": true,
+  "shared_field_mismatches": 0,
+  "ble_only_slots": 0,
+  "zigbee_only_slots": 0,
+  "neither_slots": null,
+  "limitations": [
+    "Receiver records prove decoding, not command execution.",
+    "Board tx_completed is a DMA-completion proxy, not measured RF airtime.",
+    "Independent HackRF sample times have separate origins and are not subtracted.",
+    "Same-channel diagnostic packets do not prove standards-compliant AuxPtr following."
+  ]
+}

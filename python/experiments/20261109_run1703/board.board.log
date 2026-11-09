@@ -1,1 +1,609 @@
+CONTROL_PLAN_START state=armed run_id=1703 period_ms=200 tasks=1 slots=300 duration_s=60 rf_mode=same_channel_diagnostic
+
+CONTROL_PLAN_ENTRY run_id=1703 entry=0 command_id=0 first_slot=0 repeats=300 execute_at_ms=0 valid_until_ms=0 ble_target=0 ble_opcode=0 ble_arg=0 zigbee_target=0 zigbee_opcode=0 zigbee_arg=0
+
 CONTROL_PLAN_STATS final=1 state=complete run_id=1703 period_ms=200 tasks=1 planned_slots=300 reached_slots=300 elapsed_us=60000004 generated=300 primary_started=300 primary_completed=300 tx_started=300 tx_completed=300 deadline_miss=0 dma_timeout=0 secondary_dma_late_samples=300 secondary_dma_late_max_us=81541 secondary_dma_late_avg_us=80440 time_reference=planned_secondary_start rf_mode=same_channel_diagnostic
+
+CONTROL_PLAN_TASK run_id=1703 entry=0 command_id=0 first_slot=0 repeats=300 reached=300 generated=300 primary_started=300 primary_completed=300 tx_started=300 tx_completed=300 deadline_miss=0 dma_timeout=0
+
+CONTROL_PLAN_SLOT run_id=1703 slot=0 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=81541
+
+CONTROL_PLAN_SLOT run_id=1703 slot=1 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80627
+
+CONTROL_PLAN_SLOT run_id=1703 slot=2 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80693
+
+CONTROL_PLAN_SLOT run_id=1703 slot=3 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80630
+
+CONTROL_PLAN_SLOT run_id=1703 slot=4 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80655
+
+CONTROL_PLAN_SLOT run_id=1703 slot=5 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80626
+
+CONTROL_PLAN_SLOT run_id=1703 slot=6 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80100
+
+CONTROL_PLAN_SLOT run_id=1703 slot=7 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80144
+
+CONTROL_PLAN_SLOT run_id=1703 slot=8 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80694
+
+CONTROL_PLAN_SLOT run_id=1703 slot=9 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80109
+
+CONTROL_PLAN_SLOT run_id=1703 slot=10 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80098
+
+CONTROL_PLAN_SLOT run_id=1703 slot=11 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80225
+
+CONTROL_PLAN_SLOT run_id=1703 slot=12 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80089
+
+CONTROL_PLAN_SLOT run_id=1703 slot=13 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80175
+
+CONTROL_PLAN_SLOT run_id=1703 slot=14 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80735
+
+CONTROL_PLAN_SLOT run_id=1703 slot=15 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80644
+
+CONTROL_PLAN_SLOT run_id=1703 slot=16 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80689
+
+CONTROL_PLAN_SLOT run_id=1703 slot=17 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80177
+
+CONTROL_PLAN_SLOT run_id=1703 slot=18 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80711
+
+CONTROL_PLAN_SLOT run_id=1703 slot=19 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80590
+
+CONTROL_PLAN_SLOT run_id=1703 slot=20 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80776
+
+CONTROL_PLAN_SLOT run_id=1703 slot=21 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80605
+
+CONTROL_PLAN_SLOT run_id=1703 slot=22 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80610
+
+CONTROL_PLAN_SLOT run_id=1703 slot=23 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80751
+
+CONTROL_PLAN_SLOT run_id=1703 slot=24 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80259
+
+CONTROL_PLAN_SLOT run_id=1703 slot=25 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80063
+
+CONTROL_PLAN_SLOT run_id=1703 slot=26 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80637
+
+CONTROL_PLAN_SLOT run_id=1703 slot=27 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80679
+
+CONTROL_PLAN_SLOT run_id=1703 slot=28 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80624
+
+CONTROL_PLAN_SLOT run_id=1703 slot=29 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80774
+
+CONTROL_PLAN_SLOT run_id=1703 slot=30 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80268
+
+CONTROL_PLAN_SLOT run_id=1703 slot=31 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80080
+
+CONTROL_PLAN_SLOT run_id=1703 slot=32 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80631
+
+CONTROL_PLAN_SLOT run_id=1703 slot=33 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80723
+
+CONTROL_PLAN_SLOT run_id=1703 slot=34 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80254
+
+CONTROL_PLAN_SLOT run_id=1703 slot=35 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80097
+
+CONTROL_PLAN_SLOT run_id=1703 slot=36 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80246
+
+CONTROL_PLAN_SLOT run_id=1703 slot=37 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80111
+
+CONTROL_PLAN_SLOT run_id=1703 slot=38 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80611
+
+CONTROL_PLAN_SLOT run_id=1703 slot=39 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80709
+
+CONTROL_PLAN_SLOT run_id=1703 slot=40 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80248
+
+CONTROL_PLAN_SLOT run_id=1703 slot=41 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80109
+
+CONTROL_PLAN_SLOT run_id=1703 slot=42 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80199
+
+CONTROL_PLAN_SLOT run_id=1703 slot=43 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80790
+
+CONTROL_PLAN_SLOT run_id=1703 slot=44 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80629
+
+CONTROL_PLAN_SLOT run_id=1703 slot=45 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80734
+
+CONTROL_PLAN_SLOT run_id=1703 slot=46 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80177
+
+CONTROL_PLAN_SLOT run_id=1703 slot=47 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80153
+
+CONTROL_PLAN_SLOT run_id=1703 slot=48 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80704
+
+CONTROL_PLAN_SLOT run_id=1703 slot=49 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80039
+
+CONTROL_PLAN_SLOT run_id=1703 slot=50 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80572
+
+CONTROL_PLAN_SLOT run_id=1703 slot=51 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80741
+
+CONTROL_PLAN_SLOT run_id=1703 slot=52 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80670
+
+CONTROL_PLAN_SLOT run_id=1703 slot=53 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80737
+
+CONTROL_PLAN_SLOT run_id=1703 slot=54 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80197
+
+CONTROL_PLAN_SLOT run_id=1703 slot=55 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80173
+
+CONTROL_PLAN_SLOT run_id=1703 slot=56 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80666
+
+CONTROL_PLAN_SLOT run_id=1703 slot=57 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80750
+
+CONTROL_PLAN_SLOT run_id=1703 slot=58 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80217
+
+CONTROL_PLAN_SLOT run_id=1703 slot=59 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80183
+
+CONTROL_PLAN_SLOT run_id=1703 slot=60 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80177
+
+CONTROL_PLAN_SLOT run_id=1703 slot=61 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80159
+
+CONTROL_PLAN_SLOT run_id=1703 slot=62 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80109
+
+CONTROL_PLAN_SLOT run_id=1703 slot=63 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80747
+
+CONTROL_PLAN_SLOT run_id=1703 slot=64 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80706
+
+CONTROL_PLAN_SLOT run_id=1703 slot=65 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80754
+
+CONTROL_PLAN_SLOT run_id=1703 slot=66 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80245
+
+CONTROL_PLAN_SLOT run_id=1703 slot=67 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80166
+
+CONTROL_PLAN_SLOT run_id=1703 slot=68 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80238
+
+CONTROL_PLAN_SLOT run_id=1703 slot=69 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80113
+
+CONTROL_PLAN_SLOT run_id=1703 slot=70 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80594
+
+CONTROL_PLAN_SLOT run_id=1703 slot=71 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80712
+
+CONTROL_PLAN_SLOT run_id=1703 slot=72 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80281
+
+CONTROL_PLAN_SLOT run_id=1703 slot=73 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80572
+
+CONTROL_PLAN_SLOT run_id=1703 slot=74 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80594
+
+CONTROL_PLAN_SLOT run_id=1703 slot=75 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80728
+
+CONTROL_PLAN_SLOT run_id=1703 slot=76 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80574
+
+CONTROL_PLAN_SLOT run_id=1703 slot=77 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80731
+
+CONTROL_PLAN_SLOT run_id=1703 slot=78 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80291
+
+CONTROL_PLAN_SLOT run_id=1703 slot=79 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80084
+
+CONTROL_PLAN_SLOT run_id=1703 slot=80 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80707
+
+CONTROL_PLAN_SLOT run_id=1703 slot=81 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80076
+
+CONTROL_PLAN_SLOT run_id=1703 slot=82 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80177
+
+CONTROL_PLAN_SLOT run_id=1703 slot=83 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80229
+
+CONTROL_PLAN_SLOT run_id=1703 slot=84 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80662
+
+CONTROL_PLAN_SLOT run_id=1703 slot=85 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80733
+
+CONTROL_PLAN_SLOT run_id=1703 slot=86 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80242
+
+CONTROL_PLAN_SLOT run_id=1703 slot=87 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80094
+
+CONTROL_PLAN_SLOT run_id=1703 slot=88 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80643
+
+CONTROL_PLAN_SLOT run_id=1703 slot=89 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80706
+
+CONTROL_PLAN_SLOT run_id=1703 slot=90 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80229
+
+CONTROL_PLAN_SLOT run_id=1703 slot=91 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80116
+
+CONTROL_PLAN_SLOT run_id=1703 slot=92 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80211
+
+CONTROL_PLAN_SLOT run_id=1703 slot=93 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80087
+
+CONTROL_PLAN_SLOT run_id=1703 slot=94 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80689
+
+CONTROL_PLAN_SLOT run_id=1703 slot=95 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80731
+
+CONTROL_PLAN_SLOT run_id=1703 slot=96 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80204
+
+CONTROL_PLAN_SLOT run_id=1703 slot=97 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80087
+
+CONTROL_PLAN_SLOT run_id=1703 slot=98 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80593
+
+CONTROL_PLAN_SLOT run_id=1703 slot=99 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80722
+
+CONTROL_PLAN_SLOT run_id=1703 slot=100 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80630
+
+CONTROL_PLAN_SLOT run_id=1703 slot=101 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80681
+
+CONTROL_PLAN_SLOT run_id=1703 slot=102 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80204
+
+CONTROL_PLAN_SLOT run_id=1703 slot=103 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80658
+
+CONTROL_PLAN_SLOT run_id=1703 slot=104 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80642
+
+CONTROL_PLAN_SLOT run_id=1703 slot=105 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80227
+
+CONTROL_PLAN_SLOT run_id=1703 slot=106 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80292
+
+CONTROL_PLAN_SLOT run_id=1703 slot=107 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80133
+
+CONTROL_PLAN_SLOT run_id=1703 slot=108 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80222
+
+CONTROL_PLAN_SLOT run_id=1703 slot=109 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80144
+
+CONTROL_PLAN_SLOT run_id=1703 slot=110 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80666
+
+CONTROL_PLAN_SLOT run_id=1703 slot=111 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80761
+
+CONTROL_PLAN_SLOT run_id=1703 slot=112 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80266
+
+
+CONTROL_PLAN_SLOT run_id=1703 slot=113 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80717
+
+CONTROL_PLAN_SLOT run_id=1703 slot=114 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80187
+
+CONTROL_PLAN_SLOT run_id=1703 slot=115 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80141
+
+CONTROL_PLAN_SLOT run_id=1703 slot=116 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80229
+
+CONTROL_PLAN_SLOT run_id=1703 slot=117 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80141
+
+CONTROL_PLAN_SLOT run_id=1703 slot=118 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80607
+
+CONTROL_PLAN_SLOT run_id=1703 slot=119 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80713
+
+CONTROL_PLAN_SLOT run_id=1703 slot=120 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80218
+
+CONTROL_PLAN_SLOT run_id=1703 slot=121 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80072
+
+CONTROL_PLAN_SLOT run_id=1703 slot=122 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80618
+
+CONTROL_PLAN_SLOT run_id=1703 slot=123 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80269
+
+CONTROL_PLAN_SLOT run_id=1703 slot=124 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80150
+
+CONTROL_PLAN_SLOT run_id=1703 slot=125 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80774
+
+CONTROL_PLAN_SLOT run_id=1703 slot=126 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80297
+
+CONTROL_PLAN_SLOT run_id=1703 slot=127 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80083
+
+CONTROL_PLAN_SLOT run_id=1703 slot=128 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80684
+
+CONTROL_PLAN_SLOT run_id=1703 slot=129 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80741
+
+CONTROL_PLAN_SLOT run_id=1703 slot=130 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80216
+
+CONTROL_PLAN_SLOT run_id=1703 slot=131 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80109
+
+CONTROL_PLAN_SLOT run_id=1703 slot=132 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80248
+
+CONTROL_PLAN_SLOT run_id=1703 slot=133 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80050
+
+CONTROL_PLAN_SLOT run_id=1703 slot=134 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80641
+
+CONTROL_PLAN_SLOT run_id=1703 slot=135 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80752
+
+CONTROL_PLAN_SLOT run_id=1703 slot=136 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80223
+
+CONTROL_PLAN_SLOT run_id=1703 slot=137 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80653
+
+CONTROL_PLAN_SLOT run_id=1703 slot=138 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80646
+
+CONTROL_PLAN_SLOT run_id=1703 slot=139 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80728
+
+CONTROL_PLAN_SLOT run_id=1703 slot=140 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80646
+
+CONTROL_PLAN_SLOT run_id=1703 slot=141 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80689
+
+CONTROL_PLAN_SLOT run_id=1703 slot=142 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80212
+
+CONTROL_PLAN_SLOT run_id=1703 slot=143 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80135
+
+CONTROL_PLAN_SLOT run_id=1703 slot=144 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80259
+
+CONTROL_PLAN_SLOT run_id=1703 slot=145 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80133
+
+CONTROL_PLAN_SLOT run_id=1703 slot=146 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80578
+
+CONTROL_PLAN_SLOT run_id=1703 slot=147 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80826
+
+CONTROL_PLAN_SLOT run_id=1703 slot=148 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80592
+
+CONTROL_PLAN_SLOT run_id=1703 slot=149 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80693
+
+CONTROL_PLAN_SLOT run_id=1703 slot=150 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80225
+
+CONTROL_PLAN_SLOT run_id=1703 slot=151 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80165
+
+CONTROL_PLAN_SLOT run_id=1703 slot=152 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80619
+
+CONTROL_PLAN_SLOT run_id=1703 slot=153 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80727
+
+CONTROL_PLAN_SLOT run_id=1703 slot=154 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80263
+
+CONTROL_PLAN_SLOT run_id=1703 slot=155 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80121
+
+CONTROL_PLAN_SLOT run_id=1703 slot=156 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80287
+
+CONTROL_PLAN_SLOT run_id=1703 slot=157 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80104
+
+CONTROL_PLAN_SLOT run_id=1703 slot=158 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80669
+
+CONTROL_PLAN_SLOT run_id=1703 slot=159 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80781
+
+CONTROL_PLAN_SLOT run_id=1703 slot=160 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80179
+
+CONTROL_PLAN_SLOT run_id=1703 slot=161 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80029
+
+CONTROL_PLAN_SLOT run_id=1703 slot=162 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80636
+
+CONTROL_PLAN_SLOT run_id=1703 slot=163 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80767
+
+CONTROL_PLAN_SLOT run_id=1703 slot=164 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80124
+
+CONTROL_PLAN_SLOT run_id=1703 slot=165 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80238
+
+CONTROL_PLAN_SLOT run_id=1703 slot=166 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80260
+
+CONTROL_PLAN_SLOT run_id=1703 slot=167 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80184
+
+CONTROL_PLAN_SLOT run_id=1703 slot=168 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80664
+
+CONTROL_PLAN_SLOT run_id=1703 slot=169 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80220
+
+CONTROL_PLAN_SLOT run_id=1703 slot=170 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80217
+
+CONTROL_PLAN_SLOT run_id=1703 slot=171 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80164
+
+CONTROL_PLAN_SLOT run_id=1703 slot=172 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80180
+
+CONTROL_PLAN_SLOT run_id=1703 slot=173 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80156
+
+CONTROL_PLAN_SLOT run_id=1703 slot=174 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80688
+
+CONTROL_PLAN_SLOT run_id=1703 slot=175 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80766
+
+CONTROL_PLAN_SLOT run_id=1703 slot=176 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80250
+
+CONTROL_PLAN_SLOT run_id=1703 slot=177 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80697
+
+CONTROL_PLAN_SLOT run_id=1703 slot=178 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80216
+
+CONTROL_PLAN_SLOT run_id=1703 slot=179 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80078
+
+CONTROL_PLAN_SLOT run_id=1703 slot=180 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80278
+
+CONTROL_PLAN_SLOT run_id=1703 slot=181 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80117
+
+CONTROL_PLAN_SLOT run_id=1703 slot=182 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80592
+
+CONTROL_PLAN_SLOT run_id=1703 slot=183 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80728
+
+CONTROL_PLAN_SLOT run_id=1703 slot=184 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80257
+
+CONTROL_PLAN_SLOT run_id=1703 slot=185 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80596
+
+CONTROL_PLAN_SLOT run_id=1703 slot=186 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80627
+
+CONTROL_PLAN_SLOT run_id=1703 slot=187 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80763
+
+CONTROL_PLAN_SLOT run_id=1703 slot=188 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80664
+
+CONTROL_PLAN_SLOT run_id=1703 slot=189 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80759
+
+CONTROL_PLAN_SLOT run_id=1703 slot=190 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80252
+
+CONTROL_PLAN_SLOT run_id=1703 slot=191 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80068
+
+CONTROL_PLAN_SLOT run_id=1703 slot=192 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80161
+
+CONTROL_PLAN_SLOT run_id=1703 slot=193 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80142
+
+CONTROL_PLAN_SLOT run_id=1703 slot=194 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80634
+
+CONTROL_PLAN_SLOT run_id=1703 slot=195 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80834
+
+CONTROL_PLAN_SLOT run_id=1703 slot=196 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80676
+
+CONTROL_PLAN_SLOT run_id=1703 slot=197 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80777
+
+CONTROL_PLAN_SLOT run_id=1703 slot=198 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80242
+
+CONTROL_PLAN_SLOT run_id=1703 slot=199 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80114
+
+CONTROL_PLAN_SLOT run_id=1703 slot=200 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80628
+
+CONTROL_PLAN_SLOT run_id=1703 slot=201 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80284
+
+CONTROL_PLAN_SLOT run_id=1703 slot=202 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80295
+
+CONTROL_PLAN_SLOT run_id=1703 slot=203 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80136
+
+CONTROL_PLAN_SLOT run_id=1703 slot=204 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80276
+
+CONTROL_PLAN_SLOT run_id=1703 slot=205 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80610
+
+CONTROL_PLAN_SLOT run_id=1703 slot=206 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80164
+
+CONTROL_PLAN_SLOT run_id=1703 slot=207 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80731
+
+CONTROL_PLAN_SLOT run_id=1703 slot=208 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80228
+
+CONTROL_PLAN_SLOT run_id=1703 slot=209 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80773
+
+CONTROL_PLAN_SLOT run_id=1703 slot=210 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80322
+
+CONTROL_PLAN_SLOT run_id=1703 slot=211 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80144
+
+CONTROL_PLAN_SLOT run_id=1703 slot=212 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80240
+
+CONTROL_PLAN_SLOT run_id=1703 slot=213 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80180
+
+CONTROL_PLAN_SLOT run_id=1703 slot=214 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80580
+
+CONTROL_PLAN_SLOT run_id=1703 slot=215 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80743
+
+CONTROL_PLAN_SLOT run_id=1703 slot=216 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80204
+
+CONTROL_PLAN_SLOT run_id=1703 slot=217 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80116
+
+CONTROL_PLAN_SLOT run_id=1703 slot=218 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80587
+
+CONTROL_PLAN_SLOT run_id=1703 slot=219 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80754
+
+CONTROL_PLAN_SLOT run_id=1703 slot=220 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80571
+
+CONTROL_PLAN_SLOT run_id=1703 slot=221 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80735
+
+CONTROL_PLAN_SLOT run_id=1703 slot=222 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80290
+
+CONTROL_PLAN_SLOT run_id=1703 slot=223 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80149
+
+CONTROL_PLAN_SLOT run_id=1703 slot=224 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80756
+
+CONTROL_PLAN_SLOT run_id=1703 slot=225 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80721
+
+CONTROL_PLAN_SLOT run_id=1703 slot=226 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80718
+
+CONTROL_PLAN_SLOT run_id=1703 slot=227 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80096
+
+CONTROL_PLAN_SLOT run_id=1703 slot=228 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80242
+
+CONTROL_PLAN_SLOT run_id=1703 slot=229 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80171
+
+CONTROL_PLAN_SLOT run_id=1703 slot=230 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80629
+
+CONTROL_PLAN_SLOT run_id=1703 slot=231 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80728
+
+CONTROL_PLAN_SLOT run_id=1703 slot=232 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80283
+
+CONTROL_PLAN_SLOT run_id=1703 slot=233 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80663
+
+CONTROL_PLAN_SLOT run_id=1703 slot=234 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80647
+
+CONTROL_PLAN_SLOT run_id=1703 slot=235 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80691
+
+CONTROL_PLAN_SLOT run_id=1703 slot=236 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80679
+
+CONTROL_PLAN_SLOT run_id=1703 slot=237 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80751
+
+CONTROL_PLAN_SLOT run_id=1703 slot=238 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80216
+
+CONTROL_PLAN_SLOT run_id=1703 slot=239 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80068
+
+CONTROL_PLAN_SLOT run_id=1703 slot=240 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80640
+
+CONTROL_PLAN_SLOT run_id=1703 slot=241 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80099
+
+CONTROL_PLAN_SLOT run_id=1703 slot=242 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80618
+
+CONTROL_PLAN_SLOT run_id=1703 slot=243 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80796
+
+CONTROL_PLAN_SLOT run_id=1703 slot=244 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80624
+
+CONTROL_PLAN_SLOT run_id=1703 slot=245 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80714
+
+CONTROL_PLAN_SLOT run_id=1703 slot=246 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80832
+
+CONTROL_PLAN_SLOT run_id=1703 slot=247 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80670
+
+CONTROL_PLAN_SLOT run_id=1703 slot=248 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80642
+
+CONTROL_PLAN_SLOT run_id=1703 slot=249 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80712
+
+CONTROL_PLAN_SLOT run_id=1703 slot=250 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80228
+
+CONTROL_PLAN_SLOT run_id=1703 slot=251 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80105
+
+CONTROL_PLAN_SLOT run_id=1703 slot=252 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80251
+
+CONTROL_PLAN_SLOT run_id=1703 slot=253 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80146
+
+CONTROL_PLAN_SLOT run_id=1703 slot=254 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80630
+
+CONTROL_PLAN_SLOT run_id=1703 slot=255 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80685
+
+CONTROL_PLAN_SLOT run_id=1703 slot=256 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80672
+
+CONTROL_PLAN_SLOT run_id=1703 slot=257 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80802
+
+CONTROL_PLAN_SLOT run_id=1703 slot=258 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80266
+
+CONTROL_PLAN_SLOT run_id=1703 slot=259 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80125
+
+CONTROL_PLAN_SLOT run_id=1703 slot=260 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80206
+
+CONTROL_PLAN_SLOT run_id=1703 slot=261 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80098
+
+CONTROL_PLAN_SLOT run_id=1703 slot=262 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80604
+
+CONTROL_PLAN_SLOT run_id=1703 slot=263 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80693
+
+CONTROL_PLAN_SLOT run_id=1703 slot=264 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80215
+
+CONTROL_PLAN_SLOT run_id=1703 slot=265 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80631
+
+CONTROL_PLAN_SLOT run_id=1703 slot=266 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80599
+
+CONTROL_PLAN_SLOT run_id=1703 slot=267 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80291
+
+CONTROL_PLAN_SLOT run_id=1703 slot=268 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80643
+
+CONTROL_PLAN_SLOT run_id=1703 slot=269 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80752
+
+CONTROL_PLAN_SLOT run_id=1703 slot=270 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80255
+
+CONTROL_PLAN_SLOT run_id=1703 slot=271 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80104
+
+CONTROL_PLAN_SLOT run_id=1703 slot=272 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80294
+
+CONTROL_PLAN_SLOT run_id=1703 slot=273 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80679
+
+CONTROL_PLAN_SLOT run_id=1703 slot=274 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80179
+
+CONTROL_PLAN_SLOT run_id=1703 slot=275 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80206
+
+CONTROL_PLAN_SLOT run_id=1703 slot=276 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80249
+
+CONTROL_PLAN_SLOT run_id=1703 slot=277 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80218
+
+CONTROL_PLAN_SLOT run_id=1703 slot=278 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80608
+
+CONTROL_PLAN_SLOT run_id=1703 slot=279 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80713
+
+CONTROL_PLAN_SLOT run_id=1703 slot=280 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80150
+
+CONTROL_PLAN_SLOT run_id=1703 slot=281 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80216
+
+CONTROL_PLAN_SLOT run_id=1703 slot=282 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80652
+
+CONTROL_PLAN_SLOT run_id=1703 slot=283 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80752
+
+CONTROL_PLAN_SLOT run_id=1703 slot=284 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80681
+
+CONTROL_PLAN_SLOT run_id=1703 slot=285 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80754
+
+CONTROL_PLAN_SLOT run_id=1703 slot=286 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80201
+
+CONTROL_PLAN_SLOT run_id=1703 slot=287 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80731
+
+CONTROL_PLAN_SLOT run_id=1703 slot=288 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80804
+
+CONTROL_PLAN_SLOT run_id=1703 slot=289 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80703
+
+CONTROL_PLAN_SLOT run_id=1703 slot=290 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80195
+
+CONTROL_PLAN_SLOT run_id=1703 slot=291 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80175
+
+CONTROL_PLAN_SLOT run_id=1703 slot=292 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80179
+
+CONTROL_PLAN_SLOT run_id=1703 slot=293 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80212
+
+CONTROL_PLAN_SLOT run_id=1703 slot=294 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80680
+
+CONTROL_PLAN_SLOT run_id=1703 slot=295 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80669
+
+CONTROL_PLAN_SLOT run_id=1703 slot=296 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80169
+
+CONTROL_PLAN_SLOT run_id=1703 slot=297 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80646
+
+CONTROL_PLAN_SLOT run_id=1703 slot=298 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80689
+
+CONTROL_PLAN_SLOT run_id=1703 slot=299 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80692
+

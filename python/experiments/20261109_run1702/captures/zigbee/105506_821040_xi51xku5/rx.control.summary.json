@@ -1,0 +1,51 @@
+{
+  "schema": "b2z_live_control_v1",
+  "side": "zigbee",
+  "run_id": 1702,
+  "sender_id": "configured_board",
+  "receiver_status": "complete",
+  "observation_mode": "live_software",
+  "target_ids": [
+    2
+  ],
+  "accept_broadcast": false,
+  "external_reference_bound_ms": null,
+  "reference_bound_status": "not supplied; timed commands denied",
+  "event_counts": {
+    "decoded": 299,
+    "clock_updated": 42,
+    "clock_outlier": 257
+  },
+  "reasons": {},
+  "tasks": [],
+  "engine": {
+    "side": "zigbee",
+    "run_id": 1702,
+    "current_sample": 640000000,
+    "clock": {
+      "model_version": 42,
+      "training_packets": 16,
+      "latest_ref_ms": 8200,
+      "training_span_ms": 3000,
+      "rate_fitted": true,
+      "rate_ppm": -154.16911764698506,
+      "residual_ms": 0.45846102941036226
+    },
+    "task_status": {},
+    "software_state": {},
+    "software_triggers": []
+  },
+  "generated_utc": "2026-11-09T02:56:27.187836+00:00",
+  "files": {
+    "control_events": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1702/captures/zigbee/105506_821040_xi51xku5/rx.control.events.jsonl",
+    "control_tasks": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1702/captures/zigbee/105506_821040_xi51xku5/rx.control.tasks.csv",
+    "control_summary": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1702/captures/zigbee/105506_821040_xi51xku5/rx.control.summary.json",
+    "control_report": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1702/captures/zigbee/105506_821040_xi51xku5/rx.control.report.md"
+  },
+  "limitations": [
+    "one receiver's software events only",
+    "IQ sample progress is not a calibrated host or RF timestamp",
+    "offline events are simulated; live host timestamps include processing latency",
+    "no cross-device execution error or physical actuator measurement"
+  ]
+}

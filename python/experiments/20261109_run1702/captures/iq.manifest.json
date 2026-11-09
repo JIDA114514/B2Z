@@ -1,0 +1,19 @@
+{
+  "schema": "local_iq_manifest_v1",
+  "run_id": 1702,
+  "purpose": "Identify the two locally retained independent HackRF IQ captures; IQ bytes are excluded from Git.",
+  "files": [
+    {
+      "path": "ble/105508_177335_ee0jg_q_/rx.ci8",
+      "bytes": 1280000000,
+      "sha256": "0a5467095ff1fd44746e3945fbb238419f8890391da4ecca50ee09047f354bb3",
+      "receiver_summary": "ble/105508_177335_ee0jg_q_/rx.summary.json"
+    },
+    {
+      "path": "zigbee/105506_821040_xi51xku5/rx.ci8",
+      "bytes": 1280000000,
+      "sha256": "3702711f4a8416c717022f378354ef527d455dbe64fddbc823b037acd0c2f863",
+      "receiver_summary": "zigbee/105506_821040_xi51xku5/rx.summary.json"
+    }
+  ]
+}

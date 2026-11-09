@@ -1,0 +1,77 @@
+{
+  "schema": "b2z_timeline_audit_v1",
+  "run_id": 1702,
+  "sample_rate_hz": 8000000,
+  "sources": {
+    "ble": {
+      "path": "python/experiments/20261109_run1702/captures/ble/105508_177335_ee0jg_q_/rx.control.events.jsonl",
+      "sha256": "dab0a406aa11c3c8afdbcc2d62d77aaf44373b0535a151634a69fc0a4fb29a91"
+    },
+    "zigbee": {
+      "path": "python/experiments/20261109_run1702/captures/zigbee/105506_821040_xi51xku5/rx.control.events.jsonl",
+      "sha256": "7131f16251055bd421dbef17dc89b5bb51b915fe354c7063e662cdf9848b6ce0"
+    }
+  },
+  "board_log": {
+    "path": "python/experiments/20261109_run1702/board.board.log",
+    "sha256": "bfcf619db7d113a1cb2777f55ce79e83f94e6418c9fe1885894e3922af9a5ffa",
+    "provenance": "user-pasted final line"
+  },
+  "planned_slots": 300,
+  "ble_valid_slots": 299,
+  "zigbee_valid_slots": 299,
+  "both_valid_slots": 298,
+  "ble_only_slots": [
+    42
+  ],
+  "zigbee_only_slots": [
+    198
+  ],
+  "neither_slots": [],
+  "interval_anomalies_ms": {
+    "ble": [
+      {
+        "after_slot": 199,
+        "previous_slot": 197,
+        "deviation_ms": -131.819
+      },
+      {
+        "after_slot": 200,
+        "previous_slot": 199,
+        "deviation_ms": -21.987
+      }
+    ],
+    "zigbee": [
+      {
+        "after_slot": 43,
+        "previous_slot": 41,
+        "deviation_ms": -55.197
+      },
+      {
+        "after_slot": 200,
+        "previous_slot": 199,
+        "deviation_ms": -78.61175
+      }
+    ]
+  },
+  "cross_offset_jumps_ms": [
+    {
+      "after_slot": 43,
+      "previous_common_slot": 41,
+      "jump_ms": 55.9085
+    },
+    {
+      "after_slot": 199,
+      "previous_common_slot": 197,
+      "jump_ms": -131.07175
+    },
+    {
+      "after_slot": 200,
+      "previous_common_slot": 199,
+      "jump_ms": 56.62475
+    }
+  ],
+  "measurement": "IQ timeline continuity diagnostic; cross offset change is relative to common slot 0, not synchronization algorithm error",
+  "timing_qualified": false,
+  "reason": "millisecond-scale sample-index discontinuities in both independent captures"
+}

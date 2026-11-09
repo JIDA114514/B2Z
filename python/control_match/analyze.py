@@ -106,15 +106,31 @@ def read_board(path: Path | None, run_id: int, command_id: int) -> dict | None:
     if path is None:
         return None
     matches = []
+    plan_matches = []
+    plan_tasks = []
     for line in path.read_text(encoding="utf-8").splitlines():
-        if not line.startswith("CONTROL_STATS "):
-            continue
         fields = dict(re.findall(r"(\w+)=([^\s]+)", line))
-        if (fields.get("final"), fields.get("run_id"), fields.get("command_id")) == ("1", str(run_id), str(command_id)):
+        if line.startswith("CONTROL_STATS ") and (fields.get("final"), fields.get("run_id"), fields.get("command_id")) == ("1", str(run_id), str(command_id)):
             matches.append(fields)
-    if len(matches) != 1:
-        raise ValueError("board log needs exactly one matching final CONTROL_STATS")
-    fields = matches[0]
+        elif line.startswith("CONTROL_PLAN_STATS ") and (fields.get("final"), fields.get("run_id")) == ("1", str(run_id)):
+            plan_matches.append(fields)
+        elif line.startswith("CONTROL_PLAN_TASK ") and fields.get("run_id") == str(run_id):
+            plan_tasks.append(fields)
+    if len(matches) == 1 and not plan_matches:
+        fields = matches[0]
+        fields["record_type"] = "CONTROL_STATS"
+        fields["command_id_verified"] = True
+    elif not matches and len(plan_matches) == 1:
+        fields = plan_matches[0]
+        if fields.get("tasks") != "1":
+            raise ValueError("CONTROL_PLAN_STATS alone can be linked only to a single-task plan")
+        if plan_tasks and (len(plan_tasks) != 1 or plan_tasks[0].get("command_id") != str(command_id)):
+            raise ValueError("CONTROL_PLAN_TASK command_id does not match requested command")
+        fields["record_type"] = "CONTROL_PLAN_STATS"
+        fields["command_id_verified"] = bool(plan_tasks)
+        fields["scheduled"] = fields["planned_slots"]
+    else:
+        raise ValueError("board log needs exactly one matching final CONTROL_STATS or single-task CONTROL_PLAN_STATS")
     if fields.get("state") != "complete":
         raise ValueError("board run did not complete")
     for key in ("scheduled", "generated", "primary_completed", "tx_completed", "deadline_miss", "dma_timeout"):
@@ -208,6 +224,8 @@ def report(summary: dict) -> str:
     if summary["board"]:
         lines.append("")
         completed = summary["board"]["tx_completed"]
+        if not summary["board"].get("command_id_verified", True):
+            lines.append("- 板端只有单任务计划的最终统计，缺少 `CONTROL_PLAN_TASK`；任务命令号由两侧逐包记录交叉核对。")
         for side in ("ble", "zigbee"):
             if side in sides:
                 value = sides[side]["unique_slots"]

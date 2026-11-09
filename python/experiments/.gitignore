@@ -7,6 +7,9 @@
 !*.summary.txt
 !*.summary.csv
 !*.metrics.csv
+!*.validation.csv
+!*.sweep.csv
+!*.qc.csv
 !*.control.tasks.csv
 !*.config.json
 !*.manifest.json

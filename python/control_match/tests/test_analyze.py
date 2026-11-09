@@ -18,6 +18,21 @@ ZIGBEE = bytes.fromhex(
 
 
 class ControlMatchTests(unittest.TestCase):
+    def test_single_task_plan_final_stats_can_supply_dma_denominator(self):
+        with tempfile.TemporaryDirectory() as temp:
+            board_path = Path(temp) / "board.board.log"
+            board_path.write_text(
+                "CONTROL_PLAN_STATS final=1 state=complete run_id=1703 period_ms=200 "
+                "tasks=1 planned_slots=300 reached_slots=300 generated=300 "
+                "primary_completed=300 tx_completed=300 deadline_miss=0 dma_timeout=0\n")
+            board = read_board(board_path, 1703, 0)
+            self.assertEqual((board["scheduled"], board["tx_completed"]), (300, 300))
+            self.assertEqual(board["record_type"], "CONTROL_PLAN_STATS")
+            self.assertFalse(board["command_id_verified"])
+            with self.assertRaisesRegex(ValueError, "single-task plan"):
+                board_path.write_text(board_path.read_text().replace("tasks=1", "tasks=2"))
+                read_board(board_path, 1703, 0)
+
     def test_wire_vectors_and_crc_rejection(self):
         ble = control_record(BLE)
         zigbee = control_record(ZIGBEE)

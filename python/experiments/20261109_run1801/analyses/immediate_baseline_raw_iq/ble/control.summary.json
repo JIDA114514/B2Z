@@ -1,0 +1,60 @@
+{
+  "control_observations": 300,
+  "policy": "immediate",
+  "events": {
+    "decoded": 300,
+    "time_update_ignored": 291,
+    "accepted": 3,
+    "software_processed": 3,
+    "duplicate": 6
+  },
+  "reasons": {},
+  "engine": {
+    "side": "ble",
+    "run_id": 1801,
+    "current_sample": 320000000,
+    "task_status": {
+      "43": "processed",
+      "44": "processed",
+      "45": "processed"
+    },
+    "software_state": {
+      "1": 2
+    },
+    "software_triggers": [
+      {
+        "target_id": 1,
+        "arg": 9,
+        "local_sample": 206962688
+      }
+    ],
+    "time_model": null,
+    "deadline_policy": "not_evaluated_no_time_reference"
+  },
+  "foreign_run_ids": [],
+  "time_reference": "one_receiver_iq_sample_domain",
+  "progress_step_samples": 65536,
+  "progress_scope": "sample-domain replay; no host dispatch-time reconstruction",
+  "software_only": true,
+  "schema": "b2z_immediate_baseline_replay_v1",
+  "side": "ble",
+  "run_id": 1801,
+  "target_ids": [
+    1
+  ],
+  "sample_rate": 4000000,
+  "assumed_reference_bound_ms": null,
+  "assumption_status": "no time reference used; deadline and target-time checks not evaluated",
+  "generated_utc": "2026-11-09T08:28:26.957639+00:00",
+  "sources": {
+    "packets": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1801/analyses/immediate_source_redecode_ble/ble/rx.packets.jsonl",
+    "packets_sha256": "c17d7810b85b93e70b9577595c29ba504032c233b5b523f686fc855c51abaa4a",
+    "receiver_summary": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1801/analyses/immediate_source_redecode_ble/ble/rx.summary.json"
+  },
+  "limitations": [
+    "one receiver only; no cross-device execution error",
+    "software state/actions are sample-domain replay, not physical actuator events",
+    "sender planned timestamp is not calibrated RF start",
+    "immediate baseline does not schedule against execute_at_ms or evaluate runtime expiry"
+  ]
+}

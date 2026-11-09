@@ -1,0 +1,68 @@
+{
+  "control_observations": 300,
+  "events": {
+    "decoded": 300,
+    "clock_updated": 300,
+    "accepted": 3,
+    "scheduled": 3,
+    "rescheduled": 147,
+    "duplicate": 6,
+    "schedule_frozen": 3,
+    "software_processed": 3
+  },
+  "reasons": {},
+  "engine": {
+    "side": "ble",
+    "run_id": 1801,
+    "current_sample": 320000000,
+    "clock": {
+      "model_version": 300,
+      "training_packets": 16,
+      "latest_ref_ms": 59800,
+      "training_span_ms": 3000,
+      "rate_fitted": true,
+      "rate_ppm": -44.316176470604596,
+      "residual_ms": 0.43044338235259055
+    },
+    "task_status": {
+      "43": "processed",
+      "44": "processed",
+      "45": "processed"
+    },
+    "software_state": {
+      "1": 2
+    },
+    "software_triggers": [
+      {
+        "target_id": 1,
+        "arg": 9,
+        "local_sample": 246939648
+      }
+    ]
+  },
+  "foreign_run_ids": [],
+  "time_reference": "one_receiver_iq_sample_domain",
+  "progress_step_samples": 65536,
+  "progress_scope": "sample-domain replay; no host dispatch-time reconstruction",
+  "software_only": true,
+  "schema": "b2z_control_engine_replay_v1",
+  "side": "ble",
+  "run_id": 1801,
+  "target_ids": [
+    1
+  ],
+  "sample_rate": 4000000,
+  "assumed_reference_bound_ms": 1.0,
+  "assumption_status": "user-supplied functional replay assumption; not a measured bound",
+  "generated_utc": "2026-11-09T07:58:42.528388+00:00",
+  "sources": {
+    "packets": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1801/captures/ble/155243_684234_luouk7f9/rx.packets.jsonl",
+    "packets_sha256": "c17d7810b85b93e70b9577595c29ba504032c233b5b523f686fc855c51abaa4a",
+    "receiver_summary": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1801/captures/ble/155243_684234_luouk7f9/rx.summary.json"
+  },
+  "limitations": [
+    "one receiver only; no cross-device execution error",
+    "software state/actions are sample-domain replay, not physical actuator events",
+    "sender planned timestamp is not calibrated RF start"
+  ]
+}

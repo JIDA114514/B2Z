@@ -1,0 +1,4 @@
+command_id,first_slot,planned_attempts,board_tx_completed,ble_valid_attempts,zigbee_valid_attempts,same_attempt_joint_valid,ble_first_valid_slot,zigbee_first_valid_slot,joint_task_decoded,ble_live_status,zigbee_live_status,ble_software_processed,zigbee_software_processed
+43,50,3,3,3,3,3,50,50,1,rejected,rejected,0,0
+44,150,3,3,3,3,3,150,150,1,rejected,rejected,0,0
+45,250,3,3,3,3,3,250,250,1,rejected,rejected,0,0

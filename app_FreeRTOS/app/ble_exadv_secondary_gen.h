@@ -4,6 +4,11 @@
 #include <stdint.h>
 
 #define BLE_EXADV_SECONDARY_GEN_TX_LO_HZ 2480000000ULL
+#define B2Z_CONTROL_SECONDARY_CH3_TX_LO_HZ 2410000000ULL
+#define B2Z_CONTROL_RF_SAME_CHANNEL 0u
+#define B2Z_CONTROL_RF_STANDARD_CH3 1u
+#define B2Z_CONTROL_DIAGNOSTIC_AUX_OFFSET_US 30000u
+#define B2Z_CONTROL_STANDARD_AUX_OFFSET_US 300000u
 #define BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES 46u
 #define B2Z_CONTROL_RECORD_BYTES 35u
 
@@ -53,14 +58,21 @@ struct ble_exadv_secondary_gen_meta {
 	const uint32_t *primary_iq_words;
 	uint32_t primary_iq_byte_count;
 	uint32_t primary_air_us;
+	uint8_t aux_ptr_channel;
+	uint32_t aux_offset_us;
+	uint8_t rf_mode;
+	const uint8_t *primary_pdu;
+	uint32_t primary_pdu_len;
 };
 
 int32_t ble_exadv_secondary_gen_build_default(void);
 int32_t ble_exadv_secondary_gen_build_payload(const uint8_t *payload,
 					      uint32_t payload_len);
-/* Builds v1 control data plus a same-channel diagnostic primary (ch39 RF). */
+/* Legacy same-channel wrapper; AuxPtr remains diagnostic in this mode. */
 int32_t ble_exadv_secondary_gen_build_control(
 	const struct b2z_control_packet *packet);
+int32_t ble_exadv_secondary_gen_build_control_mode(
+	const struct b2z_control_packet *packet, uint8_t rf_mode);
 const struct ble_exadv_secondary_gen_meta *
 ble_exadv_secondary_gen_get_last_meta(void);
 

@@ -6,6 +6,8 @@ import subprocess
 import tempfile
 import unittest
 
+from python.exadv_rx.protocol import whiten
+
 
 ROOT = Path(__file__).resolve().parents[3]
 APP = ROOT / "app_FreeRTOS" / "app"
@@ -60,6 +62,11 @@ class Meta(ctypes.Structure):
         ("primary_iq_words", ctypes.POINTER(ctypes.c_uint32)),
         ("primary_iq_byte_count", ctypes.c_uint32),
         ("primary_air_us", ctypes.c_uint32),
+        ("aux_ptr_channel", ctypes.c_uint8),
+        ("aux_offset_us", ctypes.c_uint32),
+        ("rf_mode", ctypes.c_uint8),
+        ("primary_pdu", ctypes.POINTER(ctypes.c_uint8)),
+        ("primary_pdu_len", ctypes.c_uint32),
     ]
 
 
@@ -85,6 +92,9 @@ class ControlGeneratorTests(unittest.TestCase):
         cls.lib = ctypes.CDLL(str(library))
         cls.lib.ble_exadv_secondary_gen_build_control.argtypes = [ctypes.POINTER(Packet)]
         cls.lib.ble_exadv_secondary_gen_build_control.restype = ctypes.c_int32
+        cls.lib.ble_exadv_secondary_gen_build_control_mode.argtypes = [
+            ctypes.POINTER(Packet), ctypes.c_uint8]
+        cls.lib.ble_exadv_secondary_gen_build_control_mode.restype = ctypes.c_int32
         cls.lib.ble_exadv_secondary_gen_build_default.restype = ctypes.c_int32
         cls.lib.ble_exadv_secondary_gen_get_last_meta.restype = ctypes.POINTER(Meta)
 
@@ -125,6 +135,36 @@ class ControlGeneratorTests(unittest.TestCase):
         self.assertEqual(ll[59:59 + 172], bluebee)
         self.assertEqual((meta.air_us, meta.primary_air_us), (1872, 136))
         self.assertGreater(meta.primary_iq_byte_count, 0)
+        self.assertEqual((meta.rf_mode, meta.whitening_channel, meta.tx_lo_hz,
+                          meta.aux_offset_us), (0, 39, 2_480_000_000, 30_000))
+        self.assertEqual(read_bytes(meta.primary_pdu, meta.primary_pdu_len)[6:9],
+                         bytes.fromhex("03e803"))
+
+    def test_standard_secondary_ch3_updates_auxptr_whitening_and_rf(self):
+        packet = Packet(1001, 7, 1400, 500, 42, 3000, 2500,
+                        1, 1, 1, 2, 1, 2)
+        packet.ref_tick_ms = 3500
+        packet.execute_at_ms = 6000
+        packet.valid_until_ms = 5000
+        self.assertEqual(self.lib.ble_exadv_secondary_gen_build_control_mode(
+            ctypes.byref(packet), 1), 0)
+        meta = self.lib.ble_exadv_secondary_gen_get_last_meta().contents
+        self.assertEqual((meta.rf_mode, meta.aux_ptr_channel, meta.aux_offset_us),
+                         (1, 3, 300_000))
+        self.assertEqual((meta.whitening_channel, meta.tx_lo_hz),
+                         (3, 2_410_000_000))
+        primary = read_bytes(meta.primary_pdu, meta.primary_pdu_len)
+        self.assertEqual(primary[6:9], bytes.fromhex("83e803"))
+        self.assertEqual(primary[4:6], bytes.fromhex("0700"))
+        self.assertEqual((meta.pdu_len, meta.adv_data_len), (226, 214))
+        ll = read_bytes(meta.ll_payload, meta.ll_payload_len)
+        pdu = read_bytes(meta.pdu, meta.pdu_len)
+        bluebee = read_bytes(meta.bluebee_bytes, meta.bluebee_byte_count)
+        self.assertEqual(ll[59:59 + 172], bluebee)
+        self.assertEqual(whiten(ll[5:5 + len(pdu)], 3), pdu)
+        self.assertNotEqual(whiten(ll[5:5 + len(pdu)], 39), pdu)
+        self.assertEqual(self.lib.ble_exadv_secondary_gen_build_control_mode(
+            ctypes.byref(packet), 2), -1)
 
     def test_sync_only_and_invalid_deadline(self):
         packet = Packet(1001, 1, 200, 200, 0, 0, 0, 0, 0, 0, 0, 0, 0)

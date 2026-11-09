@@ -90,6 +90,7 @@ static uint32_t g_iq_words[BLE_EXADV_MAX_IQ_WORDS]
 	__attribute__((aligned(64)));
 static uint32_t g_control_primary_iq_words[BLE_EXADV_PRIMARY_IQ_WORDS]
 	__attribute__((aligned(64)));
+static uint8_t g_control_primary_pdu[9];
 static uint8_t g_ble_control_record[B2Z_CONTROL_RECORD_BYTES];
 static float g_gfsk_taps[BLE_EXADV_TAPS];
 static float g_gfsk_tap_prefix[BLE_EXADV_TAPS + 1u];
@@ -478,6 +479,7 @@ static int32_t build_secondary_ll_payload(uint32_t adv_data_len,
 					  uint32_t bluebee_start,
 					  uint32_t bluebee_byte_count,
 					  uint16_t did, uint8_t adv_mode,
+					  uint8_t whitening_channel,
 					  uint32_t *pdu_len,
 					  uint32_t *ll_payload_len)
 {
@@ -510,7 +512,7 @@ static int32_t build_secondary_ll_payload(uint32_t adv_data_len,
 	bluebee_pdu_start = 2u + 1u + sizeof(ext_header) + bluebee_start;
 	memset(whiten_in, 0, off + BLE_EXADV_CRC_LEN);
 	bt_whiten(whiten_in, off + BLE_EXADV_CRC_LEN,
-		  BLE_EXADV_DEFAULT_CHANNEL, whitening_mask);
+		  whitening_channel, whitening_mask);
 	for (uint32_t i = 0u; i < bluebee_byte_count; i++)
 		g_pdu[bluebee_pdu_start + i] ^=
 			whitening_mask[bluebee_pdu_start + i];
@@ -520,7 +522,7 @@ static int32_t build_secondary_ll_payload(uint32_t adv_data_len,
 	memcpy(&whiten_in[off], g_crc, sizeof(g_crc));
 	memcpy(g_ll_payload, g_ble_preamble_and_aa,
 	       sizeof(g_ble_preamble_and_aa));
-	bt_whiten(whiten_in, off + sizeof(g_crc), BLE_EXADV_DEFAULT_CHANNEL,
+	bt_whiten(whiten_in, off + sizeof(g_crc), whitening_channel,
 		  &g_ll_payload[sizeof(g_ble_preamble_and_aa)]);
 
 	*pdu_len = off;
@@ -626,24 +628,29 @@ static int32_t build_iq_from_ll_payload(const uint8_t *ll_payload,
 	return 0;
 }
 
-static int32_t build_control_primary(uint16_t did,
+static int32_t build_control_primary(uint16_t did, uint8_t rf_mode,
 				     uint32_t *iq_word_count)
 {
-	uint8_t pdu[9] = {
+	uint8_t standard = rf_mode == B2Z_CONTROL_RF_STANDARD_CH3;
+	uint8_t *pdu = g_control_primary_pdu;
+	static const uint8_t initial_pdu[9] = {
 		BLE_PDU_TYPE_ADV_EXT_IND, 7u, 6u,
 		BLE_EXT_HDR_FLAG_ADI | BLE_EXT_HDR_FLAG_AUX_PTR,
 		0u, 0u,
 		0x03u, 0xE8u, 0x03u,
 	};
-	uint8_t raw[sizeof(pdu) + BLE_EXADV_CRC_LEN];
+	uint8_t raw[sizeof(g_control_primary_pdu) + BLE_EXADV_CRC_LEN];
 	uint8_t ll[BLE_EXADV_PREAMBLE_AND_AA_LEN + sizeof(raw)];
 	uint8_t crc[BLE_EXADV_CRC_LEN];
 
+	memcpy(pdu, initial_pdu, sizeof(g_control_primary_pdu));
 	pdu[4] = (uint8_t)did;
 	pdu[5] = (uint8_t)(did >> 8);
-	bt_crc24_adv(pdu, sizeof(pdu), crc);
-	memcpy(raw, pdu, sizeof(pdu));
-	memcpy(&raw[sizeof(pdu)], crc, sizeof(crc));
+	/* Both offsets encode 1000 units: 30 ms/30 us or 300 ms/300 us. */
+	pdu[6] = standard ? 0x83u : 0x03u;
+	bt_crc24_adv(pdu, sizeof(g_control_primary_pdu), crc);
+	memcpy(raw, pdu, sizeof(g_control_primary_pdu));
+	memcpy(&raw[sizeof(g_control_primary_pdu)], crc, sizeof(crc));
 	memcpy(ll, g_ble_preamble_and_aa, sizeof(g_ble_preamble_and_aa));
 	bt_whiten(raw, sizeof(raw), BLE_EXADV_DEFAULT_CHANNEL,
 		  &ll[sizeof(g_ble_preamble_and_aa)]);
@@ -653,9 +660,11 @@ static int32_t build_control_primary(uint16_t did,
 					iq_word_count);
 }
 
-int32_t ble_exadv_secondary_gen_build_control(
-	const struct b2z_control_packet *packet)
+int32_t ble_exadv_secondary_gen_build_control_mode(
+	const struct b2z_control_packet *packet, uint8_t rf_mode)
 {
+	uint8_t whitening_channel = rf_mode == B2Z_CONTROL_RF_STANDARD_CH3 ?
+		3u : BLE_EXADV_DEFAULT_CHANNEL;
 	uint8_t zigbee_record[B2Z_CONTROL_RECORD_BYTES];
 	uint32_t frame_len = 0u;
 	uint32_t bluebee_len;
@@ -674,6 +683,8 @@ int32_t ble_exadv_secondary_gen_build_control(
 	uint32_t gfsk_time_us;
 
 	if (!packet ||
+	    (rf_mode != B2Z_CONTROL_RF_SAME_CHANNEL &&
+	     rf_mode != B2Z_CONTROL_RF_STANDARD_CH3) ||
 	    build_control_record(g_ble_control_record, packet,
 				 packet->ble_target, packet->ble_opcode,
 				 packet->ble_arg) < 0 ||
@@ -695,6 +706,7 @@ int32_t ble_exadv_secondary_gen_build_control(
 	if (build_secondary_ll_payload(adv_data_len, bluebee_start,
 				       bluebee_len, did,
 				       BLE_EXT_ADV_MODE_NONCONN_NONSCAN,
+				       whitening_channel,
 				       &pdu_len, &ll_payload_len) < 0 ||
 	    pdu_len != 226u)
 		return -1;
@@ -704,7 +716,7 @@ int32_t ble_exadv_secondary_gen_build_control(
 	if (build_iq_from_ll_payload(g_ll_payload, ll_payload_len,
 				     g_iq_words, BLE_EXADV_MAX_IQ_WORDS,
 				     &iq_word_count) < 0 ||
-	    build_control_primary(did, &primary_iq_word_count) < 0)
+	    build_control_primary(did, rf_mode, &primary_iq_word_count) < 0)
 		return -1;
 	stage_end = timing_now();
 	gfsk_time_us = timing_elapsed_us(stage_start, stage_end);
@@ -733,14 +745,30 @@ int32_t ble_exadv_secondary_gen_build_control(
 	g_meta.mapping_time_us = mapping_time_us;
 	g_meta.gfsk_time_us = gfsk_time_us;
 	g_meta.total_time_us = timing_elapsed_us(total_start, stage_end);
-	g_meta.whitening_channel = BLE_EXADV_DEFAULT_CHANNEL;
-	g_meta.tx_lo_hz = BLE_EXADV_SECONDARY_GEN_TX_LO_HZ;
+	g_meta.whitening_channel = whitening_channel;
+	g_meta.tx_lo_hz = rf_mode == B2Z_CONTROL_RF_STANDARD_CH3 ?
+		B2Z_CONTROL_SECONDARY_CH3_TX_LO_HZ :
+		BLE_EXADV_SECONDARY_GEN_TX_LO_HZ;
 	g_meta.ble_control_record = g_ble_control_record;
 	g_meta.primary_iq_words = g_control_primary_iq_words;
 	g_meta.primary_iq_byte_count =
 		primary_iq_word_count * sizeof(uint32_t);
 	g_meta.primary_air_us = 136u;
+	g_meta.aux_ptr_channel = 3u;
+	g_meta.aux_offset_us = rf_mode == B2Z_CONTROL_RF_STANDARD_CH3 ?
+		B2Z_CONTROL_STANDARD_AUX_OFFSET_US :
+		B2Z_CONTROL_DIAGNOSTIC_AUX_OFFSET_US;
+	g_meta.rf_mode = rf_mode;
+	g_meta.primary_pdu = g_control_primary_pdu;
+	g_meta.primary_pdu_len = sizeof(g_control_primary_pdu);
 	return 0;
+}
+
+int32_t ble_exadv_secondary_gen_build_control(
+	const struct b2z_control_packet *packet)
+{
+	return ble_exadv_secondary_gen_build_control_mode(
+		packet, B2Z_CONTROL_RF_SAME_CHANNEL);
 }
 
 int32_t ble_exadv_secondary_gen_build_payload(const uint8_t *payload,
@@ -773,7 +801,8 @@ int32_t ble_exadv_secondary_gen_build_payload(const uint8_t *payload,
 		return -1;
 	if (build_secondary_ll_payload(adv_data_len, bluebee_start,
 				       bluebee_byte_count, 0x0DC8u,
-				       BLE_EXT_ADV_MODE_CONNECTABLE, &pdu_len,
+				       BLE_EXT_ADV_MODE_CONNECTABLE,
+				       BLE_EXADV_DEFAULT_CHANNEL, &pdu_len,
 				       &ll_payload_len) < 0)
 		return -1;
 	stage_end = timing_now();

@@ -589,17 +589,20 @@ b2z_control_start? <run_id> <command_id> <period_ms> <attempts> <execute_at_ms> 
 b2z_control_start? <run_id> <command_id> <period_ms> <attempts> <execute_at_ms> <valid_until_ms> <ble_target> <ble_opcode> <ble_arg> <zigbee_target> <zigbee_opcode> <zigbee_arg>
 ```
 
+以上三种形式均可在最后附加 `rf_mode`：`0`（默认）为同频诊断，`1` 为跨信道 secondary（ch3）。`rf_mode=1` 必须显式提供 `period_ms` 且至少为 500 ms。
+
 全部参数为十进制整数。最短命令默认 `period_ms=200`、`attempts=10`、`execute_at_ms=3000`、`valid_until_ms=2500`，BLE 节点 1 和 IEEE 802.15.4 节点 2 都执行 `SET_STATE(1)`。例如：
 
 ```text
 b2z_control_start? 1001 42
 b2z_control_start? 1002 43 200 10 3000 2500 1 1 1 2 1 2
 b2z_control_start? 1003 0
+b2z_control_start? 1901 43 500 10 5000 4500 1
 ```
 
 最后一个示例的 `command_id=0` 表示纯时间更新，所有命令字段和目标时刻在空口为 0。`opcode` 为 0=`NOOP`、1=`SET_STATE`、2=`TRIGGER`。命令运行时仍可用 `bluebee_perf_status?` 查看 `CONTROL_STATS`，用 `bluebee_perf_stop?` 提前停止。一次命令最多运行 600 秒，`period_ms` 为 50–65535，尝试次数为正整数；命令包要求最后一次计划广播不晚于 `valid_until_ms`，且 `valid_until_ms < execute_at_ms`。`run_id` 必须为 1–65535，串口形式的 `command_id` 为 0–2147483647；命令编号在同一轮重发时保持不变，计划时隙和 `ref_tick_ms` 按周期增长。串口输出的 `primary_started/primary_completed` 与 `tx_started/tx_completed` 分别统计两种 DMA 提交和轮询完成，`secondary_dma_late_*` 统计计划 secondary 时刻到 DMA 提交函数返回的延迟；这些都不是实际空口发射时间的直接测量。
 
-每个时隙动态生成 primary 和一个共包 secondary，BLE 记录、BlueBee 区域、ADI/DID 随时隙更新；单 secondary 的 PDU payload 为 224 B。当前两个波形均在 **ch39 / 2480 MHz** 发送，primary AuxPtr 声明 ch3、LE 1M 和 30 ms，因此输出明确标记 `rf_mode=same_channel_diagnostic`。这可用于当前两块 HackRF 的固定频点共包实验，**不是跨信道 AuxPtr 跟随验证**。`ref_tick_ms` 是计划的 secondary 前导码起点相对本轮首个计划 secondary 起点的毫秒数；板端尚未测得它与实际空口起点的误差，不能将其当作已校准发送时间戳。主机测试已核对打包、CRC、FCS 和字节预算；实际构建、上板和空口结果待验证。
+每个时隙动态生成 primary 和一个共包 secondary，BLE 记录、BlueBee 区域、ADI/DID 随时隙更新；单 secondary 的 PDU payload 为 224 B。默认 `rf_mode=0` 保留原同频诊断：两个波形均在 **ch39 / 2480 MHz** 发送，secondary 按 ch39 加白，primary AuxPtr 仍声明 ch3、LE 1M 和 30 ms。`rf_mode=1` 先在 ch39 / 2480 MHz 发 primary，随后切换发送 LO 至 ch3 / 2410 MHz，在 primary DMA 提交前记录的板端时刻后约 300 ms 提交 secondary DMA，secondary 按 ch3 加白；primary AuxPtr 声明 ch3、LE 1M、300 ms（300 µs 单位）。secondary DMA 完成或发送失败后尝试切回 2480 MHz。2410 MHz 同时对应 IEEE 802.15.4 ch12。每轮结束会报告 `auxptr_dma_window_miss`、`auxptr_dma_delta_*`（primary 到 secondary 的 DMA 时间差）和 `retune_failure`；计划模式另报每时隙的 `auxptr_dma_delta_us` 与切频耗时。切频失败会终止本轮，时间窗错过则跳过该次 secondary。上述时间均以板端 DMA 调用为代理；AD9361 锁定时间、DMA 到真实空口起点的延迟和 AuxPtr 是否落入规范时间窗仍需 IQ 实测。`ref_tick_ms` 是计划的 secondary 前导码起点相对本轮首个计划 secondary 起点的毫秒数；板端尚未测得它与实际空口起点的误差，不能将其当作已校准发送时间戳。主机测试已核对打包、CRC、FCS 和字节预算；实际构建、上板和空口结果待验证。
 
 ### 一轮多任务计划（待上板验证）
 
@@ -613,6 +616,8 @@ b2z_plan_add? 0 1 0 0
 b2z_plan_add? 44 3 3000 2500 1 1 2 2 1 2
 b2z_plan_start? 1501 200
 ```
+
+计划启动也可附加 `rf_mode`，例如 `b2z_plan_start? 1902 500 1`；选模式 1 时应按新的周期重建计划，使各命令的有效期覆盖最后一次重发。
 
 `b2z_plan_add? <command_id> <repeats> <execute_at_ms> <valid_until_ms> [ble_target ble_opcode ble_arg zigbee_target zigbee_opcode zigbee_arg]` 按加入顺序排列连续时隙。`command_id=0` 是纯时间更新，时刻必须都为 0，不能附带目标字段；非零命令省略目标字段时仍默认 BLE 节点 1、IEEE 802.15.4 节点 2 执行 `SET_STATE(1)`。同一非零 `command_id` 在一轮内只能加入一次，其 K 次重发保持相同标识；纯时间更新可穿插多条。全轮 `slot_index` 从 0 连续编号，`ref_tick_ms=slot_index×period_ms`，`run_id` 和周期由 `b2z_plan_start?` 统一设定。每个命令的 `valid_until_ms` 必须覆盖它最后一次计划时隙，并早于 `execute_at_ms`。最多 16 条计划、1024 个时隙、600 秒；周期范围 50–65535 ms。
 

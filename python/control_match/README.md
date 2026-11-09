@@ -20,9 +20,9 @@ python3 python/control_match/analyze.py \
   --run-id 1004 --command-id 43
 ```
 
-脚本自动选取实验目录中唯一的正常结束接收记录；若同侧存在多份正常结束录制，使用 `--ble-packets`、`--zigbee-packets` 明确指定。若实验目录下有 `board.board.log`，自动合并同一 Run ID、Command ID 的一条最终 `CONTROL_STATS`，提供计划时隙和 DMA 完成分母。
+脚本自动选取实验目录中唯一的正常结束接收记录；若同侧存在多份正常结束录制，使用 `--ble-packets`、`--zigbee-packets` 明确指定。若实验目录下有 `board.board.log`，自动合并同一 Run ID、Command ID 的一条最终 `CONTROL_STATS`；单任务计划也可合并 `CONTROL_PLAN_STATS`，缺少 `CONTROL_PLAN_TASK` 时会标记板端命令号未经逐任务日志核对。多任务计划使用下述 `plan_analyze.py`。
 
-未来两块 HackRF **同时录制同一轮发送**时，将两个接收结果放在同一个实验目录，并显式使用 `--same-transmission`：
+两块 HackRF **同时录制同一轮发送**时，将两个接收结果放在同一个实验目录，并显式使用 `--same-transmission`：
 
 ```bash
 python3 python/control_match/analyze.py \
@@ -46,6 +46,20 @@ python3 python/control_match/sync_replay.py \
 ```
 
 结果写入 `sync.report.md`、`sync.summary.json`、`sync.sweep.csv` 和 `sync.validation.csv`，列出实际训练时隙、训练跨度、最近更新时隙、验证样本数及误差。所有配置使用同一批更晚的共同验证包。该误差是两个独立模型对共同 RF 事件的时间估计差，固定的包内标记和接收路径偏差尚未独立校准；不表示绝对同步精度或执行时差。单轮离线屏蔽包是回放实验，不能充当新的物理独立重复。
+
+1703/1704 的 300 槽固定验证集、不同包训练和周期更新由 `holdover_analyze.py` 处理。它接受两侧显式逐包路径、Run ID 和新输出目录，生成 32 种策略的汇总、逐验证槽 CSV 与采样间隔质量表；命令示例与解释见[时间保持实验方案](../../doc/independent_sync_holdover_experiment_plan.md)。验证包只用于打分，不参与模型拟合。
+
+## 多任务板端计划匹配
+
+`plan_analyze.py` 读取完整 `CONTROL_PLAN_STATS/TASK/SLOT` 板端日志和两份独立解码的逐包文件，按全轮 `slot_index` 输出四象限、按非零 `command_id` 输出逐任务联合解析，并保留实时软件状态。它要求完整逐槽日志，防止把单一最终计数错配到某个命令。
+
+```bash
+python3 python/control_match/plan_analyze.py \
+  --experiment-dir python/experiments/20261104_run1601 \
+  --run-id 1601 --analysis-id plan_match
+```
+
+若同侧有多份录制，指定 `--ble-packets` 与 `--zigbee-packets`。两侧可从不同重发槽恢复同一任务；同槽共同有效数与逐任务联合解析数分别报告。该脚本不从两台独立 IQ 的样本索引推算执行时差。下一轮连续时间更新与三任务实验见[方案](../../doc/integrated_sync_control_experiment_plan.md)。
 
 ## 单侧时间与软件命令模块
 

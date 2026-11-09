@@ -38,7 +38,6 @@
 候选 CRC/FCS 失败计数不等于唯一物理坏包数；队列未溢出不证明 USB 无丢样。
 当前报告描述解码与负载校验，不表示命令执行或执行器同步。
 
-- [rx.ci8](rx.ci8)
 - [rx.control.events.jsonl](rx.control.events.jsonl)
 - [rx.control.packets.sample.jsonl](rx.control.packets.sample.jsonl)
 - [rx.control.tasks.csv](rx.control.tasks.csv)

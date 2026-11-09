@@ -13,7 +13,9 @@
 
 ## 分析与原始记录
 
+- [analyses/holdover_preregistered_v1/holdover.summary.json](analyses/holdover_preregistered_v1/holdover.summary.json)（历史分析；状态未记录）
 - [captures/ble/154759_665728_3uh39cp5/rx.control.summary.json](captures/ble/154759_665728_3uh39cp5/rx.control.summary.json)（历史分析；状态未记录）
 - [captures/zigbee/154801_661908_vnn1wz3d/rx.control.summary.json](captures/zigbee/154801_661908_vnn1wz3d/rx.control.summary.json)（历史分析；状态未记录）
+- [board.board.log](board.board.log)
 
 配置：[experiment.config.json](experiment.config.json)。完整参数、分母依据和异常见各接收报告及原始 JSON。

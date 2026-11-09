@@ -1,0 +1,73 @@
+{
+  "schema": "b2z_live_control_v1",
+  "side": "zigbee",
+  "run_id": 1901,
+  "sender_id": "configured_board",
+  "receiver_status": "complete",
+  "observation_mode": "live_software",
+  "target_ids": [
+    2
+  ],
+  "accept_broadcast": false,
+  "external_reference_bound_ms": null,
+  "reference_bound_status": "not supplied; timed commands denied",
+  "event_counts": {
+    "decoded": 10,
+    "clock_updated": 10,
+    "rejected": 10
+  },
+  "reasons": {
+    "time_quality_insufficient": 10
+  },
+  "tasks": [
+    {
+      "run_id": 1901,
+      "command_id": 43,
+      "target_id": 2,
+      "opcode": 1,
+      "arg": 1,
+      "decoded_packets": 10,
+      "unique_slots": 10,
+      "duplicate_attempts": 0,
+      "first_decoded_sample": 32440320,
+      "last_decoded_sample": 68485120,
+      "accepted_sample": null,
+      "target_sample": null,
+      "processed_sample": null,
+      "processing_lateness_ms": null,
+      "status": "rejected",
+      "last_rejection_reason": "time_quality_insufficient",
+      "cancellation_reason": null
+    }
+  ],
+  "engine": {
+    "side": "zigbee",
+    "run_id": 1901,
+    "current_sample": 120000000,
+    "clock": {
+      "model_version": 10,
+      "training_packets": 10,
+      "latest_ref_ms": 4500,
+      "training_span_ms": 4500,
+      "rate_fitted": true,
+      "rate_ppm": -110.05454545454097,
+      "residual_ms": 0.5520272727278062
+    },
+    "task_status": {},
+    "software_state": {},
+    "software_triggers": []
+  },
+  "generated_utc": "2026-11-09T08:51:21.625873+00:00",
+  "files": {
+    "control_events": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1901/captures/zigbee/165106_403777_8rms7obh/rx.control.events.jsonl",
+    "control_tasks": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1901/captures/zigbee/165106_403777_8rms7obh/rx.control.tasks.csv",
+    "control_summary": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1901/captures/zigbee/165106_403777_8rms7obh/rx.control.summary.json",
+    "control_report": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1901/captures/zigbee/165106_403777_8rms7obh/rx.control.report.md"
+  },
+  "limitations": [
+    "one receiver's software events only",
+    "IQ sample progress is not a calibrated host or RF timestamp",
+    "offline events are simulated; live host timestamps include processing latency",
+    "no cross-device execution error or physical actuator measurement"
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "schema": "b2z_live_control_v1",
+  "side": "ble",
+  "run_id": 1901,
+  "sender_id": "configured_board",
+  "receiver_status": "complete",
+  "observation_mode": "live_software",
+  "target_ids": [
+    1
+  ],
+  "accept_broadcast": false,
+  "external_reference_bound_ms": null,
+  "reference_bound_status": "not supplied; timed commands denied",
+  "event_counts": {
+    "decoded": 6,
+    "clock_updated": 6,
+    "rejected": 6
+  },
+  "reasons": {
+    "time_quality_insufficient": 6
+  },
+  "tasks": [
+    {
+      "run_id": 1901,
+      "command_id": 43,
+      "target_id": 1,
+      "opcode": 1,
+      "arg": 1,
+      "decoded_packets": 6,
+      "unique_slots": 6,
+      "duplicate_attempts": 0,
+      "first_decoded_sample": 21168128,
+      "last_decoded_sample": 45154304,
+      "accepted_sample": null,
+      "target_sample": null,
+      "processed_sample": null,
+      "processing_lateness_ms": null,
+      "status": "rejected",
+      "last_rejection_reason": "time_quality_insufficient",
+      "cancellation_reason": null
+    }
+  ],
+  "engine": {
+    "side": "ble",
+    "run_id": 1901,
+    "current_sample": 120000000,
+    "clock": {
+      "model_version": 6,
+      "training_packets": 6,
+      "latest_ref_ms": 3500,
+      "training_span_ms": 3000,
+      "rate_fitted": true,
+      "rate_ppm": 12.750000000005812,
+      "residual_ms": 0.06704166666651144
+    },
+    "task_status": {},
+    "software_state": {},
+    "software_triggers": []
+  },
+  "generated_utc": "2026-11-09T08:51:23.531608+00:00",
+  "files": {
+    "control_events": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1901/captures/ble/165108_311158_b7o7xgl8/rx.control.events.jsonl",
+    "control_tasks": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1901/captures/ble/165108_311158_b7o7xgl8/rx.control.tasks.csv",
+    "control_summary": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1901/captures/ble/165108_311158_b7o7xgl8/rx.control.summary.json",
+    "control_report": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1901/captures/ble/165108_311158_b7o7xgl8/rx.control.report.md"
+  },
+  "limitations": [
+    "one receiver's software events only",
+    "IQ sample progress is not a calibrated host or RF timestamp",
+    "offline events are simulated; live host timestamps include processing latency",
+    "no cross-device execution error or physical actuator measurement"
+  ]
+}

@@ -1,0 +1,183 @@
+{
+  "schema": "exadv_rx_v3",
+  "receiver_version": "2026-10-26-window-retry1",
+  "start_utc": "2026-11-09T03:09:16.400289+00:00",
+  "end_utc": "2026-11-09T03:10:36.644339+00:00",
+  "status": "complete",
+  "error": null,
+  "config": {
+    "channels": [
+      39
+    ],
+    "whitening_channels": [
+      39
+    ],
+    "sample_rate": 4000000,
+    "center_hz": 2480000000.0,
+    "iq_file": null,
+    "format": "ci8",
+    "serial": "000000000000000017c467dc2926a0c3",
+    "lna": 24,
+    "vga": 20,
+    "amp": false,
+    "duration": 80.0,
+    "block_samples": 65536,
+    "queue_blocks": 64,
+    "stall_timeout": 10,
+    "sync_threshold": 0.84,
+    "dc_block_hz": 1000,
+    "timing_retry": true,
+    "channel_cutoff_hz": 850000,
+    "pair_tolerance_us": 20,
+    "diagnostic_pairs": true,
+    "diagnostic_pair_window_us": 2000,
+    "save_iq": true,
+    "output": null,
+    "experiment_dir": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1703",
+    "analysis_id": null,
+    "quiet": true,
+    "run_id": 1703,
+    "control_target_id": [
+      1
+    ],
+    "control_sender_id": "configured_board",
+    "control_accept_broadcast": false,
+    "control_assumed_reference_bound_ms": null
+  },
+  "capture_command": [
+    "/usr/bin/hackrf_transfer",
+    "-r",
+    "-",
+    "-f",
+    "2480000000",
+    "-s",
+    "4000000",
+    "-l",
+    "24",
+    "-g",
+    "20",
+    "-a",
+    "0",
+    "-p",
+    "0",
+    "-d",
+    "000000000000000017c467dc2926a0c3",
+    "-n",
+    "320000000"
+  ],
+  "capture_returncode": 0,
+  "capture_stats": {
+    "bytes_read": 640000000,
+    "queue_high_water": 2
+  },
+  "counts": {
+    "clipped_components": 89518,
+    "samples_processed": 320000000,
+    "packets": 600,
+    "primary": 300,
+    "same_channel_auxiliary_diagnostic": 300
+  },
+  "channels": {
+    "39": {
+      "sync_candidates": 600,
+      "packets": 600
+    }
+  },
+  "matched_events": 0,
+  "expired_primary": 300,
+  "diagnostic_pairs": 300,
+  "diagnostic_expired_primary": 0,
+  "diagnostic_pending_overflow": 0,
+  "pending_primary": 0,
+  "wall_duration_s": 80.24200829600022,
+  "processed_sample_duration_s": 80.0,
+  "processing_ms_recent": {
+    "samples": 4884,
+    "mean": 6.608557891073948,
+    "p99": 9.54363914977421,
+    "max": 11.737926000023435
+  },
+  "stderr_tail": [
+    " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -19.9 dBfs",
+    " 7.9 MB / 1.000 sec =  7.9 MB/second, average power -19.8 dBfs",
+    " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -19.9 dBfs",
+    " 7.9 MB / 1.000 sec =  7.9 MB/second, average power -19.8 dBfs",
+    " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -19.9 dBfs",
+    " 7.9 MB / 1.000 sec =  7.9 MB/second, average power -19.8 dBfs",
+    " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -19.9 dBfs",
+    " 7.9 MB / 1.000 sec =  7.9 MB/second, average power -19.8 dBfs",
+    " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -19.9 dBfs",
+    " 7.9 MB / 1.000 sec =  7.9 MB/second, average power -19.8 dBfs",
+    " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -19.9 dBfs",
+    " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -19.9 dBfs",
+    " 7.9 MB / 1.000 sec =  7.9 MB/second, average power -19.8 dBfs",
+    " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -15.7 dBfs",
+    " 7.9 MB / 1.000 sec =  7.9 MB/second, average power -9.7 dBfs",
+    " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -9.7 dBfs",
+    " 7.9 MB / 1.000 sec =  7.9 MB/second, average power -9.7 dBfs",
+    " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -9.7 dBfs",
+    " 7.9 MB / 1.000 sec =  7.9 MB/second, average power -9.7 dBfs",
+    " 8.1 MB / 1.001 sec =  8.1 MB/second, average power -9.7 dBfs",
+    " 7.9 MB / 0.999 sec =  7.9 MB/second, average power -9.7 dBfs",
+    " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -9.7 dBfs",
+    " 7.9 MB / 1.000 sec =  7.9 MB/second, average power -9.7 dBfs",
+    " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -9.7 dBfs",
+    " 7.9 MB / 1.000 sec =  7.9 MB/second, average power -9.7 dBfs",
+    " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -9.7 dBfs",
+    " 7.9 MB / 1.000 sec =  7.9 MB/second, average power -9.7 dBfs",
+    " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -9.7 dBfs",
+    " 7.9 MB / 1.000 sec =  7.9 MB/second, average power -9.7 dBfs",
+    " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -9.7 dBfs",
+    " 7.9 MB / 1.000 sec =  7.9 MB/second, average power -9.7 dBfs",
+    " 8.1 MB / 1.000 sec =  8.1 MB/second, average power -9.7 dBfs",
+    " 0.3 MB / 0.021 sec = 12.5 MB/second, average power -9.7 dBfs",
+    "",
+    "Exiting...",
+    "Total time: 80.02101 s",
+    "hackrf_stop_rx() done",
+    "hackrf_close() done",
+    "hackrf_exit() done",
+    "exit"
+  ],
+  "files": {
+    "packets": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1703/captures/ble/110916_399121_8lvkyj6j/rx.packets.jsonl",
+    "events": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1703/captures/ble/110916_399121_8lvkyj6j/rx.events.jsonl",
+    "summary": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1703/captures/ble/110916_399121_8lvkyj6j/rx.summary.json",
+    "text": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1703/captures/ble/110916_399121_8lvkyj6j/rx.summary.txt",
+    "report": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1703/captures/ble/110916_399121_8lvkyj6j/rx.report.md",
+    "stderr": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1703/captures/ble/110916_399121_8lvkyj6j/rx.hackrf.log",
+    "iq": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1703/captures/ble/110916_399121_8lvkyj6j/rx.ci8",
+    "control_events": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1703/captures/ble/110916_399121_8lvkyj6j/rx.control.events.jsonl",
+    "control_tasks": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1703/captures/ble/110916_399121_8lvkyj6j/rx.control.tasks.csv",
+    "control_summary": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1703/captures/ble/110916_399121_8lvkyj6j/rx.control.summary.json",
+    "control_report": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1703/captures/ble/110916_399121_8lvkyj6j/rx.control.report.md"
+  },
+  "control_engine": {
+    "event_counts": {
+      "decoded": 300,
+      "clock_updated": 300
+    },
+    "tasks": [],
+    "report": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261109_run1703/captures/ble/110916_399121_8lvkyj6j/rx.control.report.md"
+  },
+  "sources_sha256": {
+    "exadv_rx/receive.py": "32ac150e0729eacc018edf8769a5e1f694e590b183a8d177b5835339e87c4168",
+    "exadv_rx/arguments.py": "100620f696cdc8973a4560832d39041f287732df73ad4fc0aaec91a527e68cb7",
+    "exadv_rx/decoder.py": "b0975b91d2e8997fb0a4c217cb771aba7661eeb671986163a9e8430f82bf6bd6",
+    "exadv_rx/protocol.py": "cf2cf405a303ce1f8087c0806f66ee3e2a82d72b317130113c9f78825fd9bff8",
+    "experiment_tools/receiver_defaults.py": "e9231cd5a7af2a945ab3b3675f19434133ce1739c446fcdac2e0bf0c20bd6a3b",
+    "experiment_tools/reporting.py": "957bcf9fc5f3f6838c02f26f70cd5a1af637b8d97409659fca176c35c546e1d2",
+    "control_match/control_engine.py": "a7d5210f1a77f4af8af245745e8fe19170d6a1312ae464bf2d975671669d2abe",
+    "control_match/live_control.py": "d263c31af985b6e0cec8666954a2bed5e7dbc328d64284df33eef262e226d495",
+    "control_match/packet_adapter.py": "9faf636c861a2c64f857c50e75691c408138f558eb8bd7e601117aed711b9c02",
+    "control_match/protocol.py": "436b05d1dfb6773b1a814ad65fd277a8fca29900fb42fcd7b4a4c90317d99e2f"
+  },
+  "limitations": [
+    "LE 1M only; fixed RF capture, no host-timed frequency hopping",
+    "DC blocker/filter and demodulation timing require calibration before synchronization claims",
+    "sample timestamps are relative to capture, not hardware/UTC timestamps",
+    "HackRF/USB sample losses may be unobservable in raw IQ; no guaranteed gap-free timeline",
+    "CRC-failure counts refer to sync candidates, not uniquely identified transmitted packets",
+    "no PRR without independently supplied TX counts and matched observation window"
+  ]
+}

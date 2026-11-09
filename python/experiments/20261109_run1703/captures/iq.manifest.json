@@ -1,0 +1,17 @@
+{
+  "schema": "iq_manifest_v1",
+  "run_id_in_packets": 1703,
+  "capture_note": "ZigBee receiver was configured with run_id 1702; raw files remain in its original auto-created directory.",
+  "files": {
+    "ble": {
+      "path": "ble/110916_399121_8lvkyj6j/rx.ci8",
+      "bytes": 640000000,
+      "sha256": "3b02c83ec0e69b1802d1f4f3a9c8f982f23391b3175fae1b9e52b2ba95f6b3d9"
+    },
+    "zigbee": {
+      "path": "../../20261109_run1702/captures/zigbee/110914_154091_btxesy84/rx.ci8",
+      "bytes": 640000000,
+      "sha256": "0f639bb19e7a7ead574448b1a9eeb6f4cd8f208f78c75c725c943f492f697bc0"
+    }
+  }
+}

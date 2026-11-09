@@ -1,0 +1,18 @@
+\section{Introduction}\label{sec:intro}
+% ==== 写作要点 ====
+% 1) 背景：BLE 5.0 扩展广播把大负载拆到 secondary；802.15.4/ZigBee 同时工作在 2.4 GHz
+% 2) 问题：双协议设备要控制两类接收端时，通常需要发两次
+% 3) 本文：同一个 secondary PDU 里同时放 BLE 控制、BlueBee 编码负载和同步字段
+% 4) 贡献：3 条，每条后面要能指到具体的节/图/表
+% 5) 不要写 "this paper is organized as follows"（IEEE 期刊通常省略）
+
+Bluetooth Low Energy (\ble) extended advertising lets a primary advertisement
+reference a secondary payload that is transmitted later, on a channel and at a
+time of the sender's choosing~\cite{bluetooth_core51}. The \stdfour{} standard
+defines an independent low-rate PHY and MAC that shares the same 2.4\,GHz band
+but uses an unrelated frame format~\cite{ieee802154_2020}. Consequently, a node
+that must control receivers of both kinds normally transmits twice.
+
+% TODO: 用 2--3 句把"为什么难"讲清楚（不同前导/调制/校验、单包容量、单向广播无确认），
+%       再引出本文做法与贡献列表。
+

@@ -1,0 +1,5 @@
+# latexmk 配置：输出统一进 build/
+$pdf_mode = 1;          # 1 = pdflatex
+$out_dir  = 'build';
+$aux_dir  = 'build';
+$clean_ext = 'bbl run.xml nav snm vrb out';

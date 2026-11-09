@@ -1,0 +1,60 @@
+% ============================================================
+%  BlueBee 论文主文件
+%  编译：latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+%  产物：build/main.pdf
+%  结构说明见 README.md
+% ============================================================
+\documentclass[journal]{IEEEtran}
+% 投会议时改成： \documentclass[conference]{IEEEtran}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{cite}
+\usepackage[hidelinks]{hyperref}
+
+% ---- 全局宏：术语、系统名、单位集中在这里改，不要散落正文 ----
+\newcommand{\sysname}{BlueBee}
+\newcommand{\ble}{BLE}
+\newcommand{\stdfour}{IEEE~802.15.4}
+
+\begin{document}
+
+\title{Single-Packet Dual-Protocol Control and Synchronization over BLE Extended Advertising}
+
+% TODO: 填写作者、单位、通讯作者
+\author{Author Name
+\thanks{Manuscript prepared \today. Funding and affiliation to be completed.}}
+
+\maketitle
+
+\begin{abstract}
+% TODO: 150--250 词，按四句写：
+%   (1) 问题是什么
+%   (2) 本文怎么做（一句话）
+%   (3) 关键量化结果（必须与正文表格数字一致）
+%   (4) 意味着什么
+\emph{Abstract to be written.}
+\end{abstract}
+
+\begin{IEEEkeywords}
+BLE, IEEE 802.15.4, extended advertising, cross-protocol, synchronization
+\end{IEEEkeywords}
+
+\input{sections/01-introduction}
+\input{sections/02-related-work}
+\input{sections/03-system-model}
+\input{sections/04-packet-design}
+\input{sections/05-receiver-design}
+\input{sections/06-implementation}
+\input{sections/07-evaluation}
+\input{sections/08-discussion}
+\input{sections/09-conclusion}
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\end{document}

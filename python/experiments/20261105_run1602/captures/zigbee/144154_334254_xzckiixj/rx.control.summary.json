@@ -1,0 +1,92 @@
+{
+  "schema": "b2z_live_control_v1",
+  "side": "zigbee",
+  "run_id": 1602,
+  "sender_id": "configured_board",
+  "receiver_status": "complete",
+  "observation_mode": "live_software",
+  "target_ids": [
+    2
+  ],
+  "accept_broadcast": false,
+  "external_reference_bound_ms": null,
+  "reference_bound_status": "not supplied; timed commands denied",
+  "event_counts": {
+    "decoded": 9,
+    "clock_updated": 9,
+    "rejected": 6
+  },
+  "reasons": {
+    "time_quality_insufficient": 6
+  },
+  "tasks": [
+    {
+      "run_id": 1602,
+      "command_id": 43,
+      "target_id": 2,
+      "opcode": 1,
+      "arg": 1,
+      "decoded_packets": 3,
+      "unique_slots": 3,
+      "duplicate_attempts": 0,
+      "first_decoded_sample": 31522816,
+      "last_decoded_sample": 34734080,
+      "accepted_sample": null,
+      "target_sample": null,
+      "processed_sample": null,
+      "processing_lateness_ms": null,
+      "status": "rejected",
+      "last_rejection_reason": "time_quality_insufficient",
+      "cancellation_reason": null
+    },
+    {
+      "run_id": 1602,
+      "command_id": 44,
+      "target_id": 2,
+      "opcode": 2,
+      "arg": 7,
+      "decoded_packets": 3,
+      "unique_slots": 3,
+      "duplicate_attempts": 0,
+      "first_decoded_sample": 37879808,
+      "last_decoded_sample": 41091072,
+      "accepted_sample": null,
+      "target_sample": null,
+      "processed_sample": null,
+      "processing_lateness_ms": null,
+      "status": "rejected",
+      "last_rejection_reason": "time_quality_insufficient",
+      "cancellation_reason": null
+    }
+  ],
+  "engine": {
+    "side": "zigbee",
+    "run_id": 1602,
+    "current_sample": 320000000,
+    "clock": {
+      "model_version": 9,
+      "training_packets": 9,
+      "latest_ref_ms": 1600,
+      "training_span_ms": 1600,
+      "rate_fitted": true,
+      "rate_ppm": -418.12500000004695,
+      "residual_ms": 0.6521666666669771
+    },
+    "task_status": {},
+    "software_state": {},
+    "software_triggers": []
+  },
+  "generated_utc": "2026-11-05T06:42:34.769990+00:00",
+  "files": {
+    "control_events": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261105_run1602/captures/zigbee/144154_334254_xzckiixj/rx.control.events.jsonl",
+    "control_tasks": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261105_run1602/captures/zigbee/144154_334254_xzckiixj/rx.control.tasks.csv",
+    "control_summary": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261105_run1602/captures/zigbee/144154_334254_xzckiixj/rx.control.summary.json",
+    "control_report": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261105_run1602/captures/zigbee/144154_334254_xzckiixj/rx.control.report.md"
+  },
+  "limitations": [
+    "one receiver's software events only",
+    "IQ sample progress is not a calibrated host or RF timestamp",
+    "offline events are simulated; live host timestamps include processing latency",
+    "no cross-device execution error or physical actuator measurement"
+  ]
+}

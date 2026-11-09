@@ -19,6 +19,7 @@
 - [captures/zigbee/142408_872641_5bpx7ib7/rx.control.summary.json](captures/zigbee/142408_872641_5bpx7ib7/rx.control.summary.json)（历史分析；状态未记录）
 - [notes.md](notes.md)
 - [analyses/control_match_1704/control.slots.metrics.csv](analyses/control_match_1704/control.slots.metrics.csv)
+- [board.board.log](board.board.log)
 - [captures/iq.manifest.json](captures/iq.manifest.json)
 
 配置：[experiment.config.json](experiment.config.json)。完整参数、分母依据和异常见各接收报告及原始 JSON。

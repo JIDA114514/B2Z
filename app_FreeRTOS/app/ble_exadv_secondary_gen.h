@@ -7,6 +7,8 @@
 #define B2Z_CONTROL_SECONDARY_CH3_TX_LO_HZ 2410000000ULL
 #define B2Z_CONTROL_RF_SAME_CHANNEL 0u
 #define B2Z_CONTROL_RF_STANDARD_CH3 1u
+#define B2Z_CONTROL_RF_SEPARATE_CH3 2u
+#define B2Z_CONTROL_SEPARATE_GAP_US 1000u
 #define B2Z_CONTROL_DIAGNOSTIC_AUX_OFFSET_US 30000u
 #define B2Z_CONTROL_STANDARD_AUX_OFFSET_US 300000u
 #define BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES 46u
@@ -63,6 +65,10 @@ struct ble_exadv_secondary_gen_meta {
 	uint8_t rf_mode;
 	const uint8_t *primary_pdu;
 	uint32_t primary_pdu_len;
+	/* Mode 2: independent, unwhitened BlueBee waveform (not native O-QPSK). */
+	const uint32_t *ieee_iq_words;
+	uint32_t ieee_iq_byte_count;
+	uint32_t ieee_air_us;
 };
 
 int32_t ble_exadv_secondary_gen_build_default(void);

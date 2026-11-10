@@ -196,6 +196,16 @@ static uint32_t g_control_slot_late_us[B2Z_PLAN_MAX_SLOTS];
 static uint32_t g_control_slot_aux_delta_us[B2Z_PLAN_MAX_SLOTS];
 static uint32_t g_control_slot_retune_us[B2Z_PLAN_MAX_SLOTS];
 
+/* Buffered until final reporting: no UART traffic is added to the RF path.
+ * All times bracket software DMA calls; none is an RF start measurement. */
+struct b2z_burst_observation {
+	uint32_t iq_bytes, air_us, pad_us;
+	uint32_t prepared_us, submit_before_us, submit_after_us, finish_us;
+	uint8_t generated, attempted, started, completed, timeout;
+};
+static struct b2z_burst_observation g_control_bursts[B2Z_PLAN_MAX_SLOTS][3];
+
+
 /* Dedicated DDR BSS arena; independent of the 1 MB FreeRTOS heap. */
 static uint32_t
 g_perf_iq_arena[BLUEBEE_PERF_BATCH_MAX_SIZE][BLUEBEE_PERF_IQ_WORD_CAPACITY]
@@ -217,13 +227,14 @@ static const char *bluebee_perf_test_name(enum bluebee_perf_test test)
 
 static const char *b2z_rf_mode_name(uint8_t mode)
 {
-	return mode == B2Z_CONTROL_RF_STANDARD_CH3 ?
-		"standard_secondary_ch3" : "same_channel_diagnostic";
+	return mode == B2Z_CONTROL_RF_SEPARATE_CH3 ? "separate_secondary_ch3" :
+		(mode == B2Z_CONTROL_RF_STANDARD_CH3 ?
+		 "standard_secondary_ch3" : "same_channel_diagnostic");
 }
 
 static uint32_t b2z_aux_offset_us(uint8_t mode)
 {
-	return mode == B2Z_CONTROL_RF_STANDARD_CH3 ?
+	return mode != B2Z_CONTROL_RF_SAME_CHANNEL ?
 		B2Z_CONTROL_STANDARD_AUX_OFFSET_US :
 		B2Z_CONTROL_DIAGNOSTIC_AUX_OFFSET_US;
 }
@@ -444,6 +455,8 @@ static void b2z_plan_print_stats(const struct bluebee_perf_runtime *snapshot,
 		}
 		console_print("CONTROL_PLAN_TASK run_id=%d entry=%d command_id=%d "
 			      "first_slot=%d repeats=%d reached=%d generated=%d "
+			      "execute_at_ms=%d valid_until_ms=%d ble_target=%d ble_opcode=%d ble_arg=%d "
+			      "zigbee_target=%d zigbee_opcode=%d zigbee_arg=%d "
 			      "primary_started=%d primary_completed=%d "
 			      "tx_started=%d tx_completed=%d "
 			      "deadline_miss=%d dma_timeout=%d "
@@ -451,6 +464,9 @@ static void b2z_plan_print_stats(const struct bluebee_perf_runtime *snapshot,
 			      (long)snapshot->config.run_id, (long)i,
 			      (long)entry->packet.command_id, (long)entry->first_slot,
 			      (long)entry->repeats, (long)task_reached, (long)generated,
+			      (long)entry->packet.execute_at_ms, (long)entry->packet.valid_until_ms,
+			      (long)entry->packet.ble_target, (long)entry->packet.ble_opcode, (long)entry->packet.ble_arg,
+			      (long)entry->packet.zigbee_target, (long)entry->packet.zigbee_opcode, (long)entry->packet.zigbee_arg,
 			      (long)primary_started, (long)primary_completed,
 			      (long)tx_started,
 			      (long)tx_completed, (long)deadline_miss,
@@ -496,6 +512,36 @@ static void b2z_plan_print_stats(const struct bluebee_perf_runtime *snapshot,
 			      (long)retune_us,
 			      (long)!!(flags & B2Z_SLOT_AUXPTR_DMA_MISS));
 	}
+	{
+		uint32_t separate = snapshot->config.control_rf_mode == B2Z_CONTROL_RF_SEPARATE_CH3;
+		uint32_t attempted = 0u, started = 0u, completed = 0u, ieee_completed = 0u;
+		for (uint32_t slot = 0u; slot < snapshot->config.expected_packets; slot++) {
+			for (uint32_t kind = 0u; kind < (separate ? 3u : 2u); kind++) {
+				const struct b2z_burst_observation *b = &g_control_bursts[slot][kind];
+				attempted += b->attempted; started += b->started; completed += b->completed;
+				if (kind == (separate ? 2u : 1u)) ieee_completed += b->completed;
+				console_print("CONTROL_BURST run_id=%d slot=%d kind=%s generated=%d "
+					"attempted=%d started=%d completed=%d timeout=%d "
+					"iq_bytes=%d air_us=%d pad_us=%d prepared_us=%d "
+					"submit_before_us=%d submit_after_us=%d finish_us=%d\r\n",
+					(long)snapshot->config.run_id, (long)slot,
+					(char *)(kind == 0u ? "primary" : kind == 2u ? "ieee" : "secondary"),
+					(long)b->generated, (long)b->attempted, (long)b->started,
+					(long)b->completed, (long)b->timeout,
+					(long)b->iq_bytes, (long)b->air_us, (long)b->pad_us,
+					(long)b->prepared_us, (long)b->submit_before_us,
+					(long)b->submit_after_us, (long)b->finish_us);
+			}
+		}
+		console_print("CONTROL_COST_STATS run_id=%d logical_slots=%d ble_tx_completed=%d "
+			"ieee_tx_completed=%d burst_attempted=%d burst_started=%d burst_completed=%d "
+			"separate_gap_us=%d reference=dma_software_brackets\r\n",
+			(long)snapshot->config.run_id, (long)snapshot->config.expected_packets,
+			(long)snapshot->counters.tx_completed, (long)ieee_completed,
+			(long)attempted, (long)started, (long)completed,
+			(long)(separate ? B2Z_CONTROL_SEPARATE_GAP_US : 0u));
+	}
+
 }
 
 static void bluebee_perf_print_stats(uint8_t final)
@@ -781,8 +827,8 @@ int32_t b2z_control_start_cmdline(const char *args)
 	if (values[0] == 0u || values[0] > 0xFFFFu ||
 	    values[1] > 0x7FFFFFFFu ||
 	    period_ms < 50u || period_ms > 0xFFFFu ||
-	    attempts == 0u || rf_mode > B2Z_CONTROL_RF_STANDARD_CH3 ||
-	    (rf_mode == B2Z_CONTROL_RF_STANDARD_CH3 &&
+	    attempts == 0u || rf_mode > B2Z_CONTROL_RF_SEPARATE_CH3 ||
+	    (rf_mode != B2Z_CONTROL_RF_SAME_CHANNEL &&
 	     period_ms < B2Z_STANDARD_MIN_PERIOD_MS)) {
 		console_print("CONTROL_ERROR invalid run, command, period or attempts\r\n");
 		return -1;
@@ -885,8 +931,8 @@ int32_t b2z_control_start_cmdline(const char *args)
 		      (long)packet->zigbee_arg,
 		      (char *)b2z_rf_mode_name(config.control_rf_mode),
 		      (long)b2z_aux_offset_us(config.control_rf_mode),
-		      (long)(config.control_rf_mode ==
-			B2Z_CONTROL_RF_STANDARD_CH3 ? 2410u : 2480u));
+		      (long)(config.control_rf_mode !=
+			B2Z_CONTROL_RF_SAME_CHANNEL ? 2410u : 2480u));
 	xTaskNotifyGive(g_perf_task);
 	return 0;
 }
@@ -1036,8 +1082,8 @@ int32_t b2z_plan_start_cmdline(const char *args)
 	}
 	if (values[0] == 0u || values[0] > 0xFFFFu ||
 	    values[1] < 50u || values[1] > 0xFFFFu ||
-	    (count == 3u && values[2] > B2Z_CONTROL_RF_STANDARD_CH3) ||
-	    (count == 3u && values[2] == B2Z_CONTROL_RF_STANDARD_CH3 &&
+	    (count == 3u && values[2] > B2Z_CONTROL_RF_SEPARATE_CH3) ||
+	    (count == 3u && values[2] != B2Z_CONTROL_RF_SAME_CHANNEL &&
 	     values[1] < B2Z_STANDARD_MIN_PERIOD_MS)) {
 		console_print("CONTROL_PLAN_ERROR invalid run or period\r\n");
 		return -1;
@@ -1097,6 +1143,7 @@ int32_t b2z_plan_start_cmdline(const char *args)
 	}
 	memset(&g_perf, 0, sizeof(g_perf));
 	memset(g_control_slot_flags, 0, sizeof(g_control_slot_flags));
+	memset(g_control_bursts, 0, sizeof(g_control_bursts));
 	memset(g_control_slot_late_us, 0, sizeof(g_control_slot_late_us));
 	memset(g_control_slot_aux_delta_us, 0,
 	       sizeof(g_control_slot_aux_delta_us));
@@ -1114,8 +1161,8 @@ int32_t b2z_plan_start_cmdline(const char *args)
 		      (long)config.duration_s,
 		      (char *)b2z_rf_mode_name(config.control_rf_mode),
 		      (long)b2z_aux_offset_us(config.control_rf_mode),
-		      (long)(config.control_rf_mode ==
-			B2Z_CONTROL_RF_STANDARD_CH3 ? 2410u : 2480u));
+		      (long)(config.control_rf_mode !=
+			B2Z_CONTROL_RF_SAME_CHANNEL ? 2410u : 2480u));
 	for (uint32_t i = 0u; i < config.plan_count; i++) {
 		const struct b2z_plan_entry *entry = &config.plan[i];
 		console_print("CONTROL_PLAN_ENTRY run_id=%d entry=%d "
@@ -1661,10 +1708,56 @@ static void bluebee_perf_set_scheduled(uint32_t scheduled)
 	taskEXIT_CRITICAL();
 }
 
+static uint32_t b2z_observation_us(void)
+{
+	XTime now;
+	XTime_GetTime(&now);
+	return bluebee_perf_ticks_to_us(now - g_perf.start_time);
+}
+
+static struct b2z_burst_observation *b2z_burst(uint32_t slot, uint32_t kind)
+{
+	return g_perf.config.planned && slot < B2Z_PLAN_MAX_SLOTS ?
+		&g_control_bursts[slot][kind] : NULL;
+}
+
+static void b2z_burst_prepare(uint32_t slot, uint32_t kind,
+			     uint32_t bytes, uint32_t air_us, uint32_t pad_us)
+{
+	struct b2z_burst_observation *b = b2z_burst(slot, kind);
+	if (!b) return;
+	b->generated = 1u; b->iq_bytes = bytes; b->air_us = air_us;
+	b->pad_us = pad_us; b->prepared_us = b2z_observation_us();
+}
+
+static int32_t b2z_burst_start(uint32_t slot, uint32_t kind,
+			     const uint32_t *iq, uint32_t bytes)
+{
+	struct b2z_burst_observation *b = b2z_burst(slot, kind);
+	int32_t ret;
+	if (b) { b->attempted = 1u; b->submit_before_us = b2z_observation_us(); }
+	ret = bluebee_perf_dma_start(iq, bytes);
+	if (b) { b->started = ret >= 0; b->submit_after_us = b2z_observation_us(); }
+	return ret;
+}
+
+static int32_t b2z_burst_wait(uint32_t slot, uint32_t kind, uint32_t timeout_us)
+{
+	struct b2z_burst_observation *b = b2z_burst(slot, kind);
+	int32_t ret = bluebee_perf_dma_wait(timeout_us);
+	if (b) {
+		b->completed = ret >= 0; b->timeout = ret < 0;
+		b->finish_us = b2z_observation_us();
+	}
+	return ret;
+}
+
 static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 				      uint32_t sequence)
 {
 	uint8_t payload[BLUEBEE_PERF_MAX_PAYLOAD];
+	const uint32_t *ieee_iq_words = NULL;
+	uint32_t ieee_iq_bytes = 0u, ieee_tx_us = 0u;
 	const uint32_t *iq_words = NULL;
 	const uint32_t *primary_iq_words = ble_exadv_primary_iq_ch39;
 	uint32_t primary_iq_byte_count =
@@ -1674,7 +1767,7 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 	uint32_t aux_offset_us = BLUEBEE_PERF_AUX_OFFSET_US;
 	uint8_t standard_secondary =
 		config->test == BLUEBEE_PERF_TEST_CONTROL &&
-		config->control_rf_mode == B2Z_CONTROL_RF_STANDARD_CH3;
+		config->control_rf_mode != B2Z_CONTROL_RF_SAME_CHANNEL;
 	uint8_t secondary_lo_selected = 0u;
 	XTime primary_start = 0u;
 	int32_t result = -1;
@@ -1707,6 +1800,13 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 		timing.gfsk_us = meta->gfsk_time_us;
 		timing.total_us = meta->total_time_us;
 		aux_offset_us = meta->aux_offset_us;
+		ieee_iq_words = meta->ieee_iq_words;
+		ieee_iq_bytes = meta->ieee_iq_byte_count;
+		ieee_tx_us = meta->ieee_air_us + meta->post_pad_us;
+		b2z_burst_prepare(sequence, 0u, primary_iq_byte_count, meta->primary_air_us, meta->post_pad_us);
+		b2z_burst_prepare(sequence, 1u, iq_byte_count, meta->air_us, meta->post_pad_us);
+		if (ieee_iq_words)
+			b2z_burst_prepare(sequence, 2u, ieee_iq_bytes, meta->ieee_air_us, meta->post_pad_us);
 	} else {
 		bluebee_perf_build_payload(payload, config->payload_len,
 					    config->run_id, sequence);
@@ -1723,13 +1823,13 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 	if (config->test == BLUEBEE_PERF_TEST_EXADV ||
 	    config->test == BLUEBEE_PERF_TEST_CONTROL) {
 		XTime_GetTime(&primary_start);
-		if (bluebee_perf_dma_start(primary_iq_words,
+		if (b2z_burst_start(sequence, 0u, primary_iq_words,
 					    primary_iq_byte_count) < 0)
 			return -1;
 		if (config->test == BLUEBEE_PERF_TEST_CONTROL)
 			bluebee_perf_count(&g_perf.counters.primary_started);
 		b2z_plan_slot_flag(sequence, B2Z_SLOT_PRIMARY_STARTED);
-		if (bluebee_perf_dma_wait(BLUEBEE_PERF_PRIMARY_TIMEOUT_US) < 0) {
+		if (b2z_burst_wait(sequence, 0u, BLUEBEE_PERF_PRIMARY_TIMEOUT_US) < 0) {
 			bluebee_perf_count(&g_perf.counters.dma_timeout);
 			b2z_plan_slot_flag(sequence, B2Z_SLOT_DMA_TIMEOUT);
 			return -1;
@@ -1785,7 +1885,7 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 			goto restore_primary_lo;
 		}
 	}
-	if (bluebee_perf_dma_start(iq_words, iq_byte_count) < 0)
+	if (b2z_burst_start(sequence, 1u, iq_words, iq_byte_count) < 0)
 		goto restore_primary_lo;
 	if (config->test == BLUEBEE_PERF_TEST_CONTROL) {
 		XTime now;
@@ -1827,13 +1927,28 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 	}
 	bluebee_perf_count(&g_perf.counters.tx_started);
 	b2z_plan_slot_flag(sequence, B2Z_SLOT_TX_STARTED);
-	if (bluebee_perf_dma_wait(tx_time_us + BLUEBEE_PERF_DMA_MARGIN_US) < 0) {
+	if (b2z_burst_wait(sequence, 1u, tx_time_us + BLUEBEE_PERF_DMA_MARGIN_US) < 0) {
 		bluebee_perf_count(&g_perf.counters.dma_timeout);
 		b2z_plan_slot_flag(sequence, B2Z_SLOT_DMA_TIMEOUT);
 		goto restore_primary_lo;
 	}
 	bluebee_perf_count(&g_perf.counters.tx_completed);
 	b2z_plan_slot_flag(sequence, B2Z_SLOT_TX_COMPLETED);
+	if (ieee_iq_words) {
+		XTime gap_start;
+		/* Minimum software gap after BLE DMA completion, not an RF gap. */
+		XTime_GetTime(&gap_start);
+		if (bluebee_perf_wait_until(gap_start + bluebee_perf_ticks_from_us(
+			B2Z_CONTROL_SEPARATE_GAP_US), 1u) < 0 || bluebee_perf_stop_requested())
+			goto restore_primary_lo;
+		if (b2z_burst_start(sequence, 2u, ieee_iq_words, ieee_iq_bytes) < 0)
+			goto restore_primary_lo;
+		if (b2z_burst_wait(sequence, 2u, ieee_tx_us + BLUEBEE_PERF_DMA_MARGIN_US) < 0) {
+			bluebee_perf_count(&g_perf.counters.dma_timeout);
+			b2z_plan_slot_flag(sequence, B2Z_SLOT_DMA_TIMEOUT);
+			goto restore_primary_lo;
+		}
+	}
 	result = 0;
 
 restore_primary_lo:

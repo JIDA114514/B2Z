@@ -624,3 +624,10 @@ b2z_plan_start? 1501 200
 `CONTROL_PLAN_START` 和逐条 `CONTROL_PLAN_ENTRY` 给出启动清单。运行中 `bluebee_perf_status?` 返回累计 `CONTROL_PLAN_STATS`；结束时依次输出最终累计统计、`CONTROL_PLAN_TASK` 和每个已到达时隙的 `CONTROL_PLAN_SLOT`。时隙记录包含生成、primary/secondary DMA 提交与完成、超时、deadline miss 和相对计划 secondary 的 DMA 延迟；未尝试的已到达时隙保留零标记。串口行在发送结束后输出，应完整保存原始日志。DMA 完成不等于已校准的空口发送时间，接收侧任务成功还需独立解码和关联。
 
 两块 HackRF 的启动顺序、首轮计划、数据归档和功能判定见[多任务共包实验方案](../doc/multi_task_control_experiment_plan.md)。
+
+
+## N2 分别发送模式
+
+`b2z_plan_start? <run_id> <period_ms> 2` 新增 BLE-only ch3 secondary + 独立 BlueBee 2410 MHz 的顺序发送，primary 仍为 ch39，周期至少 500 ms。模式 0/1 和旧性能协议保持不变；`b2z_control_start?` 最后一个可选 rf_mode 也支持 2。正式成本实验使用 plan 入口，单任务 control 入口没有逐突发清单。
+
+计划最终输出增加 `CONTROL_BURST` 与 `CONTROL_COST_STATS`，在 RF 运行结束后打印。旧 tx_completed 保持 BLE secondary 口径，独立 IEEE 完成数必须从新日志取得。每段波形尾部为 10 µs 标称零样本，BLE DMA 完成后等待至少 1000 µs 才提交 IEEE；软件间隔不是 RF 实测。主机语法/波形验证已完成，实际构建、上板、接收验证由实验者执行。任务清单与全部指令见 [N2 执行方案](../doc/n2_separate_transmission_experiment_plan.md#7-已实现接口与首轮执行指令2026-11-10)。

@@ -2,11 +2,13 @@
 
 主要开发基于 BLE 的跨技术通信（cross technology communication, CTC），具体原理基于 [BlueBee](https://doi.org/10.1145/3131672.3131678)。
 
-当前研究主线是基于 BLE extended advertising 的双协议共包控制与同步：在同一个 secondary `AUX_ADV_IND` 中承载 BLE 与 BlueBee/IEEE 802.15.4 信息。v1 控制负载和同频诊断收发原型已实现；独立设备同步处理、规范 exadv 跟随及相对基线收益仍需实现或验证。板端现有工作主要位于 `app_FreeRTOS/`。常用工作流有两类：
+当前研究主线是基于 BLE extended advertising 的双协议共包控制与同步：在同一个 secondary `AUX_ADV_IND` 中承载 BLE 与 BlueBee/IEEE 802.15.4 信息。v1 共包、多任务发送、两侧独立命令解析和时间模型原型已实现，已有 BLE 跨信道跟随观察；公平对照收益、独立同步精度及严格 AuxPtr 空口时序仍待验证。板端现有工作主要位于 `app_FreeRTOS/`。
 
 新代码按功能迭代提交，消息格式见[提交约定](CONTRIBUTING.md)。
 
-接收侧时间模型、单侧软件控制及两条实时接收链的逐任务报告已接入；板端一轮多任务计划和逐时隙统计代码已完成，待构建上板。下一项是双侧逐任务联合汇总与功能对照。上板后的步骤和判定口径见[多任务实验方案](doc/multi_task_control_experiment_plan.md)，实现顺序见[功能完成路线](doc/control_sync_function_plan.md)，实验工作包与测量边界见[下一阶段计划](doc/next_stage_plan.md)，字段与单包预算见[v1 负载草案](doc/control_sync_packet_v1_draft.md)，相关先例见[设计研究笔记](doc/sync_control_payload_research.md)。
+当前进度与后续优先级以 2026-11-10 更新的[下一阶段计划](doc/next_stage_plan.md)为准。协议字段见[v1 负载草案](doc/control_sync_packet_v1_draft.md)，已有步骤见[多任务实验方案](doc/multi_task_control_experiment_plan.md)和[功能完成路线](doc/control_sync_function_plan.md)，相关先例见[设计研究笔记](doc/sync_control_payload_research.md)。较早文档中的待办状态需结合最新计划与实测报告阅读。
+
+常用工作流有两类：
 
 - Python 端离线生成 IQ/C 头文件，用于分析、SDK 集成或 HackRF/接收链路验证。
 - FreeRTOS 串口命令在板端启动 legacy BLE、切换共享 TX DMA 波形，或运行时生成 BlueBee / BLE exadv secondary 波形。
@@ -14,6 +16,21 @@
 使用的硬件为 MicroPhase 的 e310，上面搭载 Zynq-7020 和 AD9363。
 
 代码来自于 [MicroPhase 官方](https://github.com/MicroPhase/antsdr_standalone)的裸机代码程序，需要注意 hdl 中用于 e310 开发板的 Vivado 项目为 `antsdre310` 而非 `e310v2`。`e310v2` 的代码生成后在下板执行时可能会报错。
+
+## 当前证据与下一阶段
+
+[1703–1705](doc/holdover_1703_1705_review.md)已有三轮独立录制上的离线相对时间保持复核；[1801](python/experiments/20261109_run1801/notes.md)在同频诊断模式下实现同槽双端有效 300/300、三任务联合解析 3/3，并完成[立即处理软件基线](python/experiments/20261109_run1801/analyses/immediate_baseline/report.md)。1801 的实时定时软件处理仍为 0/3，假设 1 ms 参考界的回放结果不能当作实测同步精度。[1906](python/experiments/20261109_run1906/analyses/std_ble_flow_20261109_182005_0f42d1/flow.summary.json)完成 9/10 个实际 BLE 跨信道跟随事件，缺失 DID 2 的 primary；该轮没有同时验证 IEEE 接收，也未校准空口 AuxPtr 时间。
+
+下一阶段先补齐下面的证据，再对选定主要配置增加独立重复。详细交付物与统计规则见[完整计划](doc/next_stage_plan.md)。
+
+| 顺序 | 工作包 | 要回答的问题 |
+| --- | --- | --- |
+| N1 | 同轮跨信道双端多任务：一块 HackRF 做 BLE 跟随，另一块固定 IEEE ch12 | 跟随、独立双协议解码、时间更新和多任务解析能否在最终配置下同时成立？ |
+| N2 | 实现分别发送基线，并与共包立即处理、共包时间模型处理对照 | 在相同任务、截止时间及明确重发策略下，共包的联合解析率、RF 成本和完成时延有何收益或代价？ |
+| N3 | 拆分板端 DMA 准备/提交/返回取时，建立独立时间参考与误差预算 | 记录偏差与实际发送偏差如何区分，能支持哪一层同步精度结论？取时诊断可与 N1/N2 并行 |
+| N4/N5 | 容量与 legacy 对照、有效包数/更新间隔/失更/提前量/K 次重复等消融 | exadv 容量具体解决什么约束，效果来自哪些机制，哪些条件会失败？ |
+
+没有可审计的共同参考误差界时，论文结论限定为共包时间信息分发、相对时间保持及软件调度原型。主机回调时差、拟合残差及 `auxptr_dma_window_miss` 软件代理计数不能直接代替实际空口或跨设备同步精度。成本计入全部 primary、secondary、时间更新和重发，任务失败保留在分母内。商用芯片、执行器和更多独立节点作为扩展，创新性与性能收益仍需查新和对照支撑。
 
 ## 接收结果与实验归档
 
@@ -45,6 +62,26 @@ python3 python/zigbee_rx/receive.py --run-id 10270 \
 ```
 
 先启动接收，再启动匹配的板端实验。上例 `150` 是显式计划范围，不由 40 秒接收时长推断；板端任务应为对应的 30 秒、200000 us 间隔。接收参数只是示例，不表示已经满足稳定性要求。
+
+### 板端标准 BLE 跨信道流程核验
+
+[`python/std_ble/verify_board_exadv.py`](python/std_ble/verify_board_exadv.py) 基于标准 BLE GNU Radio/HackRF 接收链，针对当前板端 v1 共包格式检查 ch39 `ADV_EXT_IND`、AuxPtr、切频后的 ch3 `AUX_ADV_IND`、两包 BLE CRC、扩展头/AD 结构、35 B BLE 控制记录校验及 ADI DID 对应关系。运行前连接 BLE 接收用 HackRF，先启动脚本，再从板端串口发送下面的命令；`rf_mode=1` 指定真正的 ch3 secondary，默认同频诊断模式不适用于这个验证：
+
+```bash
+python3 python/std_ble/verify_board_exadv.py \
+  --run-id 1904 --command-id 43 --expected-attempts 10 \
+  --osmosdr-args hackrf=0 --sample-rate 8000000 --duration 15
+```
+
+```text
+b2z_control_start? 1904 43 500 10 5000 4500 1
+```
+
+脚本默认以板端当前设置检查 primary ch39、AuxPtr 指向 ch3、LE 1M、300 ms，secondary ch3；增益默认 `--gain 0 --if-gain 16 --bb-gain 10`，可按接收条件调整。确认板端 `CONTROL_STATS` 后，可用 `--board-log <path>` 将其纳入分析。每轮自动写入 `python/experiments/YYYYMMDD_run<run_id>/analyses/std_ble_flow_*/`，包含 `flow.md`、`flow.summary.json` 和 `flow.events.jsonl`，并更新实验索引。实时模式退出码 0 表示预期 DID 均在同一 HackRF 的 AuxPtr 驱动切频过程中通过 BLE 与应用校验并配对；离线模式退出码 0 只表示同轮双文件的内容与 DID 关联完整。退出码 2 表示观察不完整或校验失败。命令行 `FOLLOW` 是单接收机的流程证据。
+
+1905 的固定 ch3 IQ 表明，GNU Radio 旧接收链对前导码要求逐位完全相同会漏掉 CRC 正确的 secondary，且 4 Msps 解调在该 IQ 上不稳定。当前解析器允许前导码至多 2 位错误和任意 bit 对齐，仍要求完整 BLE CRC；跟随脚本默认改为 8 Msps。后续 1906 实时观察到 9/10 个配对事件；脚本仍按预设全部 10 个 DID 判断验收，因此该轮 `verification_passed=false`，不表示 9 个实际跟随事件无效。
+
+已有的两频点固定接收逐包文件可用 `--primary-packets <ch39 rx.packets.jsonl> --secondary-packets <ch3 rx.packets.jsonl>` 离线复核 BLE 内容；仅同轮且采集时间重叠才进行 DID 关联。不同轮只能加 `--allow-cross-run-structure-only` 检查结构，不能视作跟随成功。Host 回调时刻和独立 IQ 的采样起点尚未校准；以上两种模式都不判定实际空口 AuxPtr 时间误差，也不宣称完整 BLE 规范兼容性。报告中的 `aux_air_timing_verified` 与 `full_standard_exadv_verified` 因此始终为 `false`。
 
 离线回放默认读取完整 IQ，另存于当天相同 Run ID 的 `analyses/`，不复制输入 IQ。`--analysis-id` 可命名一轮对照；已有分析标识拒绝覆盖：
 
@@ -198,8 +235,8 @@ FreeRTOS 运行时入口在 `app_FreeRTOS/`。串口 console task 会先处理�
 | `ble_exadv_secondary_gen? [hex ZigBee payload]` | 运行时构造 BLE exadv secondary + BlueBee/ZigBee 波形并启动 cyclic TX DMA。无 payload 时使用默认 46 字节负载。执行时会先输出 `ble_exadv_secondary_gen: generating waveform...`。 |
 | `bluebee_pure_perf_start? <payload_len> <interval_us> <duration_s> [run_id] [mode] [batch_size]` | 启动 pure BlueBee 性能实验；当前已实现 `mode=0` realtime。 |
 | `bluebee_exadv_perf_start? <payload_len> <interval_us> <duration_s> [run_id] [mode] [batch_size]` | 启动 exadv primary/secondary 性能实验；当前已实现 `mode=0` realtime。 |
-| `b2z_control_start? <run_id> <command_id> [...]` | 启动有限次数的 v1 双协议控制与时间广播；当前为 ch39 同频诊断发送，参数见 [FreeRTOS 命令说明](app_FreeRTOS/README.md#十六v1-双协议控制与时间广播命令待上板验证)。 |
-| `b2z_plan_clear?`、`b2z_plan_add? ...`、`b2z_plan_start? <run_id> <period_ms>` | 逐条建立并启动一轮多任务控制计划；逐任务与逐时隙日志见 [FreeRTOS 多任务说明](app_FreeRTOS/README.md#一轮多任务计划待上板验证)。 |
+| `b2z_control_start? <run_id> <command_id> [...]` | 启动有限次数的 v1 双协议控制与时间广播；默认 `rf_mode=0` 为同频诊断，末尾 `rf_mode=1` 为 ch39 primary / ch3 secondary，参数见 [FreeRTOS 命令说明](app_FreeRTOS/README.md#十六v1-双协议控制与时间广播命令待上板验证)。 |
+| `b2z_plan_clear?`、`b2z_plan_add? ...`、`b2z_plan_start? <run_id> <period_ms> [rf_mode]` | 建立并启动一轮多任务计划；模式 1 需按跨信道周期重算有效期。逐任务与逐时隙日志见 [FreeRTOS 多任务说明](app_FreeRTOS/README.md#一轮多任务计划待上板验证)。 |
 | `bluebee_perf_status?` | 输出当前配置、运行状态、板端计数器和分阶段生成耗时。 |
 | `bluebee_perf_stop?` | 停止当前性能实验或控制广播；分别输出 `PERF_STATS`、`CONTROL_STATS` 或 `CONTROL_PLAN_STATS`。 |
 

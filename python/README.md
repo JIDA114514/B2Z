@@ -26,6 +26,7 @@
 | `ctc_sim/std_zigbee/zigbee_rx.py` | 标准 ZigBee frame 接收验证入口。 |
 | `ctc_sim/bluebee/bluebee_rx.py` | BlueBee 构造 frame 的接收验证入口。 |
 | `std_ble/ble_exadv_hackrf_sniffer.py` | BLE extended advertising 捕获和时序调试入口。 |
+| `std_ble/verify_board_exadv.py` | 板端 v1 primary→AuxPtr→secondary 跟随及 BLE 内容校验；命令见根目录 README。 |
 | `std_ble/ble_packet_detector.py` | BLE packet 检测调试入口。 |
 | `ctc_sim/std_zigbee/generate_zigbee_iq_30_72M.py` | 标准 ZigBee 30.72 MSPS 头文件生成辅助入口。 |
 | `perf_test/zigbee_perf_rx.py` | 标准/五相位性能接收、FCS/payload 校验、序列统计及板端日志合并入口。 |
@@ -36,6 +37,7 @@
 
 ```bash
 python3 python/std_ble/generate_ble_exadv_iq_30_72M.py --help
+python3 python/std_ble/verify_board_exadv.py --help
 python3 python/ctc_sim/bluebee/generate_bluebee_zigbee_frame_iq_30_72M.py --help
 python3 python/ctc_sim/bluebee/generate_bluebee_iq_30_72M.py --help
 python3 python/ctc_sim/std_zigbee/zigbee_rx.py --help

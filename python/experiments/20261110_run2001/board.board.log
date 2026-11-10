@@ -1,0 +1,270 @@
+CONTROL_PLAN_ENTRY run_id=2001 entry=0 command_id=0 first_slot=0 repeats=20 execute_at_ms=0 valid_until_ms=0 ble_target=0 ble_opcode=0 ble_arg=0 zigbee_target=0 zigbee_opcode=0 zigbee_arg=0
+
+CONTROL_PLAN_ENTRY run_id=2001 entry=1 command_id=43 first_slot=20 repeats=3 execute_at_ms=20000 valid_until_ms=15000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=1
+
+CONTROL_PLAN_ENTRY run_id=2001 entry=2 command_id=0 first_slot=23 repeats=37 execute_at_ms=0 valid_until_ms=0 ble_target=0 ble_opcode=0 ble_arg=0 zigbee_target=0 zigbee_opcode=0 zigbee_arg=0
+
+CONTROL_PLAN_ENTRY run_id=2001 entry=3 command_id=44 first_slot=60 repeats=3 execute_at_ms=40000 valid_until_ms=35000 ble_target=1 ble_opcode=1 ble_arg=2 zigbee_target=2 zigbee_opcode=2 zigbee_arg=7
+
+CONTROL_PLAN_ENTRY run_id=2001 entry=4 command_id=0 first_slot=63 repeats=37 execute_at_ms=0 valid_until_ms=0 ble_target=0 ble_opcode=0 ble_arg=0 zigbee_target=0 zigbee_opcode=0 zigbee_arg=0
+
+CONTROL_PLAN_ENTRY run_id=2001 entry=5 command_id=45 first_slot=100 repeats=3 execute_at_ms=60000 valid_until_ms=55000 ble_target=1 ble_opcode=2 ble_arg=9 zigbee_target=2 zigbee_opcode=1 zigbee_arg=3
+
+CONTROL_PLAN_ENTRY run_id=2001 entry=6 command_id=0 first_slot=103 repeats=17 execute_at_ms=0 valid_until_ms=0 ble_target=0 ble_opcode=0 ble_arg=0 zigbee_target=0 zigbee_opcode=0 zigbee_arg=0
+
+CONTROL_PLAN_STATS final=1 state=complete run_id=2001 period_ms=500 tasks=7 planned_slots=120 reached_slots=120 elapsed_us=60000005 generated=120 primary_started=120 primary_completed=120 tx_started=120 tx_completed=120 deadline_miss=0 dma_timeout=0 secondary_dma_late_samples=120 secondary_dma_late_max_us=81514 secondary_dma_late_avg_us=80690 time_reference=planned_secondary_start rf_mode=standard_secondary_ch3 aux_channel=3 aux_offset_us=300000 auxptr_dma_window_miss=120 auxptr_dma_delta_samples=120 auxptr_dma_delta_min_us=300832 auxptr_dma_delta_max_us=301011 auxptr_dma_delta_avg_us=300998 retune_failure=0 retune_secondary_max_us=817
+
+CONTROL_PLAN_TASK run_id=2001 entry=0 command_id=0 first_slot=0 repeats=20 reached=20 generated=20 primary_started=20 primary_completed=20 tx_started=20 tx_completed=20 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=20
+
+CONTROL_PLAN_TASK run_id=2001 entry=1 command_id=43 first_slot=20 repeats=3 reached=3 generated=3 primary_started=3 primary_completed=3 tx_started=3 tx_completed=3 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=3
+
+CONTROL_PLAN_TASK run_id=2001 entry=2 command_id=0 first_slot=23 repeats=37 reached=37 generated=37 primary_started=37 primary_completed=37 tx_started=37 tx_completed=37 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=37
+
+CONTROL_PLAN_TASK run_id=2001 entry=3 command_id=44 first_slot=60 repeats=3 reached=3 generated=3 primary_started=3 primary_completed=3 tx_started=3 tx_completed=3 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=3
+
+CONTROL_PLAN_TASK run_id=2001 entry=4 command_id=0 first_slot=63 repeats=37 reached=37 generated=37 primary_started=37 primary_completed=37 tx_started=37 tx_completed=37 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=37
+
+CONTROL_PLAN_TASK run_id=2001 entry=5 command_id=45 first_slot=100 repeats=3 reached=3 generated=3 primary_started=3 primary_completed=3 tx_started=3 tx_completed=3 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=3
+
+CONTROL_PLAN_TASK run_id=2001 entry=6 command_id=0 first_slot=103 repeats=17 reached=17 generated=17 primary_started=17 primary_completed=17 tx_started=17 tx_completed=17 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=17
+
+CONTROL_PLAN_SLOT run_id=2001 slot=0 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=81514 auxptr_dma_delta_us=300832 retune_secondary_us=817 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=1 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80357 auxptr_dma_delta_us=300897 retune_secondary_us=817 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=2 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80406 auxptr_dma_delta_us=300935 retune_secondary_us=813 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=3 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80808 auxptr_dma_delta_us=300947 retune_secondary_us=813 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=4 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80807 auxptr_dma_delta_us=300953 retune_secondary_us=812 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=5 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80760 auxptr_dma_delta_us=300962 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=6 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80879 auxptr_dma_delta_us=300974 retune_secondary_us=813 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=7 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80478 auxptr_dma_delta_us=300977 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=8 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80846 auxptr_dma_delta_us=300980 retune_secondary_us=812 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=9 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80526 auxptr_dma_delta_us=300981 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=10 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80464 auxptr_dma_delta_us=300983 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=11 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80861 auxptr_dma_delta_us=300985 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=12 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80878 auxptr_dma_delta_us=300987 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=13 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80882 auxptr_dma_delta_us=300986 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=14 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80921 auxptr_dma_delta_us=300987 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=15 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80356 auxptr_dma_delta_us=300988 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=16 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80469 auxptr_dma_delta_us=300991 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=17 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80785 auxptr_dma_delta_us=300989 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=18 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80753 auxptr_dma_delta_us=300991 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=19 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80527 auxptr_dma_delta_us=300992 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=20 entry=1 command_id=43 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80660 auxptr_dma_delta_us=300992 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=21 entry=1 command_id=43 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80692 auxptr_dma_delta_us=300994 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=22 entry=1 command_id=43 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80760 auxptr_dma_delta_us=300996 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=23 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80749 auxptr_dma_delta_us=300997 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=24 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80357 auxptr_dma_delta_us=300998 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=25 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80916 auxptr_dma_delta_us=300998 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=26 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80529 auxptr_dma_delta_us=300999 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=27 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80706 auxptr_dma_delta_us=301001 retune_secondary_us=812 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=28 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80986 auxptr_dma_delta_us=301000 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=29 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80781 auxptr_dma_delta_us=300998 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=30 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80754 auxptr_dma_delta_us=301001 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=31 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80510 auxptr_dma_delta_us=301001 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=32 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80524 auxptr_dma_delta_us=301005 retune_secondary_us=812 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=33 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80327 auxptr_dma_delta_us=301005 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=34 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80835 auxptr_dma_delta_us=301004 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=35 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80547 auxptr_dma_delta_us=301004 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=36 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80379 auxptr_dma_delta_us=301003 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=37 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80634 auxptr_dma_delta_us=301006 retune_secondary_us=812 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=38 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80605 auxptr_dma_delta_us=301005 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=39 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80791 auxptr_dma_delta_us=301004 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=40 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80388 auxptr_dma_delta_us=301005 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=41 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80946 auxptr_dma_delta_us=301005 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=42 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80928 auxptr_dma_delta_us=301005 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=43 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80736 auxptr_dma_delta_us=301005 retune_secondary_us=813 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=44 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80950 auxptr_dma_delta_us=301004 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=45 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80818 auxptr_dma_delta_us=301003 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=46 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80757 auxptr_dma_delta_us=301003 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=47 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80571 auxptr_dma_delta_us=301003 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=48 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80850 auxptr_dma_delta_us=301006 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=49 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80530 auxptr_dma_delta_us=301005 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=50 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80528 auxptr_dma_delta_us=301004 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=51 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80753 auxptr_dma_delta_us=301005 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=52 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80928 auxptr_dma_delta_us=301008 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=53 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80853 auxptr_dma_delta_us=301004 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=54 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80763 auxptr_dma_delta_us=301005 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=55 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80517 auxptr_dma_delta_us=301006 retune_secondary_us=812 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=56 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80997 auxptr_dma_delta_us=301005 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=57 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80825 auxptr_dma_delta_us=301007 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=58 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80808 auxptr_dma_delta_us=301006 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=59 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80631 auxptr_dma_delta_us=301005 retune_secondary_us=812 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=60 entry=3 command_id=44 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80652 auxptr_dma_delta_us=301004 retune_secondary_us=812 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=61 entry=3 command_id=44 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80800 auxptr_dma_delta_us=301004 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=62 entry=3 command_id=44 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80770 auxptr_dma_delta_us=301003 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=63 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80382 auxptr_dma_delta_us=301003 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=64 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80908 auxptr_dma_delta_us=301003 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=65 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80799 auxptr_dma_delta_us=301004 retune_secondary_us=812 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=66 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80339 auxptr_dma_delta_us=301005 retune_secondary_us=813 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=67 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80566 auxptr_dma_delta_us=301004 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=68 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80437 auxptr_dma_delta_us=301005 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=69 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80618 auxptr_dma_delta_us=301004 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=70 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80598 auxptr_dma_delta_us=301004 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=71 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80730 auxptr_dma_delta_us=301005 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=72 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80381 auxptr_dma_delta_us=301007 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=73 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80554 auxptr_dma_delta_us=301006 retune_secondary_us=812 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=74 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80979 auxptr_dma_delta_us=301005 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=75 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80794 auxptr_dma_delta_us=301007 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=76 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80914 auxptr_dma_delta_us=301005 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=77 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80780 auxptr_dma_delta_us=301005 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=78 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80723 auxptr_dma_delta_us=301004 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=79 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80597 auxptr_dma_delta_us=301005 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=80 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80865 auxptr_dma_delta_us=301006 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=81 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80462 auxptr_dma_delta_us=301006 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=82 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80941 auxptr_dma_delta_us=301006 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=83 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80773 auxptr_dma_delta_us=301006 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=84 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80922 auxptr_dma_delta_us=301005 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=85 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80411 auxptr_dma_delta_us=301005 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=86 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80736 auxptr_dma_delta_us=301005 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=87 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80521 auxptr_dma_delta_us=301006 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=88 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80930 auxptr_dma_delta_us=301005 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=89 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80768 auxptr_dma_delta_us=301004 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=90 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80844 auxptr_dma_delta_us=301005 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=91 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80520 auxptr_dma_delta_us=301005 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=92 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80406 auxptr_dma_delta_us=301006 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=93 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80588 auxptr_dma_delta_us=301007 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=94 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80559 auxptr_dma_delta_us=301006 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=95 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80753 auxptr_dma_delta_us=301005 retune_secondary_us=812 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=96 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80848 auxptr_dma_delta_us=301006 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=97 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80508 auxptr_dma_delta_us=301007 retune_secondary_us=812 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=98 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80550 auxptr_dma_delta_us=301006 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=99 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80787 auxptr_dma_delta_us=301006 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=100 entry=5 command_id=45 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80688 auxptr_dma_delta_us=301005 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=101 entry=5 command_id=45 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80684 auxptr_dma_delta_us=301006 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=102 entry=5 command_id=45 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80635 auxptr_dma_delta_us=301005 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=103 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80489 auxptr_dma_delta_us=301006 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=104 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80906 auxptr_dma_delta_us=301004 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=105 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80846 auxptr_dma_delta_us=301005 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=106 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80467 auxptr_dma_delta_us=301005 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=107 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=81011 auxptr_dma_delta_us=301007 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=108 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80405 auxptr_dma_delta_us=301006 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=109 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80598 auxptr_dma_delta_us=301006 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=110 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80584 auxptr_dma_delta_us=301006 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=111 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80777 auxptr_dma_delta_us=301006 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=112 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80566 auxptr_dma_delta_us=301008 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=113 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80768 auxptr_dma_delta_us=301008 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=114 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80769 auxptr_dma_delta_us=301008 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=115 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80944 auxptr_dma_delta_us=301011 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=116 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80331 auxptr_dma_delta_us=301008 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=117 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80535 auxptr_dma_delta_us=301010 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=118 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80630 auxptr_dma_delta_us=301010 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2001 slot=119 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80788 auxptr_dma_delta_us=301009 retune_secondary_us=809 auxptr_dma_window_miss=1
+

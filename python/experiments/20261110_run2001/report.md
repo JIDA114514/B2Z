@@ -12,8 +12,12 @@
 
 ## 分析与原始记录
 
+- [analyses/n1_joint/plan.summary.json](analyses/n1_joint/plan.summary.json)（历史分析；状态未记录）
 - [analyses/std_ble_flow_20261110_103901_777698/flow.summary.json](analyses/std_ble_flow_20261110_103901_777698/flow.summary.json)（complete）
 - [captures/zigbee/103725_683095_8w7ee1w9/rx.control.summary.json](captures/zigbee/103725_683095_8w7ee1w9/rx.control.summary.json)（历史分析；状态未记录）
 - [analyses/std_ble_flow_20261110_103901_777698/flow.md](analyses/std_ble_flow_20261110_103901_777698/flow.md)
+- [analyses/n1_joint/plan.slots.metrics.csv](analyses/n1_joint/plan.slots.metrics.csv)
+- [analyses/n1_joint/plan.tasks.metrics.csv](analyses/n1_joint/plan.tasks.metrics.csv)
+- [board.board.log](board.board.log)
 
 配置：[experiment.config.json](experiment.config.json)。完整参数、分母依据和异常见各接收报告及原始 JSON。

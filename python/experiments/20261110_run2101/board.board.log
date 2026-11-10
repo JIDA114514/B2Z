@@ -1,0 +1,757 @@
+CONTROL_PLAN_START state=armed run_id=2101 period_ms=500 tasks=7 slots=120 duration_s=60 rf_mode=standard_secondary_ch3 aux_channel=3 aux_offset_us=300000 primary_mhz=2480 secondary_mhz=2410
+
+CONTROL_PLAN_ENTRY run_id=2101 entry=0 command_id=0 first_slot=0 repeats=20 execute_at_ms=0 valid_until_ms=0 ble_target=0 ble_opcode=0 ble_arg=0 zigbee_target=0 zigbee_opcode=0 zigbee_arg=0
+
+CONTROL_PLAN_ENTRY run_id=2101 entry=1 command_id=43 first_slot=20 repeats=3 execute_at_ms=20000 valid_until_ms=15000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=1
+
+CONTROL_PLAN_ENTRY run_id=2101 entry=2 command_id=0 first_slot=23 repeats=37 execute_at_ms=0 valid_until_ms=0 ble_target=0 ble_opcode=0 ble_arg=0 zigbee_target=0 zigbee_opcode=0 zigbee_arg=0
+
+CONTROL_PLAN_ENTRY run_id=2101 entry=3 command_id=44 first_slot=60 repeats=3 execute_at_ms=40000 valid_until_ms=35000 ble_target=1 ble_opcode=1 ble_arg=2 zigbee_target=2 zigbee_opcode=2 zigbee_arg=7
+
+CONTROL_PLAN_ENTRY run_id=2101 entry=4 command_id=0 first_slot=63 repeats=37 execute_at_ms=0 valid_until_ms=0 ble_target=0 ble_opcode=0 ble_arg=0 zigbee_target=0 zigbee_opcode=0 zigbee_arg=0
+
+CONTROL_PLAN_ENTRY run_id=2101 entry=5 command_id=45 first_slot=100 repeats=3 execute_at_ms=60000 valid_until_ms=55000 ble_target=1 ble_opcode=2 ble_arg=9 zigbee_target=2 zigbee_opcode=1 zigbee_arg=3
+
+CONTROL_PLAN_ENTRY run_id=2101 entry=6 command_id=0 first_slot=103 repeats=17 execute_at_ms=0 valid_until_ms=0 ble_target=0 ble_opcode=0 ble_arg=0 zigbee_target=0 zigbee_opcode=0 zigbee_arg=0
+
+CONTROL_PLAN_STATS final=1 state=complete run_id=2101 period_ms=500 tasks=7 planned_slots=120 reached_slots=120 elapsed_us=60000006 generated=120 primary_started=120 primary_completed=120 tx_started=120 tx_completed=120 deadline_miss=0 dma_timeout=0 secondary_dma_late_samples=120 secondary_dma_late_max_us=81374 secondary_dma_late_avg_us=80520 time_reference=planned_secondary_start rf_mode=standard_secondary_ch3 aux_channel=3 aux_offset_us=300000 auxptr_dma_window_miss=120 auxptr_dma_delta_samples=120 auxptr_dma_delta_min_us=300822 auxptr_dma_delta_max_us=301009 auxptr_dma_delta_avg_us=300999 retune_failure=0 retune_secondary_max_us=816
+
+CONTROL_PLAN_TASK run_id=2101 entry=0 command_id=0 first_slot=0 repeats=20 reached=20 generated=20 execute_at_ms=0 valid_until_ms=0 ble_target=0 ble_opcode=0 ble_arg=0 zigbee_target=0 zigbee_opcode=0 zigbee_arg=0 primary_started=20 primary_completed=20 tx_started=20 tx_completed=20 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=20
+
+CONTROL_PLAN_TASK run_id=2101 entry=1 command_id=43 first_slot=20 repeats=3 reached=3 generated=3 execute_at_ms=20000 valid_until_ms=15000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=1 primary_started=3 primary_completed=3 tx_started=3 tx_completed=3 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=3
+
+CONTROL_PLAN_TASK run_id=2101 entry=2 command_id=0 first_slot=23 repeats=37 reached=37 generated=37 execute_at_ms=0 valid_until_ms=0 ble_target=0 ble_opcode=0 ble_arg=0 zigbee_target=0 zigbee_opcode=0 zigbee_arg=0 primary_started=37 primary_completed=37 tx_started=37 tx_completed=37 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=37
+
+CONTROL_PLAN_TASK run_id=2101 entry=3 command_id=44 first_slot=60 repeats=3 reached=3 generated=3 execute_at_ms=40000 valid_until_ms=35000 ble_target=1 ble_opcode=1 ble_arg=2 zigbee_target=2 zigbee_opcode=2 zigbee_arg=7 primary_started=3 primary_completed=3 tx_started=3 tx_completed=3 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=3
+
+CONTROL_PLAN_TASK run_id=2101 entry=4 command_id=0 first_slot=63 repeats=37 reached=37 generated=37 execute_at_ms=0 valid_until_ms=0 ble_target=0 ble_opcode=0 ble_arg=0 zigbee_target=0 zigbee_opcode=0 zigbee_arg=0 primary_started=37 primary_completed=37 tx_started=37 tx_completed=37 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=37
+
+CONTROL_PLAN_TASK run_id=2101 entry=5 command_id=45 first_slot=100 repeats=3 reached=3 generated=3 execute_at_ms=60000 valid_until_ms=55000 ble_target=1 ble_opcode=2 ble_arg=9 zigbee_target=2 zigbee_opcode=1 zigbee_arg=3 primary_started=3 primary_completed=3 tx_started=3 tx_completed=3 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=3
+
+CONTROL_PLAN_TASK run_id=2101 entry=6 command_id=0 first_slot=103 repeats=17 reached=17 generated=17 execute_at_ms=0 valid_until_ms=0 ble_target=0 ble_opcode=0 ble_arg=0 zigbee_target=0 zigbee_opcode=0 zigbee_arg=0 primary_started=17 primary_completed=17 tx_started=17 tx_completed=17 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=17
+
+CONTROL_PLAN_SLOT run_id=2101 slot=0 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=81374 auxptr_dma_delta_us=300822 retune_secondary_us=816 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=1 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80197 auxptr_dma_delta_us=300886 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=2 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80265 auxptr_dma_delta_us=300922 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=3 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80618 auxptr_dma_delta_us=300941 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=4 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80601 auxptr_dma_delta_us=300957 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=5 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80684 auxptr_dma_delta_us=300976 retune_secondary_us=811 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=6 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80660 auxptr_dma_delta_us=300983 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=7 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80298 auxptr_dma_delta_us=300985 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=8 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80686 auxptr_dma_delta_us=300990 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=9 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80297 auxptr_dma_delta_us=300992 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=10 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80317 auxptr_dma_delta_us=300994 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=11 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80714 auxptr_dma_delta_us=300994 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=12 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80663 auxptr_dma_delta_us=300995 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=13 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80692 auxptr_dma_delta_us=300998 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=14 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80696 auxptr_dma_delta_us=300996 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=15 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80326 auxptr_dma_delta_us=301000 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=16 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80315 auxptr_dma_delta_us=301002 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=17 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80615 auxptr_dma_delta_us=300999 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=18 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80580 auxptr_dma_delta_us=301000 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=19 entry=0 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80409 auxptr_dma_delta_us=300999 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=20 entry=1 command_id=43 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80477 auxptr_dma_delta_us=301000 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=21 entry=1 command_id=43 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80477 auxptr_dma_delta_us=301001 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=22 entry=1 command_id=43 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80578 auxptr_dma_delta_us=301001 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=23 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80560 auxptr_dma_delta_us=301001 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=24 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80156 auxptr_dma_delta_us=301001 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=25 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80777 auxptr_dma_delta_us=301002 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=26 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80342 auxptr_dma_delta_us=301002 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=27 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80660 auxptr_dma_delta_us=301001 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=28 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80768 auxptr_dma_delta_us=301002 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=29 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80609 auxptr_dma_delta_us=301002 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=30 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80596 auxptr_dma_delta_us=301003 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=31 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80411 auxptr_dma_delta_us=301002 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=32 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80290 auxptr_dma_delta_us=301001 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=33 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80242 auxptr_dma_delta_us=301003 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=34 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80650 auxptr_dma_delta_us=301002 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=35 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80385 auxptr_dma_delta_us=301001 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=36 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80215 auxptr_dma_delta_us=301002 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=37 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80349 auxptr_dma_delta_us=301003 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=38 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80421 auxptr_dma_delta_us=301003 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=39 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80610 auxptr_dma_delta_us=301003 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=40 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80236 auxptr_dma_delta_us=301005 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=41 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80750 auxptr_dma_delta_us=301005 retune_secondary_us=806 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=42 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80784 auxptr_dma_delta_us=301004 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=43 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80606 auxptr_dma_delta_us=301004 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=44 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80789 auxptr_dma_delta_us=301004 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=45 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80628 auxptr_dma_delta_us=301005 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=46 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80566 auxptr_dma_delta_us=301005 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=47 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80394 auxptr_dma_delta_us=301006 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=48 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80702 auxptr_dma_delta_us=301003 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=49 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80386 auxptr_dma_delta_us=301005 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=50 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80347 auxptr_dma_delta_us=301004 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=51 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80564 auxptr_dma_delta_us=301004 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=52 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80782 auxptr_dma_delta_us=301003 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=53 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80628 auxptr_dma_delta_us=301006 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=54 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80632 auxptr_dma_delta_us=301006 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=55 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80365 auxptr_dma_delta_us=301008 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=56 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80816 auxptr_dma_delta_us=301007 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=57 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80708 auxptr_dma_delta_us=301005 retune_secondary_us=806 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=58 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80608 auxptr_dma_delta_us=301005 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+
+CONTROL_PLAN_SLOT run_id=2101 slot=59 entry=2 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80436 auxptr_dma_delta_us=301006 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=60 entry=3 command_id=44 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80478 auxptr_dma_delta_us=301003 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=61 entry=3 command_id=44 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80528 auxptr_dma_delta_us=301006 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=62 entry=3 command_id=44 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80576 auxptr_dma_delta_us=301005 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=63 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80180 auxptr_dma_delta_us=301006 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=64 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80700 auxptr_dma_delta_us=301005 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=65 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80631 auxptr_dma_delta_us=301005 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=66 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80173 auxptr_dma_delta_us=301005 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=67 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80388 auxptr_dma_delta_us=301004 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=68 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80193 auxptr_dma_delta_us=301005 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=69 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80384 auxptr_dma_delta_us=301006 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=70 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80404 auxptr_dma_delta_us=301006 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=71 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80589 auxptr_dma_delta_us=301004 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=72 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80207 auxptr_dma_delta_us=301003 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=73 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80413 auxptr_dma_delta_us=301005 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=74 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80809 auxptr_dma_delta_us=301005 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=75 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80582 auxptr_dma_delta_us=301005 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=76 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80771 auxptr_dma_delta_us=301004 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=77 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80619 auxptr_dma_delta_us=301005 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=78 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80576 auxptr_dma_delta_us=301007 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=79 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80424 auxptr_dma_delta_us=301008 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=80 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80710 auxptr_dma_delta_us=301007 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=81 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80388 auxptr_dma_delta_us=301007 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=82 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80806 auxptr_dma_delta_us=301007 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=83 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80620 auxptr_dma_delta_us=301008 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=84 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80802 auxptr_dma_delta_us=301006 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=85 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80280 auxptr_dma_delta_us=301005 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=86 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80597 auxptr_dma_delta_us=301004 retune_secondary_us=806 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=87 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80396 auxptr_dma_delta_us=301006 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=88 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80779 auxptr_dma_delta_us=301007 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=89 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80638 auxptr_dma_delta_us=301006 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=90 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80609 auxptr_dma_delta_us=301007 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=91 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80415 auxptr_dma_delta_us=301007 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=92 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80255 auxptr_dma_delta_us=301007 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=93 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80326 auxptr_dma_delta_us=301005 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=94 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80443 auxptr_dma_delta_us=301005 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=95 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80635 auxptr_dma_delta_us=301004 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=96 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80704 auxptr_dma_delta_us=301004 retune_secondary_us=806 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=97 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80398 auxptr_dma_delta_us=301003 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=98 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80362 auxptr_dma_delta_us=301004 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=99 entry=4 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80639 auxptr_dma_delta_us=301006 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=100 entry=5 command_id=45 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80470 auxptr_dma_delta_us=301005 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=101 entry=5 command_id=45 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80453 auxptr_dma_delta_us=301005 retune_secondary_us=806 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=102 entry=5 command_id=45 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80418 auxptr_dma_delta_us=301004 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=103 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80408 auxptr_dma_delta_us=301004 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=104 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80787 auxptr_dma_delta_us=301004 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=105 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80612 auxptr_dma_delta_us=301004 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=106 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80205 auxptr_dma_delta_us=301007 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=107 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80821 auxptr_dma_delta_us=301003 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=108 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80213 auxptr_dma_delta_us=301004 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=109 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80405 auxptr_dma_delta_us=301004 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=110 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80364 auxptr_dma_delta_us=301004 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=111 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80598 auxptr_dma_delta_us=301009 retune_secondary_us=810 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=112 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80343 auxptr_dma_delta_us=301007 retune_secondary_us=807 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=113 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80616 auxptr_dma_delta_us=301005 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=114 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80602 auxptr_dma_delta_us=301005 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=115 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80792 auxptr_dma_delta_us=301005 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=116 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80176 auxptr_dma_delta_us=301008 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=117 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80379 auxptr_dma_delta_us=301005 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=118 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80436 auxptr_dma_delta_us=301006 retune_secondary_us=808 auxptr_dma_window_miss=1
+
+CONTROL_PLAN_SLOT run_id=2101 slot=119 entry=6 command_id=0 flags=159 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80631 auxptr_dma_delta_us=301004 retune_secondary_us=809 auxptr_dma_window_miss=1
+
+CONTROL_BURST run_id=2101 slot=0 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=80533 submit_before_us=80551 submit_after_us=80651 finish_us=81091
+
+CONTROL_BURST run_id=2101 slot=0 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=80534 submit_before_us=380553 submit_after_us=381372 finish_us=384091
+
+CONTROL_BURST run_id=2101 slot=1 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=579298 submit_before_us=579311 submit_after_us=579410 finish_us=580092
+
+CONTROL_BURST run_id=2101 slot=1 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=579299 submit_before_us=879313 submit_after_us=880195 finish_us=882092
+
+CONTROL_BURST run_id=2101 slot=2 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=1079324 submit_before_us=1079343 submit_after_us=1079441 finish_us=1080093
+
+CONTROL_BURST run_id=2101 slot=2 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=1079325 submit_before_us=1379345 submit_after_us=1380263 finish_us=1383093
+
+CONTROL_BURST run_id=2101 slot=3 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=1579664 submit_before_us=1579677 submit_after_us=1579775 finish_us=1580094
+
+CONTROL_BURST run_id=2101 slot=3 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=1579665 submit_before_us=1879679 submit_after_us=1880616 finish_us=1883094
+
+CONTROL_BURST run_id=2101 slot=4 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=2079630 submit_before_us=2079643 submit_after_us=2079741 finish_us=2080095
+
+CONTROL_BURST run_id=2101 slot=4 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=2079631 submit_before_us=2379645 submit_after_us=2380599 finish_us=2383095
+
+CONTROL_BURST run_id=2101 slot=5 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=2579695 submit_before_us=2579708 submit_after_us=2579806 finish_us=2580096
+
+CONTROL_BURST run_id=2101 slot=5 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=2579696 submit_before_us=2879709 submit_after_us=2880682 finish_us=2883099
+
+CONTROL_BURST run_id=2101 slot=6 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=3079663 submit_before_us=3079676 submit_after_us=3079775 finish_us=3080097
+
+CONTROL_BURST run_id=2101 slot=6 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=3079664 submit_before_us=3379678 submit_after_us=3380657 finish_us=3383097
+
+CONTROL_BURST run_id=2101 slot=7 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=3579296 submit_before_us=3579313 submit_after_us=3579411 finish_us=3580098
+
+CONTROL_BURST run_id=2101 slot=7 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=3579297 submit_before_us=3879314 submit_after_us=3880296 finish_us=3883098
+
+CONTROL_BURST run_id=2101 slot=8 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=4079683 submit_before_us=4079696 submit_after_us=4079794 finish_us=4080099
+
+CONTROL_BURST run_id=2101 slot=8 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=4079684 submit_before_us=4379698 submit_after_us=4380684 finish_us=4383099
+
+CONTROL_BURST run_id=2101 slot=9 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=4579293 submit_before_us=4579305 submit_after_us=4579403 finish_us=4580100
+
+CONTROL_BURST run_id=2101 slot=9 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=4579294 submit_before_us=4879307 submit_after_us=4880295 finish_us=4883100
+
+CONTROL_BURST run_id=2101 slot=10 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=5079311 submit_before_us=5079323 submit_after_us=5079421 finish_us=5080101
+
+CONTROL_BURST run_id=2101 slot=10 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=5079312 submit_before_us=5379325 submit_after_us=5380315 finish_us=5383104
+
+CONTROL_BURST run_id=2101 slot=11 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=5579708 submit_before_us=5579720 submit_after_us=5579818 finish_us=5580102
+
+CONTROL_BURST run_id=2101 slot=11 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=5579709 submit_before_us=5879721 submit_after_us=5880712 finish_us=5883102
+
+CONTROL_BURST run_id=2101 slot=12 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=6079650 submit_before_us=6079667 submit_after_us=6079765 finish_us=6080103
+
+CONTROL_BURST run_id=2101 slot=12 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=6079651 submit_before_us=6379669 submit_after_us=6380661 finish_us=6383103
+
+CONTROL_BURST run_id=2101 slot=13 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=6579682 submit_before_us=6579694 submit_after_us=6579792 finish_us=6580104
+
+CONTROL_BURST run_id=2101 slot=13 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=6579683 submit_before_us=6879696 submit_after_us=6880690 finish_us=6883104
+
+CONTROL_BURST run_id=2101 slot=14 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=7079687 submit_before_us=7079699 submit_after_us=7079797 finish_us=7080105
+
+CONTROL_BURST run_id=2101 slot=14 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=7079688 submit_before_us=7379700 submit_after_us=7380693 finish_us=7383105
+
+CONTROL_BURST run_id=2101 slot=15 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=7579314 submit_before_us=7579325 submit_after_us=7579423 finish_us=7580106
+
+CONTROL_BURST run_id=2101 slot=15 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=7579315 submit_before_us=7879327 submit_after_us=7880324 finish_us=7883109
+
+CONTROL_BURST run_id=2101 slot=16 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=8079301 submit_before_us=8079312 submit_after_us=8079410 finish_us=8080107
+
+CONTROL_BURST run_id=2101 slot=16 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=8079302 submit_before_us=8379314 submit_after_us=8380313 finish_us=8383107
+
+
+CONTROL_BURST run_id=2101 slot=17 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=8579599 submit_before_us=8579615 submit_after_us=8579713 finish_us=8580107
+
+CONTROL_BURST run_id=2101 slot=17 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=8579600 submit_before_us=8879617 submit_after_us=8880612 finish_us=8883108
+
+CONTROL_BURST run_id=2101 slot=18 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=9079567 submit_before_us=9079580 submit_after_us=9079678 finish_us=9080108
+
+CONTROL_BURST run_id=2101 slot=18 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=9079568 submit_before_us=9379581 submit_after_us=9380578 finish_us=9383109
+
+CONTROL_BURST run_id=2101 slot=19 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=9579398 submit_before_us=9579409 submit_after_us=9579507 finish_us=9580110
+
+CONTROL_BURST run_id=2101 slot=19 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=9579399 submit_before_us=9879411 submit_after_us=9880407 finish_us=9883110
+
+CONTROL_BURST run_id=2101 slot=20 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=10079465 submit_before_us=10079477 submit_after_us=10079575 finish_us=10080110
+
+CONTROL_BURST run_id=2101 slot=20 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=10079466 submit_before_us=10379479 submit_after_us=10380475 finish_us=10383114
+
+CONTROL_BURST run_id=2101 slot=21 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=10579464 submit_before_us=10579476 submit_after_us=10579573 finish_us=10580112
+
+CONTROL_BURST run_id=2101 slot=21 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=10579465 submit_before_us=10879477 submit_after_us=10880474 finish_us=10883112
+
+CONTROL_BURST run_id=2101 slot=22 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=11079560 submit_before_us=11079577 submit_after_us=11079675 finish_us=11080113
+
+CONTROL_BURST run_id=2101 slot=22 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=11079561 submit_before_us=11379578 submit_after_us=11380576 finish_us=11383113
+
+CONTROL_BURST run_id=2101 slot=23 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=11579547 submit_before_us=11579559 submit_after_us=11579657 finish_us=11580113
+
+CONTROL_BURST run_id=2101 slot=23 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=11579548 submit_before_us=11879560 submit_after_us=11880557 finish_us=11883114
+
+CONTROL_BURST run_id=2101 slot=24 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=12079144 submit_before_us=12079155 submit_after_us=12079254 finish_us=12080114
+
+CONTROL_BURST run_id=2101 slot=24 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=12079145 submit_before_us=12379157 submit_after_us=12380154 finish_us=12382115
+
+CONTROL_BURST run_id=2101 slot=25 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=12579764 submit_before_us=12579775 submit_after_us=12579873 finish_us=12580115
+
+CONTROL_BURST run_id=2101 slot=25 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=12579765 submit_before_us=12879777 submit_after_us=12880775 finish_us=12883119
+
+CONTROL_BURST run_id=2101 slot=26 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=13079328 submit_before_us=13079339 submit_after_us=13079437 finish_us=13080116
+
+CONTROL_BURST run_id=2101 slot=26 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=13079329 submit_before_us=13379341 submit_after_us=13380340 finish_us=13383117
+
+CONTROL_BURST run_id=2101 slot=27 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=13579643 submit_before_us=13579658 submit_after_us=13579756 finish_us=13580117
+
+CONTROL_BURST run_id=2101 slot=27 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=13579644 submit_before_us=13879660 submit_after_us=13880658 finish_us=13883117
+
+CONTROL_BURST run_id=2101 slot=28 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=14079753 submit_before_us=14079765 submit_after_us=14079863 finish_us=14080118
+
+CONTROL_BURST run_id=2101 slot=28 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=14079754 submit_before_us=14379767 submit_after_us=14380765 finish_us=14383118
+
+CONTROL_BURST run_id=2101 slot=29 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=14579594 submit_before_us=14579607 submit_after_us=14579705 finish_us=14580119
+
+CONTROL_BURST run_id=2101 slot=29 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=14579595 submit_before_us=14879608 submit_after_us=14880607 finish_us=14883119
+
+CONTROL_BURST run_id=2101 slot=30 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=15079582 submit_before_us=15079593 submit_after_us=15079691 finish_us=15080120
+
+CONTROL_BURST run_id=2101 slot=30 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=15079583 submit_before_us=15379595 submit_after_us=15380594 finish_us=15383124
+
+CONTROL_BURST run_id=2101 slot=31 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=15579397 submit_before_us=15579409 submit_after_us=15579506 finish_us=15580121
+
+CONTROL_BURST run_id=2101 slot=31 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=15579398 submit_before_us=15879410 submit_after_us=15880409 finish_us=15883121
+
+CONTROL_BURST run_id=2101 slot=32 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=16079274 submit_before_us=16079289 submit_after_us=16079387 finish_us=16080122
+
+CONTROL_BURST run_id=2101 slot=32 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=16079275 submit_before_us=16379291 submit_after_us=16380288 finish_us=16383123
+
+CONTROL_BURST run_id=2101 slot=33 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=16579227 submit_before_us=16579239 submit_after_us=16579337 finish_us=16580123
+
+CONTROL_BURST run_id=2101 slot=33 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=16579228 submit_before_us=16879241 submit_after_us=16880240 finish_us=16882123
+
+CONTROL_BURST run_id=2101 slot=34 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=17079636 submit_before_us=17079647 submit_after_us=17079745 finish_us=17080124
+
+CONTROL_BURST run_id=2101 slot=34 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=17079637 submit_before_us=17379649 submit_after_us=17380648 finish_us=17383124
+
+CONTROL_BURST run_id=2101 slot=35 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=17579372 submit_before_us=17579383 submit_after_us=17579482 finish_us=17580125
+
+CONTROL_BURST run_id=2101 slot=35 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=17579373 submit_before_us=17879385 submit_after_us=17880383 finish_us=17883129
+
+CONTROL_BURST run_id=2101 slot=36 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=18079201 submit_before_us=18079213 submit_after_us=18079311 finish_us=18080126
+
+CONTROL_BURST run_id=2101 slot=36 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=18079202 submit_before_us=18379214 submit_after_us=18380213 finish_us=18382127
+
+CONTROL_BURST run_id=2101 slot=37 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=18579330 submit_before_us=18579346 submit_after_us=18579444 finish_us=18580127
+
+CONTROL_BURST run_id=2101 slot=37 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=18579331 submit_before_us=18879348 submit_after_us=18880347 finish_us=18883127
+
+CONTROL_BURST run_id=2101 slot=38 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=19079406 submit_before_us=19079418 submit_after_us=19079516 finish_us=19080128
+
+CONTROL_BURST run_id=2101 slot=38 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=19079407 submit_before_us=19379419 submit_after_us=19380419 finish_us=19383128
+
+CONTROL_BURST run_id=2101 slot=39 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=19579594 submit_before_us=19579606 submit_after_us=19579705 finish_us=19580129
+
+CONTROL_BURST run_id=2101 slot=39 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=19579596 submit_before_us=19879607 submit_after_us=19880607 finish_us=19883129
+
+CONTROL_BURST run_id=2101 slot=40 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=20079219 submit_before_us=20079231 submit_after_us=20079329 finish_us=20080130
+
+CONTROL_BURST run_id=2101 slot=40 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=20079220 submit_before_us=20379232 submit_after_us=20380234 finish_us=20382130
+
+CONTROL_BURST run_id=2101 slot=41 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=20579733 submit_before_us=20579745 submit_after_us=20579843 finish_us=20580131
+
+CONTROL_BURST run_id=2101 slot=41 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=20579734 submit_before_us=20879747 submit_after_us=20880747 finish_us=20883131
+
+CONTROL_BURST run_id=2101 slot=42 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=21079764 submit_before_us=21079780 submit_after_us=21079877 finish_us=21080132
+
+CONTROL_BURST run_id=2101 slot=42 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=21079765 submit_before_us=21379781 submit_after_us=21380782 finish_us=21383132
+
+CONTROL_BURST run_id=2101 slot=43 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=21579589 submit_before_us=21579601 submit_after_us=21579700 finish_us=21580133
+
+CONTROL_BURST run_id=2101 slot=43 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=21579590 submit_before_us=21879603 submit_after_us=21880603 finish_us=21883133
+
+CONTROL_BURST run_id=2101 slot=44 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=22079773 submit_before_us=22079785 submit_after_us=22079883 finish_us=22080134
+
+CONTROL_BURST run_id=2101 slot=44 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=22079774 submit_before_us=22379786 submit_after_us=22380787 finish_us=22383134
+
+CONTROL_BURST run_id=2101 slot=45 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=22579611 submit_before_us=22579623 submit_after_us=22579722 finish_us=22580135
+
+CONTROL_BURST run_id=2101 slot=45 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=22579612 submit_before_us=22879625 submit_after_us=22880626 finish_us=22883138
+
+CONTROL_BURST run_id=2101 slot=46 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=23079549 submit_before_us=23079561 submit_after_us=23079658 finish_us=23080136
+
+CONTROL_BURST run_id=2101 slot=46 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=23079550 submit_before_us=23379563 submit_after_us=23380564 finish_us=23383136
+
+CONTROL_BURST run_id=2101 slot=47 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=23579371 submit_before_us=23579387 submit_after_us=23579485 finish_us=23580137
+
+CONTROL_BURST run_id=2101 slot=47 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=23579372 submit_before_us=23879389 submit_after_us=23880391 finish_us=23883137
+
+CONTROL_BURST run_id=2101 slot=48 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=24079687 submit_before_us=24079699 submit_after_us=24079796 finish_us=24080138
+
+CONTROL_BURST run_id=2101 slot=48 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=24079688 submit_before_us=24379700 submit_after_us=24380700 finish_us=24383138
+
+CONTROL_BURST run_id=2101 slot=49 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=24579369 submit_before_us=24579380 submit_after_us=24579478 finish_us=24580139
+
+CONTROL_BURST run_id=2101 slot=49 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=24579370 submit_before_us=24879382 submit_after_us=24880384 finish_us=24883139
+
+CONTROL_BURST run_id=2101 slot=50 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=25079331 submit_before_us=25079343 submit_after_us=25079441 finish_us=25080140
+
+CONTROL_BURST run_id=2101 slot=50 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=25079332 submit_before_us=25379345 submit_after_us=25380345 finish_us=25383143
+
+CONTROL_BURST run_id=2101 slot=51 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=25579547 submit_before_us=25579560 submit_after_us=25579658 finish_us=25580141
+
+CONTROL_BURST run_id=2101 slot=51 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=25579548 submit_before_us=25879562 submit_after_us=25880561 finish_us=25883141
+
+CONTROL_BURST run_id=2101 slot=52 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=26079761 submit_before_us=26079779 submit_after_us=26079877 finish_us=26080142
+
+CONTROL_BURST run_id=2101 slot=52 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=26079762 submit_before_us=26379781 submit_after_us=26380780 finish_us=26383142
+
+CONTROL_BURST run_id=2101 slot=53 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=26579610 submit_before_us=26579622 submit_after_us=26579720 finish_us=26580143
+
+CONTROL_BURST run_id=2101 slot=53 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=26579611 submit_before_us=26879624 submit_after_us=26880626 finish_us=26883143
+
+CONTROL_BURST run_id=2101 slot=54 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=27079614 submit_before_us=27079626 submit_after_us=27079724 finish_us=27080144
+
+CONTROL_BURST run_id=2101 slot=54 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=27079615 submit_before_us=27379627 submit_after_us=27380629 finish_us=27383144
+
+CONTROL_BURST run_id=2101 slot=55 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=27579343 submit_before_us=27579356 submit_after_us=27579454 finish_us=27580145
+
+CONTROL_BURST run_id=2101 slot=55 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=27579345 submit_before_us=27879358 submit_after_us=27880362 finish_us=27883149
+
+CONTROL_BURST run_id=2101 slot=56 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=28079796 submit_before_us=28079809 submit_after_us=28079906 finish_us=28080146
+
+CONTROL_BURST run_id=2101 slot=56 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=28079797 submit_before_us=28379810 submit_after_us=28380814 finish_us=28383146
+
+CONTROL_BURST run_id=2101 slot=57 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=28579685 submit_before_us=28579703 submit_after_us=28579800 finish_us=28580147
+
+CONTROL_BURST run_id=2101 slot=57 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=28579686 submit_before_us=28879704 submit_after_us=28880705 finish_us=28883147
+
+CONTROL_BURST run_id=2101 slot=58 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=29079590 submit_before_us=29079603 submit_after_us=29079700 finish_us=29080148
+
+CONTROL_BURST run_id=2101 slot=58 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=29079591 submit_before_us=29379604 submit_after_us=29380606 finish_us=29383148
+
+CONTROL_BURST run_id=2101 slot=59 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=29579418 submit_before_us=29579430 submit_after_us=29579528 finish_us=29580149
+
+CONTROL_BURST run_id=2101 slot=59 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=29579419 submit_before_us=29879432 submit_after_us=29880434 finish_us=29883149
+
+CONTROL_BURST run_id=2101 slot=60 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=30079462 submit_before_us=30079474 submit_after_us=30079572 finish_us=30080150
+
+CONTROL_BURST run_id=2101 slot=60 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=30079463 submit_before_us=30379476 submit_after_us=30380476 finish_us=30383153
+
+CONTROL_BURST run_id=2101 slot=61 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=30579510 submit_before_us=30579522 submit_after_us=30579620 finish_us=30580151
+
+CONTROL_BURST run_id=2101 slot=61 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=30579511 submit_before_us=30879524 submit_after_us=30880525 finish_us=30883151
+
+CONTROL_BURST run_id=2101 slot=62 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=31079554 submit_before_us=31079570 submit_after_us=31079668 finish_us=31080152
+
+CONTROL_BURST run_id=2101 slot=62 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=31079555 submit_before_us=31379571 submit_after_us=31380573 finish_us=31383152
+
+CONTROL_BURST run_id=2101 slot=63 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=31579162 submit_before_us=31579174 submit_after_us=31579272 finish_us=31580153
+
+CONTROL_BURST run_id=2101 slot=63 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=31579163 submit_before_us=31879175 submit_after_us=31880177 finish_us=31882153
+
+CONTROL_BURST run_id=2101 slot=64 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=32079683 submit_before_us=32079695 submit_after_us=32079793 finish_us=32080154
+
+CONTROL_BURST run_id=2101 slot=64 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=32079684 submit_before_us=32379697 submit_after_us=32380697 finish_us=32383154
+
+CONTROL_BURST run_id=2101 slot=65 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=32579613 submit_before_us=32579626 submit_after_us=32579724 finish_us=32580155
+
+
+CONTROL_BURST run_id=2101 slot=65 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=32579615 submit_before_us=32879627 submit_after_us=32880629 finish_us=32883158
+
+CONTROL_BURST run_id=2101 slot=66 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=33079155 submit_before_us=33079168 submit_after_us=33079266 finish_us=33080156
+
+CONTROL_BURST run_id=2101 slot=66 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=33079157 submit_before_us=33379169 submit_after_us=33380171 finish_us=33382156
+
+CONTROL_BURST run_id=2101 slot=67 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=33579367 submit_before_us=33579383 submit_after_us=33579481 finish_us=33580157
+
+CONTROL_BURST run_id=2101 slot=67 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=33579368 submit_before_us=33879385 submit_after_us=33880385 finish_us=33883157
+
+CONTROL_BURST run_id=2101 slot=68 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=34079176 submit_before_us=34079188 submit_after_us=34079286 finish_us=34080158
+
+CONTROL_BURST run_id=2101 slot=68 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=34079177 submit_before_us=34379190 submit_after_us=34380191 finish_us=34382158
+
+CONTROL_BURST run_id=2101 slot=69 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=34579366 submit_before_us=34579378 submit_after_us=34579476 finish_us=34580159
+
+CONTROL_BURST run_id=2101 slot=69 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=34579367 submit_before_us=34879380 submit_after_us=34880381 finish_us=34883159
+
+CONTROL_BURST run_id=2101 slot=70 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=35079386 submit_before_us=35079398 submit_after_us=35079496 finish_us=35080160
+
+CONTROL_BURST run_id=2101 slot=70 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=35079387 submit_before_us=35379400 submit_after_us=35380402 finish_us=35383163
+
+CONTROL_BURST run_id=2101 slot=71 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=35579573 submit_before_us=35579585 submit_after_us=35579683 finish_us=35580161
+
+CONTROL_BURST run_id=2101 slot=71 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=35579574 submit_before_us=35879587 submit_after_us=35880587 finish_us=35883161
+
+CONTROL_BURST run_id=2101 slot=72 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=36079187 submit_before_us=36079203 submit_after_us=36079301 finish_us=36080162
+
+CONTROL_BURST run_id=2101 slot=72 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=36079188 submit_before_us=36379205 submit_after_us=36380204 finish_us=36382162
+
+CONTROL_BURST run_id=2101 slot=73 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=36579396 submit_before_us=36579408 submit_after_us=36579506 finish_us=36580163
+
+CONTROL_BURST run_id=2101 slot=73 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=36579397 submit_before_us=36879409 submit_after_us=36880411 finish_us=36883163
+
+CONTROL_BURST run_id=2101 slot=74 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=37079792 submit_before_us=37079804 submit_after_us=37079901 finish_us=37080164
+
+CONTROL_BURST run_id=2101 slot=74 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=37079793 submit_before_us=37379806 submit_after_us=37380807 finish_us=37383164
+
+CONTROL_BURST run_id=2101 slot=75 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=37579564 submit_before_us=37579577 submit_after_us=37579675 finish_us=37580165
+
+CONTROL_BURST run_id=2101 slot=75 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=37579565 submit_before_us=37879578 submit_after_us=37880580 finish_us=37883168
+
+CONTROL_BURST run_id=2101 slot=76 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=38079755 submit_before_us=38079766 submit_after_us=38079865 finish_us=38080166
+
+CONTROL_BURST run_id=2101 slot=76 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=38079756 submit_before_us=38379768 submit_after_us=38380769 finish_us=38383166
+
+CONTROL_BURST run_id=2101 slot=77 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=38579597 submit_before_us=38579614 submit_after_us=38579711 finish_us=38580167
+
+CONTROL_BURST run_id=2101 slot=77 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=38579599 submit_before_us=38879615 submit_after_us=38880617 finish_us=38883167
+
+CONTROL_BURST run_id=2101 slot=78 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=39079557 submit_before_us=39079569 submit_after_us=39079666 finish_us=39080168
+
+CONTROL_BURST run_id=2101 slot=78 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=39079558 submit_before_us=39379570 submit_after_us=39380574 finish_us=39383168
+
+CONTROL_BURST run_id=2101 slot=79 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=39579405 submit_before_us=39579416 submit_after_us=39579514 finish_us=39580169
+
+CONTROL_BURST run_id=2101 slot=79 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=39579405 submit_before_us=39879418 submit_after_us=39880422 finish_us=39883169
+
+CONTROL_BURST run_id=2101 slot=80 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=40079691 submit_before_us=40079703 submit_after_us=40079800 finish_us=40080170
+
+CONTROL_BURST run_id=2101 slot=80 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=40079692 submit_before_us=40379704 submit_after_us=40380708 finish_us=40383173
+
+CONTROL_BURST run_id=2101 slot=81 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=40579370 submit_before_us=40579381 submit_after_us=40579479 finish_us=40580171
+
+CONTROL_BURST run_id=2101 slot=81 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=40579371 submit_before_us=40879382 submit_after_us=40880386 finish_us=40883171
+
+CONTROL_BURST run_id=2101 slot=82 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=41079783 submit_before_us=41079798 submit_after_us=41079896 finish_us=41080172
+
+CONTROL_BURST run_id=2101 slot=82 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=41079784 submit_before_us=41379800 submit_after_us=41380803 finish_us=41383172
+
+CONTROL_BURST run_id=2101 slot=83 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=41579601 submit_before_us=41579613 submit_after_us=41579711 finish_us=41580172
+
+CONTROL_BURST run_id=2101 slot=83 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=41579602 submit_before_us=41879614 submit_after_us=41880618 finish_us=41883173
+
+CONTROL_BURST run_id=2101 slot=84 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=42079784 submit_before_us=42079796 submit_after_us=42079893 finish_us=42080174
+
+CONTROL_BURST run_id=2101 slot=84 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=42079785 submit_before_us=42379797 submit_after_us=42380800 finish_us=42383174
+
+CONTROL_BURST run_id=2101 slot=85 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=42579263 submit_before_us=42579275 submit_after_us=42579373 finish_us=42580175
+
+CONTROL_BURST run_id=2101 slot=85 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=42579264 submit_before_us=42879276 submit_after_us=42880278 finish_us=42882175
+
+CONTROL_BURST run_id=2101 slot=86 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=43079581 submit_before_us=43079592 submit_after_us=43079691 finish_us=43080176
+
+CONTROL_BURST run_id=2101 slot=86 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=43079582 submit_before_us=43379594 submit_after_us=43380595 finish_us=43383176
+
+CONTROL_BURST run_id=2101 slot=87 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=43579374 submit_before_us=43579390 submit_after_us=43579488 finish_us=43580176
+
+CONTROL_BURST run_id=2101 slot=87 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=43579375 submit_before_us=43879392 submit_after_us=43880394 finish_us=43883177
+
+CONTROL_BURST run_id=2101 slot=88 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=44079761 submit_before_us=44079772 submit_after_us=44079871 finish_us=44080177
+
+CONTROL_BURST run_id=2101 slot=88 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=44079762 submit_before_us=44379774 submit_after_us=44380777 finish_us=44383178
+
+CONTROL_BURST run_id=2101 slot=89 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=44579620 submit_before_us=44579631 submit_after_us=44579730 finish_us=44580178
+
+CONTROL_BURST run_id=2101 slot=89 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=44579621 submit_before_us=44879633 submit_after_us=44880636 finish_us=44883179
+
+CONTROL_BURST run_id=2101 slot=90 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=45079591 submit_before_us=45079602 submit_after_us=45079700 finish_us=45080179
+
+CONTROL_BURST run_id=2101 slot=90 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=45079592 submit_before_us=45379604 submit_after_us=45380607 finish_us=45383183
+
+CONTROL_BURST run_id=2101 slot=91 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=45579396 submit_before_us=45579408 submit_after_us=45579505 finish_us=45580181
+
+CONTROL_BURST run_id=2101 slot=91 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=45579397 submit_before_us=45879409 submit_after_us=45880413 finish_us=45883181
+
+CONTROL_BURST run_id=2101 slot=92 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=46079232 submit_before_us=46079248 submit_after_us=46079346 finish_us=46080181
+
+CONTROL_BURST run_id=2101 slot=92 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=46079233 submit_before_us=46379249 submit_after_us=46380252 finish_us=46382182
+
+CONTROL_BURST run_id=2101 slot=93 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=46579309 submit_before_us=46579321 submit_after_us=46579418 finish_us=46580182
+
+CONTROL_BURST run_id=2101 slot=93 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=46579310 submit_before_us=46879322 submit_after_us=46880324 finish_us=46883183
+
+CONTROL_BURST run_id=2101 slot=94 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=47079425 submit_before_us=47079437 submit_after_us=47079535 finish_us=47080183
+
+CONTROL_BURST run_id=2101 slot=94 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=47079426 submit_before_us=47379439 submit_after_us=47380440 finish_us=47383183
+
+CONTROL_BURST run_id=2101 slot=95 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=47579619 submit_before_us=47579631 submit_after_us=47579728 finish_us=47580184
+
+CONTROL_BURST run_id=2101 slot=95 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=47579620 submit_before_us=47879632 submit_after_us=47880633 finish_us=47883188
+
+CONTROL_BURST run_id=2101 slot=96 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=48079687 submit_before_us=48079699 submit_after_us=48079797 finish_us=48080185
+
+CONTROL_BURST run_id=2101 slot=96 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=48079688 submit_before_us=48379701 submit_after_us=48380701 finish_us=48383185
+
+CONTROL_BURST run_id=2101 slot=97 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=48579379 submit_before_us=48579395 submit_after_us=48579492 finish_us=48580186
+
+CONTROL_BURST run_id=2101 slot=97 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=48579380 submit_before_us=48879396 submit_after_us=48880396 finish_us=48883186
+
+CONTROL_BURST run_id=2101 slot=98 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=49079346 submit_before_us=49079358 submit_after_us=49079456 finish_us=49080187
+
+CONTROL_BURST run_id=2101 slot=98 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=49079347 submit_before_us=49379359 submit_after_us=49380360 finish_us=49383187
+
+CONTROL_BURST run_id=2101 slot=99 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=49579622 submit_before_us=49579633 submit_after_us=49579731 finish_us=49580188
+
+CONTROL_BURST run_id=2101 slot=99 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=49579623 submit_before_us=49879635 submit_after_us=49880636 finish_us=49883188
+
+CONTROL_BURST run_id=2101 slot=100 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=50079453 submit_before_us=50079465 submit_after_us=50079563 finish_us=50080189
+
+CONTROL_BURST run_id=2101 slot=100 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=50079455 submit_before_us=50379467 submit_after_us=50380468 finish_us=50383192
+
+CONTROL_BURST run_id=2101 slot=101 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=50579437 submit_before_us=50579448 submit_after_us=50579546 finish_us=50580190
+
+CONTROL_BURST run_id=2101 slot=101 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=50579438 submit_before_us=50879450 submit_after_us=50880451 finish_us=50883190
+
+CONTROL_BURST run_id=2101 slot=102 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=51079398 submit_before_us=51079413 submit_after_us=51079511 finish_us=51080191
+
+CONTROL_BURST run_id=2101 slot=102 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=51079399 submit_before_us=51379415 submit_after_us=51380415 finish_us=51383191
+
+CONTROL_BURST run_id=2101 slot=103 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=51579392 submit_before_us=51579403 submit_after_us=51579501 finish_us=51580192
+
+CONTROL_BURST run_id=2101 slot=103 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=51579393 submit_before_us=51879405 submit_after_us=51880405 finish_us=51883192
+
+CONTROL_BURST run_id=2101 slot=104 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=52079772 submit_before_us=52079783 submit_after_us=52079881 finish_us=52080193
+
+CONTROL_BURST run_id=2101 slot=104 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=52079773 submit_before_us=52379785 submit_after_us=52380785 finish_us=52383193
+
+CONTROL_BURST run_id=2101 slot=105 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=52579596 submit_before_us=52579608 submit_after_us=52579705 finish_us=52580194
+
+CONTROL_BURST run_id=2101 slot=105 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=52579597 submit_before_us=52879610 submit_after_us=52880609 finish_us=52883198
+
+CONTROL_BURST run_id=2101 slot=106 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=53079183 submit_before_us=53079198 submit_after_us=53079295 finish_us=53080200
+
+CONTROL_BURST run_id=2101 slot=106 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=53079184 submit_before_us=53379199 submit_after_us=53380203 finish_us=53382195
+
+CONTROL_BURST run_id=2101 slot=107 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=53579805 submit_before_us=53579817 submit_after_us=53579916 finish_us=53580196
+
+CONTROL_BURST run_id=2101 slot=107 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=53579806 submit_before_us=53879819 submit_after_us=53880819 finish_us=53883196
+
+CONTROL_BURST run_id=2101 slot=108 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=54079198 submit_before_us=54079209 submit_after_us=54079307 finish_us=54080197
+
+CONTROL_BURST run_id=2101 slot=108 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=54079199 submit_before_us=54379211 submit_after_us=54380211 finish_us=54382197
+
+CONTROL_BURST run_id=2101 slot=109 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=54579390 submit_before_us=54579401 submit_after_us=54579499 finish_us=54580198
+
+CONTROL_BURST run_id=2101 slot=109 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=54579391 submit_before_us=54879403 submit_after_us=54880403 finish_us=54883198
+
+CONTROL_BURST run_id=2101 slot=110 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=55079348 submit_before_us=55079360 submit_after_us=55079458 finish_us=55080199
+
+CONTROL_BURST run_id=2101 slot=110 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=55079349 submit_before_us=55379362 submit_after_us=55380362 finish_us=55383199
+
+CONTROL_BURST run_id=2101 slot=111 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=55579577 submit_before_us=55579589 submit_after_us=55579688 finish_us=55580205
+
+CONTROL_BURST run_id=2101 slot=111 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=55579578 submit_before_us=55879591 submit_after_us=55880596 finish_us=55883200
+
+CONTROL_BURST run_id=2101 slot=112 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=56079324 submit_before_us=56079336 submit_after_us=56079434 finish_us=56080201
+
+CONTROL_BURST run_id=2101 slot=112 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=56079325 submit_before_us=56379338 submit_after_us=56380341 finish_us=56383201
+
+CONTROL_BURST run_id=2101 slot=113 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=56579599 submit_before_us=56579611 submit_after_us=56579709 finish_us=56580202
+
+CONTROL_BURST run_id=2101 slot=113 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=56579600 submit_before_us=56879612 submit_after_us=56880613 finish_us=56883202
+
+CONTROL_BURST run_id=2101 slot=114 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=57079586 submit_before_us=57079597 submit_after_us=57079695 finish_us=57080203
+
+CONTROL_BURST run_id=2101 slot=114 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=57079587 submit_before_us=57379599 submit_after_us=57380600 finish_us=57383203
+
+CONTROL_BURST run_id=2101 slot=115 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=57579775 submit_before_us=57579786 submit_after_us=57579885 finish_us=57580204
+
+CONTROL_BURST run_id=2101 slot=115 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=57579776 submit_before_us=57879788 submit_after_us=57880790 finish_us=57883204
+
+CONTROL_BURST run_id=2101 slot=116 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=58079156 submit_before_us=58079168 submit_after_us=58079275 finish_us=58080205
+
+CONTROL_BURST run_id=2101 slot=116 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=58079157 submit_before_us=58379170 submit_after_us=58380174 finish_us=58382205
+
+CONTROL_BURST run_id=2101 slot=117 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=58579363 submit_before_us=58579374 submit_after_us=58579472 finish_us=58580206
+
+CONTROL_BURST run_id=2101 slot=117 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=58579364 submit_before_us=58879376 submit_after_us=58880377 finish_us=58883206
+
+CONTROL_BURST run_id=2101 slot=118 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=59079419 submit_before_us=59079430 submit_after_us=59079528 finish_us=59080207
+
+CONTROL_BURST run_id=2101 slot=118 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=59079420 submit_before_us=59379432 submit_after_us=59380434 finish_us=59383207
+
+CONTROL_BURST run_id=2101 slot=119 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=59579616 submit_before_us=59579627 submit_after_us=59579725 finish_us=59580208
+
+CONTROL_BURST run_id=2101 slot=119 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=59579617 submit_before_us=59879629 submit_after_us=59880629 finish_us=59883211
+
+CONTROL_COST_STATS run_id=2101 logical_slots=120 ble_tx_completed=120 ieee_tx_completed=120 burst_attempted=240 burst_started=240 burst_completed=240 separate_gap_us=0 reference=dma_software_brackets
+

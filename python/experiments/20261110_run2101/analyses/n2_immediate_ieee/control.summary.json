@@ -1,0 +1,60 @@
+{
+  "control_observations": 120,
+  "policy": "immediate",
+  "events": {
+    "decoded": 120,
+    "time_update_ignored": 111,
+    "accepted": 3,
+    "software_processed": 3,
+    "duplicate": 6
+  },
+  "reasons": {},
+  "engine": {
+    "side": "zigbee",
+    "run_id": 2101,
+    "current_sample": 360000000,
+    "task_status": {
+      "43": "processed",
+      "44": "processed",
+      "45": "processed"
+    },
+    "software_state": {
+      "2": 3
+    },
+    "software_triggers": [
+      {
+        "target_id": 2,
+        "arg": 7,
+        "local_sample": 135659520
+      }
+    ],
+    "time_model": null,
+    "deadline_policy": "not_evaluated_no_time_reference"
+  },
+  "foreign_run_ids": [],
+  "time_reference": "one_receiver_iq_sample_domain",
+  "progress_step_samples": 65536,
+  "progress_scope": "sample-domain replay; no host dispatch-time reconstruction",
+  "software_only": true,
+  "schema": "b2z_immediate_baseline_replay_v1",
+  "side": "zigbee",
+  "run_id": 2101,
+  "target_ids": [
+    2
+  ],
+  "sample_rate": 4000000,
+  "assumed_reference_bound_ms": null,
+  "assumption_status": "no time reference used; deadline and target-time checks not evaluated",
+  "generated_utc": "2026-11-10T08:04:36.407910+00:00",
+  "sources": {
+    "packets": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261110_run2101/captures/zigbee/154410_214683_78p7ymau/rx.packets.jsonl",
+    "packets_sha256": "ccde43c01ede09806f5fdde2a2cb4e34b7b6f3159e50e74397936bbfa56b22ce",
+    "receiver_summary": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261110_run2101/captures/zigbee/154410_214683_78p7ymau/rx.summary.json"
+  },
+  "limitations": [
+    "one receiver only; no cross-device execution error",
+    "software state/actions are sample-domain replay, not physical actuator events",
+    "sender planned timestamp is not calibrated RF start",
+    "immediate baseline does not schedule against execute_at_ms or evaluate runtime expiry"
+  ]
+}

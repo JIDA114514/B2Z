@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 import queue
@@ -147,6 +147,9 @@ def _board_stats(path: Path | None, run_id: int) -> dict | None:
 def _record_packet(events: list[dict], kind: str, packet: dict, detail: dict) -> None:
     events.append({"event": kind, "channel": packet["channel"],
                    "did": detail["did"], "pdu_hex": detail["pdu_hex"],
+                   "crc_ok": packet["crc_ok"],
+                   **({"crc_hex": bytes(packet["pdu"][-3:]).hex()}
+                      if len(packet["pdu"]) == len(bytes.fromhex(detail["pdu_hex"])) + 3 else {}),
                    **({"preamble_errors": packet["preamble_errors"]}
                       if "preamble_errors" in packet else {}),
                    **({"bit_alignment": packet["bit_alignment"]}
@@ -234,6 +237,7 @@ def verify_files(args) -> dict:
 
 def verify_live(args) -> dict:
     """Follow each valid primary immediately, then wait through its AuxPtr."""
+    start_utc = datetime.now(timezone.utc).isoformat()
     packet_queue: queue.Queue = queue.Queue()
     args.center_freq = ble_channel_freq_hz(args.primary_channel)
     args.keep_crc_errors = False
@@ -321,6 +325,7 @@ def verify_live(args) -> dict:
     counts["demod_crc_errors"] = tb.packet_sink.parser.crc_errors
     complete = paired == set(range(args.expected_attempts))
     return {"mode": "live_hop", "counts": dict(counts), "events": events,
+            "start_utc": start_utc, "end_utc": datetime.now(timezone.utc).isoformat(),
             "primary_dids": sorted(primary_dids), "secondary_dids": sorted(secondary_dids),
             "paired_dids": sorted(paired), "separate_runs": False,
             "primary_correct": primary_dids == set(range(args.expected_attempts)),
@@ -355,6 +360,7 @@ def write_results(args, result: dict) -> Path:
     summary.update(schema="board_std_ble_flow_v1", status="complete", run_id=args.run_id,
                    verification_passed=verification_passed(result),
                    command_id=args.command_id, expected_attempts=args.expected_attempts,
+                   expected_adva=args.expected_adva,
                    primary_channel=args.primary_channel,
                    secondary_channel=args.secondary_channel,
                    advertised_aux_offset_us=args.aux_offset_us,

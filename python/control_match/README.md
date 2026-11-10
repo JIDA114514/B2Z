@@ -107,3 +107,9 @@ python3 python/control_match/replay_engine.py \
 
 输出目录必须尚不存在；每次分析使用新目录名。1801 的结果见[立即处理基线报告](../experiments/20261109_run1801/analyses/immediate_baseline/report.md)。
 该轮还从原始 `rx.ci8` 各重新解调一次，再运行同一基线；新旧逐包流的 300 个槽号、命令号、包起始与可用样本位置完全一致。重新解调是同一物理录制的复核，不算新一轮实验。
+
+## N1 跨信道跟随记录联合分析
+
+`plan_analyze.py --ble-flow <flow.events.jsonl>` 可替代 `--ble-packets`，将 std_ble 实际跟随证据与独立 IEEE 包流、完整板端计划日志进行联合分析。两选项互斥；默认不会自动挑选 flow，避免混淆多轮采集。完整指令见 [N1 执行方案](../../doc/n1_cross_channel_experiment_plan.md)。
+
+新记录的 BLE CRC 与应用字段重新校验；旧格式只能保留验证器的 CRC 成功断言，缺少 UTC 录制窗口时拒绝跨端联合验收。UTC 窗口只用于检查两侧录制是否重叠。报告 `b2z_plan_match_v2` 增加 `ble_follow` 比率、缺失槽、本侧任务参数，以及逐槽 `ble_primary_valid`、`ble_followed`、`followed_joint_valid`；没有软件状态机观测的处理字段为 `null`、状态为 `not_measured`。不生成虚构的样本索引或同步执行精度。

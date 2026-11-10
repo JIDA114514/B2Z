@@ -10,8 +10,10 @@ from pathlib import Path
 import re
 
 try:
+    from .flow_input import load_flow
     from .analyze import SHARED_FIELDS, TASK_FIELDS, capture_interval, discover, read_side
 except ImportError:
+    from flow_input import load_flow
     from analyze import SHARED_FIELDS, TASK_FIELDS, capture_interval, discover, read_side
 
 
@@ -94,12 +96,16 @@ def load_side(path: Path, side: str, run_id: int, commands: set[int]) -> dict:
     if live and (live["side"], live["run_id"]) != (side, run_id):
         raise ValueError(f"{side}: live control summary identifies another run")
     return {"path": path, "by_slot": by_slot, "counts": counts,
-            "live": live, "live_path": summary_path if live else None}
+            "live": live, "live_path": summary_path if live else None,
+            "summary_path": path.with_name("rx.summary.json")}
 
 
 def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], list[dict]]:
     sides = {"ble": ble, "zigbee": zigbee}
     slot_rows = []
+    if "followed_slots" in ble:
+        if ble["expected_attempts"] != len(plan["slots"]) or ble["period_ms"] != int(plan["stats"]["period_ms"]):
+            raise ValueError("flow configuration differs from board plan")
     for slot, board in sorted(plan["slots"].items()):
         events = {side: data["by_slot"].get(slot) for side, data in sides.items()}
         for side, event in events.items():
@@ -113,6 +119,10 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
                "ble_valid": int(events["ble"] is not None),
                "zigbee_valid": int(events["zigbee"] is not None),
                "shared_fields_match": "" if shared_match is None else int(shared_match)}
+        row["ble_followed"] = int(slot in ble["followed_slots"]) if "followed_slots" in ble else None
+        row["ble_primary_valid"] = int(slot in ble["primary_slots"]) if "primary_slots" in ble else None
+        row["followed_joint_valid"] = (int(bool(row["ble_followed"] and row["zigbee_valid"] and shared_match))
+                                        if "followed_slots" in ble else None)
         slot_rows.append(row)
     tasks = []
     for board in plan["tasks"]:
@@ -127,6 +137,10 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
                 side_events["ble"][0]["record"][key] != side_events["zigbee"][0]["record"][key]
                 for key in TASK_FIELDS):
             raise ValueError(f"shared task fields disagree for command {command}")
+        for side, events in side_events.items():
+            keys = TASK_FIELDS + ("target_id", "opcode", "arg")
+            if events and any(any(e["record"].get(k) != events[0]["record"].get(k) for k in keys) for e in events):
+                raise ValueError(f"{side}: task fields change across repeats for {command}")
         live = {}
         for side, data in sides.items():
             live_rows = data["live"]["tasks"] if data["live"] else []
@@ -142,16 +156,26 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
                 "zigbee_first_valid_slot": min((r["record"]["slot_index"] for r in side_events["zigbee"]),
                                                default=""),
                 "joint_task_decoded": int(all(side_events.values())),
-                "ble_live_status": live["ble"]["status"] if live["ble"] else "not_decoded",
-                "zigbee_live_status": live["zigbee"]["status"] if live["zigbee"] else "not_decoded",
+                "ble_live_status": live["ble"]["status"] if live["ble"] else ("not_measured" if sides["ble"]["live"] is None else "not_decoded"),
+                "zigbee_live_status": live["zigbee"]["status"] if live["zigbee"] else ("not_measured" if sides["zigbee"]["live"] is None else "not_decoded"),
                 "ble_software_processed": int(bool(live["ble"] and live["ble"].get("processed_sample"))),
                 "zigbee_software_processed": int(bool(live["zigbee"] and live["zigbee"].get("processed_sample")))}
+        for side in sides:
+            task[f"{side}_command"] = ({k: side_events[side][0]["record"].get(k) for k in
+                                       ("target_id", "opcode", "arg", "execute_at_ms", "valid_until_ms")}
+                                      if side_events[side] else None)
+            if sides[side]["live"] is None:
+                task[f"{side}_software_processed"] = None
+        task["ble_followed_attempts"] = (sum(r["ble_followed"] for r in selected)
+                                           if "followed_slots" in ble else None)
+        task["joint_task_with_ble_follow"] = (int(bool(task["joint_task_decoded"] and task["ble_followed_attempts"]))
+                                               if "followed_slots" in ble else None)
         tasks.append(task)
     if any(r["shared_fields_match"] == 0 for r in slot_rows):
         raise ValueError("shared fields disagree in a jointly decoded slot")
     if any(slot not in plan["slots"] for data in sides.values() for slot in data["by_slot"]):
         raise ValueError("decoded slot is outside board plan")
-    summary = {"schema": "b2z_plan_match_v1", "run_id": int(plan["stats"]["run_id"]),
+    summary = {"schema": "b2z_plan_match_v2", "run_id": int(plan["stats"]["run_id"]),
                "planned_slots": len(slot_rows), "board_tx_completed": int(plan["stats"]["tx_completed"]),
                "planned_control_tasks": len(tasks),
                "ble_valid_attempts": sum(r["ble_valid"] for r in slot_rows),
@@ -162,12 +186,27 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
                "zigbee_only_attempts": sum(r["zigbee_valid"] and not r["ble_valid"] for r in slot_rows),
                "neither_attempts": sum(not r["ble_valid"] and not r["zigbee_valid"] for r in slot_rows),
                "joint_decoded_tasks": sum(r["joint_task_decoded"] for r in tasks),
-               "joint_software_processed_tasks": sum(r["ble_software_processed"] and
-                                                     r["zigbee_software_processed"] for r in tasks),
+               "joint_software_processed_tasks": sum(bool(r["ble_software_processed"] and
+                                                          r["zigbee_software_processed"]) for r in tasks),
                "board": plan["stats"], "tasks": tasks,
                "limitations": ["software processing is not physical actuator execution",
                                "independent IQ sample origins are not subtracted",
                                "DMA completion is a transmit proxy, not measured RF airtime"]}
+    if any(data["live"] is None for data in sides.values()):
+        summary["joint_software_processed_tasks"] = None
+    if "followed_slots" in ble:
+        n = len(ble["followed_slots"])
+        def ratio(num, den):
+            return {"numerator": num, "denominator": den, "value": num / den if den else None}
+        summary["ble_follow"] = {
+            "per_planned_slot": ratio(n, len(slot_rows)),
+            "per_valid_primary": ratio(n, len(ble["primary_slots"])),
+            "joint_same_slot": ratio(sum(r["followed_joint_valid"] for r in slot_rows), len(slot_rows)),
+            "joint_tasks_with_follow": ratio(sum(t["joint_task_with_ble_follow"] for t in tasks), len(tasks)),
+            "missing_primary_slots": sorted(set(plan["slots"]) - ble["primary_slots"]),
+            "missing_follow_slots": sorted(set(plan["slots"]) - ble["followed_slots"]),
+            "source_counts": ble["counts"]}
+        summary["limitations"].append("flow callback times are not IQ sample or RF timestamps; BLE scheduling not measured")
     return summary, slot_rows, tasks
 
 
@@ -184,23 +223,29 @@ def main() -> int:
     parser.add_argument("--experiment-dir", type=Path, required=True)
     parser.add_argument("--run-id", type=int, required=True)
     parser.add_argument("--board-log", type=Path)
-    parser.add_argument("--ble-packets", type=Path)
+    ble_source = parser.add_mutually_exclusive_group()
+    ble_source.add_argument("--ble-packets", type=Path)
+    ble_source.add_argument("--ble-flow", type=Path, help="std_ble flow.events.jsonl with sibling flow.summary.json")
     parser.add_argument("--zigbee-packets", type=Path)
     parser.add_argument("--analysis-id", default="plan_match")
     args = parser.parse_args()
     if Path(args.analysis_id).name != args.analysis_id or args.analysis_id in (".", ".."):
         parser.error("analysis-id must be one directory name")
-    paths = {"ble": args.ble_packets or discover(args.experiment_dir, "ble"),
+    paths = {"ble": args.ble_flow or args.ble_packets or discover(args.experiment_dir, "ble"),
              "zigbee": args.zigbee_packets or discover(args.experiment_dir, "zigbee")}
     if not all(paths.values()):
         parser.error("two complete receiver packet streams are required")
-    intervals = [capture_interval(p) for p in paths.values()]
+    flow = load_flow(args.ble_flow, args.run_id) if args.ble_flow else None
+    if flow is not None and flow["interval"] is None:
+        parser.error("legacy flow lacks capture UTC interval; usable for standalone review, not same-run joint verification")
+    intervals = [flow["interval"] if flow else capture_interval(paths["ble"]), capture_interval(paths["zigbee"])]
     if max(a for a, _ in intervals) >= min(b for _, b in intervals):
         parser.error("receiver capture intervals do not overlap")
     board_path = args.board_log or args.experiment_dir / "board.board.log"
     plan = read_plan(board_path, args.run_id)
     commands = {int(row["command_id"]) for row in plan["tasks"]}
-    sides = {side: load_side(path, side, args.run_id, commands) for side, path in paths.items()}
+    sides = {side: flow if side == "ble" and flow is not None else load_side(path, side, args.run_id, commands)
+             for side, path in paths.items()}
     summary, slot_rows, task_rows = summarize(plan, sides["ble"], sides["zigbee"])
     summary["sources"] = {"board": {"path": str(board_path.resolve()),
                                      "sha256": hashlib.sha256(board_path.read_bytes()).hexdigest()},
@@ -208,7 +253,7 @@ def main() -> int:
                                     "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
                              for side, path in paths.items()}}
     for side, data in sides.items():
-        for kind, path in (("receiver_summary", paths[side].with_name("rx.summary.json")),
+        for kind, path in (("receiver_summary", data["summary_path"]),
                            ("live_control_summary", data["live_path"])):
             if path is not None:
                 summary["sources"][f"{side}_{kind}"] = {
@@ -226,14 +271,19 @@ def main() -> int:
              f"- 同尝试联合有效解码：{summary['joint_valid_attempts']}/{summary['planned_slots']}",
              f"- 逐任务联合有效解析：{summary['joint_decoded_tasks']}/{len(task_rows)}" if task_rows else
              "- 逐任务联合有效解析：N/A（零任务）",
-             f"- 两侧软件处理事件均出现：{summary['joint_software_processed_tasks']}/{len(task_rows)}" if task_rows else
-             "- 两侧软件处理事件均出现：N/A（零任务）",
+             f"- 两侧软件处理事件均出现：{summary['joint_software_processed_tasks']}/{len(task_rows)}" if task_rows and summary["joint_software_processed_tasks"] is not None else
+             "- 两侧软件处理事件均出现：N/A（零任务或缺少软件处理观测）",
              "", "| Command ID | 计划发送 | BLE 有效 | IEEE 有效 | 同尝试双方有效 | 双方解析任务 | BLE/IEEE 实时状态 |",
              "|---:|---:|---:|---:|---:|---:|---|"]
     for row in task_rows:
         lines.append(f"| {row['command_id']} | {row['planned_attempts']} | {row['ble_valid_attempts']} | "
                      f"{row['zigbee_valid_attempts']} | {row['same_attempt_joint_valid']} | "
                      f"{row['joint_task_decoded']} | {row['ble_live_status']} / {row['zigbee_live_status']} |")
+    if "ble_follow" in summary:
+        lines += ["", "## BLE 跟随证据", ""]
+        for label, value in summary["ble_follow"].items():
+            if isinstance(value, dict) and "numerator" in value:
+                lines.append(f"- {label}：{value['numerator']}/{value['denominator']}" if value['denominator'] else f"- {label}：N/A（零分母）")
     lines += ["", "逐槽及逐任务数据见 [plan.slots.metrics.csv](plan.slots.metrics.csv)、[plan.tasks.metrics.csv](plan.tasks.metrics.csv) 和 [plan.summary.json](plan.summary.json)。",
               "软件处理事件不等于物理执行；两台 IQ 的独立采样零点未校准，不能由此计算执行时差。", ""]
     (output / "plan.report.md").write_text("\n".join(lines))

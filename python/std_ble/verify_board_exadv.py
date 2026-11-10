@@ -72,7 +72,8 @@ def validate_secondary(packet: dict, args) -> dict:
     ext = packet["ext"]
     if not packet["crc_ok"] or packet["channel"] != args.secondary_channel:
         raise ValueError("secondary_crc_or_rf_channel")
-    if (len(pdu) != 226 or pdu[0] != 0x47 or pdu[1] != 224 or
+    payload_len, manufacturer_len = ((52, 37) if getattr(args, "payload_mode", "joint") == "ble-only" else (224, 209))
+    if (len(pdu) != payload_len + 2 or pdu[0] != 0x47 or pdu[1] != payload_len or
             packet["kind"] != "secondary" or ext.get("adv_mode") != 0 or
             ext.get("ext_hdr_len") != 9 or ext.get("flags") != 0x09 or
             ext.get("aux_ptr") is not None or
@@ -84,7 +85,7 @@ def validate_secondary(packet: dict, args) -> dict:
             ad[1][0] != 0xff):
         raise ValueError("secondary_ad_structure")
     manufacturer = bytes(ad[1][1])
-    if len(manufacturer) != 209 or manufacturer[:2] != b"\xff\xff":
+    if len(manufacturer) != manufacturer_len or manufacturer[:2] != b"\xff\xff":
         raise ValueError("manufacturer_length_or_id")
     record = control_record(manufacturer[2:37])
     if (sid != 0 or did != (record["slot_index"] & 0x0fff) or
@@ -342,7 +343,7 @@ def verification_passed(result: dict) -> bool:
 
 def write_results(args, result: dict) -> Path:
     board = _board_stats(args.board_log, args.run_id)
-    if board and (board.get("rf_mode") != "standard_secondary_ch3" or
+    if board and (board.get("rf_mode") != ("separate_secondary_ch3" if args.payload_mode == "ble-only" else "standard_secondary_ch3") or
                   board.get("aux_channel") != str(args.secondary_channel) or
                   board.get("aux_offset_us") != str(args.aux_offset_us) or
                   board.get("period_ms") != str(args.period_ms) or
@@ -360,7 +361,7 @@ def write_results(args, result: dict) -> Path:
     summary.update(schema="board_std_ble_flow_v1", status="complete", run_id=args.run_id,
                    verification_passed=verification_passed(result),
                    command_id=args.command_id, expected_attempts=args.expected_attempts,
-                   expected_adva=args.expected_adva,
+                   expected_adva=args.expected_adva, payload_mode=args.payload_mode,
                    primary_channel=args.primary_channel,
                    secondary_channel=args.secondary_channel,
                    advertised_aux_offset_us=args.aux_offset_us,
@@ -411,6 +412,8 @@ def parse_args(argv=None):
     parser.add_argument("--command-id", type=int, default=None)
     parser.add_argument("--expected-attempts", type=int, default=10)
     parser.add_argument("--period-ms", type=int, default=500)
+    parser.add_argument("--payload-mode", choices=("joint", "ble-only"), default="joint",
+                        help="explicit secondary wire format; BLE-only is the N2 separate baseline")
     parser.add_argument("--primary-channel", type=int, default=39)
     parser.add_argument("--secondary-channel", type=int, default=3)
     parser.add_argument("--aux-offset-us", type=int, default=300000)

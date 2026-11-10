@@ -24,12 +24,12 @@ class BoardBleFlowTests(unittest.TestCase):
     def tearDownClass(cls):
         ControlGeneratorTests.tearDownClass()
 
-    def board_pdus(self, slot):
+    def board_pdus(self, slot, mode=1):
         packet = Packet(1904, slot, slot * 500, 500, 43, 5000, 4500,
                         1, 1, 1, 2, 1, 1)
         library = ControlGeneratorTests.lib
         self.assertEqual(library.ble_exadv_secondary_gen_build_control_mode(
-            ctypes.byref(packet), 1), 0)
+            ctypes.byref(packet), mode), 0)
         meta = library.ble_exadv_secondary_gen_get_last_meta().contents
         return (read_bytes(meta.primary_pdu, meta.primary_pdu_len),
                 read_bytes(meta.pdu, meta.pdu_len))
@@ -51,6 +51,20 @@ class BoardBleFlowTests(unittest.TestCase):
             self.assertEqual(parser.crc_errors, 0)
             self.assertEqual(validator(decoded[0], args)["did"], 0)
         self.assertEqual(len(secondary), 226)
+
+    def test_ble_only_follow_shape_requires_explicit_format(self):
+        primary, secondary = self.board_pdus(0, 2)
+        args = SimpleNamespace(run_id=1904, command_id=43, expected_attempts=2,
+                               period_ms=500, primary_channel=39, secondary_channel=3,
+                               aux_offset_us=300000, expected_adva="C1:A2:A3:A4:A5:A6",
+                               payload_mode="ble-only")
+        parser = BleStreamParser(3)
+        parser.insert_data(bytes.fromhex("aad6be898e") + whiten(secondary + crc24(secondary), 3))
+        packet = parser.poll()[0]
+        self.assertEqual(validate_secondary(packet, args)["encoded_ieee_bytes"], 0)
+        args.payload_mode = "joint"
+        with self.assertRaisesRegex(ValueError, "secondary_pdu_shape"):
+            validate_secondary(packet, args)
 
     def test_stream_parser_recovers_crc_valid_frame_with_preamble_errors_and_bit_shift(self):
         _, secondary = self.board_pdus(0)

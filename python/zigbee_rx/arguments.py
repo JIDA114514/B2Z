@@ -35,6 +35,8 @@ def parse_args(argv=None, *, control_mode=False):
     p.add_argument("--preamble-max-distance", type=int, help="max errors over 8 preamble symbols")
     p.add_argument("--run-id", type=int, help="Run ID filter, after PHY decoding only")
     if control_mode:
+        p.add_argument("--control-layout", choices=("joint", "separate"), default="joint",
+                       help="separate IEEE preamble has no joint 472 us reference offset")
         p.add_argument("--command-id", type=int,
                        help="optional B2 43 command ID filter; omit for a multi-task run")
         p.add_argument("--control-target-id", type=int, action="append",
@@ -60,6 +62,8 @@ def parse_args(argv=None, *, control_mode=False):
     resolve_input_defaults(a)
     validate_output_arguments(p, a)
     try:
+        if control_mode and a.control_layout == "separate" and a.control_target_id:
+            raise ValueError("separate layout supports decoding/immediate replay only, not scheduled control")
         frequency = channel_frequency(a.channel)
         if a.center_hz is None:
             a.center_hz = frequency

@@ -31,7 +31,7 @@ def extract_ble(packet: dict) -> bytes | None:
             continue
         data = bytes.fromhex(ad["data_hex"])
         if data[2:4] == b"\xb2\x43":
-            if packet.get("pdu_length") != 224 or len(data) != 209:
+            if (packet.get("pdu_length"), len(data)) not in ((224, 209), (52, 37)) or data[:2] != b"\xff\xff":
                 raise ValueError("control_wire_budget")
             return data[2:37]
     return None
@@ -79,10 +79,12 @@ def read_side(path: Path, side: str, run_id: int, command_id: int) -> dict:
             slot = record["slot_index"]
             event = {"record": record, "packet_no": packet.get("packet_no"),
                      "sample_start": packet.get("sample_start"),
+                     "available_sample": packet.get("available_sample"),
+                     "wire_format": ("ble-only" if packet.get("pdu_length") == 52 else "joint") if side == "ble" else None,
                      "sample_time_s": packet.get("sample_time_s"), "line_no": line_no}
             if slot in by_slot:
                 counts["duplicates"] += 1
-                if record != by_slot[slot]["record"]:
+                if record != by_slot[slot]["record"] or event["wire_format"] != by_slot[slot]["wire_format"]:
                     raise ValueError(f"conflicting {side} records at slot {slot}")
             else:
                 by_slot[slot] = event

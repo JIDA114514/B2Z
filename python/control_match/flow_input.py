@@ -20,6 +20,7 @@ def load_flow(path: Path, run_id: int) -> dict:
         raise ValueError('flow must be a complete same-run live hop capture')
     args = SimpleNamespace(**{k: summary[k] for k in
         ('run_id', 'command_id', 'expected_attempts', 'period_ms', 'primary_channel', 'secondary_channel')})
+    args.payload_mode = summary.get('payload_mode', 'joint')
     args.aux_offset_us = summary['advertised_aux_offset_us']
     args.expected_adva = summary.get('expected_adva', 'C1:A2:A3:A4:A5:A6')
     primary, followed, by_slot = set(), set(), {}
@@ -64,7 +65,7 @@ def load_flow(path: Path, run_id: int) -> dict:
                     counts['duplicates'] += 1
                     if by_slot[slot]['record'] != record:
                         raise ValueError('conflicting flow records')
-                by_slot[slot] = {'record': record, 'line_no': line_no,
+                by_slot[slot] = {'record': record, 'wire_format': args.payload_mode, 'line_no': line_no,
                                  'sample_start': None, 'sample_time_s': None}
         elif kind == 'followed_event':
             did = row['did']

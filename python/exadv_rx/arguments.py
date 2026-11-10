@@ -41,6 +41,8 @@ def parse_args(argv=None):
     add_output_arguments(parser)
     parser.add_argument("--quiet", action=argparse.BooleanOptionalAction, help="only periodic status and final summary")
     parser.add_argument("--run-id", type=int, help="experiment Run ID for archiving only; BLE payload is not filtered")
+    parser.add_argument("--control-layout", choices=("joint", "separate"), default="joint",
+                        help="N2 separate captures are decode-only; no shared RF epoch")
     parser.add_argument("--control-target-id", type=int, action="append",
                         help="enable B2 43 software-control processing for this node/group ID; repeatable")
     parser.add_argument("--control-sender-id", default="configured_board")
@@ -52,6 +54,8 @@ def parse_args(argv=None):
     resolve_input_defaults(args)
     validate_output_arguments(parser, args)
     try:
+        if args.control_layout == "separate" and args.control_target_id:
+            raise ValueError("separate layout supports decoding/immediate replay only, not scheduled control")
         args.channels = [int(value) for value in args.channels.split(",")]
         if not args.channels or len(set(args.channels)) != len(args.channels):
             raise ValueError("channels must be nonempty and distinct")

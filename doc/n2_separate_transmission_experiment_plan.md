@@ -20,7 +20,7 @@ A 复用现有 BlueBee 波形生成能力，但需要新增 B2 43 控制发送�
 
 保持两侧 35 B 控制记录、Flags AD、Company ID、AdvA/ADI 和 LE 1M 条件。A 的 BLE secondary 删除 172 B BlueBee 区域，不保留无意义填充。单独 IEEE 数据为 43 B PHY 帧，其中 35 B 控制记录、2 B FCS，以及 6 B PHY 前缀；BlueBee 映射为 172 B BLE 比特字节。
 
-| 项目 | 共包 B/C | 分别发送 A（拟实现） |
+| 项目 | 共包 B/C | 分别发送 A（已实现，待实测） |
 | --- | ---: | ---: |
 | primary 有效波形 | 136 µs | 136 µs |
 | BLE secondary PDU payload | 224 B | 52 B |
@@ -54,7 +54,7 @@ A 复用现有 BlueBee 波形生成能力，但需要新增 B2 43 控制发送�
 
 两块 HackRF 接收相同任务，不能同时要求同一块设备既固定接收又跟随。固定频点 BLE 用 exadv_rx，IEEE 用 control_receive；实际跟随用 std_ble。BLE-only 格式解析需先适配，现有 224 B 固定检查不能直接放行新格式。固定频点采样率首轮采用两侧 4 Msps，参照既有独立录制条件；若质检不通过，先修正接收条件并统一重采 A/B，不能只优化某一组。跟随模式仍用已验证的 BLE 8 Msps、IEEE 4 Msps，单列配置差异。
 
-采集覆盖板端启动前后，默认 90 s。每次先核对两块设备序列号，再启动接收，最后启动板端。当前仅共包 b2z_plan_start 已可用；2102/2103 的新发送入口尚未实现，本文件不提供可被误认为已经支持的新串口命令。
+采集覆盖板端启动前后，默认 90 s。每次先核对两块设备序列号，再启动接收，最后启动板端。模式 2 已完成软件实现；新命令、采集参数及分析入口见第 7 节，仍需用户构建上板。
 
 ## 4. 必须先实现的软件与固件
 
@@ -84,4 +84,144 @@ B/C 先使用完全相同的独立逐包输入。无参考界时 C 的拒绝是�
 
 满足功能和成本初验后可进入 N3/N4/N5；同步效果与尾部可靠性未测部分继续登记。最终主要配置至少三轮独立重复，交替 A/B 顺序；如后续改变发射格式或接收算法，最终对照需使用冻结后的同版本重测。
 
-最近一步：先设计并实现 A 的单 SDR 分别发送模式、明确 BLE-only 格式与逐突发日志，再适配接收和分析器。现阶段无需先补 N1 的重复轮次。
+最近一步：按第 7 节构建并上板，先完成 2101/2102 公平对照与 2103 BLE-only 跟随初验。现阶段无需先补 N1 的重复轮次。
+
+## 7. 已实现接口与首轮执行指令（2026-11-10）
+
+软件实现已完成主机验证，尚未上板验证。此次修改后需重新构建固件；`app_FreeRTOS/app/` 的四个改动文件已同步到 SDK 的 `app/src/app/`。旧性能命令与控制模式 0/1 保持兼容。
+
+### 7.1 板端接口
+
+`b2z_plan_start? <run_id> <period_ms> [rf_mode]` 以及 `b2z_control_start?` 的末尾参数新增 `2`：
+
+| rf_mode | 发送行为 |
+| --- | --- |
+| 0 | 原同频诊断共包，保留 |
+| 1 | ch39 primary → ch3 共包 secondary，保留 |
+| 2 | ch39 primary → ch3 BLE-only secondary → 2410 MHz 独立 BlueBee |
+
+模式 1/2 周期至少 500 ms，AuxOffset 均为 300 ms。模式 2 两份数据波形在 primary 发送前准备完毕，BLE secondary DMA 完成后至少等待 1000 µs，再提交独立 BlueBee；这是软件保护间隔，不是已校准 RF 静默时长。每个突发均包含 10 µs 标称零样本尾部，没有旧 pure 生成器的长前置 padding。前级失败时跳过本槽后续突发；IEEE 失败保留已完成的 BLE 记录，不在槽内偷偷重试。
+
+将第 3 节任务清单逐条输入串口（与 N1 相同）：
+
+```text
+b2z_plan_clear?
+b2z_plan_add? 0 20 0 0
+b2z_plan_add? 43 3 20000 15000 1 1 1 2 1 1
+b2z_plan_add? 0 37 0 0
+b2z_plan_add? 44 3 40000 35000 1 1 2 2 2 7
+b2z_plan_add? 0 37 0 0
+b2z_plan_add? 45 3 60000 55000 1 2 9 2 1 3
+b2z_plan_add? 0 17 0 0
+```
+
+### 7.2 固定频点采集：先 2101，再 2102
+
+以下从仓库根目录执行，先运行 `hackrf_info` 核对序列号。两轮维持接线、功率、衰减与增益一致。每轮两终端各运行一条命令，接收已启动后才发板端启动命令。90 s 时长从接收进程开始计，尽量在 10 s 内启动两侧，随后 5 s 内启动板端。
+
+2101 BLE：
+
+```bash
+python3 python/exadv_rx/receive.py --run-id 2101 --channels 3 \
+  --serial 000000000000000017c467dc2926a0c3 \
+  --sample-rate 4000000 --lna 16 --vga 10 --duration 90 --save-iq --quiet
+```
+
+2101 IEEE：
+
+```bash
+python3 python/zigbee_rx/control_receive.py --run-id 2101 --channel 12 \
+  --serial 000000000000000017c467dc3348a6c3 \
+  --sample-rate 4000000 --lna 16 --vga 10 --expected-packets 120 \
+  --duration 90 --save-iq --quiet
+```
+
+随后串口输入 `b2z_plan_start? 2101 500 1`。本轮不启用在线定时处理，B/C 使用同一份接收结果离线回放。
+
+2102 BLE：
+
+```bash
+python3 python/exadv_rx/receive.py --run-id 2102 --channels 3 --control-layout separate \
+  --serial 000000000000000017c467dc2926a0c3 \
+  --sample-rate 4000000 --lna 16 --vga 10 --duration 90 --save-iq --quiet
+```
+
+2102 IEEE：
+
+```bash
+python3 python/zigbee_rx/control_receive.py --run-id 2102 --channel 12 --control-layout separate \
+  --serial 000000000000000017c467dc3348a6c3 \
+  --sample-rate 4000000 --lna 16 --vga 10 --expected-packets 120 \
+  --duration 90 --save-iq --quiet
+```
+
+随后串口输入 `b2z_plan_start? 2102 500 2`。两侧都省略 `--command-id`，不能只保留某一个命令。`--control-layout separate` 记录波形布局并禁止启动共包定时处理；分别发送的 IEEE 起点不沿用共包的 472 µs 补偿。离线立即处理可用，分别发送的 scheduled 回放会被拒绝。
+
+日志目录依据当天日期与 run_id 自动创建，无需 EXP_DIR。完整串口日志放在对应实验目录的 `board.board.log`，不要在出现 `CONTROL_PLAN_STATS` 后立即停止保存：还要保存 7 条 TASK、120 条 SLOT、模式 1 的 240 条/模式 2 的 360 条 `CONTROL_BURST` 以及最后的 `CONTROL_COST_STATS`。新增日志在 RF 调度结束后输出，串口传输可能持续数秒。
+
+### 7.3 逐槽联合分析和成本
+
+日期按实际实验日修改。每轮只有一份完整 BLE 与 IEEE 采集时，分析器自动发现包文件；有多个候选则显式指定 `--ble-packets` 和 `--zigbee-packets`，不自动选最新。
+
+```bash
+python3 python/control_match/plan_analyze.py \
+  --experiment-dir python/experiments/20261110_run2101 --run-id 2101 --analysis-id n2_joint
+python3 python/control_match/plan_analyze.py \
+  --experiment-dir python/experiments/20261110_run2102 --run-id 2102 --analysis-id n2_separate
+```
+
+输出 `plan.report.md`、`plan.summary.json`、`plan.slots.metrics.csv`、`plan.tasks.metrics.csv` 和新增 `plan.bursts.csv`。历史日志没有突发观测时成本为未测；模式 2 缺少完整突发清单会拒绝分析。旧 `tx_completed` 明确保留 BLE secondary DMA 完成语义，IEEE 完成数来自独立突发记录。两侧有效命令也与新增 TASK 中的目标、操作和参数核对。
+
+`CONTROL_BURST` 的时间字段单位为 µs、原点为本轮板端软件运行起点：`prepared_us` 为全部波形准备完成后的记录点，`submit_before_us`/`submit_after_us` 包围 DMA 启动调用，`finish_us` 为轮询返回点。未提交时对应字段为 0，须结合状态字段解释。`generated/attempted/started/completed/timeout` 区分准备、调用、成功返回、轮询完成和超时；没有对应波形生成时长度为 0。`iq_bytes` 为完整 DMA 缓冲长度，`air_us` 为标称有效调制长度，`pad_us` 为标称零样本长度。
+
+成本按成功提交的整段波形核算，DMA 超时仍计入；失败提交另计 attempted 预算，实际发出了多少保持未知。所有时间更新、重发与失败保留，成功任务为零时单位成本为 `N/A`。本侧解码可用延迟在 JSON 中单列，不能作跨机完成时延。输入文件哈希和分析代码版本写入 JSON，运行固件的构建版本需人工保存，不能由主机当前 Git HEAD 推断。
+
+### 7.4 同输入 B/C 回放
+
+将以下包路径替换为 2101 本轮的实际文件。先对 BLE 执行：
+
+```bash
+python3 python/control_match/replay_engine.py \
+  --packets <2101_BLE_rx.packets.jsonl> --side ble --run-id 2101 --target-id 1 \
+  --policy immediate --output-dir python/experiments/20261110_run2101/analyses/n2_immediate_ble
+python3 python/control_match/replay_engine.py \
+  --packets <2101_BLE_rx.packets.jsonl> --side ble --run-id 2101 --target-id 1 \
+  --policy scheduled --output-dir python/experiments/20261110_run2101/analyses/n2_scheduled_ble
+```
+
+IEEE 两次回放使用 IEEE 文件、`--side zigbee --target-id 2`，输出目录分别为 `n2_immediate_ieee` 和 `n2_scheduled_ieee`。不要填写假设参考误差界来获取通过。无参考界时 scheduled 拒绝执行符合预期；这不是同步收益结论。A 组如需软件处理记录，仅运行 `--policy immediate`，run_id 改为 2102。
+
+### 7.5 跨轮比较
+
+建立 `python/experiments/n2.conditions.json`，按实际填写两轮的条件，不能将模板内容作为实测：
+
+```json
+{
+  "joint": {"topology": "TODO", "tx_power": "TODO", "firmware_build": "TODO", "attenuation": "TODO"},
+  "separate": {"topology": "TODO", "tx_power": "TODO", "firmware_build": "TODO", "attenuation": "TODO"}
+}
+```
+
+```bash
+python3 python/control_match/compare_n2.py \
+  --joint-summary python/experiments/20261110_run2101/analyses/n2_joint/plan.summary.json \
+  --separate-summary python/experiments/20261110_run2102/analyses/n2_separate/plan.summary.json \
+  --conditions python/experiments/n2.conditions.json \
+  --output-dir python/experiments/n2_comparison_2101_2102
+```
+
+输出比较 Markdown/JSON，核对任务、周期、接收参数和人工记录的 RF 条件。未填写/不一致项保留列出；不会把低发送完成率造成的成本下降算成效率提升。仅核对已记录条件，不代表所有环境因素受控。
+
+### 7.6 2103 BLE-only 实际跟随
+
+使用与 2102 相同板端任务，IEEE 固定接收命令中的 run_id 改为 2103；BLE 改用以下命令。先核对 `hackrf=0` 确为 BLE 设备，否则替换索引：
+
+```bash
+python3 python/std_ble/verify_board_exadv.py \
+  --run-id 2103 --expected-attempts 120 --period-ms 500 --payload-mode ble-only \
+  --osmosdr-args hackrf=0 --sample-rate 8000000 --if-gain 16 --bb-gain 10 --duration 90
+```
+
+串口启动 `b2z_plan_start? 2103 500 2`。分析调用 `plan_analyze.py --run-id 2103 --experiment-dir <2103目录> --ble-flow <flow.events.jsonl> --zigbee-packets <IEEE_rx.packets.jsonl> --analysis-id n2_separate_follow`。不把这一轮与固定频点两轮合为同配置比较。
+
+主机验证覆盖：C 生成的 BLE-only IQ 恢复、独立 BlueBee IQ 的 IEEE FCS/应用记录恢复、格式误用拒绝、任务重发关联、单侧 DMA 失败、缺失/重复日志、成本分母和零成功。ARM GCC 只作语法检查，真实调度、RF 接收和 BLE 跟随仍须上述上板实验确认。

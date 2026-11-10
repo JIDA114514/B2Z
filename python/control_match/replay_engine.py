@@ -43,6 +43,8 @@ def replay_records(rows: list[dict], config: EngineConfig, total_samples: int,
             raise ValueError(f"packet row {line_no}: {exc}") from exc
         if payload is None:
             continue
+        if policy == "scheduled" and config.side == "ble" and packet.get("pdu_length") == 52:
+            raise ValueError("BLE-only separate layout does not support the joint scheduled reference")
         if "available_sample" not in packet:
             raise ValueError(f"packet row {line_no}: missing available_sample; replay saved IQ")
         if packet["available_sample"] > total_samples:
@@ -103,6 +105,8 @@ def main(argv=None) -> int:
         parser.error("receiver capture must have completed")
     if receiver.get("counts", {}).get("samples_processed") is None:
         parser.error("receiver summary has no processed sample count")
+    if receiver.get("config", {}).get("control_layout") == "separate" and args.policy == "scheduled":
+        parser.error("separate layout has no shared RF epoch; use immediate replay")
     sample_rate = receiver.get("config", {}).get("sample_rate")
     if not isinstance(sample_rate, int):
         parser.error("receiver summary has no integer sample rate")

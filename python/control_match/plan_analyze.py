@@ -8,12 +8,15 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 
 try:
     from .flow_input import load_flow
+    from .burst_cost import read_bursts, cost_summary
     from .analyze import SHARED_FIELDS, TASK_FIELDS, capture_interval, discover, read_side
 except ImportError:
     from flow_input import load_flow
+    from burst_cost import read_bursts, cost_summary
     from analyze import SHARED_FIELDS, TASK_FIELDS, capture_interval, discover, read_side
 
 
@@ -74,12 +77,15 @@ def read_plan(path: Path, run_id: int) -> dict:
         if completed not in (0, 1):
             raise ValueError(f"invalid per-slot DMA completion at {slot}")
         by_slot[slot]["board_tx_completed"] = completed
+        by_slot[slot]["board_primary_completed"] = int(row["primary_completed"])
+        by_slot[slot]["board_generated"] = int(row["generated"])
     for metric in ("generated", "primary_completed", "tx_completed", "deadline_miss", "dma_timeout"):
         if sum(int(r[metric]) for r in slots) != int(stats[metric]):
             raise ValueError(f"board per-slot {metric} total disagrees with final stats")
         if sum(int(r[metric]) for r in tasks) != int(stats[metric]):
             raise ValueError(f"board per-task {metric} total disagrees with final stats")
-    return {"stats": stats, "tasks": tasks, "slots": by_slot}
+    bursts = read_bursts(matching, stats, by_slot)
+    return {"stats": stats, "tasks": tasks, "slots": by_slot, "bursts": bursts}
 
 
 def load_side(path: Path, side: str, run_id: int, commands: set[int]) -> dict:
@@ -95,7 +101,9 @@ def load_side(path: Path, side: str, run_id: int, commands: set[int]) -> dict:
     live = json.loads(summary_path.read_text(encoding="utf-8")) if summary_path.exists() else None
     if live and (live["side"], live["run_id"]) != (side, run_id):
         raise ValueError(f"{side}: live control summary identifies another run")
-    return {"path": path, "by_slot": by_slot, "counts": counts,
+    receiver_path = path.with_name("rx.summary.json")
+    receiver = json.loads(receiver_path.read_text()) if receiver_path.exists() else {}
+    return {"receiver_config": receiver.get("config", {}), "path": path, "by_slot": by_slot, "counts": counts,
             "live": live, "live_path": summary_path if live else None,
             "summary_path": path.with_name("rx.summary.json")}
 
@@ -109,6 +117,10 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
     for slot, board in sorted(plan["slots"].items()):
         events = {side: data["by_slot"].get(slot) for side, data in sides.items()}
         for side, event in events.items():
+            if side == "ble" and event and event.get("wire_format") is not None:
+                expected = "ble-only" if plan["stats"].get("rf_mode") == "separate_secondary_ch3" else "joint"
+                if event["wire_format"] != expected:
+                    raise ValueError("BLE wire format disagrees with board RF mode")
             if event and event["record"]["command_id"] != board["command_id"]:
                 raise ValueError(f"{side}: decoded command disagrees with board at slot {slot}")
         shared_match = (all(events["ble"]["record"][key] == events["zigbee"]["record"][key]
@@ -119,6 +131,8 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
                "ble_valid": int(events["ble"] is not None),
                "zigbee_valid": int(events["zigbee"] is not None),
                "shared_fields_match": "" if shared_match is None else int(shared_match)}
+        for side, metric in (("ble", "board_ble_tx_completed"), ("ieee", "board_ieee_tx_completed")):
+            row[metric] = board.get(metric, board["board_tx_completed"])
         row["ble_followed"] = int(slot in ble["followed_slots"]) if "followed_slots" in ble else None
         row["ble_primary_valid"] = int(slot in ble["primary_slots"]) if "primary_slots" in ble else None
         row["followed_joint_valid"] = (int(bool(row["ble_followed"] and row["zigbee_valid"] and shared_match))
@@ -139,6 +153,12 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
             raise ValueError(f"shared task fields disagree for command {command}")
         for side, events in side_events.items():
             keys = TASK_FIELDS + ("target_id", "opcode", "arg")
+            expected_keys = {"target_id": f"{side}_target", "opcode": f"{side}_opcode",
+                             "arg": f"{side}_arg", "execute_at_ms": "execute_at_ms", "valid_until_ms": "valid_until_ms"}
+            for event in events:
+                if any(key in board and event["record"][field] != int(board[key])
+                       for field, key in expected_keys.items()):
+                    raise ValueError(f"{side}: decoded task differs from board plan for {command}")
             if events and any(any(e["record"].get(k) != events[0]["record"].get(k) for k in keys) for e in events):
                 raise ValueError(f"{side}: task fields change across repeats for {command}")
         live = {}
@@ -166,6 +186,8 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
                                       if side_events[side] else None)
             if sides[side]["live"] is None:
                 task[f"{side}_software_processed"] = None
+        for side in ("ble", "ieee"):
+            task[f"board_{side}_tx_completed"] = sum(r[f"board_{side}_tx_completed"] for r in selected)
         task["ble_followed_attempts"] = (sum(r["ble_followed"] for r in selected)
                                            if "followed_slots" in ble else None)
         task["joint_task_with_ble_follow"] = (int(bool(task["joint_task_decoded"] and task["ble_followed_attempts"]))
@@ -189,6 +211,10 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
                "joint_software_processed_tasks": sum(bool(r["ble_software_processed"] and
                                                           r["zigbee_software_processed"]) for r in tasks),
                "board": plan["stats"], "tasks": tasks,
+               "planned_task_manifest": [{k: row.get(k) for k in (
+                   "command_id", "first_slot", "repeats", "execute_at_ms", "valid_until_ms",
+                   "ble_target", "ble_opcode", "ble_arg", "zigbee_target", "zigbee_opcode", "zigbee_arg")}
+                   for row in plan["tasks"]],
                "limitations": ["software processing is not physical actuator execution",
                                "independent IQ sample origins are not subtracted",
                                "DMA completion is a transmit proxy, not measured RF airtime"]}
@@ -207,6 +233,19 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
             "missing_follow_slots": sorted(set(plan["slots"]) - ble["followed_slots"]),
             "source_counts": ble["counts"]}
         summary["limitations"].append("flow callback times are not IQ sample or RF timestamps; BLE scheduling not measured")
+    summary["receiver_configs"] = {side: data.get("receiver_config") for side, data in sides.items()}
+    summary["local_decode_availability"] = {}
+    for side, data in sides.items():
+        rate = (data.get("receiver_config") or {}).get("sample_rate")
+        delays = [(e["available_sample"] - e["sample_start"]) * 1e6 / rate
+                  for e in data["by_slot"].values() if rate and e.get("available_sample") is not None
+                  and e.get("sample_start") is not None and e["available_sample"] >= e["sample_start"]]
+        summary["local_decode_availability"][side] = {
+            "samples": len(delays), "missing": len(data["by_slot"]) - len(delays),
+            "min_us": min(delays) if delays else None, "max_us": max(delays) if delays else None,
+            "mean_us": sum(delays) / len(delays) if delays else None,
+            "scope": "own IQ packet start to decoder availability; block quantized, not host processing or cross-device completion latency"}
+    summary["waveform_cost"] = cost_summary(plan["bursts"], summary["joint_decoded_tasks"]) if plan.get("bursts") else None
     return summary, slot_rows, tasks
 
 
@@ -247,6 +286,12 @@ def main() -> int:
     sides = {side: flow if side == "ble" and flow is not None else load_side(path, side, args.run_id, commands)
              for side, path in paths.items()}
     summary, slot_rows, task_rows = summarize(plan, sides["ble"], sides["zigbee"])
+    summary["analysis_version"] = {
+        "git_head": subprocess.run(["git", "rev-parse", "HEAD"], cwd=Path(__file__).resolve().parent,
+                                   capture_output=True, text=True).stdout.strip(),
+        "module_sha256": {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
+                          for name in ("plan_analyze.py", "burst_cost.py", "analyze.py", "flow_input.py")},
+        "board_firmware_version": "not_inferred_from_host_checkout"}
     summary["sources"] = {"board": {"path": str(board_path.resolve()),
                                      "sha256": hashlib.sha256(board_path.read_bytes()).hexdigest()},
                           **{side: {"path": str(path.resolve()),
@@ -262,10 +307,12 @@ def main() -> int:
     if output.exists():
         parser.error(f"output already exists: {output}")
     output.mkdir(parents=True)
+    if plan.get("bursts"):
+        write_csv(output / "plan.bursts.csv", plan["bursts"]["rows"])
     write_csv(output / "plan.slots.metrics.csv", slot_rows)
     write_csv(output / "plan.tasks.metrics.csv", task_rows)
     (output / "plan.summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n")
-    lines = ["# 多任务共包联合分析", "",
+    lines = ["# 多任务双端联合分析", "",
              f"- Run ID：{args.run_id}；计划控制任务：{len(task_rows)}；板端 secondary DMA 完成：{summary['board_tx_completed']}/{summary['planned_slots']}",
              f"- BLE / IEEE 有效解码尝试：{summary['ble_valid_attempts']}/{summary['planned_slots']} / {summary['zigbee_valid_attempts']}/{summary['planned_slots']}",
              f"- 同尝试联合有效解码：{summary['joint_valid_attempts']}/{summary['planned_slots']}",
@@ -279,6 +326,15 @@ def main() -> int:
         lines.append(f"| {row['command_id']} | {row['planned_attempts']} | {row['ble_valid_attempts']} | "
                      f"{row['zigbee_valid_attempts']} | {row['same_attempt_joint_valid']} | "
                      f"{row['joint_task_decoded']} | {row['ble_live_status']} / {row['zigbee_live_status']} |")
+    if summary["waveform_cost"] is not None:
+        cost = summary["waveform_cost"]
+        unit = cost["per_joint_decoded_task"]["value_us"]
+        lines += ["", "## 按提交波形长度核算的成本（非实测 RF 占用）", "",
+                  f"- 模式：{cost['mode']}；BLE/IEEE DMA 完成：{cost['ble_tx_completed']}/{cost['logical_slots']}、{cost['ieee_tx_completed']}/{cost['logical_slots']}",
+                  f"- 突发提交尝试/成功/完成：{cost['burst_attempted']}/{cost['burst_started']}/{cost['burst_completed']}；发送程度不确定：{cost['uncertain_bursts']}",
+                  f"- 全轮提交有效波形：{cost['submitted_waveform_us']} µs；零样本 padding：{cost['submitted_zero_padding_us']} µs；提交尝试预算：{cost['attempted_waveform_budget_us']} µs",
+                  f"- 每成功联合解析任务：{unit if unit is not None else 'N/A'} µs（分母 {summary['joint_decoded_tasks']}）；包含时间更新、失败与重发。",
+                  "- 逐突发及软件 DMA 调用时刻见 plan.bursts.csv；串口及 DMA 时刻不代表实际空口起点。"]
     if "ble_follow" in summary:
         lines += ["", "## BLE 跟随证据", ""]
         for label, value in summary["ble_follow"].items():

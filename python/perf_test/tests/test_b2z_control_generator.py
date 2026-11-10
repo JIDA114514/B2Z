@@ -67,6 +67,9 @@ class Meta(ctypes.Structure):
         ("rf_mode", ctypes.c_uint8),
         ("primary_pdu", ctypes.POINTER(ctypes.c_uint8)),
         ("primary_pdu_len", ctypes.c_uint32),
+        ("ieee_iq_words", ctypes.POINTER(ctypes.c_uint32)),
+        ("ieee_iq_byte_count", ctypes.c_uint32),
+        ("ieee_air_us", ctypes.c_uint32),
     ]
 
 
@@ -164,7 +167,41 @@ class ControlGeneratorTests(unittest.TestCase):
         self.assertEqual(whiten(ll[5:5 + len(pdu)], 3), pdu)
         self.assertNotEqual(whiten(ll[5:5 + len(pdu)], 39), pdu)
         self.assertEqual(self.lib.ble_exadv_secondary_gen_build_control_mode(
-            ctypes.byref(packet), 2), -1)
+            ctypes.byref(packet), 3), -1)
+
+    def test_separate_waveforms_recover_independent_records(self):
+        import numpy as np
+        from scipy.signal import resample_poly
+        from python.perf_test.tests.test_bluebee_gen_waveform import iq_complex, demodulate_center_bits
+        from python.zigbee_rx.tests.test_zigbee_receiver import decode
+        from python.exadv_rx.protocol import crc24
+        from python.control_match.protocol import control_record
+        for command, ble_arg, ieee_arg in ((0, 0, 0), (43, 1, 7), (44, 9, 3)):
+            packet = Packet(2102, 7, 3500, 500, command, 6000 if command else 0,
+                            5000 if command else 0, 1 if command else 0, 1 if command else 0,
+                            ble_arg, 2 if command else 0, 2 if command else 0, ieee_arg)
+            self.assertEqual(self.lib.ble_exadv_secondary_gen_build_control_mode(ctypes.byref(packet), 2), 0)
+            meta = self.lib.ble_exadv_secondary_gen_get_last_meta().contents
+            pdu = read_bytes(meta.pdu, meta.pdu_len)
+            ll = read_bytes(meta.ll_payload, meta.ll_payload_len)
+            self.assertEqual((meta.pdu_len, meta.adv_data_len, meta.air_us, meta.ieee_air_us), (54, 42, 496, 1376))
+            self.assertEqual(meta.primary_air_us + meta.air_us + meta.ieee_air_us, 2008)
+            self.assertEqual(whiten(ll[5:], 3), pdu + crc24(pdu))
+            self.assertEqual(control_record(pdu[19:54])["arg"], ble_arg)
+            self.assertEqual(read_bytes(meta.primary_pdu, meta.primary_pdu_len)[6:9], bytes.fromhex("83e803"))
+            # DMA buffer duplicates each complex sample for the platform interface.
+            ble_iq = iq_complex(np.ctypeslib.as_array(meta.iq_words, shape=(meta.iq_byte_count // 4,))[::2])
+            bits = demodulate_center_bits(ble_iq, len(ll) * 8)
+            self.assertEqual(np.packbits(bits, bitorder="little").tobytes(), ll)
+            ieee_iq = iq_complex(np.ctypeslib.as_array(meta.ieee_iq_words, shape=(meta.ieee_iq_byte_count // 4,))[::2])
+            iq4 = resample_poly(ieee_iq, 25, 192).astype(np.complex64)
+            _, recovered = decode(np.concatenate((np.zeros(400, np.complex64), iq4, np.zeros(1200, np.complex64))),
+                               sample_rate=4_000_000)
+            valid = [r for r in recovered if r["fcs_ok"]]
+            self.assertEqual(len(valid), 1)
+            actual = control_record(bytes.fromhex(valid[0]["payload_hex"]))
+            self.assertEqual((actual["run_id"], actual["slot_index"], actual["command_id"], actual["arg"]),
+                             (2102, 7, command, ieee_arg))
 
     def test_sync_only_and_invalid_deadline(self):
         packet = Packet(1001, 1, 200, 200, 0, 0, 0, 0, 0, 0, 0, 0, 0)

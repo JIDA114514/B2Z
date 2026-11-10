@@ -34,6 +34,9 @@
 | [20261109_run1901](20261109_run1901/report.md) | 1901 | complete | 2 | 1 | 3 |
 | [20261109_run1902](20261109_run1902/report.md) | 1902 | complete | 1 | 0 | 1 |
 | [20261109_run1903](20261109_run1903/report.md) | 1903 | complete | 1 | 0 | 1 |
+| [20261109_run1904](20261109_run1904/report.md) | N/A | complete | 0 | 0 | 3 |
+| [20261109_run1905](20261109_run1905/report.md) | 1905 | complete | 1 | 0 | 1 |
+| [20261109_run1906](20261109_run1906/report.md) | N/A | complete | 0 | 0 | 1 |
 | [history_ble_rx_20261026_150021_003660](history_ble_rx_20261026_150021_003660/report.md) | N/A | complete | 1 | 1 | 0 |
 | [history_ble_rx_20261026_150507_618440](history_ble_rx_20261026_150507_618440/report.md) | N/A | complete | 1 | 1 | 0 |
 | [history_ble_rx_20261026_152018_750312](history_ble_rx_20261026_152018_750312/report.md) | N/A | complete | 1 | 2 | 0 |

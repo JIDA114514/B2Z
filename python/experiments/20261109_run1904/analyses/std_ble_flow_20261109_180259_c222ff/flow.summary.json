@@ -1,0 +1,49 @@
+{
+  "mode": "live_hop",
+  "counts": {
+    "demod_crc_errors": 0
+  },
+  "primary_dids": [],
+  "secondary_dids": [],
+  "paired_dids": [],
+  "separate_runs": false,
+  "primary_correct": false,
+  "secondary_correct": false,
+  "follow_observed": false,
+  "assessment": "incomplete_follow_observation",
+  "interrupted": true,
+  "schema": "board_std_ble_flow_v1",
+  "status": "complete",
+  "run_id": 1904,
+  "verification_passed": false,
+  "command_id": 43,
+  "expected_attempts": 10,
+  "primary_channel": 39,
+  "secondary_channel": 3,
+  "advertised_aux_offset_us": 300000,
+  "period_ms": 500,
+  "board": null,
+  "source_files": {
+    "primary_packets": null,
+    "secondary_packets": null,
+    "board_log": null
+  },
+  "receiver_config": {
+    "osmosdr_args": "hackrf=0",
+    "sample_rate": 4000000,
+    "gain": 0,
+    "if_gain": 16,
+    "bb_gain": 10,
+    "duration_s": 15.0,
+    "settle_us": 1000,
+    "follow_window_ms": 360
+  },
+  "aux_air_timing_verified": false,
+  "full_standard_exadv_verified": false,
+  "limitations": [
+    "host/GNU Radio callback time is not an RF timestamp",
+    "retuning may interrupt the sample stream",
+    "fixed-IQ files do not demonstrate receiver following",
+    "no calibrated primary-to-secondary air-time measurement"
+  ]
+}

@@ -1,0 +1,8 @@
+{"event": "primary_valid", "channel": 39, "did": 2, "pdu_hex": "07070618020083e803"}
+{"event": "follow_window_miss", "did": 2}
+{"event": "primary_valid", "channel": 39, "did": 4, "pdu_hex": "07070618040083e803"}
+{"event": "follow_window_miss", "did": 4}
+{"event": "primary_valid", "channel": 39, "did": 5, "pdu_hex": "07070618050083e803"}
+{"event": "follow_window_miss", "did": 5}
+{"event": "primary_valid", "channel": 39, "did": 8, "pdu_hex": "07070618080083e803"}
+{"event": "follow_window_miss", "did": 8}

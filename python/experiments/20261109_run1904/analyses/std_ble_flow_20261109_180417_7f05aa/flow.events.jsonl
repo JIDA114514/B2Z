@@ -1,0 +1,2 @@
+{"event": "primary_valid", "channel": 39, "did": 3, "pdu_hex": "07070618030083e803"}
+{"event": "follow_window_miss", "did": 3}

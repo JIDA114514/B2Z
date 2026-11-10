@@ -8,10 +8,14 @@ import sys
 import threading
 import time
 
-from bsp_algorithm import bsp_algorithm
+try:
+    from .bsp_algorithm import bsp_algorithm
+except ImportError:  # Direct script execution from std_ble/.
+    from bsp_algorithm import bsp_algorithm
 
 
 BLE_AA_AND_PREAMBLE = bytes([0xAA, 0xD6, 0xBE, 0x89, 0x8E])
+BLE_ADV_ACCESS_ADDRESS = BLE_AA_AND_PREAMBLE[1:]
 BLE_PDU_TYPES = {
     0x00: "ADV_IND",
     0x01: "ADV_DIRECT_IND",
@@ -200,36 +204,67 @@ class BleStreamParser:
             del self.buffer[:drop]
             self.stream_offset += drop
 
+    def _candidate(self):
+        """Find an advertising access address at any bit phase.
+
+        The one-byte preamble may have up to two bit errors. The entire PDU
+        still has to pass BLE CRC before it is reported as valid.
+        """
+        best = None
+        data = self.buffer
+        for shift in range(8):
+            aligned = (bytes(data) if shift == 0 else
+                       bytes((data[i] >> shift) | ((data[i + 1] << (8 - shift)) & 0xff)
+                             for i in range(len(data) - 1)))
+            pos = 1
+            while True:
+                aa_at = aligned.find(BLE_ADV_ACCESS_ADDRESS, pos)
+                if aa_at < 0:
+                    break
+                errors = (aligned[aa_at - 1] ^ 0xaa).bit_count()
+                if errors <= 2:
+                    start = aa_at - 1
+                    candidate = (start, shift, aligned, errors)
+                    if best is None or (start * 8 + shift) < (best[0] * 8 + best[1]):
+                        best = candidate
+                    break
+                pos = aa_at + 1
+        return best
+
     def poll(self):
         packets = []
         while True:
-            start = self.buffer.find(BLE_AA_AND_PREAMBLE)
-            if start < 0:
-                if len(self.buffer) > len(BLE_AA_AND_PREAMBLE):
-                    drop = len(self.buffer) - len(BLE_AA_AND_PREAMBLE)
+            candidate = self._candidate()
+            if candidate is None:
+                if len(self.buffer) > 7:
+                    drop = len(self.buffer) - 7
                     del self.buffer[:drop]
                     self.stream_offset += drop
                 return packets
+            start, shift, aligned, preamble_errors = candidate
             if start > 0:
                 del self.buffer[:start]
                 self.stream_offset += start
-                start = 0
-            if len(self.buffer) < 7:
+                aligned = aligned[start:]
+            if len(aligned) < 7:
                 return packets
 
-            header = bsp_algorithm.bt_dewhitening(list(self.buffer[5:7]), self.channel)
-            length = header[1] & 0x3F
+            header = bsp_algorithm.bt_dewhitening(list(aligned[5:7]), self.channel)
+            # Extended advertising uses the full 8-bit length field.
+            length = header[1] if (header[0] & 0x0F) == 0x07 else header[1] & 0x3F
             total = 5 + 2 + length + 3
-            if len(self.buffer) < total:
+            if len(aligned) < total:
                 return packets
 
-            pdu = bsp_algorithm.bt_dewhitening(list(self.buffer[5:5 + 2 + length + 3]), self.channel)
+            pdu = bsp_algorithm.bt_dewhitening(list(aligned[5:total]), self.channel)
             crc = pdu[-3:]
             calc_crc = bsp_algorithm.bt_crc(pdu, 2 + length)
             crc_ok = crc == calc_crc
             if crc_ok or self.keep_crc_errors:
                 self.detected += 1
-                packet = self._build_packet(pdu, crc_ok, self.stream_offset + start, total)
+                packet = self._build_packet(pdu, crc_ok, self.stream_offset + shift / 8, total)
+                packet["bit_alignment"] = shift
+                packet["preamble_errors"] = preamble_errors
                 packets.append(packet)
             else:
                 self.crc_errors += 1
@@ -239,7 +274,7 @@ class BleStreamParser:
     def _build_packet(self, pdu, crc_ok, start, total):
         header0, header1 = pdu[0], pdu[1]
         pdu_type = header0 & 0x0F
-        length = header1 & 0x3F
+        length = header1 if pdu_type == 0x07 else header1 & 0x3F
         payload = pdu[2:2 + length]
         ext = parse_ext_adv_payload(payload) if pdu_type == 0x07 else None
         kind = "other"

@@ -43,6 +43,12 @@
 | [20261110_run2103](20261110_run2103/report.md) | 2103 | complete | 1 | 0 | 2 |
 | [20261111_run2002](20261111_run2002/report.md) | 2002 | error | 4 | 0 | 5 |
 | [20261111_run2003](20261111_run2003/report.md) | 2003 | complete | 1 | 0 | 2 |
+| [20261111_run2104](20261111_run2104/report.md) | 2104 | complete | 2 | 0 | 0 |
+| [20261111_run2105](20261111_run2105/report.md) | 2105 | complete | 2 | 0 | 0 |
+| [20261111_run2106](20261111_run2106/report.md) | 2106 | complete | 1 | 0 | 1 |
+| [20261111_run2107](20261111_run2107/report.md) | 2107 | complete | 2 | 0 | 0 |
+| [20261111_run2108](20261111_run2108/report.md) | 2108 | complete | 2 | 0 | 0 |
+| [20261111_run2109](20261111_run2109/report.md) | 2109 | complete | 1 | 0 | 1 |
 | [20261111_run2201](20261111_run2201/report.md) | 2201 | complete | 2 | 0 | 1 |
 | [history_ble_rx_20261026_150021_003660](history_ble_rx_20261026_150021_003660/report.md) | N/A | complete | 1 | 1 | 0 |
 | [history_ble_rx_20261026_150507_618440](history_ble_rx_20261026_150507_618440/report.md) | N/A | complete | 1 | 1 | 0 |

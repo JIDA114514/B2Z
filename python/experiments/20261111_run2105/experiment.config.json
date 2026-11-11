@@ -1,0 +1,9 @@
+{
+  "schema": "experiment_v1",
+  "experiment_id": "20261111_run2105",
+  "origin": "date_run_id",
+  "run_id": 2105,
+  "archive_date": "2026-11-11",
+  "created_local": "2026-11-11T15:39:28.925336+08:00",
+  "scope": "Daily Run ID collection; each receiver invocation is separate, not an inferred paired trial."
+}

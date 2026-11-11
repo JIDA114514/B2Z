@@ -15,5 +15,6 @@
 - [analyses/std_ble_flow_20261111_153217_548e09/flow.summary.json](analyses/std_ble_flow_20261111_153217_548e09/flow.summary.json)（complete）
 - [captures/zigbee/153049_313544_jffxs3dz/rx.control.summary.json](captures/zigbee/153049_313544_jffxs3dz/rx.control.summary.json)（历史分析；状态未记录）
 - [analyses/std_ble_flow_20261111_153217_548e09/flow.md](analyses/std_ble_flow_20261111_153217_548e09/flow.md)
+- [board.board.log](board.board.log)
 
 配置：[experiment.config.json](experiment.config.json)。完整参数、分母依据和异常见各接收报告及原始 JSON。

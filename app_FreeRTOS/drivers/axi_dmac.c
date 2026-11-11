@@ -562,8 +562,9 @@ int32_t axi_dmac_remove(struct axi_dmac *dmac)
  *
  * @return 0 for success, -1 in case of failure.
 *******************************************************************************/
-int32_t axi_dmac_transfer_start(struct axi_dmac *dmac,
-				struct axi_dma_transfer *dma_transfer)
+static int32_t axi_dmac_transfer_start_impl(struct axi_dmac *dmac,
+				struct axi_dma_transfer *dma_transfer,
+	const struct axi_dmac_submit_observer *observer)
 {
 	uint32_t reg_val, burst_size;
 
@@ -683,13 +684,36 @@ int32_t axi_dmac_transfer_start(struct axi_dmac *dmac,
 		/* Specify the length of the transfer and trigger transfer. */
 		axi_dmac_write(dmac, AXI_DMAC_REG_X_LENGTH, burst_size);
 		axi_dmac_write(dmac, AXI_DMAC_REG_Y_LENGTH, 0x0);
-		axi_dmac_write(dmac, AXI_DMAC_REG_TRANSFER_SUBMIT, AXI_DMAC_TRANSFER_SUBMIT);
+		{
+			int32_t write_status;
+			if (observer && observer->mark)
+				observer->mark(observer->context, 0u, 0);
+			write_status = axi_dmac_write(dmac, AXI_DMAC_REG_TRANSFER_SUBMIT,
+				AXI_DMAC_TRANSFER_SUBMIT);
+			if (observer && observer->mark)
+				observer->mark(observer->context, 1u, write_status);
+		}
 	} else {
 		return -1;
 	}
 
 	return 0;
 }
+
+int32_t axi_dmac_transfer_start(struct axi_dmac *dmac,
+	struct axi_dma_transfer *transfer)
+{
+	return axi_dmac_transfer_start_impl(dmac, transfer, NULL);
+}
+
+#ifdef FREERTOS_INTEGRATION
+int32_t axi_dmac_transfer_start_observed(struct axi_dmac *dmac,
+	struct axi_dma_transfer *transfer,
+	const struct axi_dmac_submit_observer *observer)
+{
+	return axi_dmac_transfer_start_impl(dmac, transfer, observer);
+}
+#endif
 
 /*******************************************************************************
  * @brief Wait for DMA transfer to be completed.

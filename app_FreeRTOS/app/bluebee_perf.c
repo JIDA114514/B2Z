@@ -205,6 +205,63 @@ struct b2z_burst_observation {
 };
 static struct b2z_burst_observation g_control_bursts[B2Z_PLAN_MAX_SLOTS][3];
 
+#ifndef B2Z_N3_TRACE_ENABLED
+#define B2Z_N3_TRACE_ENABLED 1
+#endif
+enum b2z_trace_stage {
+	N3_CALL, N3_STOP_CLEAR, N3_CACHE, N3_DAC_SYNC, N3_SUBMIT, N3_POLL,
+	N3_GENERATE, N3_RETUNE_SECONDARY, N3_RETUNE_PRIMARY, N3_STAGE_COUNT
+};
+struct b2z_trace {
+	XTime tick[N3_STAGE_COUNT][2];
+	uint32_t valid;
+	int32_t status[N3_STAGE_COUNT];
+	uint32_t remaining_bytes;
+	uint32_t frame_us, mapping_us, gfsk_us;
+};
+/* kind 0/1/2 = primary/secondary/IEEE, kind 3 = slot preparation/retune. */
+static struct b2z_trace g_n3_trace[B2Z_PLAN_MAX_SLOTS][4];
+static XTime g_n3_primary_anchor[B2Z_PLAN_MAX_SLOTS];
+static uint32_t g_n3_overflow, g_n3_timer_min, g_n3_timer_max;
+
+static struct b2z_trace *b2z_trace_for(uint32_t slot, uint32_t kind)
+{
+	if (!B2Z_N3_TRACE_ENABLED || !g_perf.config.planned) return NULL;
+	if (slot >= B2Z_PLAN_MAX_SLOTS || kind >= 4u) {
+		g_n3_overflow++;
+		return NULL;
+	}
+	return &g_n3_trace[slot][kind];
+}
+
+static void b2z_trace_mark(struct b2z_trace *t, uint32_t stage,
+			   uint32_t after, int32_t status)
+{
+	if (!t) return;
+	XTime_GetTime(&t->tick[stage][after]);
+	t->valid |= 1u << (2u * stage + after);
+	if (after) t->status[stage] = status;
+}
+
+static void b2z_submit_mark(void *context, uint8_t after, int32_t status)
+{
+	b2z_trace_mark(context, N3_SUBMIT, after, status);
+}
+
+static void b2z_timer_probe(void)
+{
+	g_n3_timer_min = UINT32_MAX;
+	g_n3_timer_max = 0u;
+	for (uint32_t i = 0u; i < 32u; i++) {
+		XTime a, b;
+		XTime_GetTime(&a); XTime_GetTime(&b);
+		uint32_t dt = (uint32_t)(b - a);
+		if (dt < g_n3_timer_min) g_n3_timer_min = dt;
+		if (dt > g_n3_timer_max) g_n3_timer_max = dt;
+	}
+}
+
+
 
 /* Dedicated DDR BSS arena; independent of the 1 MB FreeRTOS heap. */
 static uint32_t
@@ -371,6 +428,86 @@ static void b2z_plan_slot_flag(uint32_t slot, uint8_t flag)
 	taskENTER_CRITICAL();
 	g_control_slot_flags[slot] |= flag;
 	taskEXIT_CRITICAL();
+}
+
+/* console_print only supports signed long; format raw 64-bit ticks ourselves. */
+static const char *b2z_tick_hex(XTime value, char out[17])
+{
+	static const char digits[] = "0123456789abcdef";
+	for (uint32_t i = 0; i < 16u; i++)
+		out[i] = digits[(value >> ((15u - i) * 4u)) & 15u];
+	out[16] = 0;
+	return out;
+}
+
+static int32_t b2z_signed_us(XTime event, XTime target)
+{
+	return event >= target ? (int32_t)bluebee_perf_ticks_to_us(event - target) :
+		-(int32_t)bluebee_perf_ticks_to_us(target - event);
+}
+
+static void b2z_print_trace(const struct bluebee_perf_runtime *snapshot)
+{
+	char hex[3][17];
+	static const char *names[N3_STAGE_COUNT] = {
+		"call", "stop_clear", "cache_flush", "dac_sync", "submit_write", "poll",
+		"generation", "retune_secondary", "retune_primary"
+	};
+	console_print("CONTROL_TIME_META run_id=%d schema=1 enabled=%d tick_hz=%d "
+		"epoch_ticks=%s slots_capacity=%d overflow=%d "
+		"timer_probe_n=%d timer_probe_min_ticks=%d timer_probe_max_ticks=%d "
+		"reference=software_counter not_rf=1 submit_scope=first_write\r\n",
+		(long)snapshot->config.run_id, (long)B2Z_N3_TRACE_ENABLED,
+		(long)COUNTS_PER_SECOND, (char *)b2z_tick_hex(snapshot->start_time, hex[0]), (long)B2Z_PLAN_MAX_SLOTS,
+		(long)g_n3_overflow, (long)(B2Z_N3_TRACE_ENABLED ? 32u : 0u),
+		(long)g_n3_timer_min, (long)g_n3_timer_max);
+	if (!B2Z_N3_TRACE_ENABLED) return;
+	for (uint32_t slot = 0; slot < snapshot->config.expected_packets; slot++) {
+		XTime planned = snapshot->start_time +
+			bluebee_perf_ticks_from_us(snapshot->config.interval_us) * slot;
+		XTime anchor = g_n3_primary_anchor[slot];
+		XTime target = anchor ? anchor + bluebee_perf_ticks_from_us(
+			b2z_aux_offset_us(snapshot->config.control_rf_mode)) : 0;
+		const struct b2z_trace *prep = &g_n3_trace[slot][3];
+		console_print("CONTROL_TIME_SLOT run_id=%d slot=%d planned_ticks=%s "
+			"anchor_valid=%d anchor_ticks=%s target_ticks=%s "
+			"frame_us=%d mapping_us=%d gfsk_us=%d\r\n",
+			(long)snapshot->config.run_id, (long)slot,
+			(char *)b2z_tick_hex(planned, hex[0]), (long)(anchor != 0),
+			(char *)b2z_tick_hex(anchor, hex[1]), (char *)b2z_tick_hex(target, hex[2]),
+			(long)prep->frame_us, (long)prep->mapping_us, (long)prep->gfsk_us);
+		const struct b2z_trace *sec = &g_n3_trace[slot][1];
+		uint32_t call_valid = anchor && (sec->valid & (1u << (2u * N3_CALL)));
+		uint32_t submit_valid = anchor && (sec->valid & (1u << (2u * N3_SUBMIT)));
+		uint32_t return_valid = anchor && (sec->valid & (1u << (2u * N3_CALL + 1u)));
+		console_print("CONTROL_TIME_LATE run_id=%d slot=%d reference=legacy_primary_call_anchor "
+			"call_valid=%d submit_valid=%d return_valid=%d "
+			"pre_call_us=%d pre_submit_us=%d post_return_us=%d window_us=%d\r\n",
+			(long)snapshot->config.run_id, (long)slot,
+			(long)!!call_valid, (long)!!submit_valid, (long)!!return_valid,
+			(long)(call_valid ? b2z_signed_us(sec->tick[N3_CALL][0], target) : 0),
+			(long)(submit_valid ? b2z_signed_us(sec->tick[N3_SUBMIT][0], target) : 0),
+			(long)(return_valid ? b2z_signed_us(sec->tick[N3_CALL][1], target) : 0),
+			(long)B2Z_AUXPTR_WINDOW_US);
+
+		for (uint32_t kind = 0; kind < 4u; kind++) {
+			if (kind == 2u && snapshot->config.control_rf_mode != B2Z_CONTROL_RF_SEPARATE_CH3) continue;
+			const struct b2z_trace *t = &g_n3_trace[slot][kind];
+			for (uint32_t stage = (kind == 3u ? N3_GENERATE : N3_CALL);
+			     stage < (kind == 3u ? N3_STAGE_COUNT : N3_GENERATE); stage++) {
+				uint32_t valid = (t->valid >> (2u * stage)) & 3u;
+				console_print("CONTROL_TIME_STAGE run_id=%d slot=%d kind=%d stage=%s valid=%d "
+					"before_ticks=%s after_ticks=%s "
+					"status=%d remaining_bytes=%d\r\n",
+					(long)snapshot->config.run_id, (long)slot, (long)kind, (char *)names[stage],
+					(long)valid, (char *)b2z_tick_hex(t->tick[stage][0], hex[0]),
+					(char *)b2z_tick_hex(t->tick[stage][1], hex[1]),
+					(long)t->status[stage], (long)t->remaining_bytes);
+			}
+		}
+	}
+	console_print("CONTROL_TIME_END run_id=%d slots=%d overflow=%d\r\n",
+		(long)snapshot->config.run_id, (long)snapshot->config.expected_packets, (long)g_n3_overflow);
 }
 
 static void b2z_plan_print_stats(const struct bluebee_perf_runtime *snapshot,
@@ -542,6 +679,7 @@ static void b2z_plan_print_stats(const struct bluebee_perf_runtime *snapshot,
 			(long)(separate ? B2Z_CONTROL_SEPARATE_GAP_US : 0u));
 	}
 
+	b2z_print_trace(snapshot);
 }
 
 static void bluebee_perf_print_stats(uint8_t final)
@@ -1144,6 +1282,9 @@ int32_t b2z_plan_start_cmdline(const char *args)
 	memset(&g_perf, 0, sizeof(g_perf));
 	memset(g_control_slot_flags, 0, sizeof(g_control_slot_flags));
 	memset(g_control_bursts, 0, sizeof(g_control_bursts));
+	memset(g_n3_trace, 0, sizeof(g_n3_trace));
+	memset(g_n3_primary_anchor, 0, sizeof(g_n3_primary_anchor));
+	g_n3_overflow = 0;
 	memset(g_control_slot_late_us, 0, sizeof(g_control_slot_late_us));
 	memset(g_control_slot_aux_delta_us, 0,
 	       sizeof(g_control_slot_aux_delta_us));
@@ -1324,30 +1465,48 @@ static void bluebee_perf_release_tx(void)
 	ble_tx_adv_tx_unlock();
 }
 
-static int32_t bluebee_perf_dma_start(const uint32_t *iq_words,
-				      uint32_t iq_byte_count)
+static int32_t bluebee_perf_dma_start_traced(const uint32_t *iq_words,
+				      uint32_t iq_byte_count, struct b2z_trace *trace)
 {
 	struct axi_dma_transfer transfer;
+	int32_t clear_ret;
 
 	if (!iq_words || iq_byte_count == 0u)
 		return -1;
 
+	b2z_trace_mark(trace, N3_STOP_CLEAR, 0, 0);
 	axi_dmac_transfer_stop(tx_dmac);
-	axi_dmac_write(tx_dmac, AXI_DMAC_REG_IRQ_PENDING,
+	clear_ret = axi_dmac_write(tx_dmac, AXI_DMAC_REG_IRQ_PENDING,
 		       AXI_DMAC_IRQ_SOT | AXI_DMAC_IRQ_EOT);
+	b2z_trace_mark(trace, N3_STOP_CLEAR, 1, clear_ret);
 #ifdef XILINX_PLATFORM
+	b2z_trace_mark(trace, N3_CACHE, 0, 0);
 	Xil_DCacheFlushRange((uintptr_t)iq_words, iq_byte_count);
+	b2z_trace_mark(trace, N3_CACHE, 1, 0);
 #endif
 	transfer.size = iq_byte_count;
 	transfer.transfer_done = 0;
 	transfer.cyclic = NO;
 	transfer.src_addr = (uintptr_t)iq_words;
 	transfer.dest_addr = 0;
+	b2z_trace_mark(trace, N3_DAC_SYNC, 0, 0);
 	no_os_axi_io_write(ad9361_phy->tx_dac->base,
 			   BLUEBEE_PERF_AXI_DAC_SYNC_CONTROL,
 			   BLUEBEE_PERF_AXI_DAC_SYNC);
 
+	b2z_trace_mark(trace, N3_DAC_SYNC, 1, 0);
+	if (trace) {
+		const struct axi_dmac_submit_observer observer = {b2z_submit_mark, trace};
+		int32_t ret = axi_dmac_transfer_start_observed(tx_dmac, &transfer, &observer);
+		trace->remaining_bytes = tx_dmac->remaining_size;
+		return ret;
+	}
 	return axi_dmac_transfer_start(tx_dmac, &transfer);
+}
+
+static int32_t bluebee_perf_dma_start(const uint32_t *iq_words, uint32_t bytes)
+{
+	return bluebee_perf_dma_start_traced(iq_words, bytes, NULL);
 }
 
 static bool bluebee_perf_dma_complete(void)
@@ -1736,7 +1895,9 @@ static int32_t b2z_burst_start(uint32_t slot, uint32_t kind,
 	struct b2z_burst_observation *b = b2z_burst(slot, kind);
 	int32_t ret;
 	if (b) { b->attempted = 1u; b->submit_before_us = b2z_observation_us(); }
-	ret = bluebee_perf_dma_start(iq, bytes);
+	b2z_trace_mark(b2z_trace_for(slot, kind), N3_CALL, 0, 0);
+	ret = bluebee_perf_dma_start_traced(iq, bytes, b2z_trace_for(slot, kind));
+	b2z_trace_mark(b2z_trace_for(slot, kind), N3_CALL, 1, ret);
 	if (b) { b->started = ret >= 0; b->submit_after_us = b2z_observation_us(); }
 	return ret;
 }
@@ -1744,7 +1905,10 @@ static int32_t b2z_burst_start(uint32_t slot, uint32_t kind,
 static int32_t b2z_burst_wait(uint32_t slot, uint32_t kind, uint32_t timeout_us)
 {
 	struct b2z_burst_observation *b = b2z_burst(slot, kind);
-	int32_t ret = bluebee_perf_dma_wait(timeout_us);
+	int32_t ret;
+	b2z_trace_mark(b2z_trace_for(slot, kind), N3_POLL, 0, 0);
+	ret = bluebee_perf_dma_wait(timeout_us);
+	b2z_trace_mark(b2z_trace_for(slot, kind), N3_POLL, 1, ret);
 	if (b) {
 		b->completed = ret >= 0; b->timeout = ret < 0;
 		b->finish_us = b2z_observation_us();
@@ -1786,9 +1950,11 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 		packet.slot_index = sequence;
 		packet.ref_tick_ms = (uint32_t)((uint64_t)sequence *
 						 packet.period_ms);
-		if (ble_exadv_secondary_gen_build_control_mode(
-			    &packet, config->control_rf_mode) < 0)
-			return -1;
+		struct b2z_trace *prep = b2z_trace_for(sequence, 3u);
+		b2z_trace_mark(prep, N3_GENERATE, 0, 0);
+		int32_t gen_ret = ble_exadv_secondary_gen_build_control_mode(&packet, config->control_rf_mode);
+		b2z_trace_mark(prep, N3_GENERATE, 1, gen_ret);
+		if (gen_ret < 0) return -1;
 		meta = ble_exadv_secondary_gen_get_last_meta();
 		iq_words = meta->iq_words;
 		iq_byte_count = meta->iq_byte_count;
@@ -1799,6 +1965,7 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 		timing.mapping_us = meta->mapping_time_us;
 		timing.gfsk_us = meta->gfsk_time_us;
 		timing.total_us = meta->total_time_us;
+		if (prep) { prep->frame_us = timing.frame_us; prep->mapping_us = timing.mapping_us; prep->gfsk_us = timing.gfsk_us; }
 		aux_offset_us = meta->aux_offset_us;
 		ieee_iq_words = meta->ieee_iq_words;
 		ieee_iq_bytes = meta->ieee_iq_byte_count;
@@ -1823,6 +1990,7 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 	if (config->test == BLUEBEE_PERF_TEST_EXADV ||
 	    config->test == BLUEBEE_PERF_TEST_CONTROL) {
 		XTime_GetTime(&primary_start);
+		if (b2z_trace_for(sequence, 3u)) g_n3_primary_anchor[sequence] = primary_start;
 		if (b2z_burst_start(sequence, 0u, primary_iq_words,
 					    primary_iq_byte_count) < 0)
 			return -1;
@@ -1843,9 +2011,10 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 
 			XTime_GetTime(&retune_start);
 			secondary_lo_selected = 1u;
-			if (ad9361_set_tx_lo_freq(
-				    ad9361_phy,
-				    B2Z_CONTROL_SECONDARY_CH3_TX_LO_HZ) < 0) {
+			b2z_trace_mark(b2z_trace_for(sequence, 3u), N3_RETUNE_SECONDARY, 0, 0);
+			int32_t tune_ret = ad9361_set_tx_lo_freq(ad9361_phy, B2Z_CONTROL_SECONDARY_CH3_TX_LO_HZ);
+			b2z_trace_mark(b2z_trace_for(sequence, 3u), N3_RETUNE_SECONDARY, 1, tune_ret);
+			if (tune_ret < 0) {
 				bluebee_perf_count(&g_perf.counters.retune_failure);
 				goto restore_primary_lo;
 			}
@@ -1952,11 +2121,14 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 	result = 0;
 
 restore_primary_lo:
-	if (secondary_lo_selected &&
-	    ad9361_set_tx_lo_freq(ad9361_phy,
-		BLUEBEE_GEN_TX_LO_HZ) < 0) {
-		bluebee_perf_count(&g_perf.counters.retune_failure);
-		result = -1;
+	if (secondary_lo_selected) {
+		b2z_trace_mark(b2z_trace_for(sequence, 3u), N3_RETUNE_PRIMARY, 0, 0);
+		int32_t tune_ret = ad9361_set_tx_lo_freq(ad9361_phy, BLUEBEE_GEN_TX_LO_HZ);
+		b2z_trace_mark(b2z_trace_for(sequence, 3u), N3_RETUNE_PRIMARY, 1, tune_ret);
+		if (tune_ret < 0) {
+			bluebee_perf_count(&g_perf.counters.retune_failure);
+			result = -1;
+		}
 	}
 	return result;
 }
@@ -1989,6 +2161,7 @@ static void bluebee_perf_run(void)
 		goto finish;
 	}
 	setup_ok = 1u;
+	if (config.planned && B2Z_N3_TRACE_ENABLED) b2z_timer_probe();
 
 	/*
 	 * Batch isolates RF/DMA by moving the first arena fill before the clock

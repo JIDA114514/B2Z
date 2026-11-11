@@ -152,6 +152,19 @@ int32_t axi_dmac_is_transfer_ready(struct axi_dmac *dmac, bool *rdy);
 int32_t axi_dmac_init(struct axi_dmac **adc_core,
 		      const struct axi_dmac_init *init);
 int32_t axi_dmac_remove(struct axi_dmac *dmac);
+/* Optional synchronous observer of the FIRST submit write in transfer_start.
+ * No RF timestamp is implied; split-transfer continuation is outside this API.
+ * Callback must not block or perform IO. Legacy callers install no observer. */
+struct axi_dmac_submit_observer {
+	void (*mark)(void *context, uint8_t after, int32_t write_status);
+	void *context;
+};
+#ifdef FREERTOS_INTEGRATION
+int32_t axi_dmac_transfer_start_observed(struct axi_dmac *dmac,
+	struct axi_dma_transfer *transfer,
+	const struct axi_dmac_submit_observer *observer);
+#endif
+
 int32_t axi_dmac_transfer_start(struct axi_dmac *dmac,
 				struct axi_dma_transfer *dma_transfer);
 int32_t axi_dmac_transfer_wait_completion(struct axi_dmac *dmac,

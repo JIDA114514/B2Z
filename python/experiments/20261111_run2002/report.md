@@ -15,15 +15,12 @@
 
 ## 分析与原始记录
 
-- [analyses/std_ble_flow_20261111_151922_82cbac/flow.summary.json](analyses/std_ble_flow_20261111_151922_82cbac/flow.summary.json)（complete）
-- [analyses/std_ble_flow_20261111_152407_4a6e0e/flow.summary.json](analyses/std_ble_flow_20261111_152407_4a6e0e/flow.summary.json)（complete）
 - [analyses/std_ble_flow_20261111_152657_c87060/flow.summary.json](analyses/std_ble_flow_20261111_152657_c87060/flow.summary.json)（complete）
 - [captures/zigbee/151918_245960_klb_whxi/rx.control.summary.json](captures/zigbee/151918_245960_klb_whxi/rx.control.summary.json)（历史分析；状态未记录）
 - [captures/zigbee/152114_849866_8x39fdya/rx.control.summary.json](captures/zigbee/152114_849866_8x39fdya/rx.control.summary.json)（历史分析；状态未记录）
 - [captures/zigbee/152402_258075_ntmbsl5_/rx.control.summary.json](captures/zigbee/152402_258075_ntmbsl5_/rx.control.summary.json)（历史分析；状态未记录）
 - [captures/zigbee/152529_634451_4yibdyh9/rx.control.summary.json](captures/zigbee/152529_634451_4yibdyh9/rx.control.summary.json)（历史分析；状态未记录）
-- [analyses/std_ble_flow_20261111_151922_82cbac/flow.md](analyses/std_ble_flow_20261111_151922_82cbac/flow.md)
-- [analyses/std_ble_flow_20261111_152407_4a6e0e/flow.md](analyses/std_ble_flow_20261111_152407_4a6e0e/flow.md)
 - [analyses/std_ble_flow_20261111_152657_c87060/flow.md](analyses/std_ble_flow_20261111_152657_c87060/flow.md)
+- [board.board.log](board.board.log)
 
 配置：[experiment.config.json](experiment.config.json)。完整参数、分母依据和异常见各接收报告及原始 JSON。

@@ -1,0 +1,54 @@
+{
+  "control_observations": 120,
+  "policy": "scheduled",
+  "events": {
+    "decoded": 120,
+    "clock_updated": 120,
+    "rejected": 9
+  },
+  "reasons": {
+    "time_quality_insufficient": 9
+  },
+  "engine": {
+    "side": "ble",
+    "run_id": 2104,
+    "current_sample": 360000000,
+    "clock": {
+      "model_version": 120,
+      "training_packets": 16,
+      "latest_ref_ms": 59500,
+      "training_span_ms": 7500,
+      "rate_fitted": true,
+      "rate_ppm": -25.445588235251115,
+      "residual_ms": 0.30381102941185234
+    },
+    "task_status": {},
+    "software_state": {},
+    "software_triggers": []
+  },
+  "foreign_run_ids": [],
+  "time_reference": "one_receiver_iq_sample_domain",
+  "progress_step_samples": 65536,
+  "progress_scope": "sample-domain replay; no host dispatch-time reconstruction",
+  "software_only": true,
+  "schema": "b2z_control_engine_replay_v1",
+  "side": "ble",
+  "run_id": 2104,
+  "target_ids": [
+    1
+  ],
+  "sample_rate": 4000000,
+  "assumed_reference_bound_ms": null,
+  "assumption_status": "uncalibrated; timed actions denied",
+  "generated_utc": "2026-11-11T09:01:02.999934+00:00",
+  "sources": {
+    "packets": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261111_run2104/captures/ble/153518_723654_earjh14e/rx.packets.jsonl",
+    "packets_sha256": "67ea6a2370fd5c09b6d58e7d306fb4e891ffc34a05a79419259b697ce20a9a2a",
+    "receiver_summary": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261111_run2104/captures/ble/153518_723654_earjh14e/rx.summary.json"
+  },
+  "limitations": [
+    "one receiver only; no cross-device execution error",
+    "software state/actions are sample-domain replay, not physical actuator events",
+    "sender planned timestamp is not calibrated RF start"
+  ]
+}

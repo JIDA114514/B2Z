@@ -1,0 +1,54 @@
+{
+  "control_observations": 120,
+  "policy": "scheduled",
+  "events": {
+    "decoded": 120,
+    "clock_updated": 120,
+    "rejected": 9
+  },
+  "reasons": {
+    "time_quality_insufficient": 9
+  },
+  "engine": {
+    "side": "zigbee",
+    "run_id": 2104,
+    "current_sample": 360000000,
+    "clock": {
+      "model_version": 120,
+      "training_packets": 16,
+      "latest_ref_ms": 59500,
+      "training_span_ms": 7500,
+      "rate_fitted": true,
+      "rate_ppm": -26.28014705885473,
+      "residual_ms": 0.3038808823525906
+    },
+    "task_status": {},
+    "software_state": {},
+    "software_triggers": []
+  },
+  "foreign_run_ids": [],
+  "time_reference": "one_receiver_iq_sample_domain",
+  "progress_step_samples": 65536,
+  "progress_scope": "sample-domain replay; no host dispatch-time reconstruction",
+  "software_only": true,
+  "schema": "b2z_control_engine_replay_v1",
+  "side": "zigbee",
+  "run_id": 2104,
+  "target_ids": [
+    2
+  ],
+  "sample_rate": 4000000,
+  "assumed_reference_bound_ms": null,
+  "assumption_status": "uncalibrated; timed actions denied",
+  "generated_utc": "2026-11-11T09:05:47.450443+00:00",
+  "sources": {
+    "packets": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261111_run2104/captures/zigbee/153516_840434_ydreh_pj/rx.packets.jsonl",
+    "packets_sha256": "7d4b0985d8bcc281cffa8845e717551bb249a7e1c7f442e39138c1b2ceedd4e2",
+    "receiver_summary": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261111_run2104/captures/zigbee/153516_840434_ydreh_pj/rx.summary.json"
+  },
+  "limitations": [
+    "one receiver only; no cross-device execution error",
+    "software state/actions are sample-domain replay, not physical actuator events",
+    "sender planned timestamp is not calibrated RF start"
+  ]
+}

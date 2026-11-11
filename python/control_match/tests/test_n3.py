@@ -81,6 +81,22 @@ class TimingN3Tests(unittest.TestCase):
         parts=line.split();line2=' '.join('valid=0' if x.startswith('valid=') else x.split('=')[0]+'=0000000000000000' if x.startswith(('before_ticks=','after_ticks=')) else x for x in parts)
         self.assertIsNone(self.parse(text.replace(line,line2),plan)['slots'][0]['kind1_cache_flush_us'])
 
+    def test_prepared_secondary_cache_requires_explicit_phase_and_order(self):
+        plan,text=timing_fixture()
+        line=next(l for l in text.splitlines() if 'kind=1 stage=cache_flush' in l)
+        epoch=2**62+2**32-100
+        prepared=' '.join(f'before_ticks={epoch+500:016x}' if x.startswith('before_ticks=')
+                          else f'after_ticks={epoch+1500:016x}' if x.startswith('after_ticks=')
+                          else x for x in line.split())
+        moved=text.replace(line,prepared)
+        with self.assertRaisesRegex(ValueError,'outside DMA call'):
+            self.parse(moved,plan)
+        moved=moved.replace('schema=1','schema=1 secondary_cache=before_aux_wait')
+        self.assertEqual(self.parse(moved,plan)['slots'][0]['kind1_cache_flush_us'],1000)
+        # Old in-call cache records must not masquerade as prepared buffers.
+        with self.assertRaisesRegex(ValueError,'overlaps DMA call'):
+            self.parse(text.replace('schema=1','schema=1 secondary_cache=before_aux_wait'),plan)
+
     def test_trace_must_agree_with_burst_lifecycle(self):
         plan,text=timing_fixture()
         plan['bursts']={'rows':[dict(slot=0,kind=k,attempted=1,started=1,completed=1)

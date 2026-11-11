@@ -1,0 +1,1217 @@
+CONTROL_PLAN_START state=armed run_id=2202 period_ms=500 tasks=1 slots=30 duration_s=15 rf_mode=standard_secondary_ch3 aux_channel=3 aux_offset_us=300000 primary_mhz=2480 secondary_mhz=2410
+
+CONTROL_PLAN_ENTRY run_id=2202 entry=0 command_id=0 first_slot=0 repeats=30 execute_at_ms=0 valid_until_ms=0 ble_target=0 ble_opcode=0 ble_arg=0 zigbee_target=0 zigbee_opcode=0 zigbee_arg=0
+
+CONTROL_PLAN_STATS final=1 state=complete run_id=2202 period_ms=500 tasks=1 planned_slots=30 reached_slots=30 elapsed_us=15000005 generated=30 primary_started=30 primary_completed=30 tx_started=30 tx_completed=30 deadline_miss=0 dma_timeout=0 secondary_dma_late_samples=30 secondary_dma_late_max_us=80183 secondary_dma_late_avg_us=79209 time_reference=planned_secondary_start rf_mode=standard_secondary_ch3 aux_channel=3 aux_offset_us=300000 auxptr_dma_window_miss=0 auxptr_dma_delta_samples=30 auxptr_dma_delta_min_us=300011 auxptr_dma_delta_max_us=300012 auxptr_dma_delta_avg_us=300011 retune_failure=0 retune_secondary_max_us=822
+
+CONTROL_PLAN_TASK run_id=2202 entry=0 command_id=0 first_slot=0 repeats=30 reached=30 generated=30 execute_at_ms=0 valid_until_ms=0 ble_target=0 ble_opcode=0 ble_arg=0 zigbee_target=0 zigbee_opcode=0 zigbee_arg=0 primary_started=30 primary_completed=30 tx_started=30 tx_completed=30 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=0 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=80183 auxptr_dma_delta_us=300011 retune_secondary_us=822 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=1 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=78923 auxptr_dma_delta_us=300011 retune_secondary_us=813 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=2 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=78915 auxptr_dma_delta_us=300011 retune_secondary_us=814 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=3 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79318 auxptr_dma_delta_us=300011 retune_secondary_us=811 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=4 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79294 auxptr_dma_delta_us=300011 retune_secondary_us=810 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=5 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79252 auxptr_dma_delta_us=300011 retune_secondary_us=810 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=6 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79371 auxptr_dma_delta_us=300011 retune_secondary_us=811 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=7 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=78943 auxptr_dma_delta_us=300011 retune_secondary_us=812 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=8 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79296 auxptr_dma_delta_us=300011 retune_secondary_us=812 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=9 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79057 auxptr_dma_delta_us=300012 retune_secondary_us=811 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=10 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=78985 auxptr_dma_delta_us=300011 retune_secondary_us=812 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=11 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79343 auxptr_dma_delta_us=300011 retune_secondary_us=810 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=12 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79336 auxptr_dma_delta_us=300011 retune_secondary_us=810 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=13 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79318 auxptr_dma_delta_us=300011 retune_secondary_us=809 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=14 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79348 auxptr_dma_delta_us=300011 retune_secondary_us=810 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=15 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79041 auxptr_dma_delta_us=300011 retune_secondary_us=810 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=16 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=78929 auxptr_dma_delta_us=300011 retune_secondary_us=811 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=17 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79294 auxptr_dma_delta_us=300011 retune_secondary_us=810 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=18 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79271 auxptr_dma_delta_us=300011 retune_secondary_us=810 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=19 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79013 auxptr_dma_delta_us=300011 retune_secondary_us=810 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=20 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=78876 auxptr_dma_delta_us=300011 retune_secondary_us=810 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=21 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79453 auxptr_dma_delta_us=300011 retune_secondary_us=811 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=22 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79031 auxptr_dma_delta_us=300011 retune_secondary_us=812 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=23 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79273 auxptr_dma_delta_us=300011 retune_secondary_us=810 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=24 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=78903 auxptr_dma_delta_us=300011 retune_secondary_us=808 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=25 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79410 auxptr_dma_delta_us=300011 retune_secondary_us=811 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=26 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=78977 auxptr_dma_delta_us=300012 retune_secondary_us=812 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=27 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79293 auxptr_dma_delta_us=300012 retune_secondary_us=810 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=28 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79445 auxptr_dma_delta_us=300011 retune_secondary_us=810 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2202 slot=29 entry=0 command_id=0 flags=31 generated=1 primary_started=1 primary_completed=1 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=79206 auxptr_dma_delta_us=300011 retune_secondary_us=811 auxptr_dma_window_miss=0
+
+CONTROL_BURST run_id=2202 slot=0 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=80155 submit_before_us=80173 submit_after_us=80274 finish_us=80548
+
+CONTROL_BURST run_id=2202 slot=0 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=80156 submit_before_us=380173 submit_after_us=380181 finish_us=382548
+
+CONTROL_BURST run_id=2202 slot=1 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=578890 submit_before_us=578912 submit_after_us=579011 finish_us=579549
+
+CONTROL_BURST run_id=2202 slot=1 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=578892 submit_before_us=878913 submit_after_us=878921 finish_us=881549
+
+CONTROL_BURST run_id=2202 slot=2 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=1078889 submit_before_us=1078903 submit_after_us=1079004 finish_us=1079550
+
+CONTROL_BURST run_id=2202 slot=2 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=1078891 submit_before_us=1378905 submit_after_us=1378913 finish_us=1381550
+
+CONTROL_BURST run_id=2202 slot=3 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=1579294 submit_before_us=1579307 submit_after_us=1579407 finish_us=1580550
+
+CONTROL_BURST run_id=2202 slot=3 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=1579295 submit_before_us=1879309 submit_after_us=1879316 finish_us=1881551
+
+CONTROL_BURST run_id=2202 slot=4 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=2079269 submit_before_us=2079283 submit_after_us=2079382 finish_us=2079556
+
+CONTROL_BURST run_id=2202 slot=4 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=2079270 submit_before_us=2379284 submit_after_us=2379292 finish_us=2381552
+
+CONTROL_BURST run_id=2202 slot=5 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=2579228 submit_before_us=2579241 submit_after_us=2579342 finish_us=2579553
+
+CONTROL_BURST run_id=2202 slot=5 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=2579229 submit_before_us=2879243 submit_after_us=2879250 finish_us=2881553
+
+CONTROL_BURST run_id=2202 slot=6 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=3079347 submit_before_us=3079359 submit_after_us=3079459 finish_us=3080553
+
+CONTROL_BURST run_id=2202 slot=6 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=3079348 submit_before_us=3379361 submit_after_us=3379368 finish_us=3381554
+
+CONTROL_BURST run_id=2202 slot=7 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=3578918 submit_before_us=3578931 submit_after_us=3579031 finish_us=3579555
+
+CONTROL_BURST run_id=2202 slot=7 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=3578919 submit_before_us=3878933 submit_after_us=3878940 finish_us=3881555
+
+CONTROL_BURST run_id=2202 slot=8 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=4079272 submit_before_us=4079284 submit_after_us=4079384 finish_us=4079556
+
+CONTROL_BURST run_id=2202 slot=8 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=4079273 submit_before_us=4379286 submit_after_us=4379293 finish_us=4381556
+
+CONTROL_BURST run_id=2202 slot=9 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=4579033 submit_before_us=4579046 submit_after_us=4579146 finish_us=4579557
+
+CONTROL_BURST run_id=2202 slot=9 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=4579034 submit_before_us=4879047 submit_after_us=4879055 finish_us=4881557
+
+CONTROL_BURST run_id=2202 slot=10 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=5078962 submit_before_us=5078974 submit_after_us=5079074 finish_us=5079558
+
+CONTROL_BURST run_id=2202 slot=10 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=5078963 submit_before_us=5378976 submit_after_us=5378983 finish_us=5381561
+
+CONTROL_BURST run_id=2202 slot=11 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=5579315 submit_before_us=5579332 submit_after_us=5579430 finish_us=5580558
+
+CONTROL_BURST run_id=2202 slot=11 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=5579316 submit_before_us=5879333 submit_after_us=5879341 finish_us=5881559
+
+CONTROL_BURST run_id=2202 slot=12 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=6079312 submit_before_us=6079325 submit_after_us=6079425 finish_us=6080559
+
+CONTROL_BURST run_id=2202 slot=12 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=6079314 submit_before_us=6379327 submit_after_us=6379334 finish_us=6381560
+
+CONTROL_BURST run_id=2202 slot=13 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=6579293 submit_before_us=6579307 submit_after_us=6579407 finish_us=6579561
+
+CONTROL_BURST run_id=2202 slot=13 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=6579295 submit_before_us=6879308 submit_after_us=6879316 finish_us=6881561
+
+CONTROL_BURST run_id=2202 slot=14 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=7079322 submit_before_us=7079337 submit_after_us=7079437 finish_us=7080561
+
+CONTROL_BURST run_id=2202 slot=14 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=7079323 submit_before_us=7379338 submit_after_us=7379346 finish_us=7381562
+
+CONTROL_BURST run_id=2202 slot=15 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=7579016 submit_before_us=7579029 submit_after_us=7579129 finish_us=7579563
+
+CONTROL_BURST run_id=2202 slot=15 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=7579017 submit_before_us=7879031 submit_after_us=7879038 finish_us=7881563
+
+CONTROL_BURST run_id=2202 slot=16 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=8078905 submit_before_us=8078917 submit_after_us=8079017 finish_us=8079564
+
+CONTROL_BURST run_id=2202 slot=16 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=8078906 submit_before_us=8378919 submit_after_us=8378926 finish_us=8381564
+
+CONTROL_BURST run_id=2202 slot=17 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=8579270 submit_before_us=8579282 submit_after_us=8579382 finish_us=8579565
+
+CONTROL_BURST run_id=2202 slot=17 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=8579271 submit_before_us=8879284 submit_after_us=8879292 finish_us=8881565
+
+CONTROL_BURST run_id=2202 slot=18 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=9079247 submit_before_us=9079260 submit_after_us=9079360 finish_us=9079565
+
+CONTROL_BURST run_id=2202 slot=18 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=9079248 submit_before_us=9379261 submit_after_us=9379269 finish_us=9381566
+
+CONTROL_BURST run_id=2202 slot=19 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=9578990 submit_before_us=9579002 submit_after_us=9579102 finish_us=9579567
+
+CONTROL_BURST run_id=2202 slot=19 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=9578991 submit_before_us=9879004 submit_after_us=9879011 finish_us=9881567
+
+CONTROL_BURST run_id=2202 slot=20 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=10078853 submit_before_us=10078865 submit_after_us=10078965 finish_us=10079567
+
+CONTROL_BURST run_id=2202 slot=20 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=10078854 submit_before_us=10378867 submit_after_us=10378874 finish_us=10381571
+
+CONTROL_BURST run_id=2202 slot=21 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=10579425 submit_before_us=10579442 submit_after_us=10579542 finish_us=10580568
+
+CONTROL_BURST run_id=2202 slot=21 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=10579426 submit_before_us=10879444 submit_after_us=10879451 finish_us=10881569
+
+CONTROL_BURST run_id=2202 slot=22 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=11079007 submit_before_us=11079020 submit_after_us=11079119 finish_us=11079569
+
+CONTROL_BURST run_id=2202 slot=22 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=11079008 submit_before_us=11379021 submit_after_us=11379029 finish_us=11381570
+
+CONTROL_BURST run_id=2202 slot=23 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=11579250 submit_before_us=11579262 submit_after_us=11579361 finish_us=11579571
+
+CONTROL_BURST run_id=2202 slot=23 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=11579251 submit_before_us=11879263 submit_after_us=11879271 finish_us=11881571
+
+CONTROL_BURST run_id=2202 slot=24 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=12078880 submit_before_us=12078892 submit_after_us=12078992 finish_us=12079576
+
+CONTROL_BURST run_id=2202 slot=24 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=12078881 submit_before_us=12378894 submit_after_us=12378901 finish_us=12381572
+
+CONTROL_BURST run_id=2202 slot=25 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=12579387 submit_before_us=12579399 submit_after_us=12579499 finish_us=12580572
+
+CONTROL_BURST run_id=2202 slot=25 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=12579388 submit_before_us=12879400 submit_after_us=12879408 finish_us=12881572
+
+CONTROL_BURST run_id=2202 slot=26 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=13078953 submit_before_us=13078966 submit_after_us=13079065 finish_us=13079573
+
+CONTROL_BURST run_id=2202 slot=26 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=13078954 submit_before_us=13378967 submit_after_us=13378975 finish_us=13381573
+
+CONTROL_BURST run_id=2202 slot=27 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=13579269 submit_before_us=13579281 submit_after_us=13579381 finish_us=13579575
+
+CONTROL_BURST run_id=2202 slot=27 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=13579270 submit_before_us=13879283 submit_after_us=13879291 finish_us=13881575
+
+CONTROL_BURST run_id=2202 slot=28 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=14079421 submit_before_us=14079434 submit_after_us=14079534 finish_us=14080575
+
+CONTROL_BURST run_id=2202 slot=28 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=14079422 submit_before_us=14379436 submit_after_us=14379443 finish_us=14381575
+
+CONTROL_BURST run_id=2202 slot=29 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=14579183 submit_before_us=14579195 submit_after_us=14579295 finish_us=14579576
+
+CONTROL_BURST run_id=2202 slot=29 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=462520 air_us=1872 pad_us=10 prepared_us=14579184 submit_before_us=14879197 submit_after_us=14879204 finish_us=14881576
+
+CONTROL_COST_STATS run_id=2202 logical_slots=30 ble_tx_completed=30 ieee_tx_completed=30 burst_attempted=60 burst_started=60 burst_completed=60 separate_gap_us=0 reference=dma_software_brackets
+
+CONTROL_TIME_META run_id=2202 schema=1 enabled=1 tick_hz=333333343 epoch_ticks=00000008c22eb791 slots_capacity=1024 overflow=0 timer_probe_n=32 timer_probe_min_ticks=14 timer_probe_max_ticks=24 reference=software_counter not_rf=1 submit_scope=first_write secondary_cache=before_aux_wait
+
+CONTROL_TIME_SLOT run_id=2202 slot=0 planned_ticks=00000008c22eb791 anchor_valid=1 anchor_ticks=00000008c3c67e88 target_ticks=00000008c9bc5f8b frame_us=35 mapping_us=782 gfsk_us=79324
+
+CONTROL_TIME_LATE run_id=2202 slot=0 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=8 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=0 kind=0 stage=call valid=3 before_ticks=00000008c3c68067 after_ticks=00000008c3c70307 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=0 kind=0 stage=stop_clear valid=3 before_ticks=00000008c3c680d9 after_ticks=00000008c3c68287 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=0 kind=0 stage=cache_flush valid=3 before_ticks=00000008c3c682f8 after_ticks=00000008c3c6fa1e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=0 kind=0 stage=dac_sync valid=3 before_ticks=00000008c3c6fa59 after_ticks=00000008c3c6fb5a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=0 kind=0 stage=submit_write valid=3 before_ticks=00000008c3c70207 after_ticks=00000008c3c702a4 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=0 kind=0 stage=poll valid=3 before_ticks=00000008c3c705e4 after_ticks=00000008c3c868c8 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=0 kind=1 stage=call valid=3 before_ticks=00000008c9bc62e6 after_ticks=00000008c9bc6af6 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=0 kind=1 stage=stop_clear valid=3 before_ticks=00000008c9bc6324 after_ticks=00000008c9bc6444 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=0 kind=1 stage=cache_flush valid=3 before_ticks=00000008c3cc9c5d after_ticks=00000008c3d0dcd2 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=0 kind=1 stage=dac_sync valid=3 before_ticks=00000008c9bc6478 after_ticks=00000008c9bc64ff status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=0 kind=1 stage=submit_write valid=3 before_ticks=00000008c9bc69f9 after_ticks=00000008c9bc6a9a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=0 kind=1 stage=poll valid=3 before_ticks=00000008c9bc7411 after_ticks=00000008c9c8755f status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=0 kind=3 stage=generation valid=3 before_ticks=00000008c22ec07a after_ticks=00000008c3c66603 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=0 kind=3 stage=retune_secondary valid=3 before_ticks=00000008c3c86b94 after_ticks=00000008c3cc99ff status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=0 kind=3 stage=retune_primary valid=3 before_ticks=00000008c9c8780d after_ticks=00000008c9cc8a8c status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=1 planned_ticks=00000008cc1dd941 anchor_valid=1 anchor_ticks=00000008cdaf370f target_ticks=00000008d3a51812 frame_us=35 mapping_us=788 gfsk_us=78059
+
+CONTROL_TIME_LATE run_id=2202 slot=1 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=1 kind=0 stage=call valid=3 before_ticks=00000008cdaf3872 after_ticks=00000008cdafb941 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=1 kind=0 stage=stop_clear valid=3 before_ticks=00000008cdaf3908 after_ticks=00000008cdaf3a70 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=1 kind=0 stage=cache_flush valid=3 before_ticks=00000008cdaf3a9e after_ticks=00000008cdafb136 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=1 kind=0 stage=dac_sync valid=3 before_ticks=00000008cdafb198 after_ticks=00000008cdafb247 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=1 kind=0 stage=submit_write valid=3 before_ticks=00000008cdafb82a after_ticks=00000008cdafb8d9 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=1 kind=0 stage=poll valid=3 before_ticks=00000008cdafbc02 after_ticks=00000008cdb27558 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=1 kind=1 stage=call valid=3 before_ticks=00000008d3a51bc6 after_ticks=00000008d3a523fe status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=1 kind=1 stage=stop_clear valid=3 before_ticks=00000008d3a51c16 after_ticks=00000008d3a51d29 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=1 kind=1 stage=cache_flush valid=3 before_ticks=00000008cdb69d40 after_ticks=00000008cdbb1ef8 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=1 kind=1 stage=dac_sync valid=3 before_ticks=00000008d3a51d60 after_ticks=00000008d3a51df0 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=1 kind=1 stage=submit_write valid=3 before_ticks=00000008d3a522f3 after_ticks=00000008d3a52394 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=1 kind=1 stage=poll valid=3 before_ticks=00000008d3a52c5d after_ticks=00000008d3b28212 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=1 kind=3 stage=generation valid=3 before_ticks=00000008cc1ddda0 after_ticks=00000008cdaf1a88 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=1 kind=3 stage=retune_secondary valid=3 before_ticks=00000008cdb27800 after_ticks=00000008cdb69af4 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=1 kind=3 stage=retune_primary valid=3 before_ticks=00000008d3b28475 after_ticks=00000008d3b697fe status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=2 planned_ticks=00000008d60cfaf1 anchor_valid=1 anchor_ticks=00000008d79e4df0 target_ticks=00000008dd942ef3 frame_us=35 mapping_us=775 gfsk_us=78072
+
+CONTROL_TIME_LATE run_id=2202 slot=2 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=2 kind=0 stage=call valid=3 before_ticks=00000008d79e4f72 after_ticks=00000008d79ed101 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=2 kind=0 stage=stop_clear valid=3 before_ticks=00000008d79e5002 after_ticks=00000008d79e5148 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=2 kind=0 stage=cache_flush valid=3 before_ticks=00000008d79e5192 after_ticks=00000008d79ec972 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=2 kind=0 stage=dac_sync valid=3 before_ticks=00000008d79ec9b3 after_ticks=00000008d79eca82 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=2 kind=0 stage=submit_write valid=3 before_ticks=00000008d79ed00b after_ticks=00000008d79ed0a4 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=2 kind=0 stage=poll valid=3 before_ticks=00000008d79ed3aa after_ticks=00000008d7a19847 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=2 kind=1 stage=call valid=3 before_ticks=00000008dd9432be after_ticks=00000008dd943b1b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=2 kind=1 stage=stop_clear valid=3 before_ticks=00000008dd9432fa after_ticks=00000008dd94341b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=2 kind=1 stage=cache_flush valid=3 before_ticks=00000008d7a5c06c after_ticks=00000008d7aa7741 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=2 kind=1 stage=dac_sync valid=3 before_ticks=00000008dd943458 after_ticks=00000008dd9434e0 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=2 kind=1 stage=submit_write valid=3 before_ticks=00000008dd9439fb after_ticks=00000008dd943ab8 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=2 kind=1 stage=poll valid=3 before_ticks=00000008dd944432 after_ticks=00000008dda1a530 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=2 kind=3 stage=generation valid=3 before_ticks=00000008d60cff33 after_ticks=00000008d79e3b34 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=2 kind=3 stage=retune_secondary valid=3 before_ticks=00000008d7a19abf after_ticks=00000008d7a5bebc status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=2 kind=3 stage=retune_primary valid=3 before_ticks=00000008dda1a7d3 after_ticks=00000008dda5b9e2 status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=3 planned_ticks=00000008dffc1ca1 anchor_valid=1 anchor_ticks=00000008e18f7d75 target_ticks=00000008e7855e78 frame_us=35 mapping_us=776 gfsk_us=78474
+
+CONTROL_TIME_LATE run_id=2202 slot=3 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=3 kind=0 stage=call valid=3 before_ticks=00000008e18f7f15 after_ticks=00000008e18fff32 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=3 kind=0 stage=stop_clear valid=3 before_ticks=00000008e18f7fa6 after_ticks=00000008e18f80ea status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=3 kind=0 stage=cache_flush valid=3 before_ticks=00000008e18f811e after_ticks=00000008e18ff7ed status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=3 kind=0 stage=dac_sync valid=3 before_ticks=00000008e18ff844 after_ticks=00000008e18ff8ee status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=3 kind=0 stage=submit_write valid=3 before_ticks=00000008e18ffe30 after_ticks=00000008e18ffed3 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=3 kind=0 stage=poll valid=3 before_ticks=00000008e19001c0 after_ticks=00000008e195d05c status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=3 kind=1 stage=call valid=3 before_ticks=00000008e7856227 after_ticks=00000008e7856a56 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=3 kind=1 stage=stop_clear valid=3 before_ticks=00000008e7856274 after_ticks=00000008e7856382 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=3 kind=1 stage=cache_flush valid=3 before_ticks=00000008e199f49e after_ticks=00000008e19ec2a4 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=3 kind=1 stage=dac_sync valid=3 before_ticks=00000008e78563be after_ticks=00000008e7856447 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=3 kind=1 stage=submit_write valid=3 before_ticks=00000008e7856959 after_ticks=00000008e78569f6 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=3 kind=1 stage=poll valid=3 before_ticks=00000008e78572e1 after_ticks=00000008e790c83c status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=3 kind=3 stage=generation valid=3 before_ticks=00000008dffc222d after_ticks=00000008e18f6be4 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=3 kind=3 stage=retune_secondary valid=3 before_ticks=00000008e195d314 after_ticks=00000008e199f2dd status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=3 kind=3 stage=retune_primary valid=3 before_ticks=00000008e790caba after_ticks=00000008e794de92 status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=4 planned_ticks=00000008e9eb3e51 anchor_valid=1 anchor_ticks=00000008eb7e7f5f target_ticks=00000008f1746062 frame_us=32 mapping_us=780 gfsk_us=78448
+
+CONTROL_TIME_LATE run_id=2202 slot=4 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=4 kind=0 stage=call valid=3 before_ticks=00000008eb7e80c6 after_ticks=00000008eb7f014d status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=4 kind=0 stage=stop_clear valid=3 before_ticks=00000008eb7e8163 after_ticks=00000008eb7e82f6 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=4 kind=0 stage=cache_flush valid=3 before_ticks=00000008eb7e832f after_ticks=00000008eb7efa2f status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=4 kind=0 stage=dac_sync valid=3 before_ticks=00000008eb7efa76 after_ticks=00000008eb7efb26 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=4 kind=0 stage=submit_write valid=3 before_ticks=00000008eb7f0047 after_ticks=00000008eb7f00ea status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=4 kind=0 stage=poll valid=3 before_ticks=00000008eb7f03bc after_ticks=00000008eb7fe3ec status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=4 kind=1 stage=call valid=3 before_ticks=00000008f1746426 after_ticks=00000008f1746c67 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=4 kind=1 stage=stop_clear valid=3 before_ticks=00000008f174646f after_ticks=00000008f174659b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=4 kind=1 stage=cache_flush valid=3 before_ticks=00000008eb84076a after_ticks=00000008eb88e7dd status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=4 kind=1 stage=dac_sync valid=3 before_ticks=00000008f17465d7 after_ticks=00000008f1746660 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=4 kind=1 stage=submit_write valid=3 before_ticks=00000008f1746b58 after_ticks=00000008f1746bf9 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=4 kind=1 stage=poll valid=3 before_ticks=00000008f17474a1 after_ticks=00000008f17feb1d status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=4 kind=3 stage=generation valid=3 before_ticks=00000008e9eb439a after_ticks=00000008eb7e6d53 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=4 kind=3 stage=retune_secondary valid=3 before_ticks=00000008eb7fe677 after_ticks=00000008eb8405cb status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=4 kind=3 stage=retune_primary valid=3 before_ticks=00000008f17fedb7 after_ticks=00000008f183ff70 status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=5 planned_ticks=00000008f3da6001 anchor_valid=1 anchor_ticks=00000008f56d6b33 target_ticks=00000008fb634c36 frame_us=34 mapping_us=779 gfsk_us=78407
+
+CONTROL_TIME_LATE run_id=2202 slot=5 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=5 kind=0 stage=call valid=3 before_ticks=00000008f56d6ccb after_ticks=00000008f56dee77 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=5 kind=0 stage=stop_clear valid=3 before_ticks=00000008f56d6d5d after_ticks=00000008f56d6e9f status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=5 kind=0 stage=cache_flush valid=3 before_ticks=00000008f56d6ed3 after_ticks=00000008f56de6da status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=5 kind=0 stage=dac_sync valid=3 before_ticks=00000008f56de718 after_ticks=00000008f56de7c8 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=5 kind=0 stage=submit_write valid=3 before_ticks=00000008f56ded5a after_ticks=00000008f56dee19 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=5 kind=0 stage=poll valid=3 before_ticks=00000008f56df0e2 after_ticks=00000008f56f00c9 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=5 kind=1 stage=call valid=3 before_ticks=00000008fb634fc4 after_ticks=00000008fb6357f8 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=5 kind=1 stage=stop_clear valid=3 before_ticks=00000008fb63500f after_ticks=00000008fb635124 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=5 kind=1 stage=cache_flush valid=3 before_ticks=00000008f5732423 after_ticks=00000008f57808f7 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=5 kind=1 stage=dac_sync valid=3 before_ticks=00000008fb635165 after_ticks=00000008fb6351ed status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=5 kind=1 stage=submit_write valid=3 before_ticks=00000008fb6356fd after_ticks=00000008fb63579b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=5 kind=1 stage=poll valid=3 before_ticks=00000008fb636038 after_ticks=00000008fb6f0e10 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=5 kind=3 stage=generation valid=3 before_ticks=00000008f3da648a after_ticks=00000008f56d5a05 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=5 kind=3 stage=retune_secondary valid=3 before_ticks=00000008f56f036a after_ticks=00000008f573226a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=5 kind=3 stage=retune_primary valid=3 before_ticks=00000008fb6f10a8 after_ticks=00000008fb732426 status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=6 planned_ticks=00000008fdc981b1 anchor_valid=1 anchor_ticks=00000008ff5d269b target_ticks=000000090553079e frame_us=34 mapping_us=780 gfsk_us=78525
+
+CONTROL_TIME_LATE run_id=2202 slot=6 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=6 kind=0 stage=call valid=3 before_ticks=00000008ff5d2833 after_ticks=00000008ff5da8d0 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=6 kind=0 stage=stop_clear valid=3 before_ticks=00000008ff5d28a8 after_ticks=00000008ff5d29d4 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=6 kind=0 stage=cache_flush valid=3 before_ticks=00000008ff5d2a08 after_ticks=00000008ff5da109 status=0 remaining_bytes=0
+
+
+CONTROL_TIME_STAGE run_id=2202 slot=6 kind=0 stage=dac_sync valid=3 before_ticks=00000008ff5da150 after_ticks=00000008ff5da200 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=6 kind=0 stage=submit_write valid=3 before_ticks=00000008ff5da79c after_ticks=00000008ff5da861 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=6 kind=0 stage=poll valid=3 before_ticks=00000008ff5dab87 after_ticks=00000008ff633973 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=6 kind=1 stage=call valid=3 before_ticks=0000000905530b5c after_ticks=0000000905531382 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=6 kind=1 stage=stop_clear valid=3 before_ticks=0000000905530baa after_ticks=0000000905530cb7 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=6 kind=1 stage=cache_flush valid=3 before_ticks=00000008ff675e34 after_ticks=00000008ff6c4dda status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=6 kind=1 stage=dac_sync valid=3 before_ticks=0000000905530cfb after_ticks=0000000905530d83 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=6 kind=1 stage=submit_write valid=3 before_ticks=0000000905531276 after_ticks=0000000905531320 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=6 kind=1 stage=poll valid=3 before_ticks=0000000905531ba3 after_ticks=00000009055e30e0 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=6 kind=3 stage=generation valid=3 before_ticks=00000008fdc985e2 after_ticks=00000008ff5d1510 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=6 kind=3 stage=retune_secondary valid=3 before_ticks=00000008ff633c0f after_ticks=00000008ff675c53 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=6 kind=3 stage=retune_primary valid=3 before_ticks=00000009055e33a8 after_ticks=0000000905624653 status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=7 planned_ticks=0000000907b8a361 anchor_valid=1 anchor_ticks=00000009094a1a8f target_ticks=000000090f3ffb92 frame_us=35 mapping_us=779 gfsk_us=78097
+
+CONTROL_TIME_LATE run_id=2202 slot=7 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=7 kind=0 stage=call valid=3 before_ticks=00000009094a1c08 after_ticks=00000009094a9cc9 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=7 kind=0 stage=stop_clear valid=3 before_ticks=00000009094a1cdd after_ticks=00000009094a1e2e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=7 kind=0 stage=cache_flush valid=3 before_ticks=00000009094a1e60 after_ticks=00000009094a956f status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=7 kind=0 stage=dac_sync valid=3 before_ticks=00000009094a95aa after_ticks=00000009094a9659 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=7 kind=0 stage=submit_write valid=3 before_ticks=00000009094a9bd1 after_ticks=00000009094a9c6e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=7 kind=0 stage=poll valid=3 before_ticks=00000009094a9f3d after_ticks=00000009094d46da status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=7 kind=1 stage=call valid=3 before_ticks=000000090f3fff36 after_ticks=000000090f400761 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=7 kind=1 stage=stop_clear valid=3 before_ticks=000000090f3fff82 after_ticks=000000090f400092 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=7 kind=1 stage=cache_flush valid=3 before_ticks=0000000909516c84 after_ticks=00000009095662dd status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=7 kind=1 stage=dac_sync valid=3 before_ticks=000000090f4000ce after_ticks=000000090f400154 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=7 kind=1 stage=submit_write valid=3 before_ticks=000000090f40065a after_ticks=000000090f4006fb status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=7 kind=1 stage=poll valid=3 before_ticks=000000090f401001 after_ticks=000000090f4d540c status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=7 kind=3 stage=generation valid=3 before_ticks=0000000907b8a771 after_ticks=00000009094a0933 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=7 kind=3 stage=retune_secondary valid=3 before_ticks=00000009094d4983 after_ticks=0000000909516a9e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=7 kind=3 stage=retune_primary valid=3 before_ticks=000000090f4d5693 after_ticks=000000090f516aa4 status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=8 planned_ticks=0000000911a7c511 anchor_valid=1 anchor_ticks=00000009133b082a target_ticks=000000091930e92d frame_us=34 mapping_us=785 gfsk_us=78445
+
+CONTROL_TIME_LATE run_id=2202 slot=8 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=3 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=8 kind=0 stage=call valid=3 before_ticks=00000009133b0999 after_ticks=00000009133b8ab7 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=8 kind=0 stage=stop_clear valid=3 before_ticks=00000009133b0a0c after_ticks=00000009133b0b64 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=8 kind=0 stage=cache_flush valid=3 before_ticks=00000009133b0b96 after_ticks=00000009133b8336 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=8 kind=0 stage=dac_sync valid=3 before_ticks=00000009133b8371 after_ticks=00000009133b8422 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=8 kind=0 stage=submit_write valid=3 before_ticks=00000009133b89c2 after_ticks=00000009133b8a5e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=8 kind=0 stage=poll valid=3 before_ticks=00000009133b8d24 after_ticks=00000009133c69a9 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=8 kind=1 stage=call valid=3 before_ticks=000000091930ed18 after_ticks=000000091930f52d status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=8 kind=1 stage=stop_clear valid=3 before_ticks=000000091930ed4f after_ticks=000000091930ee6e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=8 kind=1 stage=cache_flush valid=3 before_ticks=0000000913408f70 after_ticks=0000000913458206 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=8 kind=1 stage=dac_sync valid=3 before_ticks=000000091930eeaa after_ticks=000000091930ef3a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=8 kind=1 stage=submit_write valid=3 before_ticks=000000091930f42d after_ticks=000000091930f4d1 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=8 kind=1 stage=poll valid=3 before_ticks=000000091930fdbc after_ticks=00000009193c76e2 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=8 kind=3 stage=generation valid=3 before_ticks=0000000911a7c8d0 after_ticks=00000009133af6bd status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=8 kind=3 stage=retune_secondary valid=3 before_ticks=00000009133c6c12 after_ticks=0000000913408dbb status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=8 kind=3 stage=retune_primary valid=3 before_ticks=00000009193c7978 after_ticks=0000000919408b59 status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=9 planned_ticks=000000091b96e6c1 anchor_valid=1 anchor_ticks=000000091d28f2e0 target_ticks=00000009231ed3e3 frame_us=34 mapping_us=782 gfsk_us=78208
+
+CONTROL_TIME_LATE run_id=2202 slot=9 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=3 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=9 kind=0 stage=call valid=3 before_ticks=000000091d28f44d after_ticks=000000091d29755e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=9 kind=0 stage=stop_clear valid=3 before_ticks=000000091d28f4c4 after_ticks=000000091d28f661 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=9 kind=0 stage=cache_flush valid=3 before_ticks=000000091d28f694 after_ticks=000000091d296dcb status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=9 kind=0 stage=dac_sync valid=3 before_ticks=000000091d296e0b after_ticks=000000091d296ebb status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=9 kind=0 stage=submit_write valid=3 before_ticks=000000091d29745e after_ticks=000000091d2974ff status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=9 kind=0 stage=poll valid=3 before_ticks=000000091d297821 after_ticks=000000091d2b8cbe status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=9 kind=1 stage=call valid=3 before_ticks=00000009231ed83a after_ticks=00000009231ee053 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=9 kind=1 stage=stop_clear valid=3 before_ticks=00000009231ed871 after_ticks=00000009231ed991 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=9 kind=1 stage=cache_flush valid=3 before_ticks=000000091d2fb120 after_ticks=000000091d34a48b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=9 kind=1 stage=dac_sync valid=3 before_ticks=00000009231ed9cd after_ticks=00000009231eda52 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=9 kind=1 stage=submit_write valid=3 before_ticks=00000009231edf44 after_ticks=00000009231edfe5 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=9 kind=1 stage=poll valid=3 before_ticks=00000009231ee92a after_ticks=00000009232b99e3 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=9 kind=3 stage=generation valid=3 before_ticks=000000091b96ec15 after_ticks=000000091d28e208 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=9 kind=3 stage=retune_secondary valid=3 before_ticks=000000091d2b8f48 after_ticks=000000091d2faf3c status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=9 kind=3 stage=retune_primary valid=3 before_ticks=00000009232b9c7d after_ticks=00000009232fafa2 status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=10 planned_ticks=0000000925860871 anchor_valid=1 anchor_ticks=000000092717b782 target_ticks=000000092d0d9885 frame_us=35 mapping_us=779 gfsk_us=78140
+
+CONTROL_TIME_LATE run_id=2202 slot=10 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=10 kind=0 stage=call valid=3 before_ticks=000000092717b918 after_ticks=0000000927183977 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=10 kind=0 stage=stop_clear valid=3 before_ticks=000000092717b98d after_ticks=000000092717bad7 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=10 kind=0 stage=cache_flush valid=3 before_ticks=000000092717bb10 after_ticks=000000092718320e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=10 kind=0 stage=dac_sync valid=3 before_ticks=0000000927183247 after_ticks=00000009271832f6 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=10 kind=0 stage=submit_write valid=3 before_ticks=0000000927183874 after_ticks=0000000927183912 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=10 kind=0 stage=poll valid=3 before_ticks=0000000927183c22 after_ticks=00000009271ab012 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=10 kind=1 stage=call valid=3 before_ticks=000000092d0d9c4d after_ticks=000000092d0da458 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=10 kind=1 stage=stop_clear valid=3 before_ticks=000000092d0d9c92 after_ticks=000000092d0d9da4 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=10 kind=1 stage=cache_flush valid=3 before_ticks=00000009271ed53d after_ticks=000000092723ceec status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=10 kind=1 stage=dac_sync valid=3 before_ticks=000000092d0d9dd7 after_ticks=000000092d0d9e5e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=10 kind=1 stage=submit_write valid=3 before_ticks=000000092d0da357 after_ticks=000000092d0da3f1 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=10 kind=1 stage=poll valid=3 before_ticks=000000092d0dacf9 after_ticks=000000092d1ac105 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=10 kind=3 stage=generation valid=3 before_ticks=0000000925860cf2 after_ticks=000000092717a6c3 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=10 kind=3 stage=retune_secondary valid=3 before_ticks=00000009271ab286 after_ticks=00000009271ed39a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=10 kind=3 stage=retune_primary valid=3 before_ticks=000000092d1ac376 after_ticks=000000092d1ed43b status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=11 planned_ticks=000000092f752a21 anchor_valid=1 anchor_ticks=000000093108aaad target_ticks=0000000936fe8bb0 frame_us=35 mapping_us=775 gfsk_us=78497
+
+CONTROL_TIME_LATE run_id=2202 slot=11 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=3 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=11 kind=0 stage=call valid=3 before_ticks=000000093108ac1a after_ticks=0000000931092bad status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=11 kind=0 stage=stop_clear valid=3 before_ticks=000000093108ac94 after_ticks=000000093108adcb status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=11 kind=0 stage=cache_flush valid=3 before_ticks=000000093108adff after_ticks=0000000931092499 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=11 kind=0 stage=dac_sync valid=3 before_ticks=00000009310924d5 after_ticks=0000000931092586 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=11 kind=0 stage=submit_write valid=3 before_ticks=0000000931092ab1 after_ticks=0000000931092b4f status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=11 kind=0 stage=poll valid=3 before_ticks=0000000931092e80 after_ticks=00000009310ee855 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=11 kind=1 stage=call valid=3 before_ticks=0000000936fe8fa7 after_ticks=0000000936fe97df status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=11 kind=1 stage=stop_clear valid=3 before_ticks=0000000936fe8fee after_ticks=0000000936fe9131 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=11 kind=1 stage=cache_flush valid=3 before_ticks=0000000931130bee after_ticks=00000009311801fe status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=11 kind=1 stage=dac_sync valid=3 before_ticks=0000000936fe9167 after_ticks=0000000936fe91ec status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=11 kind=1 stage=submit_write valid=3 before_ticks=0000000936fe96e2 after_ticks=0000000936fe9785 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=11 kind=1 stage=poll valid=3 before_ticks=0000000936fea06d after_ticks=000000093709dfdb status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=11 kind=3 stage=generation valid=3 before_ticks=000000092f752f58 after_ticks=000000093108945d status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=11 kind=3 stage=retune_secondary valid=3 before_ticks=00000009310eead4 after_ticks=0000000931130a40 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=11 kind=3 stage=retune_primary valid=3 before_ticks=000000093709e26a after_ticks=00000009370df489 status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=12 planned_ticks=0000000939644bd1 anchor_valid=1 anchor_ticks=000000093af7c437 target_ticks=0000000940eda53a frame_us=34 mapping_us=777 gfsk_us=78494
+
+CONTROL_TIME_LATE run_id=2202 slot=12 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=12 kind=0 stage=call valid=3 before_ticks=000000093af7c599 after_ticks=000000093af84623 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=12 kind=0 stage=stop_clear valid=3 before_ticks=000000093af7c60c after_ticks=000000093af7c752 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=12 kind=0 stage=cache_flush valid=3 before_ticks=000000093af7c786 after_ticks=000000093af83e7b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=12 kind=0 stage=dac_sync valid=3 before_ticks=000000093af83ebc after_ticks=000000093af83f9a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=12 kind=0 stage=submit_write valid=3 before_ticks=000000093af84515 after_ticks=000000093af845b8 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=12 kind=0 stage=poll valid=3 before_ticks=000000093af84936 after_ticks=000000093afe0b22 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=12 kind=1 stage=call valid=3 before_ticks=0000000940eda907 after_ticks=0000000940edb11e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=12 kind=1 stage=stop_clear valid=3 before_ticks=0000000940eda94a after_ticks=0000000940edaa6d status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=12 kind=1 stage=cache_flush valid=3 before_ticks=000000093b022dcc after_ticks=000000093b07298a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=12 kind=1 stage=dac_sync valid=3 before_ticks=0000000940edaaa9 after_ticks=0000000940edab30 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=12 kind=1 stage=submit_write valid=3 before_ticks=0000000940edb023 after_ticks=0000000940edb0c3 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=12 kind=1 stage=poll valid=3 before_ticks=0000000940edb947 after_ticks=0000000940f902ce status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=12 kind=3 stage=generation valid=3 before_ticks=00000009396450ba after_ticks=000000093af7b342 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=12 kind=3 stage=retune_secondary valid=3 before_ticks=000000093afe0dab after_ticks=000000093b022c0b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=12 kind=3 stage=retune_primary valid=3 before_ticks=0000000940f9054d after_ticks=0000000940fd1871 status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=13 planned_ticks=0000000943536d81 anchor_valid=1 anchor_ticks=0000000944e6cd96 target_ticks=000000094adcae99 frame_us=35 mapping_us=782 gfsk_us=78469
+
+CONTROL_TIME_LATE run_id=2202 slot=13 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=13 kind=0 stage=call valid=3 before_ticks=0000000944e6cef5 after_ticks=0000000944e75043 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=13 kind=0 stage=stop_clear valid=3 before_ticks=0000000944e6cf62 after_ticks=0000000944e6d0a0 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=13 kind=0 stage=cache_flush valid=3 before_ticks=0000000944e6d0d9 after_ticks=0000000944e74840 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=13 kind=0 stage=dac_sync valid=3 before_ticks=0000000944e74880 after_ticks=0000000944e74955 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=13 kind=0 stage=submit_write valid=3 before_ticks=0000000944e74f41 after_ticks=0000000944e74fe2 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=13 kind=0 stage=poll valid=3 before_ticks=0000000944e75314 after_ticks=0000000944e8187e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=13 kind=1 stage=call valid=3 before_ticks=000000094adcb25b after_ticks=000000094adcba84 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=13 kind=1 stage=stop_clear valid=3 before_ticks=000000094adcb29d after_ticks=000000094adcb3b9 status=0 remaining_bytes=0
+
+
+CONTROL_TIME_STAGE run_id=2202 slot=13 kind=1 stage=cache_flush valid=3 before_ticks=0000000944ec3af9 after_ticks=0000000944f13425 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=13 kind=1 stage=dac_sync valid=3 before_ticks=000000094adcb3f9 after_ticks=000000094adcb482 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=13 kind=1 stage=submit_write valid=3 before_ticks=000000094adcb985 after_ticks=000000094adcba28 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=13 kind=1 stage=poll valid=3 before_ticks=000000094adcc320 after_ticks=000000094ae825ff status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=13 kind=3 stage=generation valid=3 before_ticks=0000000943537269 after_ticks=0000000944e6bbfe status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=13 kind=3 stage=retune_secondary valid=3 before_ticks=0000000944e81af2 after_ticks=0000000944ec392c status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=13 kind=3 stage=retune_primary valid=3 before_ticks=000000094ae828a4 after_ticks=000000094aec3bc2 status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=14 planned_ticks=000000094d428f31 anchor_valid=1 anchor_ticks=000000094ed61673 target_ticks=0000000954cbf776 frame_us=34 mapping_us=786 gfsk_us=78495
+
+CONTROL_TIME_LATE run_id=2202 slot=14 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=14 kind=0 stage=call valid=3 before_ticks=000000094ed61816 after_ticks=000000094ed69974 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=14 kind=0 stage=stop_clear valid=3 before_ticks=000000094ed61885 after_ticks=000000094ed61a09 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=14 kind=0 stage=cache_flush valid=3 before_ticks=000000094ed61a42 after_ticks=000000094ed691b3 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=14 kind=0 stage=dac_sync valid=3 before_ticks=000000094ed691f3 after_ticks=000000094ed692c4 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=14 kind=0 stage=submit_write valid=3 before_ticks=000000094ed69874 after_ticks=000000094ed6990e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=14 kind=0 stage=poll valid=3 before_ticks=000000094ed69c0d after_ticks=000000094edc512a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=14 kind=1 stage=call valid=3 before_ticks=0000000954cbfb0d after_ticks=0000000954cc033d status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=14 kind=1 stage=stop_clear valid=3 before_ticks=0000000954cbfb55 after_ticks=0000000954cbfc71 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=14 kind=1 stage=cache_flush valid=3 before_ticks=000000094ee0756e after_ticks=000000094ee56e04 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=14 kind=1 stage=dac_sync valid=3 before_ticks=0000000954cbfcad after_ticks=0000000954cbfd32 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=14 kind=1 stage=submit_write valid=3 before_ticks=0000000954cc023f after_ticks=0000000954cc02e0 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=14 kind=1 stage=poll valid=3 before_ticks=0000000954cc0b99 after_ticks=0000000954d748bc status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=14 kind=3 stage=generation valid=3 before_ticks=000000094d429332 after_ticks=000000094ed6038a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=14 kind=3 stage=retune_secondary valid=3 before_ticks=000000094edc53f0 after_ticks=000000094ee07311 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=14 kind=3 stage=retune_primary valid=3 before_ticks=0000000954d74b33 after_ticks=0000000954db5ec8 status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=15 planned_ticks=000000095731b0e1 anchor_valid=1 anchor_ticks=0000000958c3a7ca target_ticks=000000095eb988cd frame_us=35 mapping_us=779 gfsk_us=78194
+
+CONTROL_TIME_LATE run_id=2202 slot=15 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=15 kind=0 stage=call valid=3 before_ticks=0000000958c3a965 after_ticks=0000000958c429fa status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=15 kind=0 stage=stop_clear valid=3 before_ticks=0000000958c3a9d7 after_ticks=0000000958c3ab92 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=15 kind=0 stage=cache_flush valid=3 before_ticks=0000000958c3abcb after_ticks=0000000958c42284 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=15 kind=0 stage=dac_sync valid=3 before_ticks=0000000958c422bd after_ticks=0000000958c4236a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=15 kind=0 stage=submit_write valid=3 before_ticks=0000000958c428ef after_ticks=0000000958c42993 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=15 kind=0 stage=poll valid=3 before_ticks=0000000958c42c61 after_ticks=0000000958c65e67 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=15 kind=1 stage=call valid=3 before_ticks=000000095eb98ca8 after_ticks=000000095eb994df status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=15 kind=1 stage=stop_clear valid=3 before_ticks=000000095eb98ce9 after_ticks=000000095eb98e12 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=15 kind=1 stage=cache_flush valid=3 before_ticks=0000000958ca8211 after_ticks=0000000958cf7ef8 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=15 kind=1 stage=dac_sync valid=3 before_ticks=000000095eb98e4e after_ticks=000000095eb98ed3 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=15 kind=1 stage=submit_write valid=3 before_ticks=000000095eb993d0 after_ticks=000000095eb99471 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=15 kind=1 stage=poll valid=3 before_ticks=000000095eb99d96 after_ticks=000000095ec66bbf status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=15 kind=3 stage=generation valid=3 before_ticks=000000095731b664 after_ticks=0000000958c3962c status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=15 kind=3 stage=retune_secondary valid=3 before_ticks=0000000958c660d0 after_ticks=0000000958ca805e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=15 kind=3 stage=retune_primary valid=3 before_ticks=000000095ec66e3a after_ticks=000000095eca7fac status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=16 planned_ticks=000000096120d291 anchor_valid=1 anchor_ticks=0000000962b237ce target_ticks=0000000968a818d1 frame_us=34 mapping_us=778 gfsk_us=78084
+
+CONTROL_TIME_LATE run_id=2202 slot=16 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=16 kind=0 stage=call valid=3 before_ticks=0000000962b23938 after_ticks=0000000962b2b953 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=16 kind=0 stage=stop_clear valid=3 before_ticks=0000000962b239a7 after_ticks=0000000962b23ad8 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=16 kind=0 stage=cache_flush valid=3 before_ticks=0000000962b23b11 after_ticks=0000000962b2b1f9 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=16 kind=0 stage=dac_sync valid=3 before_ticks=0000000962b2b240 after_ticks=0000000962b2b2ed status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=16 kind=0 stage=submit_write valid=3 before_ticks=0000000962b2b84a after_ticks=0000000962b2b8e7 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=16 kind=0 stage=poll valid=3 before_ticks=0000000962b2bbe2 after_ticks=0000000962b581a8 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=16 kind=1 stage=call valid=3 before_ticks=0000000968a81cae after_ticks=0000000968a824de status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=16 kind=1 stage=stop_clear valid=3 before_ticks=0000000968a81cf4 after_ticks=0000000968a81e20 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=16 kind=1 stage=cache_flush valid=3 before_ticks=0000000962b9a69d after_ticks=0000000962bea34a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=16 kind=1 stage=dac_sync valid=3 before_ticks=0000000968a81e5c after_ticks=0000000968a81ee4 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=16 kind=1 stage=submit_write valid=3 before_ticks=0000000968a823db after_ticks=0000000968a8247a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=16 kind=1 stage=poll valid=3 before_ticks=0000000968a82d45 after_ticks=0000000968b58ebc status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=16 kind=3 stage=generation valid=3 before_ticks=000000096120d7d0 after_ticks=0000000962b226ae status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=16 kind=3 stage=retune_secondary valid=3 before_ticks=0000000962b5846c after_ticks=0000000962b9a506 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=16 kind=3 stage=retune_primary valid=3 before_ticks=0000000968b5915c after_ticks=0000000968b9a40b status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=17 planned_ticks=000000096b0ff441 anchor_valid=1 anchor_ticks=000000096ca334a1 target_ticks=00000009729915a4 frame_us=35 mapping_us=782 gfsk_us=78444
+
+CONTROL_TIME_LATE run_id=2202 slot=17 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=3 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=17 kind=0 stage=call valid=3 before_ticks=000000096ca33612 after_ticks=000000096ca3b68f status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=17 kind=0 stage=stop_clear valid=3 before_ticks=000000096ca33687 after_ticks=000000096ca337af status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=17 kind=0 stage=cache_flush valid=3 before_ticks=000000096ca337de after_ticks=000000096ca3af88 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=17 kind=0 stage=dac_sync valid=3 before_ticks=000000096ca3afc9 after_ticks=000000096ca3b073 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=17 kind=0 stage=submit_write valid=3 before_ticks=000000096ca3b591 after_ticks=000000096ca3b634 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=17 kind=0 stage=poll valid=3 before_ticks=000000096ca3b943 after_ticks=000000096ca4a48b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=17 kind=1 stage=call valid=3 before_ticks=00000009729919bc after_ticks=00000009729921ef status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=17 kind=1 stage=stop_clear valid=3 before_ticks=0000000972991a08 after_ticks=0000000972991b1c status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=17 kind=1 stage=cache_flush valid=3 before_ticks=000000096ca8c74e after_ticks=000000096cadc77f status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=17 kind=1 stage=dac_sync valid=3 before_ticks=0000000972991b55 after_ticks=0000000972991be2 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=17 kind=1 stage=submit_write valid=3 before_ticks=00000009729920db after_ticks=0000000972992182 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=17 kind=1 stage=poll valid=3 before_ticks=0000000972992a31 after_ticks=0000000972a4b1b7 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=17 kind=3 stage=generation valid=3 before_ticks=000000096b0ff988 after_ticks=000000096ca323e2 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=17 kind=3 stage=retune_secondary valid=3 before_ticks=000000096ca4a717 after_ticks=000000096ca8c59b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=17 kind=3 stage=retune_primary valid=3 before_ticks=0000000972a4b459 after_ticks=0000000972a8c89a status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=18 planned_ticks=0000000974ff15f1 anchor_valid=1 anchor_ticks=000000097692393d target_ticks=000000097c881a40 frame_us=35 mapping_us=783 gfsk_us=78422
+
+CONTROL_TIME_LATE run_id=2202 slot=18 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=18 kind=0 stage=call valid=3 before_ticks=0000000976923aca after_ticks=000000097692bbf9 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=18 kind=0 stage=stop_clear valid=3 before_ticks=0000000976923b40 after_ticks=0000000976923ce8 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=18 kind=0 stage=cache_flush valid=3 before_ticks=0000000976923d25 after_ticks=000000097692b45c status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=18 kind=0 stage=dac_sync valid=3 before_ticks=000000097692b498 after_ticks=000000097692b549 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=18 kind=0 stage=submit_write valid=3 before_ticks=000000097692baf7 after_ticks=000000097692bb95 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=18 kind=0 stage=poll valid=3 before_ticks=000000097692beac after_ticks=000000097693c73c status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=18 kind=1 stage=call valid=3 before_ticks=000000097c881de4 after_ticks=000000097c88263b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=18 kind=1 stage=stop_clear valid=3 before_ticks=000000097c881e35 after_ticks=000000097c881f61 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=18 kind=1 stage=cache_flush valid=3 before_ticks=000000097697eb06 after_ticks=00000009769ce3de status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=18 kind=1 stage=dac_sync valid=3 before_ticks=000000097c881f9d after_ticks=000000097c882024 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=18 kind=1 stage=submit_write valid=3 before_ticks=000000097c882534 after_ticks=000000097c8825d0 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=18 kind=1 stage=poll valid=3 before_ticks=000000097c882efc after_ticks=000000097c93d492 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=18 kind=3 stage=generation valid=3 before_ticks=0000000974ff1a01 after_ticks=00000009769227cb status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=18 kind=3 stage=retune_secondary valid=3 before_ticks=000000097693c9dd after_ticks=000000097697e937 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=18 kind=3 stage=retune_primary valid=3 before_ticks=000000097c93d728 after_ticks=000000097c97ea97 status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=19 planned_ticks=000000097eee37a1 anchor_valid=1 anchor_ticks=0000000980800aff target_ticks=000000098675ec02 frame_us=34 mapping_us=783 gfsk_us=78166
+
+CONTROL_TIME_LATE run_id=2202 slot=19 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=19 kind=0 stage=call valid=3 before_ticks=0000000980800c6c after_ticks=0000000980808dc2 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=19 kind=0 stage=stop_clear valid=3 before_ticks=0000000980800ce2 after_ticks=0000000980800e3c status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=19 kind=0 stage=cache_flush valid=3 before_ticks=0000000980800e70 after_ticks=00000009808085b0 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=19 kind=0 stage=dac_sync valid=3 before_ticks=00000009808085ec after_ticks=000000098080869d status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=19 kind=0 stage=submit_write valid=3 before_ticks=0000000980808cb5 after_ticks=0000000980808d53 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=19 kind=0 stage=poll valid=3 before_ticks=0000000980809071 after_ticks=000000098082eaa2 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=19 kind=1 stage=call valid=3 before_ticks=000000098675efaf after_ticks=000000098675f7e0 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=19 kind=1 stage=stop_clear valid=3 before_ticks=000000098675eff1 after_ticks=000000098675f10f status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=19 kind=1 stage=cache_flush valid=3 before_ticks=0000000980870e3a after_ticks=00000009808c0889 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=19 kind=1 stage=dac_sync valid=3 before_ticks=000000098675f14b after_ticks=000000098675f1d4 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=19 kind=1 stage=submit_write valid=3 before_ticks=000000098675f6d7 after_ticks=000000098675f778 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=19 kind=1 stage=poll valid=3 before_ticks=0000000986760083 after_ticks=000000098682f79b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=19 kind=3 stage=generation valid=3 before_ticks=000000097eee3bbe after_ticks=00000009807ffaf0 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=19 kind=3 stage=retune_secondary valid=3 before_ticks=000000098082ed25 after_ticks=0000000980870c80 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=19 kind=3 stage=retune_primary valid=3 before_ticks=000000098682fa4f after_ticks=0000000986870e5e status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=20 planned_ticks=0000000988dd5951 anchor_valid=1 anchor_ticks=000000098a6e7a39 target_ticks=0000000990645b3c frame_us=35 mapping_us=783 gfsk_us=78028
+
+CONTROL_TIME_LATE run_id=2202 slot=20 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=3 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=20 kind=0 stage=call valid=3 before_ticks=000000098a6e7bf1 after_ticks=000000098a6efc51 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=20 kind=0 stage=stop_clear valid=3 before_ticks=000000098a6e7c61 after_ticks=000000098a6e7d98 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=20 kind=0 stage=cache_flush valid=3 before_ticks=000000098a6e7dd1 after_ticks=000000098a6ef520 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=20 kind=0 stage=dac_sync valid=3 before_ticks=000000098a6ef563 after_ticks=000000098a6ef60e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=20 kind=0 stage=submit_write valid=3 before_ticks=000000098a6efb42 after_ticks=000000098a6efbe3 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=20 kind=0 stage=poll valid=3 before_ticks=000000098a6efed0 after_ticks=000000098a720d40 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=20 kind=1 stage=call valid=3 before_ticks=0000000990645f2e after_ticks=000000099064676f status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=20 kind=1 stage=stop_clear valid=3 before_ticks=0000000990645f77 after_ticks=0000000990646096 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=20 kind=1 stage=cache_flush valid=3 before_ticks=000000098a763095 after_ticks=000000098a7b2c3c status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=20 kind=1 stage=dac_sync valid=3 before_ticks=00000009906460d6 after_ticks=000000099064615f status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=20 kind=1 stage=submit_write valid=3 before_ticks=0000000990646664 after_ticks=0000000990646705 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=20 kind=1 stage=poll valid=3 before_ticks=0000000990646f8d after_ticks=0000000990721ec2 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=20 kind=3 stage=generation valid=3 before_ticks=0000000988dd5db4 after_ticks=000000098a6e6a50 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=20 kind=3 stage=retune_secondary valid=3 before_ticks=000000098a720fe6 after_ticks=000000098a762ede status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=20 kind=3 stage=retune_primary valid=3 before_ticks=000000099072217f after_ticks=000000099076363f status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=21 planned_ticks=0000000992cc7b01 anchor_valid=1 anchor_ticks=0000000994608b15 target_ticks=000000099a566c18 frame_us=34 mapping_us=780 gfsk_us=78604
+
+CONTROL_TIME_LATE run_id=2202 slot=21 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=3 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=21 kind=0 stage=call valid=3 before_ticks=0000000994608ca7 after_ticks=0000000994610d4a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=21 kind=0 stage=stop_clear valid=3 before_ticks=0000000994608d1c after_ticks=0000000994608e6e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=21 kind=0 stage=cache_flush valid=3 before_ticks=0000000994608e9c after_ticks=00000009946105fc status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=21 kind=0 stage=dac_sync valid=3 before_ticks=000000099461063c after_ticks=00000009946106e7 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=21 kind=0 stage=submit_write valid=3 before_ticks=0000000994610c55 after_ticks=0000000994610ceb status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=21 kind=0 stage=poll valid=3 before_ticks=0000000994610ff2 after_ticks=00000009946645ef status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=21 kind=1 stage=call valid=3 before_ticks=000000099a56701d after_ticks=000000099a567833 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=21 kind=1 stage=stop_clear valid=3 before_ticks=000000099a567068 after_ticks=000000099a567180 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=21 kind=1 stage=cache_flush valid=3 before_ticks=00000009946a6a7c after_ticks=00000009946f632f status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=21 kind=1 stage=dac_sync valid=3 before_ticks=000000099a5671b5 after_ticks=000000099a56723b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=21 kind=1 stage=submit_write valid=3 before_ticks=000000099a56772a after_ticks=000000099a5677cb status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=21 kind=1 stage=poll valid=3 before_ticks=000000099a568084 after_ticks=000000099a613d89 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=21 kind=3 stage=generation valid=3 before_ticks=0000000992cc7f34 after_ticks=00000009946074f3 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=21 kind=3 stage=retune_secondary valid=3 before_ticks=0000000994664884 after_ticks=00000009946a68a4 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=21 kind=3 stage=retune_primary valid=3 before_ticks=000000099a614019 after_ticks=000000099a655211 status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=22 planned_ticks=000000099cbb9cb1 anchor_valid=1 anchor_ticks=000000099e4d8715 target_ticks=00000009a4436818 frame_us=34 mapping_us=779 gfsk_us=78187
+
+CONTROL_TIME_LATE run_id=2202 slot=22 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=22 kind=0 stage=call valid=3 before_ticks=000000099e4d887f after_ticks=000000099e4e0925 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=22 kind=0 stage=stop_clear valid=3 before_ticks=000000099e4d88f8 after_ticks=000000099e4d8a69 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=22 kind=0 stage=cache_flush valid=3 before_ticks=000000099e4d8aa2 after_ticks=000000099e4e0209 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=22 kind=0 stage=dac_sync valid=3 before_ticks=000000099e4e024c after_ticks=000000099e4e02fc status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=22 kind=0 stage=submit_write valid=3 before_ticks=000000099e4e081e after_ticks=000000099e4e08ba status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=22 kind=0 stage=poll valid=3 before_ticks=000000099e4e0bb9 after_ticks=000000099e505325 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=22 kind=1 stage=call valid=3 before_ticks=00000009a4436ba0 after_ticks=00000009a4437400 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=22 kind=1 stage=stop_clear valid=3 before_ticks=00000009a4436be6 after_ticks=00000009a4436d1b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=22 kind=1 stage=cache_flush valid=3 before_ticks=000000099e5478d0 after_ticks=000000099e59743a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=22 kind=1 stage=dac_sync valid=3 before_ticks=00000009a4436d57 after_ticks=00000009a4436ddc status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=22 kind=1 stage=submit_write valid=3 before_ticks=00000009a44372e9 after_ticks=00000009a4437390 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=22 kind=1 stage=poll valid=3 before_ticks=00000009a4437cb9 after_ticks=00000009a4506073 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=22 kind=3 stage=generation valid=3 before_ticks=000000099cbba117 after_ticks=000000099e4d76ca status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=22 kind=3 stage=retune_secondary valid=3 before_ticks=000000099e5055ce after_ticks=000000099e54770f status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=22 kind=3 stage=retune_primary valid=3 before_ticks=00000009a45062d3 after_ticks=00000009a454753d status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=23 planned_ticks=00000009a6aabe61 anchor_valid=1 anchor_ticks=00000009a83de409 target_ticks=00000009ae33c50c frame_us=34 mapping_us=780 gfsk_us=78428
+
+CONTROL_TIME_LATE run_id=2202 slot=23 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=23 kind=0 stage=call valid=3 before_ticks=00000009a83de586 after_ticks=00000009a83e6598 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=23 kind=0 stage=stop_clear valid=3 before_ticks=00000009a83de5f5 after_ticks=00000009a83de73f status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=23 kind=0 stage=cache_flush valid=3 before_ticks=00000009a83de778 after_ticks=00000009a83e5e79 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=23 kind=0 stage=dac_sync valid=3 before_ticks=00000009a83e5eb0 after_ticks=00000009a83e5f5e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=23 kind=0 stage=submit_write valid=3 before_ticks=00000009a83e6493 after_ticks=00000009a83e6536 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=23 kind=0 stage=poll valid=3 before_ticks=00000009a83e6849 after_ticks=00000009a83f7672 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=23 kind=1 stage=call valid=3 before_ticks=00000009ae33c8e0 after_ticks=00000009ae33d0fd status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=23 kind=1 stage=stop_clear valid=3 before_ticks=00000009ae33c91e after_ticks=00000009ae33ca2a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=23 kind=1 stage=cache_flush valid=3 before_ticks=00000009a843993f after_ticks=00000009a84893ed status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=23 kind=1 stage=dac_sync valid=3 before_ticks=00000009ae33ca66 after_ticks=00000009ae33caf6 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=23 kind=1 stage=submit_write valid=3 before_ticks=00000009ae33cfff after_ticks=00000009ae33d09c status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=23 kind=1 stage=poll valid=3 before_ticks=00000009ae33d941 after_ticks=00000009ae3f83a3 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=23 kind=3 stage=generation valid=3 before_ticks=00000009a6aac2f9 after_ticks=00000009a83dd40f status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=23 kind=3 stage=retune_secondary valid=3 before_ticks=00000009a83f78f3 after_ticks=00000009a843977e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=23 kind=3 stage=retune_primary valid=3 before_ticks=00000009ae3f8639 after_ticks=00000009ae439894 status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=24 planned_ticks=00000009b099e011 anchor_valid=1 anchor_ticks=00000009b22b246e target_ticks=00000009b8210571 frame_us=35 mapping_us=781 gfsk_us=78055
+
+CONTROL_TIME_LATE run_id=2202 slot=24 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=8 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=24 kind=0 stage=call valid=3 before_ticks=00000009b22b25f1 after_ticks=00000009b22ba61d status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=24 kind=0 stage=stop_clear valid=3 before_ticks=00000009b22b2676 after_ticks=00000009b22b27c8 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=24 kind=0 stage=cache_flush valid=3 before_ticks=00000009b22b2801 after_ticks=00000009b22b9f16 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=24 kind=0 stage=dac_sync valid=3 before_ticks=00000009b22b9f51 after_ticks=00000009b22ba001 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=24 kind=0 stage=submit_write valid=3 before_ticks=00000009b22ba50b after_ticks=00000009b22ba5a9 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=24 kind=0 stage=poll valid=3 before_ticks=00000009b22ba8bc after_ticks=00000009b22e9f69 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=24 kind=1 stage=call valid=3 before_ticks=00000009b82108f5 after_ticks=00000009b8211108 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=24 kind=1 stage=stop_clear valid=3 before_ticks=00000009b821093f after_ticks=00000009b8210a50 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=24 kind=1 stage=cache_flush valid=3 before_ticks=00000009b232c08c after_ticks=00000009b237be38 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=24 kind=1 stage=dac_sync valid=3 before_ticks=00000009b8210a89 after_ticks=00000009b8210b10 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=24 kind=1 stage=submit_write valid=3 before_ticks=00000009b8211002 after_ticks=00000009b82110a0 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=24 kind=1 stage=poll valid=3 before_ticks=00000009b8211969 after_ticks=00000009b82ea675 status=0 remaining_bytes=0
+
+
+CONTROL_TIME_STAGE run_id=2202 slot=24 kind=3 stage=generation valid=3 before_ticks=00000009b099e556 after_ticks=00000009b22b1438 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=24 kind=3 stage=retune_secondary valid=3 before_ticks=00000009b22ea1fc after_ticks=00000009b232bebe status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=24 kind=3 stage=retune_primary valid=3 before_ticks=00000009b82ea913 after_ticks=00000009b832bb1b status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=25 planned_ticks=00000009ba8901c1 anchor_valid=1 anchor_ticks=00000009bc1cd9d5 target_ticks=00000009c212bad8 frame_us=35 mapping_us=784 gfsk_us=78561
+
+CONTROL_TIME_LATE run_id=2202 slot=25 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=25 kind=0 stage=call valid=3 before_ticks=00000009bc1cdb73 after_ticks=00000009bc1d5c65 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=25 kind=0 stage=stop_clear valid=3 before_ticks=00000009bc1cdbea after_ticks=00000009bc1cdd65 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=25 kind=0 stage=cache_flush valid=3 before_ticks=00000009bc1cdd99 after_ticks=00000009bc1d54c7 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=25 kind=0 stage=dac_sync valid=3 before_ticks=00000009bc1d5503 after_ticks=00000009bc1d55b3 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=25 kind=0 stage=submit_write valid=3 before_ticks=00000009bc1d5b5c after_ticks=00000009bc1d5c00 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=25 kind=0 stage=poll valid=3 before_ticks=00000009bc1d5f0b after_ticks=00000009bc22d19e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=25 kind=1 stage=call valid=3 before_ticks=00000009c212be9b after_ticks=00000009c212c6a7 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=25 kind=1 stage=stop_clear valid=3 before_ticks=00000009c212bedd after_ticks=00000009c212bff8 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=25 kind=1 stage=cache_flush valid=3 before_ticks=00000009bc26f6c8 after_ticks=00000009bc2bf69a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=25 kind=1 stage=dac_sync valid=3 before_ticks=00000009c212c034 after_ticks=00000009c212c0ba status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=25 kind=1 stage=submit_write valid=3 before_ticks=00000009c212c5ad after_ticks=00000009c212c650 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=25 kind=1 stage=poll valid=3 before_ticks=00000009c212cf2a after_ticks=00000009c21dc956 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=25 kind=3 stage=generation valid=3 before_ticks=00000009ba8905b4 after_ticks=00000009bc1cc980 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=25 kind=3 stage=retune_secondary valid=3 before_ticks=00000009bc22d481 after_ticks=00000009bc26f4f1 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=25 kind=3 stage=retune_primary valid=3 before_ticks=00000009c21dcc1d after_ticks=00000009c221dfbb status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=26 planned_ticks=00000009c4782371 anchor_valid=1 anchor_ticks=00000009c609c79b target_ticks=00000009cbffa89e frame_us=35 mapping_us=783 gfsk_us=78127
+
+CONTROL_TIME_LATE run_id=2202 slot=26 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=26 kind=0 stage=call valid=3 before_ticks=00000009c609c949 after_ticks=00000009c60a4967 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=26 kind=0 stage=stop_clear valid=3 before_ticks=00000009c609c9c8 after_ticks=00000009c609caec status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=26 kind=0 stage=cache_flush valid=3 before_ticks=00000009c609cb25 after_ticks=00000009c60a421a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=26 kind=0 stage=dac_sync valid=3 before_ticks=00000009c60a425a after_ticks=00000009c60a430b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=26 kind=0 stage=submit_write valid=3 before_ticks=00000009c60a4868 after_ticks=00000009c60a48fe status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=26 kind=0 stage=poll valid=3 before_ticks=00000009c60a4be2 after_ticks=00000009c60cdf33 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=26 kind=1 stage=call valid=3 before_ticks=00000009cbffac84 after_ticks=00000009cbffb4d6 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=26 kind=1 stage=stop_clear valid=3 before_ticks=00000009cbffacca after_ticks=00000009cbffade7 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=26 kind=1 stage=cache_flush valid=3 before_ticks=00000009c61105a3 after_ticks=00000009c6160615 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=26 kind=1 stage=dac_sync valid=3 before_ticks=00000009cbffae23 after_ticks=00000009cbffaeab status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=26 kind=1 stage=submit_write valid=3 before_ticks=00000009cbffb3c6 after_ticks=00000009cbffb46a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=26 kind=1 stage=poll valid=3 before_ticks=00000009cbffbd44 after_ticks=00000009cc0cec48 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=26 kind=3 stage=generation valid=3 before_ticks=00000009c478287b after_ticks=00000009c609b6c6 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=26 kind=3 stage=retune_secondary valid=3 before_ticks=00000009c60ce1fa after_ticks=00000009c61103ed status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=26 kind=3 stage=retune_primary valid=3 before_ticks=00000009cc0ceec3 after_ticks=00000009cc1103ad status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=27 planned_ticks=00000009ce674521 anchor_valid=1 anchor_ticks=00000009cffa83fb target_ticks=00000009d5f064fe frame_us=34 mapping_us=780 gfsk_us=78446
+
+CONTROL_TIME_LATE run_id=2202 slot=27 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=3 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=27 kind=0 stage=call valid=3 before_ticks=00000009cffa8594 after_ticks=00000009cffb064e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=27 kind=0 stage=stop_clear valid=3 before_ticks=00000009cffa85f1 after_ticks=00000009cffa878d status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=27 kind=0 stage=cache_flush valid=3 before_ticks=00000009cffa87c9 after_ticks=00000009cffafefb status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=27 kind=0 stage=dac_sync valid=3 before_ticks=00000009cffaff37 after_ticks=00000009cffaffe8 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=27 kind=0 stage=submit_write valid=3 before_ticks=00000009cffb054b after_ticks=00000009cffb05e9 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=27 kind=0 stage=poll valid=3 before_ticks=00000009cffb08e0 after_ticks=00000009cffc0238 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=27 kind=1 stage=call valid=3 before_ticks=00000009d5f06930 after_ticks=00000009d5f0718e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=27 kind=1 stage=stop_clear valid=3 before_ticks=00000009d5f0697e after_ticks=00000009d5f06a9f status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=27 kind=1 stage=cache_flush valid=3 before_ticks=00000009d00025df after_ticks=00000009d0052874 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=27 kind=1 stage=dac_sync valid=3 before_ticks=00000009d5f06adb after_ticks=00000009d5f06b68 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=27 kind=1 stage=submit_write valid=3 before_ticks=00000009d5f0708d after_ticks=00000009d5f07131 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=27 kind=1 stage=poll valid=3 before_ticks=00000009d5f07a1e after_ticks=00000009d5fc0f6e status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=27 kind=3 stage=generation valid=3 before_ticks=00000009ce674a8b after_ticks=00000009cffa738a status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=27 kind=3 stage=retune_secondary valid=3 before_ticks=00000009cffc04ce after_ticks=00000009d00023f7 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=27 kind=3 stage=retune_primary valid=3 before_ticks=00000009d5fc1216 after_ticks=00000009d600248e status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=28 planned_ticks=00000009d85666d1 anchor_valid=1 anchor_ticks=00000009d9ea6ca8 target_ticks=00000009dfe04dab frame_us=34 mapping_us=780 gfsk_us=78599
+
+CONTROL_TIME_LATE run_id=2202 slot=28 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=28 kind=0 stage=call valid=3 before_ticks=00000009d9ea6e18 after_ticks=00000009d9eaeec2 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=28 kind=0 stage=stop_clear valid=3 before_ticks=00000009d9ea6e86 after_ticks=00000009d9ea6fda status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=28 kind=0 stage=cache_flush valid=3 before_ticks=00000009d9ea700e after_ticks=00000009d9eae75b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=28 kind=0 stage=dac_sync valid=3 before_ticks=00000009d9eae79b after_ticks=00000009d9eae84b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=28 kind=0 stage=submit_write valid=3 before_ticks=00000009d9eaedb7 after_ticks=00000009d9eaee53 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=28 kind=0 stage=poll valid=3 before_ticks=00000009d9eaf171 after_ticks=00000009d9f03abc status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=28 kind=1 stage=call valid=3 before_ticks=00000009dfe05193 after_ticks=00000009dfe059cb status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=28 kind=1 stage=stop_clear valid=3 before_ticks=00000009dfe051db after_ticks=00000009dfe052fc status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=28 kind=1 stage=cache_flush valid=3 before_ticks=00000009d9f45d4f after_ticks=00000009d9f95969 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=28 kind=1 stage=dac_sync valid=3 before_ticks=00000009dfe05331 after_ticks=00000009dfe053b7 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=28 kind=1 stage=submit_write valid=3 before_ticks=00000009dfe058c5 after_ticks=00000009dfe05970 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=28 kind=1 stage=poll valid=3 before_ticks=00000009dfe0621b after_ticks=00000009dfeb3245 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=28 kind=3 stage=generation valid=3 before_ticks=00000009d8566bd0 after_ticks=00000009d9ea5b5b status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=28 kind=3 stage=retune_secondary valid=3 before_ticks=00000009d9f03d2f after_ticks=00000009d9f45b96 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=28 kind=3 stage=retune_primary valid=3 before_ticks=00000009dfeb34e3 after_ticks=00000009dfef46c4 status=0 remaining_bytes=0
+
+CONTROL_TIME_SLOT run_id=2202 slot=29 planned_ticks=00000009e2458881 anchor_valid=1 anchor_ticks=00000009e3d85739 target_ticks=00000009e9ce383c frame_us=34 mapping_us=780 gfsk_us=78361
+
+CONTROL_TIME_LATE run_id=2202 slot=29 reference=legacy_primary_call_anchor call_valid=1 submit_valid=1 return_valid=1 pre_call_us=2 pre_submit_us=8 post_return_us=9 window_us=300
+
+CONTROL_TIME_STAGE run_id=2202 slot=29 kind=0 stage=call valid=3 before_ticks=00000009e3d858e6 after_ticks=00000009e3d8d95c status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=29 kind=0 stage=stop_clear valid=3 before_ticks=00000009e3d85955 after_ticks=00000009e3d85a88 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=29 kind=0 stage=cache_flush valid=3 before_ticks=00000009e3d85abc after_ticks=00000009e3d8d1f5 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=29 kind=0 stage=dac_sync valid=3 before_ticks=00000009e3d8d231 after_ticks=00000009e3d8d2e1 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=29 kind=0 stage=submit_write valid=3 before_ticks=00000009e3d8d856 after_ticks=00000009e3d8d8fd status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=29 kind=0 stage=poll valid=3 before_ticks=00000009e3d8dbee after_ticks=00000009e3da4824 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=29 kind=1 stage=call valid=3 before_ticks=00000009e9ce3c23 after_ticks=00000009e9ce4442 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=29 kind=1 stage=stop_clear valid=3 before_ticks=00000009e9ce3c5a after_ticks=00000009e9ce3d79 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=29 kind=1 stage=cache_flush valid=3 before_ticks=00000009e3de6d04 after_ticks=00000009e3e3687d status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=29 kind=1 stage=dac_sync valid=3 before_ticks=00000009e9ce3db8 after_ticks=00000009e9ce3e40 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=29 kind=1 stage=submit_write valid=3 before_ticks=00000009e9ce433c after_ticks=00000009e9ce43d7 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=29 kind=1 stage=poll valid=3 before_ticks=00000009e9ce4d31 after_ticks=00000009e9da5545 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=29 kind=3 stage=generation valid=3 before_ticks=00000009e2458da0 after_ticks=00000009e3d846d2 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=29 kind=3 stage=retune_secondary valid=3 before_ticks=00000009e3da4ab1 after_ticks=00000009e3de6b62 status=0 remaining_bytes=0
+
+CONTROL_TIME_STAGE run_id=2202 slot=29 kind=3 stage=retune_primary valid=3 before_ticks=00000009e9da57e6 after_ticks=00000009e9de6c38 status=0 remaining_bytes=0
+
+CONTROL_TIME_END run_id=2202 slots=30 overflow=0
+

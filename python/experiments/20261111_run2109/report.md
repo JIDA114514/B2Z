@@ -14,5 +14,6 @@
 
 - [analyses/std_ble_flow_20261111_155630_371950/flow.summary.json](analyses/std_ble_flow_20261111_155630_371950/flow.summary.json)（complete）
 - [analyses/std_ble_flow_20261111_155630_371950/flow.md](analyses/std_ble_flow_20261111_155630_371950/flow.md)
+- [board.board.log](board.board.log)
 
 配置：[experiment.config.json](experiment.config.json)。完整参数、分母依据和异常见各接收报告及原始 JSON。

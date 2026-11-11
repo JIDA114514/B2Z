@@ -15,6 +15,7 @@
 - [analyses/n2_separate_follow/plan.summary.json](analyses/n2_separate_follow/plan.summary.json)（历史分析；状态未记录）
 - [analyses/std_ble_flow_20261110_164657_7636d7/flow.summary.json](analyses/std_ble_flow_20261110_164657_7636d7/flow.summary.json)（complete）
 - [analyses/n3_follow_audit_20261111/follow.audit.md](analyses/n3_follow_audit_20261111/follow.audit.md)
+- [analyses/n3_follow_audit_final_20261111/follow.audit.md](analyses/n3_follow_audit_final_20261111/follow.audit.md)
 - [analyses/std_ble_flow_20261110_164657_7636d7/flow.md](analyses/std_ble_flow_20261110_164657_7636d7/flow.md)
 - [analyses/n2_separate_follow/plan.slots.metrics.csv](analyses/n2_separate_follow/plan.slots.metrics.csv)
 - [analyses/n2_separate_follow/plan.tasks.metrics.csv](analyses/n2_separate_follow/plan.tasks.metrics.csv)

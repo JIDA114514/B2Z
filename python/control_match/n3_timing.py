@@ -35,6 +35,9 @@ def parse_timing(path,plan,allow_legacy=False):
     meta=one(traces,'CONTROL_TIME_META')
     if meta.get('schema')!='1' or meta.get('enabled')!='1':
         raise ValueError('unsupported or disabled N3 timing')
+    cache_phase=meta.get('secondary_cache','in_call')
+    if cache_phase not in ('in_call','before_aux_wait'):
+        raise ValueError('unsupported secondary cache phase')
     end=one(matching('CONTROL_TIME_END'),'CONTROL_TIME_END')
     n=len(plan['slots']);hz=int(meta['tick_hz']);epoch=tick(meta,'epoch_ticks')
     if hz<=0 or int(meta['overflow']) or int(end['overflow']) or int(end['slots'])!=n or int(meta['slots_capacity'])<n:
@@ -98,6 +101,12 @@ def parse_timing(path,plan,allow_legacy=False):
             previous_end=cb
             for stage in BURST_STAGES[1:-1]:
                 b,a,_,_=seen[slot,kind,stage]
+                if kind==1 and stage=='cache_flush' and cache_phase=='before_aux_wait':
+                    if b is not None and (a is None or (cb is not None and a>cb)):
+                        raise ValueError('secondary cache preparation overlaps DMA call')
+                    if cb is not None and b is None:
+                        raise ValueError('missing secondary cache preparation')
+                    continue
                 if b is not None and (cb is None or b<cb or (ca is not None and (a or b)>ca)):
                     raise ValueError('stage outside DMA call bracket')
                 if b is not None and previous_end is not None and b < previous_end:

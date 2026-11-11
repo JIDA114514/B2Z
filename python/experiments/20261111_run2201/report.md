@@ -13,7 +13,12 @@
 
 ## 分析与原始记录
 
+- [analyses/n3_full/n3.summary.json](analyses/n3_full/n3.summary.json)（历史分析；状态未记录）
 - [analyses/n3_integrity/plan.summary.json](analyses/n3_integrity/plan.summary.json)（历史分析；状态未记录）
+- [analyses/n3_full/assessment.md](analyses/n3_full/assessment.md)
+- [analyses/n3_full/holdover.age.png](analyses/n3_full/holdover.age.png)
+- [analyses/n3_full/holdover.cdf.png](analyses/n3_full/holdover.cdf.png)
+- [analyses/n3_full/timing.trace.png](analyses/n3_full/timing.trace.png)
 - [analyses/n3_integrity/plan.slots.metrics.csv](analyses/n3_integrity/plan.slots.metrics.csv)
 - [analyses/n3_integrity/plan.tasks.metrics.csv](analyses/n3_integrity/plan.tasks.metrics.csv)
 - [board.board.log](board.board.log)

@@ -164,7 +164,22 @@ def main() -> int:
     parser.add_argument("--zigbee-packets", type=Path, required=True)
     parser.add_argument("--run-id", type=int, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--config", type=Path, help="explicit N3 config; omit to retain legacy 300-slot/200-ms replay")
+    parser.add_argument("--experiment-dir", type=Path)
+    parser.add_argument("--board-log", type=Path)
+    parser.add_argument("--allow-legacy-timing", action="store_true")
     args = parser.parse_args()
+    if args.config:
+        try:
+            from .n3_analyze import run_analysis
+        except ImportError:
+            from n3_analyze import run_analysis
+        if not args.experiment_dir:
+            parser.error("N3 --config requires --experiment-dir")
+        run_analysis(args.experiment_dir,args.run_id,args.config,
+                     args.board_log or args.experiment_dir / "board.board.log",
+                     {"ble":args.ble_packets,"zigbee":args.zigbee_packets},args.output_dir,args.allow_legacy_timing)
+        return 0
     if args.output_dir.exists():
         parser.error("output directory already exists")
     sources = {"ble": args.ble_packets, "zigbee": args.zigbee_packets}

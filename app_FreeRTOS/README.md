@@ -631,3 +631,9 @@ b2z_plan_start? 1501 200
 `b2z_plan_start? <run_id> <period_ms> 2` 新增 BLE-only ch3 secondary + 独立 BlueBee 2410 MHz 的顺序发送，primary 仍为 ch39，周期至少 500 ms。模式 0/1 和旧性能协议保持不变；`b2z_control_start?` 最后一个可选 rf_mode 也支持 2。正式成本实验使用 plan 入口，单任务 control 入口没有逐突发清单。
 
 计划最终输出增加 `CONTROL_BURST` 与 `CONTROL_COST_STATS`，在 RF 运行结束后打印。旧 tx_completed 保持 BLE secondary 口径，独立 IEEE 完成数必须从新日志取得。每段波形尾部为 10 µs 标称零样本，BLE DMA 完成后等待至少 1000 µs 才提交 IEEE；软件间隔不是 RF 实测。主机语法/波形验证已完成，实际构建、上板、接收验证由实验者执行。任务清单与全部指令见 [N2 执行方案](../doc/n2_separate_transmission_experiment_plan.md#7-已实现接口与首轮执行指令2026-11-10)。
+
+## N3 板端软件取时
+
+计划实验默认新增 `CONTROL_TIME_META/SLOT/STAGE/LATE/END`，覆盖生成、DMA stop/clear、缓存刷新、DAC同步、首次提交寄存器写入、调用返回、轮询与往返切频。原命令、包格式和 N2 计数保留。原始 64 位 tick 采用十六进制字符串，独立 valid 标志区分缺失；这些是软件取时，不是实际 RF 起点。
+
+完整字段解释、失败/分段限制及串口保存要求见 [N3 日志接口](../doc/n3_time_reference_experiment_plan.md#10-板端实现状态与日志接口2026-11-11)。默认开启，可通过编译宏 `B2Z_N3_TRACE_ENABLED=0` 禁用；不要求立即开展优化干预。300 槽最终串口输出较长，必须保存到 `CONTROL_TIME_END`。主机解析适配仍待完成，由用户自行构建和上板。

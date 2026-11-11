@@ -39,3 +39,6 @@ build/
 
 *.str
 *.log
+
+# Pre-registered N3 analysis policies (not generated receiver output).
+!/python/control_match/configs/n3_*.json

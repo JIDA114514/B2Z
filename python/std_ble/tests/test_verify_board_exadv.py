@@ -52,6 +52,46 @@ class BoardBleFlowTests(unittest.TestCase):
             self.assertEqual(validator(decoded[0], args)["did"], 0)
         self.assertEqual(len(secondary), 226)
 
+    def test_live_follow_stage_logging_and_tune_failure(self):
+        import time
+        from unittest.mock import patch
+        from python.std_ble.verify_board_exadv import verify_live
+        primary, secondary = self.board_pdus(0)
+        packets = {}
+        for ch,pdu in ((39,primary),(3,secondary)):
+            parser = BleStreamParser(ch)
+            parser.insert_data(bytes.fromhex("aad6be898e") + whiten(pdu+crc24(pdu),ch))
+            packets[ch] = parser.poll()[0]
+        args = SimpleNamespace(run_id=1904,command_id=43,expected_attempts=1,period_ms=500,
+            primary_channel=39,secondary_channel=3,aux_offset_us=300000,
+            expected_adva="C1:A2:A3:A4:A5:A6",payload_mode="joint",duration=.02,settle_us=0,follow_window_ms=360)
+        for failure in (False, True):
+            class TB:
+                def __init__(self,q):
+                    self.q=q;self.generation=0
+                    self.packet_sink=SimpleNamespace(parser=SimpleNamespace(crc_errors=0))
+                def start(self):pass
+                def stop(self):pass
+                def wait(self):pass
+                def diagnostic_state(self):
+                    return dict(stream_generation=self.generation,demodulated_bytes=0,crc_candidates=0,crc_errors=0,queue_size=self.q.qsize(),timeline_status="timeline_unverified")
+                def tune_channel(self,ch,settle):
+                    if failure and ch==3:raise RuntimeError('simulated tune error')
+                    self.generation+=1
+                    if self.generation<=2:
+                        packet=dict(packets[ch],stream_generation=self.generation,monotonic=time.monotonic())
+                        self.q.put(packet)
+                    return dict(driver_return_hz=None,**self.diagnostic_state())
+            with patch('python.std_ble.verify_board_exadv.build_hop_top_block',side_effect=lambda a,q:TB(q)):
+                result=verify_live(args)
+            self.assertEqual(result['timeline_status'],'timeline_unverified')
+            kinds=[e['event'] for e in result['events']]
+            if failure:
+                self.assertTrue(result['interrupted']);self.assertIn('tune_error',kinds)
+            else:
+                self.assertEqual(result['paired_dids'],[0]);self.assertIn('secondary_window_enter',kinds)
+                self.assertIn('packet_dequeued',kinds);self.assertIn('tune_return',kinds)
+
     def test_ble_only_follow_shape_requires_explicit_format(self):
         primary, secondary = self.board_pdus(0, 2)
         args = SimpleNamespace(run_id=1904, command_id=43, expected_attempts=2,

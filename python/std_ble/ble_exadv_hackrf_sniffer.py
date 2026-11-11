@@ -185,6 +185,7 @@ class BleStreamParser:
         self.stream_offset = 0
         self.detected = 0
         self.crc_errors = 0
+        self.crc_candidates = 0
 
     def reset(self, channel=None, reset_counts=False):
         if channel is not None:
@@ -194,6 +195,7 @@ class BleStreamParser:
         if reset_counts:
             self.detected = 0
             self.crc_errors = 0
+            self.crc_candidates = 0
 
     def insert_data(self, data):
         if isinstance(data, str):
@@ -260,14 +262,15 @@ class BleStreamParser:
             crc = pdu[-3:]
             calc_crc = bsp_algorithm.bt_crc(pdu, 2 + length)
             crc_ok = crc == calc_crc
+            self.crc_candidates += 1
+            if not crc_ok:
+                self.crc_errors += 1
             if crc_ok or self.keep_crc_errors:
                 self.detected += 1
                 packet = self._build_packet(pdu, crc_ok, self.stream_offset + shift / 8, total)
                 packet["bit_alignment"] = shift
                 packet["preamble_errors"] = preamble_errors
                 packets.append(packet)
-            else:
-                self.crc_errors += 1
             del self.buffer[:total]
             self.stream_offset += total
 
@@ -733,11 +736,13 @@ def build_hop_top_block(args, packet_queue):
             self.parser = BleStreamParser(channel, keep_crc_errors=args.keep_crc_errors)
             self.abs_stream_offset = 0
             self.parser_base_offset = 0
+            self.stream_generation = 0
 
         def set_channel(self, channel):
             with self.lock:
                 self.parser_base_offset = self.abs_stream_offset
                 self.parser.reset(channel=channel)
+                self.stream_generation += 1
 
         def work(self, input_items, output_items):
             del output_items
@@ -748,6 +753,7 @@ def build_hop_top_block(args, packet_queue):
                     packets = self.parser.poll()
                     for packet in packets:
                         packet["abs_start"] = self.parser_base_offset + packet["start"]
+                        packet["stream_generation"] = self.stream_generation
                     self.abs_stream_offset += len(data)
                 for packet in packets:
                     packet_queue.put(packet)
@@ -796,11 +802,22 @@ def build_hop_top_block(args, packet_queue):
             self.connect((self.demod, 0), (self.pack, 0))
             self.connect((self.pack, 0), (self.packet_sink, 0))
 
+        def diagnostic_state(self):
+            with self.packet_sink.lock:
+                return {"stream_generation": self.packet_sink.stream_generation,
+                        "demodulated_bytes": self.packet_sink.abs_stream_offset,
+                        "crc_candidates": self.packet_sink.parser.crc_candidates,
+                        "crc_errors": self.packet_sink.parser.crc_errors,
+                        "queue_size": packet_queue.qsize(), "timeline_status": "timeline_unverified"}
+
         def tune_channel(self, channel, settle_us):
-            self.source.set_center_freq(ble_channel_freq_hz(channel), 0)
+            requested = ble_channel_freq_hz(channel)
+            returned = self.source.set_center_freq(requested, 0)
             if settle_us > 0:
                 time.sleep(settle_us / 1e6)
             self.packet_sink.set_channel(channel)
+            return {"requested_hz": requested, "driver_return_hz": returned,
+                    "hardware_lock_verified": False, **self.diagnostic_state()}
 
     return HopBleTopBlock()
 

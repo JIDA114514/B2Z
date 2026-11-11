@@ -149,6 +149,9 @@ def _record_packet(events: list[dict], kind: str, packet: dict, detail: dict) ->
     events.append({"event": kind, "channel": packet["channel"],
                    "did": detail["did"], "pdu_hex": detail["pdu_hex"],
                    "crc_ok": packet["crc_ok"],
+                   **({"host_callback_monotonic_s": packet["monotonic"]} if "monotonic" in packet else {}),
+                   **({"stream_generation": packet["stream_generation"], "demodulated_byte_start": packet.get("abs_start")}
+                      if "stream_generation" in packet else {}),
                    **({"crc_hex": bytes(packet["pdu"][-3:]).hex()}
                       if len(packet["pdu"]) == len(bytes.fromhex(detail["pdu_hex"])) + 3 else {}),
                    **({"preamble_errors": packet["preamble_errors"]}
@@ -252,20 +255,41 @@ def verify_live(args) -> dict:
     deadline = 0.0
     window_crc_start = 0
     stopped = False
+    def stage(event, **detail):
+        events.append({"event": event, "host_monotonic_s": time.monotonic(),
+                       "timing_scope": "host_software_only", **tb.diagnostic_state(), **detail})
+
+    def tune(channel, did=None):
+        stage("tune_request", channel=channel, did=did)
+        try:
+            result = tb.tune_channel(channel, args.settle_us)
+        except Exception as exc:
+            stage("tune_error", channel=channel, did=did, reason=str(exc))
+            raise
+        stage("tune_return", channel=channel, did=did, **result)
+
     tb.start()
     try:
-        tb.tune_channel(args.primary_channel, args.settle_us)
+        tune(args.primary_channel)
         end = time.monotonic() + args.duration
         while time.monotonic() < end:
             if active and time.monotonic() >= deadline:
                 counts["follow_window_miss"] += 1
                 events.append({"event": "follow_window_miss", "did": active[1]["did"],
                                "crc_errors_in_window": tb.packet_sink.parser.crc_errors - window_crc_start})
-                tb.tune_channel(args.primary_channel, args.settle_us)
+                stage("secondary_window_exit", did=active[1]["did"], outcome="miss")
+                tune(args.primary_channel, active[1]["did"])
                 active = None
             try:
                 packet = packet_queue.get(timeout=0.01)
             except queue.Empty:
+                continue
+            stage("packet_dequeued", channel=packet["channel"], active_did=active[1]["did"] if active else None,
+                  packet_generation=packet.get("stream_generation"),
+                  queue_delay_ms=(time.monotonic()-packet["monotonic"])*1000)
+            if packet.get("stream_generation") != tb.diagnostic_state()["stream_generation"]:
+                counts["stale_generation_discard"] += 1
+                stage("packet_discard", reason="stale_generation", channel=packet["channel"])
                 continue
             if active is None:
                 if packet["channel"] != args.primary_channel:
@@ -275,19 +299,20 @@ def verify_live(args) -> dict:
                     detail = validate_primary(packet, args)
                 except ValueError as exc:
                     counts["primary_invalid"] += 1
-                    events.append({"event": "primary_invalid", "reason": str(exc)})
+                    stage("primary_invalid", reason=str(exc), pdu_hex=_pdu_no_crc(packet).hex())
                     continue
                 primary_dids.add(detail["did"])
                 _record_packet(events, "primary_valid", packet, detail)
                 active = (packet, detail)
                 retune_started = time.monotonic()
-                tb.tune_channel(args.secondary_channel, args.settle_us)
+                tune(args.secondary_channel, detail["did"])
                 events.append({"event": "tune_secondary", "did": detail["did"],
                                "host_retune_ms": (time.monotonic() - retune_started) * 1000,
                                "channel": args.secondary_channel})
                 window_crc_start = tb.packet_sink.parser.crc_errors
                 # This is a host observation window, not a measured RF offset.
                 deadline = packet["monotonic"] + args.follow_window_ms / 1000
+                stage("secondary_window_enter", did=detail["did"], host_deadline_s=deadline)
                 continue
             if packet["channel"] != args.secondary_channel:
                 continue
@@ -296,12 +321,13 @@ def verify_live(args) -> dict:
                 detail = validate_secondary(packet, args)
             except ValueError as exc:
                 counts["secondary_invalid"] += 1
-                events.append({"event": "secondary_invalid", "reason": str(exc)})
+                stage("secondary_invalid", did=active[1]["did"], reason=str(exc), pdu_hex=_pdu_no_crc(packet).hex())
                 continue
             secondary_dids.add(detail["did"])
             _record_packet(events, "secondary_valid", packet, detail)
             if detail["did"] != active[1]["did"] or detail["sid"] != active[1]["sid"]:
                 counts["identity_mismatch"] += 1
+                stage("identity_mismatch", did=active[1]["did"], observed_did=detail["did"])
                 continue
             paired.add(detail["did"])
             counts["followed_events"] += 1
@@ -312,20 +338,28 @@ def verify_live(args) -> dict:
             print(f"FOLLOW did={detail['did']} run={detail['control']['run_id']} "
                   f"command={detail['control']['command_id']} BLE_CRC=OK app_CRC=OK",
                   flush=True)
-            tb.tune_channel(args.primary_channel, args.settle_us)
+            stage("secondary_window_exit", did=detail["did"], outcome="matched")
+            tune(args.primary_channel, detail["did"])
             active = None
     except KeyboardInterrupt:
         stopped = True
+    except Exception as exc:
+        stopped = True
+        stage("capture_error", reason=str(exc))
     finally:
         tb.stop()
         tb.wait()
     if active:
+        stage("secondary_window_exit", did=active[1]["did"], outcome="capture_end")
         counts["follow_window_miss"] += 1
         events.append({"event": "follow_window_miss", "did": active[1]["did"],
                        "crc_errors_in_window": tb.packet_sink.parser.crc_errors - window_crc_start})
+    stage("capture_end", interrupted=stopped)
     counts["demod_crc_errors"] = tb.packet_sink.parser.crc_errors
     complete = paired == set(range(args.expected_attempts))
     return {"mode": "live_hop", "counts": dict(counts), "events": events,
+            "diagnostics_schema": "b2z_follow_stages_v1", "timeline_status": "timeline_unverified",
+            "iq_saved": False, "stream_counter_unit": "demodulated_bytes_not_IQ_samples",
             "start_utc": start_utc, "end_utc": datetime.now(timezone.utc).isoformat(),
             "primary_dids": sorted(primary_dids), "secondary_dids": sorted(secondary_dids),
             "paired_dids": sorted(paired), "separate_runs": False,

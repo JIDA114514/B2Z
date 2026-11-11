@@ -120,3 +120,9 @@ python3 python/control_match/replay_engine.py \
 `plan_analyze.py` 支持板端 `rf_mode=2`，校验 52 B BLE-only 与 224 B 共包格式，独立统计 BLE/IEEE DMA 完成。新增 `plan.bursts.csv` 和 `waveform_cost`，成本包含所有时间更新和重发；旧日志无突发清单时为未测。`compare_n2.py` 对两个固定频点实验核对任务、接收和 RF 配置，输出 Markdown/JSON；完整命令见 [N2 第 7 节](../../doc/n2_separate_transmission_experiment_plan.md#7-已实现接口与首轮执行指令2026-11-10)。
 
 分别发送两侧不共享 RF 起点。接收时指定 `--control-layout separate`，本阶段仅支持有效解析及 immediate 软件回放，禁止套用 joint scheduled 时间模型。DMA 调用包围时刻、完成时刻和波形预算均不冒充实测 RF 时间。
+
+## N3 时间保持与软件取时
+
+正式入口 `n3_analyze.py` 使用显式 JSON 配置核对计划、混合命令、训练与留出探测槽，检查历史包解码可用时刻；输出单侧预测、双侧相对估计差、更新年龄、N3板端阶段、关联CSV及图表。旧 `holdover_analyze.py` 默认行为保留，新增 `--config --experiment-dir` 可委托新版流程。新配置位于 `configs/n3_2201.json`，历史探索配置单列。
+
+`n3_follow_analyze.py` 审计 std_ble 新旧跟随事件，细分已知阶段与未知项。主机软件时刻和解调字节进度不等于RF时间或连续IQ，当前始终标记时间轴未验证。完整执行指令和输出说明见 [N3第11节](../../doc/n3_time_reference_experiment_plan.md#11-主机实现与最终分析命令2026-11-11)。

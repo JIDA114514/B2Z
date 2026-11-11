@@ -456,11 +456,13 @@ static void b2z_print_trace(const struct bluebee_perf_runtime *snapshot)
 	console_print("CONTROL_TIME_META run_id=%d schema=1 enabled=%d tick_hz=%d "
 		"epoch_ticks=%s slots_capacity=%d overflow=%d "
 		"timer_probe_n=%d timer_probe_min_ticks=%d timer_probe_max_ticks=%d "
-		"reference=software_counter not_rf=1 submit_scope=first_write\r\n",
+		"reference=software_counter not_rf=1 submit_scope=first_write secondary_cache=%s\r\n",
 		(long)snapshot->config.run_id, (long)B2Z_N3_TRACE_ENABLED,
 		(long)COUNTS_PER_SECOND, (char *)b2z_tick_hex(snapshot->start_time, hex[0]), (long)B2Z_PLAN_MAX_SLOTS,
 		(long)g_n3_overflow, (long)(B2Z_N3_TRACE_ENABLED ? 32u : 0u),
-		(long)g_n3_timer_min, (long)g_n3_timer_max);
+		(long)g_n3_timer_min, (long)g_n3_timer_max,
+		(char *)(snapshot->config.control_rf_mode != B2Z_CONTROL_RF_SAME_CHANNEL ?
+			"before_aux_wait" : "in_call"));
 	if (!B2Z_N3_TRACE_ENABLED) return;
 	for (uint32_t slot = 0; slot < snapshot->config.expected_packets; slot++) {
 		XTime planned = snapshot->start_time +
@@ -1465,8 +1467,23 @@ static void bluebee_perf_release_tx(void)
 	ble_tx_adv_tx_unlock();
 }
 
+/* The secondary buffer is immutable from preparation through DMA completion.
+ * Flush it while there is still AuxOffset slack; never skip flushing legacy TX. */
+static int32_t bluebee_perf_dma_prepare_cache(const uint32_t *iq_words,
+                                            uint32_t bytes, struct b2z_trace *trace)
+{
+	if (!iq_words || !bytes) return -1;
+#ifdef XILINX_PLATFORM
+	b2z_trace_mark(trace, N3_CACHE, 0, 0);
+	Xil_DCacheFlushRange((uintptr_t)iq_words, bytes);
+	b2z_trace_mark(trace, N3_CACHE, 1, 0);
+#endif
+	return 0;
+}
+
 static int32_t bluebee_perf_dma_start_traced(const uint32_t *iq_words,
-				      uint32_t iq_byte_count, struct b2z_trace *trace)
+				      uint32_t iq_byte_count, struct b2z_trace *trace,
+                                      bool cache_prepared)
 {
 	struct axi_dma_transfer transfer;
 	int32_t clear_ret;
@@ -1479,11 +1496,9 @@ static int32_t bluebee_perf_dma_start_traced(const uint32_t *iq_words,
 	clear_ret = axi_dmac_write(tx_dmac, AXI_DMAC_REG_IRQ_PENDING,
 		       AXI_DMAC_IRQ_SOT | AXI_DMAC_IRQ_EOT);
 	b2z_trace_mark(trace, N3_STOP_CLEAR, 1, clear_ret);
-#ifdef XILINX_PLATFORM
-	b2z_trace_mark(trace, N3_CACHE, 0, 0);
-	Xil_DCacheFlushRange((uintptr_t)iq_words, iq_byte_count);
-	b2z_trace_mark(trace, N3_CACHE, 1, 0);
-#endif
+	if (!cache_prepared &&
+	    bluebee_perf_dma_prepare_cache(iq_words, iq_byte_count, trace) < 0)
+		return -1;
 	transfer.size = iq_byte_count;
 	transfer.transfer_done = 0;
 	transfer.cyclic = NO;
@@ -1506,7 +1521,7 @@ static int32_t bluebee_perf_dma_start_traced(const uint32_t *iq_words,
 
 static int32_t bluebee_perf_dma_start(const uint32_t *iq_words, uint32_t bytes)
 {
-	return bluebee_perf_dma_start_traced(iq_words, bytes, NULL);
+	return bluebee_perf_dma_start_traced(iq_words, bytes, NULL, false);
 }
 
 static bool bluebee_perf_dma_complete(void)
@@ -1889,17 +1904,23 @@ static void b2z_burst_prepare(uint32_t slot, uint32_t kind,
 	b->pad_us = pad_us; b->prepared_us = b2z_observation_us();
 }
 
-static int32_t b2z_burst_start(uint32_t slot, uint32_t kind,
-			     const uint32_t *iq, uint32_t bytes)
+static int32_t b2z_burst_start_impl(uint32_t slot, uint32_t kind,
+			     const uint32_t *iq, uint32_t bytes, bool cache_prepared)
 {
 	struct b2z_burst_observation *b = b2z_burst(slot, kind);
 	int32_t ret;
 	if (b) { b->attempted = 1u; b->submit_before_us = b2z_observation_us(); }
 	b2z_trace_mark(b2z_trace_for(slot, kind), N3_CALL, 0, 0);
-	ret = bluebee_perf_dma_start_traced(iq, bytes, b2z_trace_for(slot, kind));
+	ret = bluebee_perf_dma_start_traced(iq, bytes, b2z_trace_for(slot, kind), cache_prepared);
 	b2z_trace_mark(b2z_trace_for(slot, kind), N3_CALL, 1, ret);
 	if (b) { b->started = ret >= 0; b->submit_after_us = b2z_observation_us(); }
 	return ret;
+}
+
+static int32_t b2z_burst_start(uint32_t slot, uint32_t kind,
+                             const uint32_t *iq, uint32_t bytes)
+{
+	return b2z_burst_start_impl(slot, kind, iq, bytes, false);
 }
 
 static int32_t b2z_burst_wait(uint32_t slot, uint32_t kind, uint32_t timeout_us)
@@ -2030,6 +2051,13 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 				g_control_slot_retune_us[sequence] = retune_us;
 			taskEXIT_CRITICAL();
 		}
+		/* Primary has completed and the secondary waveform will not be modified.
+		 * Preparation is included in the existing target/deadline checks below.
+		 * Stop/clear, DAC sync and register submission remain in the start call. */
+		if (standard_secondary &&
+		    bluebee_perf_dma_prepare_cache(iq_words, iq_byte_count,
+		                                  b2z_trace_for(sequence, 1u)) < 0)
+			goto restore_primary_lo;
 		if ((standard_secondary ?
 		     b2z_wait_aux_target(primary_start +
 			bluebee_perf_ticks_from_us(aux_offset_us)) :
@@ -2054,7 +2082,8 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 			goto restore_primary_lo;
 		}
 	}
-	if (b2z_burst_start(sequence, 1u, iq_words, iq_byte_count) < 0)
+	if (b2z_burst_start_impl(sequence, 1u, iq_words, iq_byte_count,
+	                         standard_secondary != 0u) < 0)
 		goto restore_primary_lo;
 	if (config->test == BLUEBEE_PERF_TEST_CONTROL) {
 		XTime now;

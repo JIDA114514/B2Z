@@ -637,3 +637,8 @@ b2z_plan_start? 1501 200
 计划实验默认新增 `CONTROL_TIME_META/SLOT/STAGE/LATE/END`，覆盖生成、DMA stop/clear、缓存刷新、DAC同步、首次提交寄存器写入、调用返回、轮询与往返切频。原命令、包格式和 N2 计数保留。原始 64 位 tick 采用十六进制字符串，独立 valid 标志区分缺失；这些是软件取时，不是实际 RF 起点。
 
 完整字段解释、失败/分段限制及串口保存要求见 [N3 日志接口](../doc/n3_time_reference_experiment_plan.md#10-板端实现状态与日志接口2026-11-11)。默认开启，可通过编译宏 `B2Z_N3_TRACE_ENABLED=0` 禁用；不要求立即开展优化干预。300 槽最终串口输出较长，必须保存到 `CONTROL_TIME_END`。主机解析适配仍待完成，由用户自行构建和上板。
+
+
+### 2201 后的 secondary 提交时序修正
+
+标准跨信道控制将 secondary 缓存刷新移到 AuxPtr 等待前，提交时不重复刷新；同频诊断与旧性能入口保留原流程。N3 日志增加 `secondary_cache` 阶段标记，主机解析器同时支持新旧日志。SDK 源码已同步，ARM 语法检查通过；尚待用户构建上板与短轮时序验证。验收步骤见 [N3 方案](../doc/n3_time_reference_experiment_plan.md) 末节。

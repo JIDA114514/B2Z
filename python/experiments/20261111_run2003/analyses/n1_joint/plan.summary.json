@@ -1,0 +1,436 @@
+{
+  "schema": "b2z_plan_match_v2",
+  "run_id": 2003,
+  "planned_slots": 120,
+  "board_tx_completed": 120,
+  "planned_control_tasks": 3,
+  "ble_valid_attempts": 95,
+  "zigbee_valid_attempts": 120,
+  "joint_valid_attempts": 95,
+  "ble_only_attempts": 0,
+  "zigbee_only_attempts": 25,
+  "neither_attempts": 0,
+  "joint_decoded_tasks": 3,
+  "joint_software_processed_tasks": null,
+  "board": {
+    "final": "1",
+    "state": "complete",
+    "run_id": "2003",
+    "period_ms": "500",
+    "tasks": "7",
+    "planned_slots": "120",
+    "reached_slots": "120",
+    "elapsed_us": "60000008",
+    "generated": "120",
+    "primary_started": "120",
+    "primary_completed": "120",
+    "tx_started": "120",
+    "tx_completed": "120",
+    "deadline_miss": "0",
+    "dma_timeout": "0",
+    "secondary_dma_late_samples": "120",
+    "secondary_dma_late_max_us": "80506",
+    "secondary_dma_late_avg_us": "80151",
+    "time_reference": "planned_secondary_start",
+    "rf_mode": "standard_secondary_ch3",
+    "aux_channel": "3",
+    "aux_offset_us": "300000",
+    "auxptr_dma_window_miss": "120",
+    "auxptr_dma_delta_samples": "120",
+    "auxptr_dma_delta_min_us": "300844",
+    "auxptr_dma_delta_max_us": "300999",
+    "auxptr_dma_delta_avg_us": "300987",
+    "retune_failure": "0",
+    "retune_secondary_max_us": "828"
+  },
+  "tasks": [
+    {
+      "command_id": 43,
+      "first_slot": 20,
+      "planned_attempts": 3,
+      "board_tx_completed": 3,
+      "ble_valid_attempts": 1,
+      "zigbee_valid_attempts": 3,
+      "same_attempt_joint_valid": 1,
+      "ble_first_valid_slot": 22,
+      "zigbee_first_valid_slot": 20,
+      "joint_task_decoded": 1,
+      "ble_live_status": "not_measured",
+      "zigbee_live_status": "rejected",
+      "ble_software_processed": null,
+      "zigbee_software_processed": 0,
+      "ble_command": {
+        "target_id": 1,
+        "opcode": 1,
+        "arg": 1,
+        "execute_at_ms": 20000,
+        "valid_until_ms": 15000
+      },
+      "zigbee_command": {
+        "target_id": 2,
+        "opcode": 1,
+        "arg": 1,
+        "execute_at_ms": 20000,
+        "valid_until_ms": 15000
+      },
+      "board_ble_tx_completed": 3,
+      "board_ieee_tx_completed": 3,
+      "ble_followed_attempts": 1,
+      "joint_task_with_ble_follow": 1
+    },
+    {
+      "command_id": 44,
+      "first_slot": 60,
+      "planned_attempts": 3,
+      "board_tx_completed": 3,
+      "ble_valid_attempts": 2,
+      "zigbee_valid_attempts": 3,
+      "same_attempt_joint_valid": 2,
+      "ble_first_valid_slot": 60,
+      "zigbee_first_valid_slot": 60,
+      "joint_task_decoded": 1,
+      "ble_live_status": "not_measured",
+      "zigbee_live_status": "rejected",
+      "ble_software_processed": null,
+      "zigbee_software_processed": 0,
+      "ble_command": {
+        "target_id": 1,
+        "opcode": 1,
+        "arg": 2,
+        "execute_at_ms": 40000,
+        "valid_until_ms": 35000
+      },
+      "zigbee_command": {
+        "target_id": 2,
+        "opcode": 2,
+        "arg": 7,
+        "execute_at_ms": 40000,
+        "valid_until_ms": 35000
+      },
+      "board_ble_tx_completed": 3,
+      "board_ieee_tx_completed": 3,
+      "ble_followed_attempts": 2,
+      "joint_task_with_ble_follow": 1
+    },
+    {
+      "command_id": 45,
+      "first_slot": 100,
+      "planned_attempts": 3,
+      "board_tx_completed": 3,
+      "ble_valid_attempts": 2,
+      "zigbee_valid_attempts": 3,
+      "same_attempt_joint_valid": 2,
+      "ble_first_valid_slot": 101,
+      "zigbee_first_valid_slot": 100,
+      "joint_task_decoded": 1,
+      "ble_live_status": "not_measured",
+      "zigbee_live_status": "rejected",
+      "ble_software_processed": null,
+      "zigbee_software_processed": 0,
+      "ble_command": {
+        "target_id": 1,
+        "opcode": 2,
+        "arg": 9,
+        "execute_at_ms": 60000,
+        "valid_until_ms": 55000
+      },
+      "zigbee_command": {
+        "target_id": 2,
+        "opcode": 1,
+        "arg": 3,
+        "execute_at_ms": 60000,
+        "valid_until_ms": 55000
+      },
+      "board_ble_tx_completed": 3,
+      "board_ieee_tx_completed": 3,
+      "ble_followed_attempts": 2,
+      "joint_task_with_ble_follow": 1
+    }
+  ],
+  "planned_task_manifest": [
+    {
+      "command_id": "0",
+      "first_slot": "0",
+      "repeats": "20",
+      "execute_at_ms": "0",
+      "valid_until_ms": "0",
+      "ble_target": "0",
+      "ble_opcode": "0",
+      "ble_arg": "0",
+      "zigbee_target": "0",
+      "zigbee_opcode": "0",
+      "zigbee_arg": "0"
+    },
+    {
+      "command_id": "43",
+      "first_slot": "20",
+      "repeats": "3",
+      "execute_at_ms": "20000",
+      "valid_until_ms": "15000",
+      "ble_target": "1",
+      "ble_opcode": "1",
+      "ble_arg": "1",
+      "zigbee_target": "2",
+      "zigbee_opcode": "1",
+      "zigbee_arg": "1"
+    },
+    {
+      "command_id": "0",
+      "first_slot": "23",
+      "repeats": "37",
+      "execute_at_ms": "0",
+      "valid_until_ms": "0",
+      "ble_target": "0",
+      "ble_opcode": "0",
+      "ble_arg": "0",
+      "zigbee_target": "0",
+      "zigbee_opcode": "0",
+      "zigbee_arg": "0"
+    },
+    {
+      "command_id": "44",
+      "first_slot": "60",
+      "repeats": "3",
+      "execute_at_ms": "40000",
+      "valid_until_ms": "35000",
+      "ble_target": "1",
+      "ble_opcode": "1",
+      "ble_arg": "2",
+      "zigbee_target": "2",
+      "zigbee_opcode": "2",
+      "zigbee_arg": "7"
+    },
+    {
+      "command_id": "0",
+      "first_slot": "63",
+      "repeats": "37",
+      "execute_at_ms": "0",
+      "valid_until_ms": "0",
+      "ble_target": "0",
+      "ble_opcode": "0",
+      "ble_arg": "0",
+      "zigbee_target": "0",
+      "zigbee_opcode": "0",
+      "zigbee_arg": "0"
+    },
+    {
+      "command_id": "45",
+      "first_slot": "100",
+      "repeats": "3",
+      "execute_at_ms": "60000",
+      "valid_until_ms": "55000",
+      "ble_target": "1",
+      "ble_opcode": "2",
+      "ble_arg": "9",
+      "zigbee_target": "2",
+      "zigbee_opcode": "1",
+      "zigbee_arg": "3"
+    },
+    {
+      "command_id": "0",
+      "first_slot": "103",
+      "repeats": "17",
+      "execute_at_ms": "0",
+      "valid_until_ms": "0",
+      "ble_target": "0",
+      "ble_opcode": "0",
+      "ble_arg": "0",
+      "zigbee_target": "0",
+      "zigbee_opcode": "0",
+      "zigbee_arg": "0"
+    }
+  ],
+  "limitations": [
+    "software processing is not physical actuator execution",
+    "independent IQ sample origins are not subtracted",
+    "DMA completion is a transmit proxy, not measured RF airtime",
+    "flow callback times are not IQ sample or RF timestamps; BLE scheduling not measured"
+  ],
+  "ble_follow": {
+    "per_planned_slot": {
+      "numerator": 95,
+      "denominator": 120,
+      "value": 0.7916666666666666
+    },
+    "per_valid_primary": {
+      "numerator": 95,
+      "denominator": 108,
+      "value": 0.8796296296296297
+    },
+    "joint_same_slot": {
+      "numerator": 95,
+      "denominator": 120,
+      "value": 0.7916666666666666
+    },
+    "joint_tasks_with_follow": {
+      "numerator": 3,
+      "denominator": 3,
+      "value": 1.0
+    },
+    "missing_primary_slots": [
+      5,
+      27,
+      28,
+      29,
+      44,
+      45,
+      49,
+      52,
+      66,
+      77,
+      99,
+      100
+    ],
+    "missing_follow_slots": [
+      5,
+      12,
+      15,
+      20,
+      21,
+      23,
+      27,
+      28,
+      29,
+      44,
+      45,
+      49,
+      50,
+      52,
+      57,
+      61,
+      64,
+      66,
+      72,
+      77,
+      79,
+      99,
+      100,
+      115,
+      117
+    ],
+    "source_counts": {
+      "duplicates": 0,
+      "crc_recomputed": 203,
+      "legacy_crc_assertions": 0
+    }
+  },
+  "receiver_configs": {
+    "ble": null,
+    "zigbee": {
+      "channel": 12,
+      "serial": "000000000000000017c467dc3348a6c3",
+      "sample_rate": 4000000,
+      "center_hz": 2410000000,
+      "iq_file": null,
+      "format": "ci8",
+      "lna": 16,
+      "vga": 10,
+      "amp": false,
+      "duration": 90.0,
+      "block_samples": 65536,
+      "queue_blocks": 64,
+      "stall_timeout": 10,
+      "dc_block_hz": 1000,
+      "cutoff_hz": 700000,
+      "cfo_hz": 0,
+      "demod": "phase",
+      "symbol_order": "project",
+      "soft_retry": true,
+      "preamble_max_distance": 80,
+      "run_id": 2003,
+      "control_layout": "joint",
+      "command_id": null,
+      "control_target_id": [
+        2
+      ],
+      "control_sender_id": "configured_board",
+      "control_accept_broadcast": false,
+      "control_assumed_reference_bound_ms": null,
+      "expected_packets": 120,
+      "board_log": null,
+      "full_run_covered": false,
+      "save_iq": true,
+      "output": null,
+      "experiment_dir": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261111_run2003",
+      "analysis_id": null,
+      "quiet": true,
+      "payload_len": null
+    }
+  },
+  "local_decode_availability": {
+    "ble": {
+      "samples": 0,
+      "missing": 95,
+      "min_us": null,
+      "max_us": null,
+      "mean_us": null,
+      "scope": "own IQ packet start to decoder availability; block quantized, not host processing or cross-device completion latency"
+    },
+    "zigbee": {
+      "samples": 120,
+      "missing": 0,
+      "min_us": 4270.25,
+      "max_us": 20582.25,
+      "mean_us": 12584.23125,
+      "scope": "own IQ packet start to decoder availability; block quantized, not host processing or cross-device completion latency"
+    }
+  },
+  "waveform_cost": {
+    "schema": "b2z_waveform_cost_v1",
+    "mode": "joint",
+    "logical_slots": 120,
+    "ble_tx_completed": 120,
+    "ieee_tx_completed": 120,
+    "burst_attempted": 240,
+    "burst_started": 240,
+    "burst_completed": 240,
+    "planned_waveform_us": 240960,
+    "submitted_waveform_us": 240960,
+    "submitted_zero_padding_us": 2400,
+    "attempted_waveform_budget_us": 240960,
+    "uncertain_bursts": 0,
+    "per_joint_decoded_task": {
+      "numerator_us": 240960,
+      "denominator": 3,
+      "value_us": 80320.0
+    },
+    "actual_rf_airtime_us": null,
+    "scope": "All slots including sync-only, repeats and failed DMA completions; successful DMA start allocates full waveform. Failed submissions listed separately; actual emitted fraction unknown. Padding is zero IQ, not proof of zero RF energy."
+  },
+  "analysis_version": {
+    "git_head": "d5ceeeb0e08f4864f86bd7ab94418b64c8410d2d",
+    "module_sha256": {
+      "plan_analyze.py": "7865b66756c944a8c3c7acf4b23fe77244d5137033e1799474381be7a501593c",
+      "burst_cost.py": "304243251185c2e320d8fbb1f9e87144693c165c90f30a641cef51c3b78b6e48",
+      "analyze.py": "4443f134b9564b38cd54ec699be0a802bb581252659d979f4912400be85ccfb7",
+      "flow_input.py": "72d612a8e47a63a7ad958451ca0209f6a07a3d73a7a4c1afeb79631cde288a52"
+    },
+    "board_firmware_version": "not_inferred_from_host_checkout"
+  },
+  "sources": {
+    "board": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261111_run2003/board.board.log",
+      "sha256": "939fda11677d1822b4ad9216b5808ad65c874a52aea97e29aa30e7f2080bd3fc"
+    },
+    "ble": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261111_run2003/analyses/std_ble_flow_20261111_153217_548e09/flow.events.jsonl",
+      "sha256": "798527cd49391621bee638f3eddcaf5b97ac4d89eace267450b0a41267b3f90f"
+    },
+    "zigbee": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261111_run2003/captures/zigbee/153049_313544_jffxs3dz/rx.packets.jsonl",
+      "sha256": "5abb58b2c6f444f93848285e041df784f7d6ce0f495655749d3a217b90f76a17"
+    },
+    "ble_receiver_summary": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261111_run2003/analyses/std_ble_flow_20261111_153217_548e09/flow.summary.json",
+      "sha256": "7214f3cc858a45a409f5c2c4eff53d7053554a0db219291a5481704e755f0c08"
+    },
+    "zigbee_receiver_summary": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261111_run2003/captures/zigbee/153049_313544_jffxs3dz/rx.summary.json",
+      "sha256": "8b6df2df99accb6c874071b0d606627e39721646e8b5bc3bb7ac1450a973383b"
+    },
+    "zigbee_live_control_summary": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261111_run2003/captures/zigbee/153049_313544_jffxs3dz/rx.control.summary.json",
+      "sha256": "ef3aaa903c5836c55ece4ddb172eb25889c70c1c1403a52c56b3013206bd1c2c"
+    }
+  }
+}

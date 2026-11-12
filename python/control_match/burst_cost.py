@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 
-def read_bursts(matching, stats: dict, slots: dict) -> dict | None:
+def read_bursts(matching, stats: dict, slots: dict, capacity: dict | None = None) -> dict | None:
     rows = matching("CONTROL_BURST")
     totals = matching("CONTROL_COST_STATS")
     separate = stats.get("rf_mode") == "separate_secondary_ch3"
@@ -13,6 +13,14 @@ def read_bursts(matching, stats: dict, slots: dict) -> dict | None:
     kinds = {"primary": 136, "secondary": 496 if separate else 1872}
     if separate:
         kinds["ieee"] = 1376
+    if capacity is not None:
+        # read_plan has already checked config and actual per-slot lengths.
+        # LE 1M: payload + 2-byte PDU header + preamble/AA (5) + CRC (3).
+        payload=int(capacity["pdu_payload_bytes"])
+        if separate or capacity.get("version")!="2" or not 229<=payload<=255:
+            raise ValueError("invalid capacity waveform configuration")
+        kinds["secondary"]=(payload+10)*8
+
     parsed = {}
     integers = ("slot", "generated", "attempted", "started", "completed", "timeout",
                 "iq_bytes", "air_us", "pad_us", "prepared_us", "submit_before_us",
@@ -29,7 +37,8 @@ def read_bursts(matching, stats: dict, slots: dict) -> dict | None:
             raise ValueError("inconsistent burst lifecycle")
         if g:
             if row["air_us"] != kinds[kind] or row["pad_us"] != 10 or row["iq_bytes"] <= 0:
-                raise ValueError("burst waveform budget differs from frozen N2 format")
+                raise ValueError("burst waveform budget differs from " +
+                                 ("validated v2 capacity format" if capacity is not None else "frozen N2 format"))
         elif any(row[k] for k in integers if k != "slot"):
             raise ValueError("ungenerated burst has observations")
         if a and not row["prepared_us"] <= row["submit_before_us"] <= row["submit_after_us"]:

@@ -111,7 +111,7 @@ def read_plan(path: Path, run_id: int) -> dict:
             if any(int(r[k])!=(v if built else 0) for k,v in expected.items()):
                 raise ValueError("actual capacity slot budget mismatch")
         capacity={**capacity,"ieee_marker_offset_us":480+8*b}
-    bursts = read_bursts(matching, stats, by_slot)
+    bursts = read_bursts(matching, stats, by_slot, capacity=capacity)
     return {"stats": stats, "tasks": tasks, "slots": by_slot, "bursts": bursts, "capacity": capacity}
 
 

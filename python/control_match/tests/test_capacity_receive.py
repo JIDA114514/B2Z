@@ -59,8 +59,15 @@ CONTROL_PLAN_SLOT run_id=7 slot=0 entry=0 command_id=1 generated=1 primary_compl
 CAPACITY_CONFIG run_id=7 version=2 ble_extra=2 ieee_extra=6 ble_record_bytes=38 ieee_record_bytes=42 mapped_bytes=200 pdu_payload_bytes=255 k=1 command_rule=slot_plus_one fill=lcg_v2_side_seed
 CAPACITY_SLOT run_id=7 slot=0 command_id=1 built=1 ble_record_bytes=38 ieee_record_bytes=42 mapped_bytes=200 pdu_payload_bytes=255
 '''
+        text += "CONTROL_BURST run_id=7 slot=0 kind=primary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=35880 air_us=136 pad_us=10 prepared_us=1 submit_before_us=2 submit_after_us=3 finish_us=200\n"
+        text += "CONTROL_BURST run_id=7 slot=0 kind=secondary generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=500000 air_us=2120 pad_us=10 prepared_us=1 submit_before_us=300000 submit_after_us=300010 finish_us=303000\n"
+        text += "CONTROL_COST_STATS run_id=7 logical_slots=1 ble_tx_completed=1 ieee_tx_completed=1 burst_attempted=2 burst_started=2 burst_completed=2\n"
         with tempfile.TemporaryDirectory() as tmp:
             p=Path(tmp)/'board.log';p.write_text(text)
-            self.assertEqual(read_plan(p,7)['capacity']['ieee_marker_offset_us'],496)
+            plan=read_plan(p,7)
+            self.assertEqual(plan['capacity']['ieee_marker_offset_us'],496)
+            self.assertEqual(plan['bursts']['planned_waveform_us'],2256)
+            p.write_text(text.replace('air_us=2120','air_us=1872'))
+            with self.assertRaisesRegex(ValueError,'waveform budget'):read_plan(p,7)
             p.write_text(text.replace('pdu_payload_bytes=255\n','pdu_payload_bytes=254\n'))
             with self.assertRaisesRegex(ValueError,'actual capacity'):read_plan(p,7)

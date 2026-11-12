@@ -84,8 +84,35 @@ def read_plan(path: Path, run_id: int) -> dict:
             raise ValueError(f"board per-slot {metric} total disagrees with final stats")
         if sum(int(r[metric]) for r in tasks) != int(stats[metric]):
             raise ValueError(f"board per-task {metric} total disagrees with final stats")
+    capacity_rows=matching("CAPACITY_CONFIG")
+    capacity=None
+    if capacity_rows:
+        capacity=capacity_rows[-1]
+        if any(r!=capacity for r in capacity_rows):
+            raise ValueError("capacity config changed during run")
+        b,z=int(capacity["ble_extra"]),int(capacity["ieee_extra"])
+        if (capacity.get("version")!="2" or capacity.get("k")!="1" or
+                capacity.get("command_rule")!="slot_plus_one" or
+                capacity.get("fill")!="lcg_v2_side_seed" or
+                stats.get("rf_mode")!="standard_secondary_ch3" or
+                not 0<=b<=26 or not 0<=z<=6 or b+4*z>26):
+            raise ValueError("invalid capacity config")
+        expected=dict(ble_record_bytes=36+b,ieee_record_bytes=36+z,
+                      mapped_bytes=176+4*z,pdu_payload_bytes=229+b+4*z)
+        if any(int(capacity[k])!=v for k,v in expected.items()):
+            raise ValueError("capacity budget mismatch")
+        actual=matching("CAPACITY_SLOT")
+        if len(actual)!=planned or {int(r["slot"]) for r in actual}!=set(by_slot):
+            raise ValueError("capacity slot records incomplete")
+        for r in actual:
+            slot=int(r["slot"]); built=int(r["built"])
+            if built not in (0,1) or built!=by_slot[slot]["board_generated"] or int(r["command_id"])!=slot+1:
+                raise ValueError("capacity build or command mismatch")
+            if any(int(r[k])!=(v if built else 0) for k,v in expected.items()):
+                raise ValueError("actual capacity slot budget mismatch")
+        capacity={**capacity,"ieee_marker_offset_us":480+8*b}
     bursts = read_bursts(matching, stats, by_slot)
-    return {"stats": stats, "tasks": tasks, "slots": by_slot, "bursts": bursts}
+    return {"stats": stats, "tasks": tasks, "slots": by_slot, "bursts": bursts, "capacity": capacity}
 
 
 def load_side(path: Path, side: str, run_id: int, commands: set[int]) -> dict:
@@ -121,6 +148,14 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
                 expected = "ble-only" if plan["stats"].get("rf_mode") == "separate_secondary_ch3" else "joint"
                 if event["wire_format"] != expected:
                     raise ValueError("BLE wire format disagrees with board RF mode")
+            if event:
+                record=event["record"]; cap=plan.get("capacity")
+                if cap:
+                    extra=int(cap["ble_extra" if side=="ble" else "ieee_extra"])
+                    if record["version"]!=2 or record.get("extra_len")!=extra or record["command_id"]!=slot+1 or record["period_ms"]!=int(plan["stats"]["period_ms"]):
+                        raise ValueError(f"{side}: decoded capacity configuration mismatch at slot {slot}")
+                elif record["version"]==2:
+                    raise ValueError("v2 capacity packets require CAPACITY_CONFIG/SLOT board records")
             if event and event["record"]["command_id"] != board["command_id"]:
                 raise ValueError(f"{side}: decoded command disagrees with board at slot {slot}")
         shared_match = (all(events["ble"]["record"][key] == events["zigbee"]["record"][key]
@@ -198,6 +233,7 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
     if any(slot not in plan["slots"] for data in sides.values() for slot in data["by_slot"]):
         raise ValueError("decoded slot is outside board plan")
     summary = {"schema": "b2z_plan_match_v2", "run_id": int(plan["stats"]["run_id"]),
+               "capacity": plan.get("capacity"),
                "planned_slots": len(slot_rows), "board_tx_completed": int(plan["stats"]["tx_completed"]),
                "planned_control_tasks": len(tasks),
                "ble_valid_attempts": sum(r["ble_valid"] for r in slot_rows),
@@ -290,7 +326,7 @@ def main() -> int:
         "git_head": subprocess.run(["git", "rev-parse", "HEAD"], cwd=Path(__file__).resolve().parent,
                                    capture_output=True, text=True).stdout.strip(),
         "module_sha256": {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
-                          for name in ("plan_analyze.py", "burst_cost.py", "analyze.py", "flow_input.py")},
+                          for name in ("plan_analyze.py", "burst_cost.py", "analyze.py", "flow_input.py", "protocol.py")},
         "board_firmware_version": "not_inferred_from_host_checkout"}
     summary["sources"] = {"board": {"path": str(board_path.resolve()),
                                      "sha256": hashlib.sha256(board_path.read_bytes()).hexdigest()},
@@ -326,6 +362,14 @@ def main() -> int:
         lines.append(f"| {row['command_id']} | {row['planned_attempts']} | {row['ble_valid_attempts']} | "
                      f"{row['zigbee_valid_attempts']} | {row['same_attempt_joint_valid']} | "
                      f"{row['joint_task_decoded']} | {row['ble_live_status']} / {row['zigbee_live_status']} |")
+    if summary.get("capacity"):
+        c=summary["capacity"]
+        lines += ["", "## v2 容量校验", "",
+                  f"- 扩展 BLE/IEEE：{c['ble_extra']}/{c['ieee_extra']} B；本侧内容独立恢复后校验。",
+                  f"- 记录 BLE/IEEE：{c['ble_record_bytes']}/{c['ieee_record_bytes']} B；映射区：{c['mapped_bytes']} B。",
+                  f"- secondary PDU payload：{c['pdu_payload_bytes']}/255 B。",
+                  f"- 布局标记位置差：{c['ieee_marker_offset_us']} µs（由板端配置计算，非RF测量）。",
+                  "- 容量探针只计解析；不把扩展数据校验计为实际命令执行。"]
     if summary["waveform_cost"] is not None:
         cost = summary["waveform_cost"]
         unit = cost["per_joint_decoded_task"]["value_us"]

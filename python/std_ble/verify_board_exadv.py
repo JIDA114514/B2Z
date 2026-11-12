@@ -27,7 +27,7 @@ from ble_exadv_hackrf_sniffer import (  # noqa: E402
     parse_ext_adv_payload,
 )
 from bsp_algorithm import bsp_algorithm  # noqa: E402
-from control_match.protocol import control_record  # noqa: E402
+from control_match.protocol import control_record, ble_manufacturer_record  # noqa: E402
 from experiment_tools.reporting import EXPERIMENTS, refresh_session, session_for  # noqa: E402
 
 
@@ -72,7 +72,7 @@ def validate_secondary(packet: dict, args) -> dict:
     ext = packet["ext"]
     if not packet["crc_ok"] or packet["channel"] != args.secondary_channel:
         raise ValueError("secondary_crc_or_rf_channel")
-    payload_len, manufacturer_len = ((52, 37) if getattr(args, "payload_mode", "joint") == "ble-only" else (224, 209))
+    payload_len = pdu[1]
     if (len(pdu) != payload_len + 2 or pdu[0] != 0x47 or pdu[1] != payload_len or
             packet["kind"] != "secondary" or ext.get("adv_mode") != 0 or
             ext.get("ext_hdr_len") != 9 or ext.get("flags") != 0x09 or
@@ -85,9 +85,10 @@ def validate_secondary(packet: dict, args) -> dict:
             ad[1][0] != 0xff):
         raise ValueError("secondary_ad_structure")
     manufacturer = bytes(ad[1][1])
-    if len(manufacturer) != manufacturer_len or manufacturer[:2] != b"\xff\xff":
-        raise ValueError("manufacturer_length_or_id")
-    record = control_record(manufacturer[2:37])
+    raw = ble_manufacturer_record(manufacturer, payload_len)
+    if (getattr(args,"payload_mode","joint")=="ble-only") != (payload_len==52):
+        raise ValueError("secondary_pdu_shape")
+    record = control_record(raw, "ble")
     if (sid != 0 or did != (record["slot_index"] & 0x0fff) or
             record["slot_index"] >= args.expected_attempts or
             record["run_id"] != args.run_id or
@@ -95,7 +96,7 @@ def validate_secondary(packet: dict, args) -> dict:
             (args.command_id is not None and record["command_id"] != args.command_id)):
         raise ValueError("secondary_identity_or_control_fields")
     return {"sid": sid, "did": did, "control": record,
-            "encoded_ieee_bytes": len(manufacturer[37:]), "pdu_hex": pdu.hex()}
+            "encoded_ieee_bytes": len(manufacturer)-2-len(raw), "pdu_hex": pdu.hex()}
 
 
 def file_packet(row: dict) -> dict:

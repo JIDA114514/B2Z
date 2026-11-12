@@ -49,7 +49,7 @@ class ControlTracker:
             return None, "non_control", None
         self.counts["control_candidates"] += 1
         try:
-            record = control_record(payload)
+            record = control_record(payload, "zigbee")
         except ValueError as exc:
             reason = str(exc)
             self.counts["invalid_control"] += 1

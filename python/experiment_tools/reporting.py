@@ -160,6 +160,8 @@ def receiver_lines(summary):
              "zigbee_control": "IEEE 802.15.4 / B2Z 控制"}.get(role, "未知")
     run_note = ("归档标签，未校验 BLE 包内标识" if role == "ble" else
                 "解码后控制记录过滤条件" if role == "zigbee_control" else "解码后测试负载过滤条件")
+    if role == "ble" and summary.get("control_parser"):
+        run_note = "控制记录独立校验并统计匹配 Run ID；总 PHY 包数仍包含其他包"
     lines = [f"接收链：{label}",
              f"实验 Run ID：{show(config.get('run_id'))}（{run_note}）",
              f"模式：{'离线回放' if config.get('iq_file') else '实时采集'}",
@@ -170,6 +172,8 @@ def receiver_lines(summary):
         lines += [f"严格 AuxPtr 匹配：{show(summary.get('matched_events'))}",
                   f"同频诊断配对：{show(summary.get('diagnostic_pairs'))}（不代表规范跟随）",
                   "无线 PRR：N/A（未合并发送计数及一致观察窗口）"]
+        if summary.get("control_parser"):
+            lines += [f"有效控制记录：{counts.get('valid_control_records',0)}；匹配 Run ID：{counts.get('matching_control_records',0)}；无效控制记录：{counts.get('invalid_control_records',0)}（未按槽去重）"]
     elif role == "zigbee_control":
         rx = summary.get("receiver", {})
         lines += [f"Command ID：{show(summary.get('command_id'))}",

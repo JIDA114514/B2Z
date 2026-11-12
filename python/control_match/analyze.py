@@ -12,9 +12,9 @@ import re
 import sys
 
 try:
-    from .protocol import control_record
+    from .protocol import control_record, ble_manufacturer_record
 except ImportError:  # Direct execution: python3 python/control_match/analyze.py
-    from protocol import control_record
+    from protocol import control_record, ble_manufacturer_record
 
 
 SHARED_FIELDS = ("version", "flags", "run_id", "slot_index", "ref_tick_ms",
@@ -31,9 +31,7 @@ def extract_ble(packet: dict) -> bytes | None:
             continue
         data = bytes.fromhex(ad["data_hex"])
         if data[2:4] == b"\xb2\x43":
-            if (packet.get("pdu_length"), len(data)) not in ((224, 209), (52, 37)) or data[:2] != b"\xff\xff":
-                raise ValueError("control_wire_budget")
-            return data[2:37]
+            return ble_manufacturer_record(data, packet.get("pdu_length"))
     return None
 
 
@@ -65,7 +63,7 @@ def read_side(path: Path, side: str, run_id: int, command_id: int) -> dict:
                 continue
             counts["control_candidates"] += 1
             try:
-                record = control_record(data)
+                record = control_record(data, side)
                 if side == "ble" and packet.get("extended", {}).get("adi", {}).get("did") != (record["slot_index"] & 0xfff):
                     raise ValueError("adi_slot")
             except ValueError as exc:

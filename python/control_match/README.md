@@ -126,3 +126,7 @@ python3 python/control_match/replay_engine.py \
 正式入口 `n3_analyze.py` 使用显式 JSON 配置核对计划、混合命令、训练与留出探测槽，检查历史包解码可用时刻；输出单侧预测、双侧相对估计差、更新年龄、N3板端阶段、关联CSV及图表。旧 `holdover_analyze.py` 默认行为保留，新增 `--config --experiment-dir` 可委托新版流程。新配置位于 `configs/n3_2201.json`，历史探索配置单列。
 
 `n3_follow_analyze.py` 审计 std_ble 新旧跟随事件，细分已知阶段与未知项。主机软件时刻和解调字节进度不等于RF时间或连续IQ，当前始终标记时间轴未验证。完整执行指令和输出说明见 [N3第11节](../../doc/n3_time_reference_experiment_plan.md#11-主机实现与最终分析命令2026-11-11)。
+
+## N4 v2 容量包
+
+共享解析器支持35 B v1与36+n B v2；v2独立校验长度、应用CRC及本侧扩展字节。plan_analyze.py自动核对CAPACITY_CONFIG/SLOT并输出单轮字节预算、联合解析和波形成本。两侧采集及分析命令见[N4第7节](../../doc/n4_capacity_experiment_plan.md#7-主机接收与单轮联合分析2026-11-12)。容量记录不是已实现的扩展数据执行协议；实时/立即处理返回capacity_decode_only，旧N3工具拒绝v2固定偏移假设。

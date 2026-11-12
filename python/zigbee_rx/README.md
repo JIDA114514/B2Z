@@ -139,3 +139,8 @@ python3 -m unittest discover -s python/zigbee_rx/tests -v
 真实 IQ 回放结果见 `../experiments/history_zigbee_rx_reviews/analyses/legacy/validation_review.md`。开发时只检测到一块已连接 HackRF，双设备同时接收尚需用户连接第二块并明确序列号后验证。
 
 参考：[HackRF 原始 IQ 格式](https://hackrf.readthedocs.io/en/stable/hackrf_tools.html)。码本与项目 `python/ctc_sim/std_zigbee/zigbee_mod.py` 逐项回归；本实现不依赖历史 GNU Radio/ZMQ 接收脚本。
+
+
+### N4 容量接收（2026-11-12）
+
+实时与离线接收支持v1/v2自动识别，v2逐字节校验本侧扩展内容。沿用原接收入口、run_id自动归档，无需额外输入负载长度。完整双端命令和单轮分析见[N4方案第7节](../../doc/n4_capacity_experiment_plan.md#7-主机接收与单轮联合分析2026-11-12)。容量实验不启用定时执行；旧固定偏移N3配置不用于v2。

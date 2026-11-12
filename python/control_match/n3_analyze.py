@@ -42,6 +42,8 @@ def load_inputs(root,run,config,board,paths):
         for slot,e in sides[side]['by_slot'].items():
             if e['record']['period_ms']!=config['period_ms']:
                 raise ValueError('decoded period differs from frozen config')
+            if e['record']['version']!=1:
+                raise ValueError('N3 v1 timing config cannot analyze capacity v2; use capacity analysis')
             start,available=e['sample_start'],e['available_sample']
             if (not isinstance(start,(float,int)) or not math.isfinite(start) or
                 type(available) is not int or not 0<=start<=available<=total):

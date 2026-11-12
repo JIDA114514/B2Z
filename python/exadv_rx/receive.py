@@ -22,6 +22,8 @@ from protocol import DiagnosticEventMatcher, EventMatcher, channel_frequency
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from experiment_tools.reporting import output_prefix, write_receiver_reports
+from control_match.packet_adapter import control_payload
+from control_match.protocol import control_record
 from control_match.control_engine import EngineConfig
 from control_match.live_control import ControlSession
 from exadv_rx.arguments import parse_args
@@ -187,6 +189,17 @@ def main(argv=None):
                 aux = packet["extended"].get("aux_ptr")
                 if aux and aux["phy"] != 0:
                     counts["aux_ptr_unsupported_phy"] += 1
+                try:
+                    raw_control = control_payload(packet, "ble")
+                    if raw_control is not None:
+                        record = control_record(raw_control, "ble")
+                        packet["control_record"] = record
+                        counts["valid_control_records"] += 1
+                        if args.run_id is None or record["run_id"] == args.run_id:
+                            counts["matching_control_records"] += 1
+                except (ValueError, KeyError, TypeError) as exc:
+                    packet["control_error"] = str(exc)
+                    counts["invalid_control_records"] += 1
                 packets_file.write(json.dumps(packet, ensure_ascii=False) + "\n")
                 if control:
                     control.observe_packet(packet)
@@ -264,13 +277,14 @@ def main(argv=None):
     here = Path(__file__).resolve().parent
     source_paths = [here / name for name in ("receive.py", "arguments.py", "decoder.py", "protocol.py")]
     source_paths += [here.parent / "experiment_tools" / name for name in ("receiver_defaults.py", "reporting.py")]
+    source_paths += [here.parent / "control_match" / name for name in ("protocol.py", "analyze.py", "packet_adapter.py")]
     if control:
         source_paths += [here.parent / "control_match" / name for name in
                          ("control_engine.py", "live_control.py", "packet_adapter.py", "protocol.py")]
     receiver_status = "error" if error else "interrupted" if interrupted else "complete"
     control_result = control.finish(receiver_status) if control else None
     summary = {
-        "schema": "exadv_rx_v3", "receiver_version": "2026-10-26-window-retry1", "start_utc": start_utc,
+        "schema": "exadv_rx_v3", "control_parser": "b243_v1_v2", "receiver_version": "2026-10-26-window-retry1", "start_utc": start_utc,
         "end_utc": datetime.now(timezone.utc).isoformat(),
         "status": receiver_status,
         "error": error, "config": {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()},

@@ -58,7 +58,7 @@ class ImmediateControlEngine:
             raise ValueError("invalid packet or availability sample")
         self.advance(available_sample)
         try:
-            record = control_record(payload)
+            record = control_record(payload, self.config.side)
         except (ValueError, TypeError) as exc:
             return [self._event("invalid_record", available_sample, reason=str(exc))]
         if record["run_id"] != self.config.run_id:
@@ -66,6 +66,9 @@ class ImmediateControlEngine:
                                 observed_run_id=record["run_id"])]
         events = [self._event("decoded", available_sample, record,
                               packet_start_sample=packet_start_sample)]
+        if record["version"]==2:
+            events.append(self._event("rejected", available_sample, record, reason="capacity_decode_only"))
+            return events
         if record["flags"] == 0:
             events.append(self._event("time_update_ignored", available_sample, record))
             return events

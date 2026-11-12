@@ -120,3 +120,8 @@ python3 -m unittest discover -s python/exadv_rx/tests -v
 旧 `python/std_ble/generate_ble_exadv_iq_30_72M.py` 当前把 `BLE_AUX_PHY_LE_1M` 设为 `0x01` 并写入 AuxPtr；规范 Aux PHY 编码是 `0=LE 1M`、`1=LE 2M`、`2=LE Coded`。新接收器按规范解释该字段，不会把声明为 2M 的指针当作已验证的 1M 配对。即使 secondary 的 1M 波形可以独立收到，错误的指针仍会导致配对失败。本次仅新增接收目录，未修改旧发送脚本或板端波形。
 
 参考：[HackRF IQ 格式](https://hackrf.readthedocs.io/en/stable/hackrf_tools.html)、[Bluetooth Link Layer：2.3.4.5 AuxPtr](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/low-energy-controller/link-layer-specification.html)。
+
+
+### N4 容量接收（2026-11-12）
+
+实时与离线接收支持v1/v2自动识别，v2逐字节校验本侧扩展内容。沿用原接收入口、run_id自动归档，无需额外输入负载长度。完整双端命令和单轮分析见[N4方案第7节](../../doc/n4_capacity_experiment_plan.md#7-主机接收与单轮联合分析2026-11-12)。容量实验不启用定时执行；旧固定偏移N3配置不用于v2。

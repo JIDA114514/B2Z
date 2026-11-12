@@ -249,7 +249,7 @@ class SideControlEngine:
             raise ValueError("invalid packet or availability sample")
         events = self.advance(available_sample)
         try:
-            record = control_record(payload)
+            record = control_record(payload, self.config.side)
         except (ValueError, TypeError) as exc:
             events.append(self._event("invalid_record", available_sample, reason=str(exc)))
             return events
@@ -259,6 +259,12 @@ class SideControlEngine:
             return events
         events.append(self._event("decoded", available_sample, record,
                                   packet_start_sample=packet_start_sample))
+        if record["version"]==2:
+            # Capacity blobs have no scheduled application handler. In particular,
+            # IEEE cannot infer the BLE record length from its own payload.
+            events.append(self._event("rejected", available_sample, record,
+                                      reason="capacity_decode_only"))
+            return events
         command_id = record["command_id"]
         signature = tuple(record[key] for key in _TASK_FIELDS) if record["flags"] else None
         if (signature is not None and command_id in self.signatures and

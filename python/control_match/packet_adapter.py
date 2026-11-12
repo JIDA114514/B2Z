@@ -14,7 +14,7 @@ def control_payload(packet: dict, side: str) -> bytes | None:
         payload = extract_ble(packet)
         if payload is not None:
             try:
-                record = control_record(payload)
+                record = control_record(payload, side)
             except ValueError:
                 pass  # The engine reports the application-level rejection.
             else:

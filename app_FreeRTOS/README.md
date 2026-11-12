@@ -651,4 +651,4 @@ b2z_capacity_start? 2301 500 100 0 0
 
 参数依次为run_id、周期ms、槽数、BLE扩展字节、IEEE扩展字节。固定joint跨信道模式，每槽一个独立任务（command_id=slot+1），不占用或修改手工plan。容量限制为229+b+4z≤255，周期≥500 ms、槽数≤1024、总时长≤600 s。状态/停止沿用bluebee_perf_status?/bluebee_perf_stop?。保留完整CAPACITY_*、CONTROL_PLAN_*、CONTROL_BURST和CONTROL_TIME日志。
 
-v2使用长度字段及覆盖完整扩展的应用CRC；旧v1和性能协议不变。命令与格式详见[N4方案第6节](../doc/n4_capacity_experiment_plan.md#6-板端接口与冻结格式2026-11-12)。板端与SDK已同步并完成本地检查，用户负责构建上板；主机v2解析仍待适配，当前旧脚本不能验收新容量包。
+v2使用长度字段及覆盖完整扩展的应用CRC；旧v1和性能协议不变。命令与格式详见[N4方案第6节](../doc/n4_capacity_experiment_plan.md#6-板端接口与冻结格式2026-11-12)。板端与SDK已同步并完成本地检查，用户负责构建上板；主机v2接收与单轮联合分析已适配，命令见N4方案第7节；须使用更新后的脚本验收容量包。

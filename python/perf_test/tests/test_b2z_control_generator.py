@@ -105,6 +105,34 @@ class ControlGeneratorTests(unittest.TestCase):
     def tearDownClass(cls):
         cls.temp.cleanup()
 
+    def test_v2_budget_records_and_mapping_boundaries(self):
+        import binascii
+        lib=self.lib
+        lib.b2z_capacity_budget.argtypes=[ctypes.c_uint32,ctypes.c_uint32]
+        lib.ble_exadv_secondary_gen_build_capacity.argtypes=[ctypes.POINTER(Packet),ctypes.c_uint32,ctypes.c_uint32]
+        packet=Packet(2301,7,3500,500,8,6500,5500,1,1,1,2,1,2)
+        for b in range(28):
+            for z in range(8):
+                expected=229+b+4*z if b+4*z<=26 else -1
+                self.assertEqual(lib.b2z_capacity_budget(b,z),expected)
+        for b,z in ((0,0),(26,0),(2,6),(10,4),(18,2),(8,2)):
+            self.assertEqual(lib.ble_exadv_secondary_gen_build_capacity(ctypes.byref(packet),b,z),0)
+            m=lib.ble_exadv_secondary_gen_get_last_meta().contents
+            self.assertEqual((m.pdu_len,m.zigbee_payload_len,m.bluebee_byte_count),(231+b+4*z,36+z,176+4*z))
+            for side,n,data in ((1,b,read_bytes(m.ble_control_record,36+b)),(2,z,read_bytes(m.zigbee_payload,36+z))):
+                self.assertEqual(data[2],2);self.assertEqual(data[33],n)
+                self.assertEqual(int.from_bytes(data[-2:],'little'),binascii.crc_hqx(data[:-2],0xffff))
+                state=0xB2430200 ^ (2301<<16) ^ 7 ^ ((side*0x9E3779B9)&0xffffffff)
+                expected=[]
+                for _ in range(n):
+                    state=(state*1664525+1013904223)&0xffffffff;expected.append(state>>24)
+                self.assertEqual(data[34:-2],bytes(expected))
+            ll=read_bytes(m.ll_payload,m.ll_payload_len)
+            self.assertEqual(ll[60+b:60+b+m.bluebee_byte_count],read_bytes(m.bluebee_bytes,m.bluebee_byte_count))
+            self.assertEqual(m.air_us,(239+b+4*z)*8)
+        for b,z in ((27,0),(3,6),(0,7),(0xffffffff,0),(0,0xffffffff)):
+            self.assertEqual(lib.ble_exadv_secondary_gen_build_capacity(ctypes.byref(packet),b,z),-1)
+
     def test_v1_vectors_and_wire_budget(self):
         packet = Packet(
             1001, 7, 1400, 200, 42, 3000, 2500,

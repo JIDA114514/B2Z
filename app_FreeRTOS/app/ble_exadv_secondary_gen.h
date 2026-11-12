@@ -13,6 +13,8 @@
 #define B2Z_CONTROL_STANDARD_AUX_OFFSET_US 300000u
 #define BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES 46u
 #define B2Z_CONTROL_RECORD_BYTES 35u
+#define B2Z_CAPACITY_RECORD_BASE 36u
+#define B2Z_CAPACITY_MAX_BLE_EXTRA 26u
 
 struct b2z_control_packet {
 	uint16_t run_id;
@@ -69,6 +71,7 @@ struct ble_exadv_secondary_gen_meta {
 	const uint32_t *ieee_iq_words;
 	uint32_t ieee_iq_byte_count;
 	uint32_t ieee_air_us;
+	uint32_t ble_control_record_len;
 };
 
 int32_t ble_exadv_secondary_gen_build_default(void);
@@ -79,6 +82,10 @@ int32_t ble_exadv_secondary_gen_build_control(
 	const struct b2z_control_packet *packet);
 int32_t ble_exadv_secondary_gen_build_control_mode(
 	const struct b2z_control_packet *packet, uint8_t rf_mode);
+/* v2 joint-only budget, checked before allocating/generating a waveform. */
+int32_t b2z_capacity_budget(uint32_t ble_extra, uint32_t ieee_extra);
+int32_t ble_exadv_secondary_gen_build_capacity(
+    const struct b2z_control_packet *packet, uint32_t ble_extra, uint32_t ieee_extra);
 const struct ble_exadv_secondary_gen_meta *
 ble_exadv_secondary_gen_get_last_meta(void);
 

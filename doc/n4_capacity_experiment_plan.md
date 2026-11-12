@@ -1,6 +1,6 @@
 # N4：单 secondary 容量、legacy 对照与适用范围
 
-状态：2026-11-11 详细设计，软件前置项待实现；本文拟定的 v2 格式和扫描接口尚不可直接运行。
+状态：2026-11-12 板端 v2 格式与容量串口接口已实现并完成本地检查，主机接收/分析适配及上板验证待完成；实现接口见第6节。
 
 ## 1. 推进依据与待补项
 
@@ -86,3 +86,29 @@ IQ原始文件、接收参数、完整串口日志、版本/源码哈希、输�
 5. 小规模功能核查→15点扫描与v1参考→代表点legacy对照→后续独立重复。功能初验要求合法点有完整两侧解码证据、边界拒绝正确、失败点保留且可解释观察条件；不预设所有合法长度都100%可靠。
 
 后续集中重复同时补做2204缺失的同轮IEEE联合验证；该项为明确欠项，不记作已完成的N3完整单次实验。
+
+## 6. 板端接口与冻结格式（2026-11-12）
+
+板端已实现，主机v2接收/容量分析仍待适配。新增命令严格接受5个十进制整数：
+
+```text
+b2z_capacity_start? <run_id> <period_ms> <attempts> <ble_extra_len> <ieee_extra_len>
+```
+
+例如零扩展与单PDU上界（应分别运行，先检查run_id未占用）：
+
+```text
+b2z_capacity_start? 2301 500 100 0 0
+b2z_capacity_start? 2302 500 100 26 0
+b2z_capacity_start? 2303 500 100 2 6
+```
+
+run_id=1..65535，period_ms=500..65535，attempts=1..1024，attempts×period_ms≤600000。b≤26、z≤6、b+4z≤26，否则启动前拒绝且不提交DMA。不接受负数、小数、十六进制、缺参或额外参数。固定模式1（joint ch3），K=1。使用bluebee_perf_status?查询、bluebee_perf_stop?提前停止；与旧性能/control/plan共享busy互斥。不读取或修改手工暂存plan。
+
+每槽动态生成任务，无须plan_add：slot_index从0起，command_id=slot_index+1；BLE target/opcode/arg=1/1/1，IEEE=2/1/2。ref_tick_ms=slot×period_ms，valid_until_ms=ref_tick_ms+2000，execute_at_ms=ref_tick_ms+3000。此为容量探针的命令语义，并不表示板端或接收器已执行。失败槽仍消耗槽号和command_id。v2格式按第2节冻结；接收端必须显式识别version=2，不能将35 B v1 CRC规则直接套用。
+
+扩展数据算法冻结为无符号32位LCG：side=1表示BLE，side=2表示IEEE；初值 `0xB2430200 ^ (run_id << 16) ^ slot_index ^ (side * 0x9E3779B9)`，乘法按32位回绕。每字节先更新 `state=state*1664525+1013904223`（模2^32），再取最高8位。应用CRC16沿用v1 CRC-CCITT，初值0xffff，覆盖核心、长度及全部扩展，CRC以小端写入。IEEE另有PHY FCS；内容预期仅用于独立解码后的校验。
+
+启动输出CAPACITY_START与CONTROL_PLAN_START/ENTRY；状态和结束输出CAPACITY_CONFIG，逐槽CAPACITY_SLOT输出本槽实际构建的两侧记录、映射及PDU payload长度，built=0时长度为0而非有效零长度包。CONTROL_PLAN_TASK/SLOT、CONTROL_BURST/COST及CONTROL_TIME记录继续输出。长度与容量元数据和各槽内容在RF调度结束后输出，避免逐槽串口打印扰动发送。配置预算与实际PDU长度不符则拒绝本槽发射。
+
+复用已有任务调度、缓存前移、主动轮询与超时处理；没有新增发射线程，也不改变v1和旧性能命令。源码已同步SDK实际编译目录。ARM语法检查（取时开/关）以及v1/v2生成器、边界/CRC/映射、虚拟任务序列测试通过；尚未构建上板。旧主机协议解析器会拒绝v2，所以暂不使用旧联合统计作为容量验收结果。下一步为主机v2解析、完整扩展内容校验和manifest扫描适配。

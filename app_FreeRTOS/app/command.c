@@ -149,6 +149,7 @@ command cmd_list[] = {
 	{"b2z_control_start?", "Starts v1 joint broadcasts; optional final rf_mode: 0=same-channel, 1=joint ch3, 2=BLE-only ch3 + standalone BlueBee.", "b2z_control_start? 1001 42 500 10 5000 4500 1", NULL, b2z_control_start_cmdline},
 	{"b2z_plan_clear?", "Clears the staged multi-task control plan.", "b2z_plan_clear?", NULL, b2z_plan_clear_cmdline},
 	{"b2z_plan_add?", "Adds a task or sync-only entry to the staged control plan.", "b2z_plan_add? 43 3 3000 2500", NULL, b2z_plan_add_cmdline},
+	{"b2z_capacity_start?", "Starts a v2 joint capacity scan with one unique task per slot.", "b2z_capacity_start? 2301 500 100 0 0", NULL, b2z_capacity_start_cmdline},
 	{"b2z_plan_start?", "Starts a control plan; optional rf_mode: 0=same-channel, 1=joint ch3, 2=BLE-only ch3 + standalone BlueBee.", "b2z_plan_start? 1101 500 1", NULL, b2z_plan_start_cmdline},
 	{"bluebee_perf_stop?", "Stops the active BlueBee performance test.", "bluebee_perf_stop?", NULL, bluebee_perf_stop_cmdline},
 	{"bluebee_perf_status?", "Reports BlueBee performance configuration and counters.", "bluebee_perf_status?", NULL, bluebee_perf_status_cmdline},

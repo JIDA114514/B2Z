@@ -121,6 +121,8 @@ struct bluebee_perf_config {
 	uint8_t planned;
 	uint8_t control_rf_mode;
 	uint8_t plan_count;
+	uint8_t capacity;
+	uint8_t ble_extra, ieee_extra;
 	struct b2z_plan_entry plan[B2Z_PLAN_MAX_ENTRIES];
 };
 
@@ -408,9 +410,40 @@ static void bluebee_perf_snapshot(struct bluebee_perf_runtime *snapshot)
 	taskEXIT_CRITICAL();
 }
 
-static const struct b2z_plan_entry *b2z_plan_entry_for_slot(
-	const struct bluebee_perf_config *config, uint32_t slot)
+struct b2z_capacity_observation {
+	uint16_t ble_bytes, ieee_bytes, mapped_bytes, pdu_bytes;
+};
+static struct b2z_capacity_observation g_capacity_slots[B2Z_PLAN_MAX_SLOTS];
+
+static uint32_t b2z_task_count(const struct bluebee_perf_config *c)
 {
+	return c->capacity ? c->expected_packets : c->plan_count;
+}
+
+/* Virtual entries: no 100-entry plan allocation and no shared mutable scratch. */
+static const struct b2z_plan_entry *b2z_entry_at(
+	const struct bluebee_perf_config *c, uint32_t index, struct b2z_plan_entry *out)
+{
+	if (!c->capacity) return index < c->plan_count ? &c->plan[index] : NULL;
+	if (index >= c->expected_packets) return NULL;
+	memset(out, 0, sizeof(*out));
+	out->first_slot = (uint16_t)index;
+	out->repeats = 1u;
+	out->packet.run_id = c->run_id;
+	out->packet.period_ms = c->control.period_ms;
+	out->packet.command_id = index + 1u;
+	out->packet.ble_target = 1u; out->packet.zigbee_target = 2u;
+	out->packet.ble_opcode = out->packet.zigbee_opcode = 1u;
+	out->packet.ble_arg = 1u; out->packet.zigbee_arg = 2u;
+	out->packet.valid_until_ms = index * c->control.period_ms + 2000u;
+	out->packet.execute_at_ms = index * c->control.period_ms + 3000u;
+	return out;
+}
+
+static const struct b2z_plan_entry *b2z_plan_entry_for_slot(
+	const struct bluebee_perf_config *config, uint32_t slot, struct b2z_plan_entry *scratch)
+{
+	if (config->capacity) return b2z_entry_at(config, slot, scratch);
 	for (uint32_t i = 0u; i < config->plan_count; i++) {
 		const struct b2z_plan_entry *entry = &config->plan[i];
 
@@ -536,7 +569,7 @@ static void b2z_plan_print_stats(const struct bluebee_perf_runtime *snapshot,
 		      (long)final, (char *)bluebee_perf_state_name(snapshot->state),
 		      (long)snapshot->config.run_id,
 		      (long)snapshot->config.control.period_ms,
-		      (long)snapshot->config.plan_count,
+		      (long)b2z_task_count(&snapshot->config),
 		      (long)snapshot->config.expected_packets, (long)reached,
 		      (long)bluebee_perf_elapsed_us(snapshot),
 		      (long)snapshot->counters.generated,
@@ -562,11 +595,21 @@ static void b2z_plan_print_stats(const struct bluebee_perf_runtime *snapshot,
 			 snapshot->counters.auxptr_dma_delta_samples) : 0u),
 		      (long)snapshot->counters.retune_failure,
 		      (long)snapshot->counters.retune_secondary_max_us);
+	if (snapshot->config.capacity)
+		console_print("CAPACITY_CONFIG run_id=%d version=2 ble_extra=%d ieee_extra=%d "
+			"ble_record_bytes=%d ieee_record_bytes=%d mapped_bytes=%d pdu_payload_bytes=%d "
+			"k=1 command_rule=slot_plus_one valid_lead_ms=2000 execute_lead_ms=3000 "
+			"fill=lcg_v2_side_seed rf_mode=standard_secondary_ch3\r\n",
+			(long)snapshot->config.run_id, (long)snapshot->config.ble_extra,
+			(long)snapshot->config.ieee_extra, (long)(36u + snapshot->config.ble_extra),
+			(long)(36u + snapshot->config.ieee_extra), (long)(176u + 4u * snapshot->config.ieee_extra),
+			(long)b2z_capacity_budget(snapshot->config.ble_extra, snapshot->config.ieee_extra));
 	if (!final)
 		return;
 
-	for (uint32_t i = 0u; i < snapshot->config.plan_count; i++) {
-		const struct b2z_plan_entry *entry = &snapshot->config.plan[i];
+	for (uint32_t i = 0u; i < b2z_task_count(&snapshot->config); i++) {
+		struct b2z_plan_entry scratch;
+		const struct b2z_plan_entry *entry = b2z_entry_at(&snapshot->config, i, &scratch);
 		uint32_t task_reached = 0u, generated = 0u, primary_started = 0u;
 		uint32_t primary_completed = 0u;
 		uint32_t tx_started = 0u, tx_completed = 0u, deadline_miss = 0u;
@@ -612,9 +655,20 @@ static void b2z_plan_print_stats(const struct bluebee_perf_runtime *snapshot,
 			      (long)dma_timeout,
 			      (long)auxptr_dma_window_miss);
 	}
+	if (snapshot->config.capacity) {
+		for (uint32_t slot = 0; slot < reached; slot++) {
+			const struct b2z_capacity_observation *o = &g_capacity_slots[slot];
+			console_print("CAPACITY_SLOT run_id=%d slot=%d command_id=%d built=%d "
+				"ble_record_bytes=%d ieee_record_bytes=%d mapped_bytes=%d pdu_payload_bytes=%d\r\n",
+				(long)snapshot->config.run_id, (long)slot, (long)(slot + 1u),
+				(long)(o->pdu_bytes != 0), (long)o->ble_bytes, (long)o->ieee_bytes,
+				(long)o->mapped_bytes, (long)o->pdu_bytes);
+		}
+	}
 	for (uint32_t slot = 0u; slot < reached; slot++) {
+		struct b2z_plan_entry scratch;
 		const struct b2z_plan_entry *entry =
-			b2z_plan_entry_for_slot(&snapshot->config, slot);
+			b2z_plan_entry_for_slot(&snapshot->config, slot, &scratch);
 		uint8_t flags;
 		uint32_t late_us, aux_delta_us, retune_us;
 
@@ -638,7 +692,7 @@ static void b2z_plan_print_stats(const struct bluebee_perf_runtime *snapshot,
 			      "auxptr_dma_delta_us=%d retune_secondary_us=%d "
 			      "auxptr_dma_window_miss=%d\r\n",
 			      (long)snapshot->config.run_id, (long)slot,
-			      (long)(entry - snapshot->config.plan),
+			      (long)(snapshot->config.capacity ? slot : (uint32_t)(entry - snapshot->config.plan)),
 			      (long)entry->packet.command_id, (long)flags,
 			      (long)!!(flags & B2Z_SLOT_GENERATED),
 			      (long)!!(flags & B2Z_SLOT_PRIMARY_STARTED),
@@ -1207,7 +1261,7 @@ int32_t b2z_plan_add_cmdline(const char *args)
 	return 0;
 }
 
-int32_t b2z_plan_start_cmdline(const char *args)
+static int32_t b2z_plan_start_internal(const char *args, uint8_t capacity)
 {
 	uint32_t values[BLUEBEE_PERF_MAX_ARGS] = { 0u };
 	uint32_t count = 0u;
@@ -1215,9 +1269,17 @@ int32_t b2z_plan_start_cmdline(const char *args)
 	struct bluebee_perf_config config;
 
 	if (bluebee_perf_parse_args(args, values, &count) < 0 ||
-	    (count != 2u && count != 3u)) {
+	    (capacity ? count != 5u : (count != 2u && count != 3u))) {
+		if (capacity) { console_print("Usage: b2z_capacity_start? <run_id> <period_ms> <attempts> <ble_extra_len> <ieee_extra_len>\r\n"); return -1; }
 		console_print("Usage: b2z_plan_start? <run_id> <period_ms> "
 			      "[rf_mode]\r\n");
+		return -1;
+	}
+	if (capacity && (values[1] < 500u || values[2] == 0u ||
+	    values[2] > B2Z_PLAN_MAX_SLOTS ||
+	    (uint64_t)values[1] * values[2] > 600000ULL ||
+	    b2z_capacity_budget(values[3], values[4]) < 0)) {
+		console_print("CAPACITY_ERROR invalid period, attempts or byte budget\r\n");
 		return -1;
 	}
 	if (values[0] == 0u || values[0] > 0xFFFFu ||
@@ -1238,16 +1300,24 @@ int32_t b2z_plan_start_cmdline(const char *args)
 	config.control_rf_mode = count == 3u ? (uint8_t)values[2] :
 		B2Z_CONTROL_RF_SAME_CHANNEL;
 	config.control.period_ms = (uint16_t)values[1];
+	config.capacity = capacity;
+	if (capacity) {
+		config.ble_extra = (uint8_t)values[3];
+		config.ieee_extra = (uint8_t)values[4];
+		config.expected_packets = values[2];
+		config.payload_len = 36u + values[4];
+		config.control_rf_mode = B2Z_CONTROL_RF_STANDARD_CH3;
+	}
 
 	taskENTER_CRITICAL();
 	if (!g_perf_task || bluebee_perf_is_busy(g_perf.state) ||
 	    g_perf_reporting ||
-	    g_plan_draft_count == 0u) {
+	    (!capacity && g_plan_draft_count == 0u)) {
 		taskEXIT_CRITICAL();
 		console_print("CONTROL_PLAN_ERROR busy, no task or worker unavailable\r\n");
 		return -1;
 	}
-	config.plan_count = g_plan_draft_count;
+	config.plan_count = capacity ? 0u : g_plan_draft_count;
 	memcpy(config.plan, g_plan_draft,
 	       config.plan_count * sizeof(config.plan[0]));
 	taskEXIT_CRITICAL();
@@ -1267,6 +1337,7 @@ int32_t b2z_plan_start_cmdline(const char *args)
 			return -1;
 		}
 	}
+	if (capacity) slots = config.expected_packets;
 	if ((uint64_t)slots * values[1] > 600000ULL) {
 		console_print("CONTROL_PLAN_ERROR schedule exceeds 600 seconds\r\n");
 		return -1;
@@ -1283,6 +1354,7 @@ int32_t b2z_plan_start_cmdline(const char *args)
 	}
 	memset(&g_perf, 0, sizeof(g_perf));
 	memset(g_control_slot_flags, 0, sizeof(g_control_slot_flags));
+	memset(g_capacity_slots, 0, sizeof(g_capacity_slots));
 	memset(g_control_bursts, 0, sizeof(g_control_bursts));
 	memset(g_n3_trace, 0, sizeof(g_n3_trace));
 	memset(g_n3_primary_anchor, 0, sizeof(g_n3_primary_anchor));
@@ -1300,14 +1372,20 @@ int32_t b2z_plan_start_cmdline(const char *args)
 		      "rf_mode=%s aux_channel=3 aux_offset_us=%d "
 		      "primary_mhz=2480 secondary_mhz=%d\r\n",
 		      (long)config.run_id, (long)values[1],
-		      (long)config.plan_count, (long)slots,
+		      (long)b2z_task_count(&config), (long)slots,
 		      (long)config.duration_s,
 		      (char *)b2z_rf_mode_name(config.control_rf_mode),
 		      (long)b2z_aux_offset_us(config.control_rf_mode),
 		      (long)(config.control_rf_mode !=
 			B2Z_CONTROL_RF_SAME_CHANNEL ? 2410u : 2480u));
-	for (uint32_t i = 0u; i < config.plan_count; i++) {
-		const struct b2z_plan_entry *entry = &config.plan[i];
+	if (capacity)
+		console_print("CAPACITY_START run_id=%d version=2 ble_extra=%d ieee_extra=%d "
+			"pdu_payload_bytes=%d attempts=%d k=1 command_rule=slot_plus_one\r\n",
+			(long)config.run_id, (long)config.ble_extra, (long)config.ieee_extra,
+			(long)b2z_capacity_budget(config.ble_extra, config.ieee_extra), (long)slots);
+	for (uint32_t i = 0u; i < b2z_task_count(&config); i++) {
+		struct b2z_plan_entry scratch;
+		const struct b2z_plan_entry *entry = b2z_entry_at(&config, i, &scratch);
 		console_print("CONTROL_PLAN_ENTRY run_id=%d entry=%d "
 			      "command_id=%d first_slot=%d repeats=%d "
 			      "execute_at_ms=%d valid_until_ms=%d "
@@ -1327,6 +1405,16 @@ int32_t b2z_plan_start_cmdline(const char *args)
 	}
 	xTaskNotifyGive(g_perf_task);
 	return 0;
+}
+
+int32_t b2z_plan_start_cmdline(const char *args)
+{
+	return b2z_plan_start_internal(args, 0u);
+}
+
+int32_t b2z_capacity_start_cmdline(const char *args)
+{
+	return b2z_plan_start_internal(args, 1u);
 }
 
 int32_t bluebee_perf_stop_cmdline(const char *args)
@@ -1959,8 +2047,9 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 	struct bluebee_perf_gen_timing timing;
 
 	if (config->test == BLUEBEE_PERF_TEST_CONTROL) {
+		struct b2z_plan_entry scratch;
 		const struct b2z_plan_entry *entry = config->planned ?
-			b2z_plan_entry_for_slot(config, sequence) : NULL;
+			b2z_plan_entry_for_slot(config, sequence, &scratch) : NULL;
 		struct b2z_control_packet packet;
 		const struct ble_exadv_secondary_gen_meta *meta;
 
@@ -1973,10 +2062,20 @@ static int32_t bluebee_perf_send_slot(const struct bluebee_perf_config *config,
 						 packet.period_ms);
 		struct b2z_trace *prep = b2z_trace_for(sequence, 3u);
 		b2z_trace_mark(prep, N3_GENERATE, 0, 0);
-		int32_t gen_ret = ble_exadv_secondary_gen_build_control_mode(&packet, config->control_rf_mode);
+		int32_t gen_ret = config->capacity ?
+			ble_exadv_secondary_gen_build_capacity(&packet, config->ble_extra, config->ieee_extra) :
+			ble_exadv_secondary_gen_build_control_mode(&packet, config->control_rf_mode);
 		b2z_trace_mark(prep, N3_GENERATE, 1, gen_ret);
 		if (gen_ret < 0) return -1;
 		meta = ble_exadv_secondary_gen_get_last_meta();
+		if (config->capacity) {
+			if (meta->pdu_len != (uint32_t)b2z_capacity_budget(config->ble_extra, config->ieee_extra) + 2u)
+				return -1;
+			g_capacity_slots[sequence] = (struct b2z_capacity_observation){
+				meta->ble_control_record_len, meta->zigbee_payload_len,
+				meta->bluebee_byte_count, meta->pdu_len - 2u};
+		}
+
 		iq_words = meta->iq_words;
 		iq_byte_count = meta->iq_byte_count;
 		tx_time_us = meta->air_us + meta->post_pad_us;

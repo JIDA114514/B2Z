@@ -93,7 +93,7 @@ static uint32_t g_iq_words[BLE_EXADV_MAX_IQ_WORDS]
 static uint32_t g_control_primary_iq_words[BLE_EXADV_PRIMARY_IQ_WORDS]
 	__attribute__((aligned(64)));
 static uint8_t g_control_primary_pdu[9];
-static uint8_t g_ble_control_record[B2Z_CONTROL_RECORD_BYTES];
+static uint8_t g_ble_control_record[B2Z_CAPACITY_RECORD_BASE + B2Z_CAPACITY_MAX_BLE_EXTRA];
 static float g_gfsk_taps[BLE_EXADV_TAPS];
 static float g_gfsk_tap_prefix[BLE_EXADV_TAPS + 1u];
 static uint8_t g_gfsk_taps_ready;
@@ -269,6 +269,28 @@ static int32_t build_control_record(uint8_t out[B2Z_CONTROL_RECORD_BYTES],
 	return 0;
 }
 
+int32_t b2z_capacity_budget(uint32_t ble_extra, uint32_t ieee_extra)
+{
+	/* Bounds first avoid overflow on untrusted serial integers. */
+	if (ble_extra > 26u || ieee_extra > 6u || ble_extra + 4u * ieee_extra > 26u)
+		return -1;
+	return (int32_t)(229u + ble_extra + 4u * ieee_extra);
+}
+
+static void extend_capacity_record(uint8_t *out, const struct b2z_control_packet *p,
+                                  uint32_t length, uint32_t side)
+{
+	uint32_t state = 0xB2430200u ^ ((uint32_t)p->run_id << 16) ^
+		p->slot_index ^ (side * 0x9E3779B9u);
+	out[2] = 2u;
+	out[33] = (uint8_t)length;
+	for (uint32_t i = 0; i < length; i++) {
+		state = state * 1664525u + 1013904223u;
+		out[34u + i] = (uint8_t)(state >> 24);
+	}
+	put_le16(&out[34u + length], b2z_control_crc16(out, 34u + length));
+}
+
 static int32_t build_zigbee_frame(const uint8_t *payload,
 				  uint32_t payload_len,
 				  uint32_t *frame_len)
@@ -380,12 +402,12 @@ static int32_t build_adv_data(uint32_t bluebee_byte_count,
 	return 0;
 }
 
-static int32_t build_control_adv_data(uint32_t bluebee_byte_count,
+static int32_t build_control_adv_data(uint32_t bluebee_byte_count, uint32_t ble_len,
 				      uint32_t *bluebee_start,
 				      uint32_t *adv_data_len)
 {
 	uint32_t off = 0u;
-	uint32_t ad_len = 1u + 2u + B2Z_CONTROL_RECORD_BYTES +
+	uint32_t ad_len = 1u + 2u + ble_len +
 			  bluebee_byte_count;
 
 	if (!bluebee_start || !adv_data_len || ad_len > 0xFFu ||
@@ -399,8 +421,8 @@ static int32_t build_control_adv_data(uint32_t bluebee_byte_count,
 	g_adv_data[off++] = 0xFFu;
 	g_adv_data[off++] = 0xFFu;
 	memcpy(&g_adv_data[off], g_ble_control_record,
-	       B2Z_CONTROL_RECORD_BYTES);
-	off += B2Z_CONTROL_RECORD_BYTES;
+	       ble_len);
+	off += ble_len;
 	*bluebee_start = off;
 	memcpy(&g_adv_data[off], g_bluebee_bytes, bluebee_byte_count);
 	off += bluebee_byte_count;
@@ -662,12 +684,15 @@ static int32_t build_control_primary(uint16_t did, uint8_t rf_mode,
 					iq_word_count);
 }
 
-int32_t ble_exadv_secondary_gen_build_control_mode(
-	const struct b2z_control_packet *packet, uint8_t rf_mode)
+static int32_t build_control_mode_impl(
+	const struct b2z_control_packet *packet, uint8_t rf_mode,
+	uint8_t capacity, uint32_t ble_extra, uint32_t ieee_extra)
 {
 	uint8_t whitening_channel = rf_mode != B2Z_CONTROL_RF_SAME_CHANNEL ?
 		3u : BLE_EXADV_DEFAULT_CHANNEL;
-	uint8_t zigbee_record[B2Z_CONTROL_RECORD_BYTES];
+	uint8_t zigbee_record[BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES];
+	uint32_t ble_len = capacity ? 36u + ble_extra : 35u;
+	uint32_t ieee_len = capacity ? 36u + ieee_extra : 35u;
 	uint32_t frame_len = 0u;
 	uint32_t bluebee_len;
 	uint32_t bluebee_start = 0u;
@@ -687,6 +712,8 @@ int32_t ble_exadv_secondary_gen_build_control_mode(
 	uint32_t gfsk_time_us;
 
 	if (!packet ||
+	    (capacity && (b2z_capacity_budget(ble_extra, ieee_extra) < 0 ||
+	                  rf_mode != B2Z_CONTROL_RF_STANDARD_CH3)) ||
 	    (rf_mode != B2Z_CONTROL_RF_SAME_CHANNEL &&
 	     rf_mode != B2Z_CONTROL_RF_STANDARD_CH3 &&
 	     rf_mode != B2Z_CONTROL_RF_SEPARATE_CH3) ||
@@ -695,16 +722,20 @@ int32_t ble_exadv_secondary_gen_build_control_mode(
 				 packet->ble_arg) < 0 ||
 	    build_control_record(zigbee_record, packet,
 				 packet->zigbee_target, packet->zigbee_opcode,
-				 packet->zigbee_arg) < 0 ||
-	    build_zigbee_frame(zigbee_record, sizeof(zigbee_record),
-			       &frame_len) < 0)
+				 packet->zigbee_arg) < 0)
+		return -1;
+	if (capacity) {
+		extend_capacity_record(g_ble_control_record, packet, ble_extra, 1u);
+		extend_capacity_record(zigbee_record, packet, ieee_extra, 2u);
+	}
+	if (build_zigbee_frame(zigbee_record, ieee_len, &frame_len) < 0)
 		return -1;
 	stage_end = timing_now();
 	frame_time_us = timing_elapsed_us(stage_start, stage_end);
 	stage_start = stage_end;
 	bluebee_len = build_bluebee_bytes(frame_len);
-	if (bluebee_len != 172u ||
-	    build_control_adv_data(separate ? 0u : bluebee_len, &bluebee_start,
+	if (bluebee_len != 4u * (ieee_len + 8u) ||
+	    build_control_adv_data(separate ? 0u : bluebee_len, ble_len, &bluebee_start,
 				   &adv_data_len) < 0)
 		return -1;
 	did = (uint16_t)(packet->slot_index & 0x0FFFu);
@@ -713,7 +744,7 @@ int32_t ble_exadv_secondary_gen_build_control_mode(
 				       BLE_EXT_ADV_MODE_NONCONN_NONSCAN,
 				       whitening_channel,
 				       &pdu_len, &ll_payload_len) < 0 ||
-	    pdu_len != (separate ? 54u : 226u))
+	    pdu_len != 19u + ble_len + (separate ? 0u : bluebee_len))
 		return -1;
 	stage_end = timing_now();
 	mapping_time_us = timing_elapsed_us(stage_start, stage_end);
@@ -730,7 +761,7 @@ int32_t ble_exadv_secondary_gen_build_control_mode(
 
 	memset(&g_meta, 0, sizeof(g_meta));
 	g_meta.zigbee_payload = g_zigbee_payload;
-	g_meta.zigbee_payload_len = sizeof(zigbee_record);
+	g_meta.zigbee_payload_len = ieee_len;
 	g_meta.zigbee_frame = g_zigbee_frame;
 	g_meta.zigbee_frame_len = frame_len;
 	g_meta.bluebee_bytes = g_bluebee_bytes;
@@ -757,6 +788,7 @@ int32_t ble_exadv_secondary_gen_build_control_mode(
 		B2Z_CONTROL_SECONDARY_CH3_TX_LO_HZ :
 		BLE_EXADV_SECONDARY_GEN_TX_LO_HZ;
 	g_meta.ble_control_record = g_ble_control_record;
+	g_meta.ble_control_record_len = ble_len;
 	g_meta.primary_iq_words = g_control_primary_iq_words;
 	g_meta.primary_iq_byte_count =
 		primary_iq_word_count * sizeof(uint32_t);
@@ -772,6 +804,19 @@ int32_t ble_exadv_secondary_gen_build_control_mode(
 	g_meta.ieee_iq_byte_count = ieee_iq_word_count * sizeof(uint32_t);
 	g_meta.ieee_air_us = separate ? bluebee_len * 8u : 0u;
 	return 0;
+}
+
+int32_t ble_exadv_secondary_gen_build_control_mode(
+	const struct b2z_control_packet *packet, uint8_t rf_mode)
+{
+	return build_control_mode_impl(packet, rf_mode, 0u, 0u, 0u);
+}
+
+int32_t ble_exadv_secondary_gen_build_capacity(
+	const struct b2z_control_packet *packet, uint32_t ble_extra, uint32_t ieee_extra)
+{
+	return build_control_mode_impl(packet, B2Z_CONTROL_RF_STANDARD_CH3,
+	                              1u, ble_extra, ieee_extra);
 }
 
 int32_t ble_exadv_secondary_gen_build_control(

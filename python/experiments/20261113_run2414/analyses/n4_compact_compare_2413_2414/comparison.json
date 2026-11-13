@@ -1,0 +1,97 @@
+{
+  "schema": "b2z_n2_comparison_v1",
+  "recorded_conditions_match": true,
+  "unresolved_or_different_conditions": [],
+  "groups": {
+    "joint": {
+      "run_id": 2414,
+      "joint_parsed_tasks": {
+        "numerator": 100,
+        "denominator": 100,
+        "value": 1.0
+      },
+      "planned_waveform_us": 185600,
+      "submitted_waveform_us": 185600,
+      "submitted_zero_padding_us": 2000,
+      "burst_attempted": 200,
+      "burst_started": 200,
+      "burst_completed": 200,
+      "uncertain_bursts": 0,
+      "per_joint_decoded_task": {
+        "numerator_us": 185600,
+        "denominator": 100,
+        "value_us": 1856.0
+      },
+      "quadrants": {
+        "joint_valid_attempts": 100,
+        "ble_only_attempts": 0,
+        "zigbee_only_attempts": 0,
+        "neither_attempts": 0
+      }
+    },
+    "separate": {
+      "run_id": 2413,
+      "joint_parsed_tasks": {
+        "numerator": 100,
+        "denominator": 100,
+        "value": 1.0
+      },
+      "planned_waveform_us": 246400,
+      "submitted_waveform_us": 246400,
+      "submitted_zero_padding_us": 5000,
+      "burst_attempted": 500,
+      "burst_started": 500,
+      "burst_completed": 500,
+      "uncertain_bursts": 0,
+      "per_joint_decoded_task": {
+        "numerator_us": 246400,
+        "denominator": 100,
+        "value_us": 2464.0
+      },
+      "quadrants": {
+        "joint_valid_attempts": 100,
+        "ble_only_attempts": 0,
+        "zigbee_only_attempts": 0,
+        "neither_attempts": 0
+      }
+    }
+  },
+  "joint_minus_separate_submitted_waveform_us": -60800,
+  "conditions": {
+    "joint": {
+      "topology": "0.25m SMA馈线连接",
+      "tx_power": "tx_power=0dBm",
+      "firmware_build": "20261113.1",
+      "attenuation": "无衰减"
+    },
+    "separate": {
+      "topology": "0.25m SMA馈线连接",
+      "tx_power": "tx_power=0dBm",
+      "firmware_build": "20261113.1",
+      "attenuation": "无衰减"
+    }
+  },
+  "comparison_scope": "compact_cost_with_RF_channel_confound",
+  "reliability_protocol_effect_identifiable": false,
+  "limitations": [
+    "single rounds do not establish reliability superiority",
+    "submitted waveform length is not measured RF occupancy",
+    "cross-device completion latency, deadlines and physical execution are not measured",
+    "fewer submissions caused by sender failure are not an efficiency gain",
+    "JC BLE 2410 MHz versus LC BLE 2480 MHz: reliability differences cannot be attributed solely to format"
+  ],
+  "sources": {
+    "joint_summary": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261113_run2414/analyses/n4_compact/plan.summary.json",
+      "sha256": "d244bc694d74d66d86090a34ce9baa83629674e8b4085bff2d7c595e082165af"
+    },
+    "separate_summary": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261113_run2413/analyses/n4_compact/plan.summary.json",
+      "sha256": "a77b502cd544d0b4c8c33cfb8a0c1d0ba5c7022235152d47156047810bfe7a73"
+    },
+    "conditions": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261113_run2414/conditions.json",
+      "sha256": "a74af0af98d805a89ad95ac1f82bc3922556f30193714d8349a86031dae6b1ed"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # N4 公平对照实施方案
 
-日期：2026-11-12。状态：设计，尚未实现新增格式和命令。承接 [N4 容量方案](n4_capacity_experiment_plan.md)。2301–2315 已完成首轮 v2 容量扫描，每点联合有效解析 100/100；不能把这些历史轮次直接作为新固件、新基线的同期对照。
+日期：2026-11-12。状态：第一层板端已实现并通过本地生成/语法检查，待用户构建上板；第一层主机接收、单轮分析及跨轮比较已适配，第二层板端C1/JC/LC已实现并通过本地检查，主机C1/legacy重组与分析已适配（见第8–9节），待首轮空口验证。承接 [N4 容量方案](n4_capacity_experiment_plan.md)。2301–2315 已完成首轮 v2 容量扫描，每点联合有效解析 100/100；不能把这些历史轮次直接作为新固件、新基线的同期对照。
 
 ## 1. 要回答的问题与最小范围
 
@@ -52,6 +52,87 @@
 |2406|S2|2,6|2256 µs|
 
 首轮六轮用于功能与成本初验。后续每点至少三轮独立配对重复，交替 J/S 顺序。S2 的 BLE 先发偏置必须披露；若要比较两侧本地到达时间，再增加 IEEE 先发的单独配置并记录其时序，不从当前顺序推导共包同步收益。
+
+### 第一层已实现的板端接口
+
+```text
+b2z_capacity_start? <run_id> <period_ms> <attempts> <ble_extra_len> <ieee_extra_len> [rf_mode]
+```
+
+省略模式或指定1为J2，指定2为S2；capacity不接受0或其他模式，原控制/plan命令的同频模式不变。原五参数命令兼容，范围仍为b+4z≤26、周期500..65535 ms、1..1024槽且总时长≤600 s。每槽新命令、K=1；共包/分别发送均不读取手工plan草稿。
+
+```text
+b2z_capacity_start? 2401 500 100 0 0 1
+b2z_capacity_start? 2402 500 100 0 0 2
+b2z_capacity_start? 2403 500 100 26 0 2
+b2z_capacity_start? 2404 500 100 26 0 1
+b2z_capacity_start? 2405 500 100 2 6 1
+b2z_capacity_start? 2406 500 100 2 6 2
+```
+
+以上为已实现的板端命令清单。配套主机已适配v2分别发送，使用下节接收和分析命令；先完成2401/2402功能核查，再展开余下四轮。
+
+CAPACITY_START/CONFIG报告实际rf_mode；pdu_payload_bytes为真实secondary payload，J2为229+b+4z，S2为53+b。mapped_bytes仍报告176+4z：S2中这部分位于独立IEEE突发，并不在BLE PDU内。CAPACITY_SLOT记录实际构造长度；CONTROL_BURST/COST_STATS沿用N2，S2每槽多一个kind=ieee突发及独立完成计数。tx_completed仍为BLE secondary DMA完成代理，不能当作IEEE也完成；IEEE完成须读逐突发或COST_STATS。
+
+S2沿用BLE完成后至少1 ms的软件保护间隔、主动DMA轮询/超时、恢复primary频率和停止处理。此间隔不是硬件测得的RF静默。两侧数据提前生成，secondary缓存仍在AuxPtr等待前准备。源码已同步SDK实际编译目录；本地三代表点验证了两模式记录逐字节一致、BLE波形解调、IEEE独立波形解码与预算相同，未替代上板验证。
+
+### 第一层主机操作（已适配）
+
+在仓库根目录执行。每轮分别在两个终端设置相同的RUN和LAYOUT；J2用joint，S2用separate。两条命令各启动一次，确认采集后再发送对应板端命令。不要启用control-target-id执行功能，当前是容量/解析对照。
+
+终端A（示例2402分别发送）：
+
+```bash
+RUN=2402
+LAYOUT=separate
+python3 python/exadv_rx/receive.py --run-id "$RUN" --control-layout "$LAYOUT" \
+  --channels 3 --serial 000000000000000017c467dc2926a0c3 \
+  --sample-rate 4000000 --lna 16 --vga 10 --duration 80 --save-iq --quiet
+```
+
+终端B：
+
+```bash
+RUN=2402
+LAYOUT=separate
+python3 python/zigbee_rx/control_receive.py --run-id "$RUN" --control-layout "$LAYOUT" \
+  --channel 12 --serial 000000000000000017c467dc3348a6c3 \
+  --sample-rate 4000000 --lna 16 --vga 10 --duration 80 \
+  --expected-packets 100 --save-iq --quiet
+```
+
+2401/2404/2405使用joint；2402/2403/2406使用separate。接收器自动创建日期/run目录，不需要EXP_DIR（跨午夜须统一目录）。负载长度自动从包中解析。两端结束后，等待板端本轮CONTROL_TIME_END及后续输出完成，将完整串口记录放入本轮board.board.log。
+
+每轮分析（日期按实际目录替换）：
+
+```bash
+python3 python/control_match/plan_analyze.py \
+  --experiment-dir python/experiments/20261112_run2402 \
+  --run-id 2402 --analysis-id n4_fair
+```
+
+验收：100个计划任务；两侧与联合有效解析按实际数量报告，少于100不删失败任务；检查板端primary、BLE及IEEE各自完成数。J2正常为200次突发完成，S2为300次。零扩展两组计划有效波形均204800 µs/轮；两个255 B共包边界点均225600 µs/轮。S2的secondary payload分别为53/79/55 B，独立IEEE映射长度分别为176/176/200 B。任何长度、记录内容、模式、成本不符先定位，不继续批量采集。
+
+跨轮比较继续使用已扩展的compare_n2.py，三对分别为2401/2402、2404/2403、2405/2406。先手工保存conditions.json，两组均填写真实的topology、tx_power（单位明确）、firmware_build（同一固件版本或哈希）和attenuation；不能把未知信息填为“相同”来绕过检查。结构例如：
+
+```json
+{
+  "joint": {"topology": "TODO", "tx_power": "TODO", "firmware_build": "TODO", "attenuation": "TODO"},
+  "separate": {"topology": "TODO", "tx_power": "TODO", "firmware_build": "TODO", "attenuation": "TODO"}
+}
+```
+
+TODO必须据实替换；信息缺失时工具仍生成描述性报告，但recorded_conditions_match为false，不能当成公平性通过。
+
+```bash
+python3 python/control_match/compare_n2.py \
+  --joint-summary python/experiments/20261112_run2401/analyses/n4_fair/plan.summary.json \
+  --separate-summary python/experiments/20261112_run2402/analyses/n4_fair/plan.summary.json \
+  --conditions python/experiments/20261112_run2402/conditions.json \
+  --output-dir python/experiments/20261112_run2402/analyses/n4_compare_2401_2402
+```
+
+输出comparison.json/md，核对格式、两侧扩展长度、任务/截止期、采集与人工RF条件；PDU长度不同属于预期，不要求两组物理布局相同。schema沿用b2z_n2_comparison_v1以兼容旧工具。报告记录的条件一致仅表示所列信息一致，不证明未观测的RF环境完全相同。全部测试为本地验证，仍需新版固件的首轮空口验证。
 
 ## 4. 第二层：给双方同样的紧凑编码
 
@@ -134,3 +215,123 @@ BLE分片重组间隔可用同一个HackRF的首片/末片IQ采样索引测量�
 若结果成立，可说明：在给定应用任务、记录范围和SDR拓扑下，共包减少物理突发；在某些blob长度下相较所实现的legacy分片基线降低提交有效波形预算/分片成本，同时保持已观察的联合解析能力。零收益或负收益工作点照实保留。
 
 不能据此声称：全部任务上exadv优于legacy、优于所有最优压缩/原生IEEE方案、真实能耗降低、物理执行同步精度提高、商用设备兼容、任意RF条件下可靠性提升。同步精度证据与本容量/成本对照分别建立。
+
+## 8. 第二层板端实现（2026-11-13）
+
+板端及主机C1/legacy分片接收和分析已实现，操作见第9节；尚待首轮空口验证。用户自行编译上板。独立命令不修改v1/v2命令：
+
+```text
+b2z_compact_start? <run_id> <period_ms> <attempts> <ble_extra> <ieee_extra> <mode>
+```
+
+严格六个十进制整数，mode=1为JC，mode=2为LC；不省略mode。范围沿用第一层公平任务域b+4z≤26、b≤26、z≤6、周期500..65535 ms、槽数1..1024、计划总时长≤600 s。slot从0递增，command_id=slot+1；每任务K=1，目标/参数及2 s有效期/3 s执行字段沿用第一层，不启动执行器。复用忙状态、停止命令、虚拟任务与有界DMA轮询。接口不承诺更大C1容量，本轮只比较同应用任务。
+
+```text
+b2z_compact_start? 2411 500 100 0 0 1
+b2z_compact_start? 2412 500 100 0 0 2
+b2z_compact_start? 2413 500 100 26 0 2
+b2z_compact_start? 2414 500 100 26 0 1
+b2z_compact_start? 2415 500 100 2 6 1
+b2z_compact_start? 2416 500 100 2 6 2
+```
+
+C1完整记录判别字冻结为0xC1，分片头判别字为0xC2，片号从0起。字段布局见第4节。应用CRC16覆盖完整紧凑记录；每个legacy帧独立BLE CRC。legacy ADV_NONCONN_IND使用随机静态地址C1:A2:A3:A4:A5:A6，与exadv地址一致；仅发ch39，无Flags AD、scan response或三信道副本。≤27 B记录直接装载，否则17 B切片，末片不填充。两侧blob沿用v2确定性内容生成规则，保证在同一run/slot下编码转换不改变应用blob。
+
+JC发送primary39和共包secondary3。LC在发射前生成全部legacy分片与独立BlueBee波形，按fragment0..N顺序发送，然后切换到2410 MHz发IEEE，最后恢复2480 MHz。片间和BLE至IEEE之间至少等待1 ms软件保护间隔；不宣称实际RF间隔准确为1 ms。LC不发送primary/AuxPtr或BLE secondary，且不生成它们的无用调制波形。发生停止、提交失败、超时或调谐失败时保留逐突发结果，并尝试恢复primary频率；不追加隐式重发。
+
+日志约定：
+
+- 保留CONTROL_PLAN_START/ENTRY/TASK/SLOT/STATS作为共同任务计划及计数。LC模式名为legacy_separate_ch39，AuxOffset=0；兼容计划日志中的secondary/时间参考字段不适用于LC，不用来评价LC同步。
+- COMPACT_CONFIG：format=C1、mode=JC/LC、两侧长度、周期和语义。
+- COMPACT_SLOT：逐槽实际记录/映射字节数；JC的secondary_payload_bytes=179+b+4z，LC为0（无secondary），不是丢失长度。
+- COMPACT_BURST：JC为primary/secondary；LC为fragment0..fragment3及ieee。每个槽均输出计划突发，包括未提交者；记录生成、提交尝试、启动、完成、超时、IQ字节、有效波形预算、padding和软件调用时刻。
+- COMPACT_COST_STATS：累计全部突发；LC的ble_tx_completed仅在全部BLE片均DMA完成后计1，IEEE独立统计。LC的primary完成数为0是预期；tx_started为首BLE片启动任务数，不是所有物理突发数。
+- JC保留N3诊断；LC不套用N3 primary/AuxPtr阶段，输出COMPACT_TIME_END，使用COMPACT_BURST的软件时间括号。LC没有实际RF起点、跨设备时差或执行精度测量。
+
+主机必须显式识别上述格式，不能将旧plan_analyze结果作为C1验收。后续主机适配应严格校验COMPACT_CONFIG、逐槽长度和分片数量，独立解析IEEE完整C1，不以BLE重组结果补写IEEE。
+
+本地验证包括：三个代表点的C1语义/应用CRC、JC PDU及BLE CRC、LC实际IQ解调/白化/地址/逐帧CRC与完整分片重组、独立IEEE IQ标准接收链FCS及完整记录、两模式应用内容一致、预算1648/1856/1856与1456/2464/1984 µs，以及超范围提前量拒绝。旧v1/v2生成与虚拟任务测试保持通过。ARM语法检查不等于固件链接成功或空口验证。
+
+## 9. 第二层主机操作（2026-11-13已适配）
+
+接收仍使用exadv_rx/receive.py与zigbee_rx/control_receive.py，联合分析仍用plan_analyze.py。BLE接收器新增legacy ADV_NONCONN_IND路径；C1直接记录和0xC2分片均通过BLE CRC后再处理。LC按AdvA/run/command独立重组，应用CRC与完整内容通过后才计命令；IEEE只解析本侧C1。JSON内version=3/format=C1是主机分派标签，不是将线上0xC1替换为第三字节版本号。
+
+重组缓存上限1024项，超时固定为首片后2秒的**本机IQ采样时间**，与USB/解码处理速度无关（取代第4节草案的主机墙钟超时）。允许片号乱序、相同片重复；冲突片拒绝该身份，离线联合分析遇到冲突会拒绝出具正常结果。已完成或超时身份保留有界记录以避免迟到片重复计数。到采集结束仍不完整者列为incomplete_at_end，跨过2秒者列timeout；丢片不从计划分母中剔除。以上是本地重组规则，不是空口截止精度或执行精度测量。
+
+### 9.1 接收和发送顺序
+
+先做2411/2412，分析通过后再做2413–2416。每轮重新启动两个接收器，较早启动后20秒内发送对应板端命令。以下变量仅简化命令，不需额外EXP_DIR。注意LC的BLE接收必须从ch3改为ch39，IEEE保持ch12。
+
+|run|模式|BLE频道|两侧control-layout|b,z|
+|---|---|---:|---|---|
+|2411|JC|3|joint|0,0|
+|2412|LC|39|separate|0,0|
+|2413|LC|39|separate|26,0|
+|2414|JC|3|joint|26,0|
+|2415|JC|3|joint|2,6|
+|2416|LC|39|separate|2,6|
+
+终端A示例2412：
+
+```bash
+RUN=2412
+BLE_CHANNEL=39
+LAYOUT=separate
+python3 python/exadv_rx/receive.py --run-id "$RUN" --channels "$BLE_CHANNEL" \
+  --control-layout "$LAYOUT" --serial 000000000000000017c467dc2926a0c3 \
+  --sample-rate 4000000 --lna 16 --vga 10 --duration 80 --save-iq --quiet
+```
+
+终端B示例2412：
+
+```bash
+RUN=2412
+LAYOUT=separate
+python3 python/zigbee_rx/control_receive.py --run-id "$RUN" --channel 12 \
+  --control-layout "$LAYOUT" --serial 000000000000000017c467dc3348a6c3 \
+  --sample-rate 4000000 --lna 16 --vga 10 --duration 80 \
+  --expected-packets 100 --save-iq --quiet
+```
+
+然后发送第8节相应板端命令。保持发送功率、接线和增益一致，不启用control-target-id。LC没有primary/AuxPtr，所以严格配对计数为0是预期；本层也不要求JC固定频点接收观察primary。LC分片数不等于任务数：26 B BLE扩展时每任务4个BLE帧，但只有重组后才算1条有效记录。
+
+### 9.2 单轮分析
+
+等待板端全部逐槽/突发打印完成：JC含CONTROL_TIME_END；LC含COMPACT_TIME_END。保存完整日志到自动创建的本轮目录下board.board.log。日期以真实目录为准：
+
+```bash
+python3 python/control_match/plan_analyze.py \
+  --experiment-dir python/experiments/20261113_run2412 \
+  --run-id 2412 --analysis-id n4_compact
+```
+
+输出plan.summary.json/report.md及任务/槽/突发CSV。校验COMPACT_CONFIG/SLOT、模式与实际BLE封装、记录长度、时间语义、各物理突发预算、独立BLE/IEEE完成数。LC不套用JC布局偏移；两侧软件执行计数无观测时为N/A。解析率必须包含全部100个计划任务；未收齐片段计失败，不用确定性内容补齐。
+
+全发送且全解析时的预期预算（非实测RF占用）：
+
+|run|BLE帧/任务（不含JC primary）|每轮总突发|有效波形µs/轮|
+|---|---:|---:|---:|
+|2411|1|200|164800|
+|2412|1|200|145600|
+|2413|4|500|246400|
+|2414|1|200|185600|
+|2415|1|200|185600|
+|2416|2|300|198400|
+
+这不是预设100%解析的验收门槛。实际少收时保留四象限与重组异常，先排查录制边界、固件异常和配置；不要把预算结果当成无线实测精度。
+
+### 9.3 配对比较
+
+三对分别是2411/2412、2414/2413、2415/2416。沿用第3节conditions.json结构，joint字段填写JC、separate字段填写LC；均记录真实功率配置、接线、固件版本和外接衰减。无功率计校准时不要把配置值称为实际输出功率。
+
+```bash
+python3 python/control_match/compare_n2.py \
+  --joint-summary python/experiments/20261113_run2411/analyses/n4_compact/plan.summary.json \
+  --separate-summary python/experiments/20261113_run2412/analyses/n4_compact/plan.summary.json \
+  --conditions python/experiments/20261113_run2412/conditions.json \
+  --output-dir python/experiments/20261113_run2412/analyses/n4_compact_compare_2411_2412
+```
+
+工具自动识别JC/LC。比较相同扩展长度、命令清单、周期、有效期、设备/增益与人工条件；仅允许预期的BLE ch3/2410 MHz与ch39/2480 MHz差异。报告comparison_scope=compact_cost_with_RF_channel_confound，reliability_protocol_effect_identifiable=false：即使recorded_conditions_match=true，也不能把可靠性差异归因于协议格式。单轮结果不替代独立重复。
+
+本地验证采用真实C生成器IQ，经BLE接收器、IEEE标准解码链、分片重组和联合分析完成三个工作点JC/LC六种组合；额外覆盖缺片、重复、乱序、冲突、超时、CLI离线接收及报告生成。它们属于软件/回放验证，不增加物理实验次数。

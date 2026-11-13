@@ -7,7 +7,7 @@
 - 有效包：100（PHY FCS有效）
 - IQ观察时长：65.000000 s（全部已处理采样，含实验前后余量）
 - Command ID：N/A
-- B2 43 候选：100；记录有效：100
+- 控制记录候选：100；记录有效：100
 - 有效唯一时隙：100；重复：0；乱序：0
 - 最长连续缺失：0（explicit planned range）
 - 有效解码 / DMA 完成：N/A（分子 100；分母 N/A；matching final CONTROL_STATS and full-run coverage required）
@@ -38,7 +38,6 @@
 候选 CRC/FCS 失败计数不等于唯一物理坏包数；队列未溢出不证明 USB 无丢样。
 当前报告描述解码与负载校验，不表示命令执行或执行器同步。
 
-- [rx.ci8](rx.ci8)
 - [rx.hackrf.log](rx.hackrf.log)
 - [rx.packets.jsonl](rx.packets.jsonl)
 - [rx.summary.txt](rx.summary.txt)

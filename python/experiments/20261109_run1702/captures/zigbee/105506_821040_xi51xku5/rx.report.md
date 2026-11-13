@@ -7,7 +7,7 @@
 - 有效包：299（PHY FCS有效）
 - IQ观察时长：80.000000 s（全部已处理采样，含实验前后余量）
 - Command ID：N/A
-- B2 43 候选：299；记录有效：299
+- 控制记录候选：299；记录有效：299
 - 有效唯一时隙：299；重复：0；乱序：0
 - 最长连续缺失：1（explicit planned range）
 - 有效解码 / DMA 完成：N/A（分子 299；分母 N/A；matching final CONTROL_STATS and full-run coverage required）

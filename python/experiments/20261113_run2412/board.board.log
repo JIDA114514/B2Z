@@ -1,0 +1,1212 @@
+CONTROL_PLAN_START state=armed run_id=2412 period_ms=500 tasks=100 slots=100 duration_s=50 rf_mode=legacy_separate_ch39 aux_channel=3 aux_offset_us=0 primary_mhz=2480 secondary_mhz=2410
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=0 command_id=1 first_slot=0 repeats=1 execute_at_ms=3000 valid_until_ms=2000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=1 command_id=2 first_slot=1 repeats=1 execute_at_ms=3500 valid_until_ms=2500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=2 command_id=3 first_slot=2 repeats=1 execute_at_ms=4000 valid_until_ms=3000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=3 command_id=4 first_slot=3 repeats=1 execute_at_ms=4500 valid_until_ms=3500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=4 command_id=5 first_slot=4 repeats=1 execute_at_ms=5000 valid_until_ms=4000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=5 command_id=6 first_slot=5 repeats=1 execute_at_ms=5500 valid_until_ms=4500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=6 command_id=7 first_slot=6 repeats=1 execute_at_ms=6000 valid_until_ms=5000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=7 command_id=8 first_slot=7 repeats=1 execute_at_ms=6500 valid_until_ms=5500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=8 command_id=9 first_slot=8 repeats=1 execute_at_ms=7000 valid_until_ms=6000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=9 command_id=10 first_slot=9 repeats=1 execute_at_ms=7500 valid_until_ms=6500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=10 command_id=11 first_slot=10 repeats=1 execute_at_ms=8000 valid_until_ms=7000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=11 command_id=12 first_slot=11 repeats=1 execute_at_ms=8500 valid_until_ms=7500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=12 command_id=13 first_slot=12 repeats=1 execute_at_ms=9000 valid_until_ms=8000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=13 command_id=14 first_slot=13 repeats=1 execute_at_ms=9500 valid_until_ms=8500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=14 command_id=15 first_slot=14 repeats=1 execute_at_ms=10000 valid_until_ms=9000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=15 command_id=16 first_slot=15 repeats=1 execute_at_ms=10500 valid_until_ms=9500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=16 command_id=17 first_slot=16 repeats=1 execute_at_ms=11000 valid_until_ms=10000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=17 command_id=18 first_slot=17 repeats=1 execute_at_ms=11500 valid_until_ms=10500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=18 command_id=19 first_slot=18 repeats=1 execute_at_ms=12000 valid_until_ms=11000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=19 command_id=20 first_slot=19 repeats=1 execute_at_ms=12500 valid_until_ms=11500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=20 command_id=21 first_slot=20 repeats=1 execute_at_ms=13000 valid_until_ms=12000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=21 command_id=22 first_slot=21 repeats=1 execute_at_ms=13500 valid_until_ms=12500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=22 command_id=23 first_slot=22 repeats=1 execute_at_ms=14000 valid_until_ms=13000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=23 command_id=24 first_slot=23 repeats=1 execute_at_ms=14500 valid_until_ms=13500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=24 command_id=25 first_slot=24 repeats=1 execute_at_ms=15000 valid_until_ms=14000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=25 command_id=26 first_slot=25 repeats=1 execute_at_ms=15500 valid_until_ms=14500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=26 command_id=27 first_slot=26 repeats=1 execute_at_ms=16000 valid_until_ms=15000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=27 command_id=28 first_slot=27 repeats=1 execute_at_ms=16500 valid_until_ms=15500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=28 command_id=29 first_slot=28 repeats=1 execute_at_ms=17000 valid_until_ms=16000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=29 command_id=30 first_slot=29 repeats=1 execute_at_ms=17500 valid_until_ms=16500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=30 command_id=31 first_slot=30 repeats=1 execute_at_ms=18000 valid_until_ms=17000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=31 command_id=32 first_slot=31 repeats=1 execute_at_ms=18500 valid_until_ms=17500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=32 command_id=33 first_slot=32 repeats=1 execute_at_ms=19000 valid_until_ms=18000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=33 command_id=34 first_slot=33 repeats=1 execute_at_ms=19500 valid_until_ms=18500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=34 command_id=35 first_slot=34 repeats=1 execute_at_ms=20000 valid_until_ms=19000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=35 command_id=36 first_slot=35 repeats=1 execute_at_ms=20500 valid_until_ms=19500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=36 command_id=37 first_slot=36 repeats=1 execute_at_ms=21000 valid_until_ms=20000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=37 command_id=38 first_slot=37 repeats=1 execute_at_ms=21500 valid_until_ms=20500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=38 command_id=39 first_slot=38 repeats=1 execute_at_ms=22000 valid_until_ms=21000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=39 command_id=40 first_slot=39 repeats=1 execute_at_ms=22500 valid_until_ms=21500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=40 command_id=41 first_slot=40 repeats=1 execute_at_ms=23000 valid_until_ms=22000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=41 command_id=42 first_slot=41 repeats=1 execute_at_ms=23500 valid_until_ms=22500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=42 command_id=43 first_slot=42 repeats=1 execute_at_ms=24000 valid_until_ms=23000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=43 command_id=44 first_slot=43 repeats=1 execute_at_ms=24500 valid_until_ms=23500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=44 command_id=45 first_slot=44 repeats=1 execute_at_ms=25000 valid_until_ms=24000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=45 command_id=46 first_slot=45 repeats=1 execute_at_ms=25500 valid_until_ms=24500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=46 command_id=47 first_slot=46 repeats=1 execute_at_ms=26000 valid_until_ms=25000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=47 command_id=48 first_slot=47 repeats=1 execute_at_ms=26500 valid_until_ms=25500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=48 command_id=49 first_slot=48 repeats=1 execute_at_ms=27000 valid_until_ms=26000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=49 command_id=50 first_slot=49 repeats=1 execute_at_ms=27500 valid_until_ms=26500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=50 command_id=51 first_slot=50 repeats=1 execute_at_ms=28000 valid_until_ms=27000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=51 command_id=52 first_slot=51 repeats=1 execute_at_ms=28500 valid_until_ms=27500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=52 command_id=53 first_slot=52 repeats=1 execute_at_ms=29000 valid_until_ms=28000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=53 command_id=54 first_slot=53 repeats=1 execute_at_ms=29500 valid_until_ms=28500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=54 command_id=55 first_slot=54 repeats=1 execute_at_ms=30000 valid_until_ms=29000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=55 command_id=56 first_slot=55 repeats=1 execute_at_ms=30500 valid_until_ms=29500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=56 command_id=57 first_slot=56 repeats=1 execute_at_ms=31000 valid_until_ms=30000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=57 command_id=58 first_slot=57 repeats=1 execute_at_ms=31500 valid_until_ms=30500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=58 command_id=59 first_slot=58 repeats=1 execute_at_ms=32000 valid_until_ms=31000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=59 command_id=60 first_slot=59 repeats=1 execute_at_ms=32500 valid_until_ms=31500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=60 command_id=61 first_slot=60 repeats=1 execute_at_ms=33000 valid_until_ms=32000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=61 command_id=62 first_slot=61 repeats=1 execute_at_ms=33500 valid_until_ms=32500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=62 command_id=63 first_slot=62 repeats=1 execute_at_ms=34000 valid_until_ms=33000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=63 command_id=64 first_slot=63 repeats=1 execute_at_ms=34500 valid_until_ms=33500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=64 command_id=65 first_slot=64 repeats=1 execute_at_ms=35000 valid_until_ms=34000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=65 command_id=66 first_slot=65 repeats=1 execute_at_ms=35500 valid_until_ms=34500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=66 command_id=67 first_slot=66 repeats=1 execute_at_ms=36000 valid_until_ms=35000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=67 command_id=68 first_slot=67 repeats=1 execute_at_ms=36500 valid_until_ms=35500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=68 command_id=69 first_slot=68 repeats=1 execute_at_ms=37000 valid_until_ms=36000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=69 command_id=70 first_slot=69 repeats=1 execute_at_ms=37500 valid_until_ms=36500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=70 command_id=71 first_slot=70 repeats=1 execute_at_ms=38000 valid_until_ms=37000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=71 command_id=72 first_slot=71 repeats=1 execute_at_ms=38500 valid_until_ms=37500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=72 command_id=73 first_slot=72 repeats=1 execute_at_ms=39000 valid_until_ms=38000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=73 command_id=74 first_slot=73 repeats=1 execute_at_ms=39500 valid_until_ms=38500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=74 command_id=75 first_slot=74 repeats=1 execute_at_ms=40000 valid_until_ms=39000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=75 command_id=76 first_slot=75 repeats=1 execute_at_ms=40500 valid_until_ms=39500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=76 command_id=77 first_slot=76 repeats=1 execute_at_ms=41000 valid_until_ms=40000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=77 command_id=78 first_slot=77 repeats=1 execute_at_ms=41500 valid_until_ms=40500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=78 command_id=79 first_slot=78 repeats=1 execute_at_ms=42000 valid_until_ms=41000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=79 command_id=80 first_slot=79 repeats=1 execute_at_ms=42500 valid_until_ms=41500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=80 command_id=81 first_slot=80 repeats=1 execute_at_ms=43000 valid_until_ms=42000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=81 command_id=82 first_slot=81 repeats=1 execute_at_ms=43500 valid_until_ms=42500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=82 command_id=83 first_slot=82 repeats=1 execute_at_ms=44000 valid_until_ms=43000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=83 command_id=84 first_slot=83 repeats=1 execute_at_ms=44500 valid_until_ms=43500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=84 command_id=85 first_slot=84 repeats=1 execute_at_ms=45000 valid_until_ms=44000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=85 command_id=86 first_slot=85 repeats=1 execute_at_ms=45500 valid_until_ms=44500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=86 command_id=87 first_slot=86 repeats=1 execute_at_ms=46000 valid_until_ms=45000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=87 command_id=88 first_slot=87 repeats=1 execute_at_ms=46500 valid_until_ms=45500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=88 command_id=89 first_slot=88 repeats=1 execute_at_ms=47000 valid_until_ms=46000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=89 command_id=90 first_slot=89 repeats=1 execute_at_ms=47500 valid_until_ms=46500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=90 command_id=91 first_slot=90 repeats=1 execute_at_ms=48000 valid_until_ms=47000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=91 command_id=92 first_slot=91 repeats=1 execute_at_ms=48500 valid_until_ms=47500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=92 command_id=93 first_slot=92 repeats=1 execute_at_ms=49000 valid_until_ms=48000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=93 command_id=94 first_slot=93 repeats=1 execute_at_ms=49500 valid_until_ms=48500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=94 command_id=95 first_slot=94 repeats=1 execute_at_ms=50000 valid_until_ms=49000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=95 command_id=96 first_slot=95 repeats=1 execute_at_ms=50500 valid_until_ms=49500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=96 command_id=97 first_slot=96 repeats=1 execute_at_ms=51000 valid_until_ms=50000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=97 command_id=98 first_slot=97 repeats=1 execute_at_ms=51500 valid_until_ms=50500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=98 command_id=99 first_slot=98 repeats=1 execute_at_ms=52000 valid_until_ms=51000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_ENTRY run_id=2412 entry=99 command_id=100 first_slot=99 repeats=1 execute_at_ms=52500 valid_until_ms=51500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2
+
+CONTROL_PLAN_STATS final=1 state=complete run_id=2412 period_ms=500 tasks=100 planned_slots=100 reached_slots=100 elapsed_us=50000005 generated=100 primary_started=0 primary_completed=0 tx_started=100 tx_completed=100 deadline_miss=0 dma_timeout=0 secondary_dma_late_samples=0 secondary_dma_late_max_us=0 secondary_dma_late_avg_us=0 time_reference=planned_secondary_start rf_mode=legacy_separate_ch39 aux_channel=3 aux_offset_us=0 auxptr_dma_window_miss=0 auxptr_dma_delta_samples=0 auxptr_dma_delta_min_us=0 auxptr_dma_delta_max_us=0 auxptr_dma_delta_avg_us=0 retune_failure=0 retune_secondary_max_us=0
+
+COMPACT_CONFIG run_id=2412 format=C1 mode=LC ble_extra=0 ieee_extra=0 ble_record_bytes=26 ieee_record_bytes=26 k=1 period_ms=500 valid_lead_ms=2000 execute_lead_ms=3000 legacy_channel=39 ieee_channel=12
+
+CONTROL_PLAN_TASK run_id=2412 entry=0 command_id=1 first_slot=0 repeats=1 reached=1 generated=1 execute_at_ms=3000 valid_until_ms=2000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=1 command_id=2 first_slot=1 repeats=1 reached=1 generated=1 execute_at_ms=3500 valid_until_ms=2500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=2 command_id=3 first_slot=2 repeats=1 reached=1 generated=1 execute_at_ms=4000 valid_until_ms=3000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=3 command_id=4 first_slot=3 repeats=1 reached=1 generated=1 execute_at_ms=4500 valid_until_ms=3500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=4 command_id=5 first_slot=4 repeats=1 reached=1 generated=1 execute_at_ms=5000 valid_until_ms=4000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=5 command_id=6 first_slot=5 repeats=1 reached=1 generated=1 execute_at_ms=5500 valid_until_ms=4500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=6 command_id=7 first_slot=6 repeats=1 reached=1 generated=1 execute_at_ms=6000 valid_until_ms=5000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=7 command_id=8 first_slot=7 repeats=1 reached=1 generated=1 execute_at_ms=6500 valid_until_ms=5500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=8 command_id=9 first_slot=8 repeats=1 reached=1 generated=1 execute_at_ms=7000 valid_until_ms=6000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=9 command_id=10 first_slot=9 repeats=1 reached=1 generated=1 execute_at_ms=7500 valid_until_ms=6500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=10 command_id=11 first_slot=10 repeats=1 reached=1 generated=1 execute_at_ms=8000 valid_until_ms=7000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=11 command_id=12 first_slot=11 repeats=1 reached=1 generated=1 execute_at_ms=8500 valid_until_ms=7500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=12 command_id=13 first_slot=12 repeats=1 reached=1 generated=1 execute_at_ms=9000 valid_until_ms=8000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=13 command_id=14 first_slot=13 repeats=1 reached=1 generated=1 execute_at_ms=9500 valid_until_ms=8500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=14 command_id=15 first_slot=14 repeats=1 reached=1 generated=1 execute_at_ms=10000 valid_until_ms=9000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=15 command_id=16 first_slot=15 repeats=1 reached=1 generated=1 execute_at_ms=10500 valid_until_ms=9500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=16 command_id=17 first_slot=16 repeats=1 reached=1 generated=1 execute_at_ms=11000 valid_until_ms=10000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=17 command_id=18 first_slot=17 repeats=1 reached=1 generated=1 execute_at_ms=11500 valid_until_ms=10500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=18 command_id=19 first_slot=18 repeats=1 reached=1 generated=1 execute_at_ms=12000 valid_until_ms=11000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=19 command_id=20 first_slot=19 repeats=1 reached=1 generated=1 execute_at_ms=12500 valid_until_ms=11500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=20 command_id=21 first_slot=20 repeats=1 reached=1 generated=1 execute_at_ms=13000 valid_until_ms=12000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=21 command_id=22 first_slot=21 repeats=1 reached=1 generated=1 execute_at_ms=13500 valid_until_ms=12500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=22 command_id=23 first_slot=22 repeats=1 reached=1 generated=1 execute_at_ms=14000 valid_until_ms=13000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=23 command_id=24 first_slot=23 repeats=1 reached=1 generated=1 execute_at_ms=14500 valid_until_ms=13500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=24 command_id=25 first_slot=24 repeats=1 reached=1 generated=1 execute_at_ms=15000 valid_until_ms=14000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=25 command_id=26 first_slot=25 repeats=1 reached=1 generated=1 execute_at_ms=15500 valid_until_ms=14500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=26 command_id=27 first_slot=26 repeats=1 reached=1 generated=1 execute_at_ms=16000 valid_until_ms=15000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=27 command_id=28 first_slot=27 repeats=1 reached=1 generated=1 execute_at_ms=16500 valid_until_ms=15500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=28 command_id=29 first_slot=28 repeats=1 reached=1 generated=1 execute_at_ms=17000 valid_until_ms=16000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=29 command_id=30 first_slot=29 repeats=1 reached=1 generated=1 execute_at_ms=17500 valid_until_ms=16500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=30 command_id=31 first_slot=30 repeats=1 reached=1 generated=1 execute_at_ms=18000 valid_until_ms=17000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=31 command_id=32 first_slot=31 repeats=1 reached=1 generated=1 execute_at_ms=18500 valid_until_ms=17500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=32 command_id=33 first_slot=32 repeats=1 reached=1 generated=1 execute_at_ms=19000 valid_until_ms=18000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=33 command_id=34 first_slot=33 repeats=1 reached=1 generated=1 execute_at_ms=19500 valid_until_ms=18500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=34 command_id=35 first_slot=34 repeats=1 reached=1 generated=1 execute_at_ms=20000 valid_until_ms=19000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=35 command_id=36 first_slot=35 repeats=1 reached=1 generated=1 execute_at_ms=20500 valid_until_ms=19500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=36 command_id=37 first_slot=36 repeats=1 reached=1 generated=1 execute_at_ms=21000 valid_until_ms=20000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=37 command_id=38 first_slot=37 repeats=1 reached=1 generated=1 execute_at_ms=21500 valid_until_ms=20500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=38 command_id=39 first_slot=38 repeats=1 reached=1 generated=1 execute_at_ms=22000 valid_until_ms=21000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=39 command_id=40 first_slot=39 repeats=1 reached=1 generated=1 execute_at_ms=22500 valid_until_ms=21500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=40 command_id=41 first_slot=40 repeats=1 reached=1 generated=1 execute_at_ms=23000 valid_until_ms=22000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=41 command_id=42 first_slot=41 repeats=1 reached=1 generated=1 execute_at_ms=23500 valid_until_ms=22500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=42 command_id=43 first_slot=42 repeats=1 reached=1 generated=1 execute_at_ms=24000 valid_until_ms=23000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=43 command_id=44 first_slot=43 repeats=1 reached=1 generated=1 execute_at_ms=24500 valid_until_ms=23500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=44 command_id=45 first_slot=44 repeats=1 reached=1 generated=1 execute_at_ms=25000 valid_until_ms=24000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=45 command_id=46 first_slot=45 repeats=1 reached=1 generated=1 execute_at_ms=25500 valid_until_ms=24500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=46 command_id=47 first_slot=46 repeats=1 reached=1 generated=1 execute_at_ms=26000 valid_until_ms=25000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=47 command_id=48 first_slot=47 repeats=1 reached=1 generated=1 execute_at_ms=26500 valid_until_ms=25500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=48 command_id=49 first_slot=48 repeats=1 reached=1 generated=1 execute_at_ms=27000 valid_until_ms=26000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=49 command_id=50 first_slot=49 repeats=1 reached=1 generated=1 execute_at_ms=27500 valid_until_ms=26500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=50 command_id=51 first_slot=50 repeats=1 reached=1 generated=1 execute_at_ms=28000 valid_until_ms=27000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=51 command_id=52 first_slot=51 repeats=1 reached=1 generated=1 execute_at_ms=28500 valid_until_ms=27500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=52 command_id=53 first_slot=52 repeats=1 reached=1 generated=1 execute_at_ms=29000 valid_until_ms=28000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=53 command_id=54 first_slot=53 repeats=1 reached=1 generated=1 execute_at_ms=29500 valid_until_ms=28500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=54 command_id=55 first_slot=54 repeats=1 reached=1 generated=1 execute_at_ms=30000 valid_until_ms=29000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=55 command_id=56 first_slot=55 repeats=1 reached=1 generated=1 execute_at_ms=30500 valid_until_ms=29500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=56 command_id=57 first_slot=56 repeats=1 reached=1 generated=1 execute_at_ms=31000 valid_until_ms=30000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=57 command_id=58 first_slot=57 repeats=1 reached=1 generated=1 execute_at_ms=31500 valid_until_ms=30500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=58 command_id=59 first_slot=58 repeats=1 reached=1 generated=1 execute_at_ms=32000 valid_until_ms=31000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=59 command_id=60 first_slot=59 repeats=1 reached=1 generated=1 execute_at_ms=32500 valid_until_ms=31500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=60 command_id=61 first_slot=60 repeats=1 reached=1 generated=1 execute_at_ms=33000 valid_until_ms=32000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=61 command_id=62 first_slot=61 repeats=1 reached=1 generated=1 execute_at_ms=33500 valid_until_ms=32500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=62 command_id=63 first_slot=62 repeats=1 reached=1 generated=1 execute_at_ms=34000 valid_until_ms=33000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=63 command_id=64 first_slot=63 repeats=1 reached=1 generated=1 execute_at_ms=34500 valid_until_ms=33500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=64 command_id=65 first_slot=64 repeats=1 reached=1 generated=1 execute_at_ms=35000 valid_until_ms=34000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=65 command_id=66 first_slot=65 repeats=1 reached=1 generated=1 execute_at_ms=35500 valid_until_ms=34500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=66 command_id=67 first_slot=66 repeats=1 reached=1 generated=1 execute_at_ms=36000 valid_until_ms=35000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=67 command_id=68 first_slot=67 repeats=1 reached=1 generated=1 execute_at_ms=36500 valid_until_ms=35500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=68 command_id=69 first_slot=68 repeats=1 reached=1 generated=1 execute_at_ms=37000 valid_until_ms=36000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=69 command_id=70 first_slot=69 repeats=1 reached=1 generated=1 execute_at_ms=37500 valid_until_ms=36500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=70 command_id=71 first_slot=70 repeats=1 reached=1 generated=1 execute_at_ms=38000 valid_until_ms=37000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=71 command_id=72 first_slot=71 repeats=1 reached=1 generated=1 execute_at_ms=38500 valid_until_ms=37500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=72 command_id=73 first_slot=72 repeats=1 reached=1 generated=1 execute_at_ms=39000 valid_until_ms=38000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=73 command_id=74 first_slot=73 repeats=1 reached=1 generated=1 execute_at_ms=39500 valid_until_ms=38500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=74 command_id=75 first_slot=74 repeats=1 reached=1 generated=1 execute_at_ms=40000 valid_until_ms=39000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=75 command_id=76 first_slot=75 repeats=1 reached=1 generated=1 execute_at_ms=40500 valid_until_ms=39500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=76 command_id=77 first_slot=76 repeats=1 reached=1 generated=1 execute_at_ms=41000 valid_until_ms=40000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=77 command_id=78 first_slot=77 repeats=1 reached=1 generated=1 execute_at_ms=41500 valid_until_ms=40500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=78 command_id=79 first_slot=78 repeats=1 reached=1 generated=1 execute_at_ms=42000 valid_until_ms=41000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=79 command_id=80 first_slot=79 repeats=1 reached=1 generated=1 execute_at_ms=42500 valid_until_ms=41500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=80 command_id=81 first_slot=80 repeats=1 reached=1 generated=1 execute_at_ms=43000 valid_until_ms=42000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=81 command_id=82 first_slot=81 repeats=1 reached=1 generated=1 execute_at_ms=43500 valid_until_ms=42500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=82 command_id=83 first_slot=82 repeats=1 reached=1 generated=1 execute_at_ms=44000 valid_until_ms=43000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=83 command_id=84 first_slot=83 repeats=1 reached=1 generated=1 execute_at_ms=44500 valid_until_ms=43500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=84 command_id=85 first_slot=84 repeats=1 reached=1 generated=1 execute_at_ms=45000 valid_until_ms=44000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=85 command_id=86 first_slot=85 repeats=1 reached=1 generated=1 execute_at_ms=45500 valid_until_ms=44500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=86 command_id=87 first_slot=86 repeats=1 reached=1 generated=1 execute_at_ms=46000 valid_until_ms=45000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=87 command_id=88 first_slot=87 repeats=1 reached=1 generated=1 execute_at_ms=46500 valid_until_ms=45500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=88 command_id=89 first_slot=88 repeats=1 reached=1 generated=1 execute_at_ms=47000 valid_until_ms=46000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+
+CONTROL_PLAN_TASK run_id=2412 entry=89 command_id=90 first_slot=89 repeats=1 reached=1 generated=1 execute_at_ms=47500 valid_until_ms=46500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=90 command_id=91 first_slot=90 repeats=1 reached=1 generated=1 execute_at_ms=48000 valid_until_ms=47000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=91 command_id=92 first_slot=91 repeats=1 reached=1 generated=1 execute_at_ms=48500 valid_until_ms=47500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=92 command_id=93 first_slot=92 repeats=1 reached=1 generated=1 execute_at_ms=49000 valid_until_ms=48000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=93 command_id=94 first_slot=93 repeats=1 reached=1 generated=1 execute_at_ms=49500 valid_until_ms=48500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=94 command_id=95 first_slot=94 repeats=1 reached=1 generated=1 execute_at_ms=50000 valid_until_ms=49000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=95 command_id=96 first_slot=95 repeats=1 reached=1 generated=1 execute_at_ms=50500 valid_until_ms=49500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=96 command_id=97 first_slot=96 repeats=1 reached=1 generated=1 execute_at_ms=51000 valid_until_ms=50000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=97 command_id=98 first_slot=97 repeats=1 reached=1 generated=1 execute_at_ms=51500 valid_until_ms=50500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=98 command_id=99 first_slot=98 repeats=1 reached=1 generated=1 execute_at_ms=52000 valid_until_ms=51000 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_TASK run_id=2412 entry=99 command_id=100 first_slot=99 repeats=1 reached=1 generated=1 execute_at_ms=52500 valid_until_ms=51500 ble_target=1 ble_opcode=1 ble_arg=1 zigbee_target=2 zigbee_opcode=1 zigbee_arg=2 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 auxptr_dma_window_miss=0
+
+COMPACT_SLOT run_id=2412 slot=0 command_id=1 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=1 command_id=2 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=2 command_id=3 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=3 command_id=4 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=4 command_id=5 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=5 command_id=6 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=6 command_id=7 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=7 command_id=8 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=8 command_id=9 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=9 command_id=10 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=10 command_id=11 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=11 command_id=12 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=12 command_id=13 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=13 command_id=14 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=14 command_id=15 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=15 command_id=16 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=16 command_id=17 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=17 command_id=18 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=18 command_id=19 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=19 command_id=20 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=20 command_id=21 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=21 command_id=22 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=22 command_id=23 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=23 command_id=24 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=24 command_id=25 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=25 command_id=26 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=26 command_id=27 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=27 command_id=28 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=28 command_id=29 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=29 command_id=30 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=30 command_id=31 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=31 command_id=32 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=32 command_id=33 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=33 command_id=34 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=34 command_id=35 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=35 command_id=36 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=36 command_id=37 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=37 command_id=38 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=38 command_id=39 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=39 command_id=40 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=40 command_id=41 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=41 command_id=42 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=42 command_id=43 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=43 command_id=44 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=44 command_id=45 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=45 command_id=46 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=46 command_id=47 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=47 command_id=48 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=48 command_id=49 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=49 command_id=50 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=50 command_id=51 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=51 command_id=52 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=52 command_id=53 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=53 command_id=54 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=54 command_id=55 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=55 command_id=56 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=56 command_id=57 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=57 command_id=58 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=58 command_id=59 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=59 command_id=60 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=60 command_id=61 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=61 command_id=62 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=62 command_id=63 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=63 command_id=64 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=64 command_id=65 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=65 command_id=66 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=66 command_id=67 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=67 command_id=68 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=68 command_id=69 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=69 command_id=70 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=70 command_id=71 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=71 command_id=72 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=72 command_id=73 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=73 command_id=74 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=74 command_id=75 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=75 command_id=76 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=76 command_id=77 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=77 command_id=78 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=78 command_id=79 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=79 command_id=80 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=80 command_id=81 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=81 command_id=82 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=82 command_id=83 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=83 command_id=84 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=84 command_id=85 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=85 command_id=86 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=86 command_id=87 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=87 command_id=88 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=88 command_id=89 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=89 command_id=90 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=90 command_id=91 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=91 command_id=92 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=92 command_id=93 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=93 command_id=94 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=94 command_id=95 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=95 command_id=96 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=96 command_id=97 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=97 command_id=98 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=98 command_id=99 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+COMPACT_SLOT run_id=2412 slot=99 command_id=100 built=1 ble_record_bytes=26 ieee_record_bytes=26 mapped_bytes=136 secondary_payload_bytes=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=0 entry=0 command_id=1 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=1 entry=1 command_id=2 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=2 entry=2 command_id=3 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=3 entry=3 command_id=4 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=4 entry=4 command_id=5 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=5 entry=5 command_id=6 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=6 entry=6 command_id=7 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=7 entry=7 command_id=8 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=8 entry=8 command_id=9 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=9 entry=9 command_id=10 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=10 entry=10 command_id=11 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=11 entry=11 command_id=12 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=12 entry=12 command_id=13 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=13 entry=13 command_id=14 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=14 entry=14 command_id=15 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=15 entry=15 command_id=16 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=16 entry=16 command_id=17 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=17 entry=17 command_id=18 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=18 entry=18 command_id=19 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=19 entry=19 command_id=20 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=20 entry=20 command_id=21 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=21 entry=21 command_id=22 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=22 entry=22 command_id=23 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=23 entry=23 command_id=24 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=24 entry=24 command_id=25 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=25 entry=25 command_id=26 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=26 entry=26 command_id=27 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=27 entry=27 command_id=28 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=28 entry=28 command_id=29 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=29 entry=29 command_id=30 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=30 entry=30 command_id=31 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=31 entry=31 command_id=32 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=32 entry=32 command_id=33 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=33 entry=33 command_id=34 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=34 entry=34 command_id=35 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=35 entry=35 command_id=36 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=36 entry=36 command_id=37 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=37 entry=37 command_id=38 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=38 entry=38 command_id=39 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=39 entry=39 command_id=40 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=40 entry=40 command_id=41 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=41 entry=41 command_id=42 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=42 entry=42 command_id=43 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=43 entry=43 command_id=44 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=44 entry=44 command_id=45 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=45 entry=45 command_id=46 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=46 entry=46 command_id=47 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=47 entry=47 command_id=48 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=48 entry=48 command_id=49 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=49 entry=49 command_id=50 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=50 entry=50 command_id=51 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=51 entry=51 command_id=52 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=52 entry=52 command_id=53 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=53 entry=53 command_id=54 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=54 entry=54 command_id=55 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=55 entry=55 command_id=56 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=56 entry=56 command_id=57 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=57 entry=57 command_id=58 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=58 entry=58 command_id=59 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=59 entry=59 command_id=60 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=60 entry=60 command_id=61 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=61 entry=61 command_id=62 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=62 entry=62 command_id=63 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=63 entry=63 command_id=64 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=64 entry=64 command_id=65 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=65 entry=65 command_id=66 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=66 entry=66 command_id=67 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=67 entry=67 command_id=68 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=68 entry=68 command_id=69 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=69 entry=69 command_id=70 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=70 entry=70 command_id=71 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=71 entry=71 command_id=72 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=72 entry=72 command_id=73 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=73 entry=73 command_id=74 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=74 entry=74 command_id=75 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=75 entry=75 command_id=76 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=76 entry=76 command_id=77 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=77 entry=77 command_id=78 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=78 entry=78 command_id=79 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=79 entry=79 command_id=80 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=80 entry=80 command_id=81 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=81 entry=81 command_id=82 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=82 entry=82 command_id=83 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=83 entry=83 command_id=84 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=84 entry=84 command_id=85 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=85 entry=85 command_id=86 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=86 entry=86 command_id=87 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=87 entry=87 command_id=88 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=88 entry=88 command_id=89 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=89 entry=89 command_id=90 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=90 entry=90 command_id=91 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=91 entry=91 command_id=92 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=92 entry=92 command_id=93 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=93 entry=93 command_id=94 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=94 entry=94 command_id=95 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=95 entry=95 command_id=96 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=96 entry=96 command_id=97 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=97 entry=97 command_id=98 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=98 entry=98 command_id=99 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+CONTROL_PLAN_SLOT run_id=2412 slot=99 entry=99 command_id=100 flags=25 generated=1 primary_started=0 primary_completed=0 tx_started=1 tx_completed=1 deadline_miss=0 dma_timeout=0 secondary_dma_late_us=0 auxptr_dma_delta_us=0 retune_secondary_us=0 auxptr_dma_window_miss=0
+
+COMPACT_BURST run_id=2412 slot=0 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=57262 submit_before_us=57278 submit_after_us=57511 finish_us=58389
+
+COMPACT_BURST run_id=2412 slot=0 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=57263 submit_before_us=60215 submit_after_us=60711 finish_us=62388
+
+COMPACT_BURST run_id=2412 slot=1 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=557371 submit_before_us=557389 submit_after_us=557617 finish_us=558390
+
+COMPACT_BURST run_id=2412 slot=1 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=557372 submit_before_us=560211 submit_after_us=560748 finish_us=562389
+
+COMPACT_BURST run_id=2412 slot=2 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=1057355 submit_before_us=1057366 submit_after_us=1057602 finish_us=1058391
+
+COMPACT_BURST run_id=2412 slot=2 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=1057356 submit_before_us=1060210 submit_after_us=1060766 finish_us=1062390
+
+COMPACT_BURST run_id=2412 slot=3 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=1557369 submit_before_us=1557381 submit_after_us=1557612 finish_us=1558391
+
+COMPACT_BURST run_id=2412 slot=3 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=1557371 submit_before_us=1560210 submit_after_us=1560784 finish_us=1562391
+
+COMPACT_BURST run_id=2412 slot=4 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=2057334 submit_before_us=2057346 submit_after_us=2057576 finish_us=2058392
+
+COMPACT_BURST run_id=2412 slot=4 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=2057335 submit_before_us=2060211 submit_after_us=2060790 finish_us=2062392
+
+COMPACT_BURST run_id=2412 slot=5 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=2557433 submit_before_us=2557445 submit_after_us=2557670 finish_us=2558394
+
+COMPACT_BURST run_id=2412 slot=5 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=2557435 submit_before_us=2560210 submit_after_us=2560795 finish_us=2562393
+
+COMPACT_BURST run_id=2412 slot=6 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=3057324 submit_before_us=3057336 submit_after_us=3057566 finish_us=3058394
+
+COMPACT_BURST run_id=2412 slot=6 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=3057325 submit_before_us=3060211 submit_after_us=3060795 finish_us=3062394
+
+COMPACT_BURST run_id=2412 slot=7 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=3557368 submit_before_us=3557379 submit_after_us=3557611 finish_us=3558395
+
+COMPACT_BURST run_id=2412 slot=7 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=3557369 submit_before_us=3560212 submit_after_us=3560803 finish_us=3562395
+
+COMPACT_BURST run_id=2412 slot=8 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=4057345 submit_before_us=4057356 submit_after_us=4057586 finish_us=4058396
+
+COMPACT_BURST run_id=2412 slot=8 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=4057346 submit_before_us=4060212 submit_after_us=4060800 finish_us=4062396
+
+COMPACT_BURST run_id=2412 slot=9 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=4557442 submit_before_us=4557453 submit_after_us=4557680 finish_us=4558397
+
+COMPACT_BURST run_id=2412 slot=9 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=4557443 submit_before_us=4560214 submit_after_us=4560802 finish_us=4562397
+
+COMPACT_BURST run_id=2412 slot=10 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=5057407 submit_before_us=5057423 submit_after_us=5057650 finish_us=5058398
+
+COMPACT_BURST run_id=2412 slot=10 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=5057408 submit_before_us=5060214 submit_after_us=5060803 finish_us=5062398
+
+COMPACT_BURST run_id=2412 slot=11 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=5557404 submit_before_us=5557415 submit_after_us=5557640 finish_us=5558399
+
+COMPACT_BURST run_id=2412 slot=11 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=5557405 submit_before_us=5560214 submit_after_us=5560809 finish_us=5562399
+
+COMPACT_BURST run_id=2412 slot=12 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=6057429 submit_before_us=6057441 submit_after_us=6057666 finish_us=6058400
+
+COMPACT_BURST run_id=2412 slot=12 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=6057431 submit_before_us=6060217 submit_after_us=6060812 finish_us=6062400
+
+COMPACT_BURST run_id=2412 slot=13 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=6557437 submit_before_us=6557448 submit_after_us=6557673 finish_us=6558401
+
+COMPACT_BURST run_id=2412 slot=13 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=6557438 submit_before_us=6560216 submit_after_us=6560811 finish_us=6562401
+
+COMPACT_BURST run_id=2412 slot=14 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=7057417 submit_before_us=7057429 submit_after_us=7057653 finish_us=7058402
+
+COMPACT_BURST run_id=2412 slot=14 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=7057418 submit_before_us=7060219 submit_after_us=7060814 finish_us=7062402
+
+COMPACT_BURST run_id=2412 slot=15 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=7557371 submit_before_us=7557387 submit_after_us=7557616 finish_us=7558403
+
+COMPACT_BURST run_id=2412 slot=15 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=7557372 submit_before_us=7560219 submit_after_us=7560814 finish_us=7562403
+
+COMPACT_BURST run_id=2412 slot=16 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=8057332 submit_before_us=8057343 submit_after_us=8057574 finish_us=8058404
+
+COMPACT_BURST run_id=2412 slot=16 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=8057333 submit_before_us=8060220 submit_after_us=8060816 finish_us=8062404
+
+COMPACT_BURST run_id=2412 slot=17 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=8557290 submit_before_us=8557306 submit_after_us=8557537 finish_us=8558405
+
+COMPACT_BURST run_id=2412 slot=17 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=8557291 submit_before_us=8560221 submit_after_us=8560816 finish_us=8562405
+
+COMPACT_BURST run_id=2412 slot=18 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=9057277 submit_before_us=9057289 submit_after_us=9057520 finish_us=9058406
+
+COMPACT_BURST run_id=2412 slot=18 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=9057279 submit_before_us=9060221 submit_after_us=9060815 finish_us=9062406
+
+COMPACT_BURST run_id=2412 slot=19 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=9557207 submit_before_us=9557223 submit_after_us=9557454 finish_us=9558407
+
+COMPACT_BURST run_id=2412 slot=19 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=9557208 submit_before_us=9560222 submit_after_us=9560816 finish_us=9562407
+
+COMPACT_BURST run_id=2412 slot=20 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=10057318 submit_before_us=10057329 submit_after_us=10057561 finish_us=10058408
+
+COMPACT_BURST run_id=2412 slot=20 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=10057319 submit_before_us=10060222 submit_after_us=10060816 finish_us=10062408
+
+COMPACT_BURST run_id=2412 slot=21 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=10557303 submit_before_us=10557319 submit_after_us=10557551 finish_us=10558409
+
+COMPACT_BURST run_id=2412 slot=21 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=10557304 submit_before_us=10560223 submit_after_us=10560817 finish_us=10562409
+
+COMPACT_BURST run_id=2412 slot=22 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=11057331 submit_before_us=11057341 submit_after_us=11057574 finish_us=11058410
+
+COMPACT_BURST run_id=2412 slot=22 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=11057332 submit_before_us=11060225 submit_after_us=11060819 finish_us=11062410
+
+COMPACT_BURST run_id=2412 slot=23 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=11557316 submit_before_us=11557331 submit_after_us=11557563 finish_us=11558411
+
+COMPACT_BURST run_id=2412 slot=23 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=11557317 submit_before_us=11560225 submit_after_us=11560820 finish_us=11562411
+
+COMPACT_BURST run_id=2412 slot=24 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=12057344 submit_before_us=12057355 submit_after_us=12057587 finish_us=12058412
+
+COMPACT_BURST run_id=2412 slot=24 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=12057345 submit_before_us=12060228 submit_after_us=12060824 finish_us=12062412
+
+COMPACT_BURST run_id=2412 slot=25 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=12557337 submit_before_us=12557352 submit_after_us=12557585 finish_us=12558413
+
+COMPACT_BURST run_id=2412 slot=25 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=12557338 submit_before_us=12560226 submit_after_us=12560823 finish_us=12562413
+
+COMPACT_BURST run_id=2412 slot=26 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=13057354 submit_before_us=13057366 submit_after_us=13057599 finish_us=13058414
+
+COMPACT_BURST run_id=2412 slot=26 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=13057356 submit_before_us=13060229 submit_after_us=13060828 finish_us=13062414
+
+COMPACT_BURST run_id=2412 slot=27 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=13557298 submit_before_us=13557314 submit_after_us=13557547 finish_us=13558415
+
+COMPACT_BURST run_id=2412 slot=27 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=13557299 submit_before_us=13560231 submit_after_us=13560829 finish_us=13562415
+
+COMPACT_BURST run_id=2412 slot=28 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=14057330 submit_before_us=14057341 submit_after_us=14057574 finish_us=14058416
+
+COMPACT_BURST run_id=2412 slot=28 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=14057332 submit_before_us=14060231 submit_after_us=14060829 finish_us=14062416
+
+COMPACT_BURST run_id=2412 slot=29 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=14557418 submit_before_us=14557434 submit_after_us=14557662 finish_us=14558417
+
+COMPACT_BURST run_id=2412 slot=29 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=14557419 submit_before_us=14560231 submit_after_us=14560830 finish_us=14562417
+
+COMPACT_BURST run_id=2412 slot=30 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=15057299 submit_before_us=15057310 submit_after_us=15057543 finish_us=15058418
+
+COMPACT_BURST run_id=2412 slot=30 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=15057300 submit_before_us=15060232 submit_after_us=15060830 finish_us=15062422
+
+COMPACT_BURST run_id=2412 slot=31 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=15557294 submit_before_us=15557306 submit_after_us=15557543 finish_us=15558419
+
+COMPACT_BURST run_id=2412 slot=31 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=15557295 submit_before_us=15560233 submit_after_us=15560832 finish_us=15562419
+
+COMPACT_BURST run_id=2412 slot=32 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=16057299 submit_before_us=16057310 submit_after_us=16057543 finish_us=16058420
+
+COMPACT_BURST run_id=2412 slot=32 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=16057300 submit_before_us=16060236 submit_after_us=16060836 finish_us=16062424
+
+COMPACT_BURST run_id=2412 slot=33 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=16557352 submit_before_us=16557363 submit_after_us=16557602 finish_us=16558421
+
+COMPACT_BURST run_id=2412 slot=33 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=16557353 submit_before_us=16560235 submit_after_us=16560833 finish_us=16562421
+
+COMPACT_BURST run_id=2412 slot=34 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=17057336 submit_before_us=17057347 submit_after_us=17057581 finish_us=17058422
+
+COMPACT_BURST run_id=2412 slot=34 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=17057337 submit_before_us=17060237 submit_after_us=17060838 finish_us=17062426
+
+COMPACT_BURST run_id=2412 slot=35 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=17557227 submit_before_us=17557238 submit_after_us=17557476 finish_us=17558423
+
+COMPACT_BURST run_id=2412 slot=35 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=17557228 submit_before_us=17560238 submit_after_us=17560838 finish_us=17562423
+
+COMPACT_BURST run_id=2412 slot=36 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=18057294 submit_before_us=18057305 submit_after_us=18057539 finish_us=18058424
+
+COMPACT_BURST run_id=2412 slot=36 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=18057295 submit_before_us=18060240 submit_after_us=18060842 finish_us=18062428
+
+COMPACT_BURST run_id=2412 slot=37 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=18557288 submit_before_us=18557299 submit_after_us=18557538 finish_us=18558425
+
+COMPACT_BURST run_id=2412 slot=37 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=18557289 submit_before_us=18560240 submit_after_us=18560842 finish_us=18562425
+
+COMPACT_BURST run_id=2412 slot=38 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=19057255 submit_before_us=19057266 submit_after_us=19057501 finish_us=19058426
+
+COMPACT_BURST run_id=2412 slot=38 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=19057257 submit_before_us=19060241 submit_after_us=19060843 finish_us=19062430
+
+COMPACT_BURST run_id=2412 slot=39 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=19557353 submit_before_us=19557364 submit_after_us=19557603 finish_us=19558427
+
+COMPACT_BURST run_id=2412 slot=39 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=19557354 submit_before_us=19560242 submit_after_us=19560844 finish_us=19562426
+
+COMPACT_BURST run_id=2412 slot=40 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=20057330 submit_before_us=20057341 submit_after_us=20057575 finish_us=20058428
+
+COMPACT_BURST run_id=2412 slot=40 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=20057331 submit_before_us=20060242 submit_after_us=20060845 finish_us=20062432
+
+COMPACT_BURST run_id=2412 slot=41 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=20557310 submit_before_us=20557322 submit_after_us=20557561 finish_us=20558429
+
+COMPACT_BURST run_id=2412 slot=41 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=20557312 submit_before_us=20560244 submit_after_us=20560848 finish_us=20562429
+
+COMPACT_BURST run_id=2412 slot=42 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=21057219 submit_before_us=21057230 submit_after_us=21057464 finish_us=21058430
+
+COMPACT_BURST run_id=2412 slot=42 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=21057220 submit_before_us=21060244 submit_after_us=21060849 finish_us=21062434
+
+COMPACT_BURST run_id=2412 slot=43 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=21557319 submit_before_us=21557330 submit_after_us=21557568 finish_us=21558431
+
+COMPACT_BURST run_id=2412 slot=43 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=21557320 submit_before_us=21560246 submit_after_us=21560850 finish_us=21562430
+
+COMPACT_BURST run_id=2412 slot=44 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=22057237 submit_before_us=22057248 submit_after_us=22057482 finish_us=22058432
+
+COMPACT_BURST run_id=2412 slot=44 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=22057238 submit_before_us=22060247 submit_after_us=22060851 finish_us=22062436
+
+COMPACT_BURST run_id=2412 slot=45 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=22557377 submit_before_us=22557388 submit_after_us=22557627 finish_us=22558433
+
+COMPACT_BURST run_id=2412 slot=45 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=22557378 submit_before_us=22560248 submit_after_us=22560852 finish_us=22562432
+
+COMPACT_BURST run_id=2412 slot=46 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=23057252 submit_before_us=23057263 submit_after_us=23057497 finish_us=23058434
+
+COMPACT_BURST run_id=2412 slot=46 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=23057253 submit_before_us=23060248 submit_after_us=23060852 finish_us=23062438
+
+COMPACT_BURST run_id=2412 slot=47 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=23557216 submit_before_us=23557228 submit_after_us=23557467 finish_us=23558435
+
+COMPACT_BURST run_id=2412 slot=47 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=23557218 submit_before_us=23560250 submit_after_us=23560853 finish_us=23562434
+
+COMPACT_BURST run_id=2412 slot=48 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=24057364 submit_before_us=24057375 submit_after_us=24057609 finish_us=24058436
+
+COMPACT_BURST run_id=2412 slot=48 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=24057366 submit_before_us=24060251 submit_after_us=24060855 finish_us=24062440
+
+COMPACT_BURST run_id=2412 slot=49 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=24557347 submit_before_us=24557358 submit_after_us=24557597 finish_us=24558437
+
+COMPACT_BURST run_id=2412 slot=49 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=24557348 submit_before_us=24560252 submit_after_us=24560857 finish_us=24562436
+
+COMPACT_BURST run_id=2412 slot=50 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=25057331 submit_before_us=25057342 submit_after_us=25057577 finish_us=25058437
+
+COMPACT_BURST run_id=2412 slot=50 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=25057332 submit_before_us=25060254 submit_after_us=25060859 finish_us=25062442
+
+COMPACT_BURST run_id=2412 slot=51 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=25557364 submit_before_us=25557375 submit_after_us=25557614 finish_us=25558439
+
+COMPACT_BURST run_id=2412 slot=51 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=25557365 submit_before_us=25560254 submit_after_us=25560859 finish_us=25562438
+
+COMPACT_BURST run_id=2412 slot=52 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=26057331 submit_before_us=26057342 submit_after_us=26057577 finish_us=26058440
+
+COMPACT_BURST run_id=2412 slot=52 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=26057332 submit_before_us=26060255 submit_after_us=26060861 finish_us=26062444
+
+COMPACT_BURST run_id=2412 slot=53 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=26557232 submit_before_us=26557244 submit_after_us=26557482 finish_us=26558441
+
+COMPACT_BURST run_id=2412 slot=53 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=26557233 submit_before_us=26560256 submit_after_us=26560862 finish_us=26562440
+
+COMPACT_BURST run_id=2412 slot=54 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=27057229 submit_before_us=27057240 submit_after_us=27057475 finish_us=27058442
+
+COMPACT_BURST run_id=2412 slot=54 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=27057230 submit_before_us=27060256 submit_after_us=27060862 finish_us=27062446
+
+COMPACT_BURST run_id=2412 slot=55 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=27557312 submit_before_us=27557323 submit_after_us=27557562 finish_us=27558443
+
+COMPACT_BURST run_id=2412 slot=55 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=27557313 submit_before_us=27560258 submit_after_us=27560864 finish_us=27562442
+
+COMPACT_BURST run_id=2412 slot=56 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=28057271 submit_before_us=28057281 submit_after_us=28057515 finish_us=28058444
+
+COMPACT_BURST run_id=2412 slot=56 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=28057272 submit_before_us=28060259 submit_after_us=28060866 finish_us=28062448
+
+COMPACT_BURST run_id=2412 slot=57 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=28557372 submit_before_us=28557384 submit_after_us=28557622 finish_us=28558445
+
+COMPACT_BURST run_id=2412 slot=57 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=28557374 submit_before_us=28560258 submit_after_us=28560865 finish_us=28562444
+
+COMPACT_BURST run_id=2412 slot=58 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=29057326 submit_before_us=29057337 submit_after_us=29057571 finish_us=29058445
+
+COMPACT_BURST run_id=2412 slot=58 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=29057327 submit_before_us=29060261 submit_after_us=29060867 finish_us=29062450
+
+COMPACT_BURST run_id=2412 slot=59 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=29557276 submit_before_us=29557287 submit_after_us=29557526 finish_us=29558446
+
+COMPACT_BURST run_id=2412 slot=59 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=29557277 submit_before_us=29560261 submit_after_us=29560866 finish_us=29562446
+
+COMPACT_BURST run_id=2412 slot=60 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=30057279 submit_before_us=30057290 submit_after_us=30057524 finish_us=30058447
+
+COMPACT_BURST run_id=2412 slot=60 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=30057281 submit_before_us=30060261 submit_after_us=30060869 finish_us=30062451
+
+COMPACT_BURST run_id=2412 slot=61 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=30557284 submit_before_us=30557295 submit_after_us=30557534 finish_us=30558449
+
+COMPACT_BURST run_id=2412 slot=61 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=30557285 submit_before_us=30560263 submit_after_us=30560871 finish_us=30562448
+
+COMPACT_BURST run_id=2412 slot=62 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=31057238 submit_before_us=31057250 submit_after_us=31057484 finish_us=31058450
+
+COMPACT_BURST run_id=2412 slot=62 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=31057240 submit_before_us=31060264 submit_after_us=31060871 finish_us=31062453
+
+COMPACT_BURST run_id=2412 slot=63 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=31557281 submit_before_us=31557292 submit_after_us=31557531 finish_us=31558450
+
+COMPACT_BURST run_id=2412 slot=63 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=31557282 submit_before_us=31560265 submit_after_us=31560872 finish_us=31562450
+
+COMPACT_BURST run_id=2412 slot=64 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=32057327 submit_before_us=32057338 submit_after_us=32057573 finish_us=32058451
+
+COMPACT_BURST run_id=2412 slot=64 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=32057328 submit_before_us=32060267 submit_after_us=32060874 finish_us=32062455
+
+COMPACT_BURST run_id=2412 slot=65 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=32557367 submit_before_us=32557378 submit_after_us=32557617 finish_us=32558452
+
+COMPACT_BURST run_id=2412 slot=65 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=32557368 submit_before_us=32560269 submit_after_us=32560876 finish_us=32562452
+
+COMPACT_BURST run_id=2412 slot=66 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=33057336 submit_before_us=33057347 submit_after_us=33057581 finish_us=33058453
+
+COMPACT_BURST run_id=2412 slot=66 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=33057337 submit_before_us=33060268 submit_after_us=33060875 finish_us=33062458
+
+COMPACT_BURST run_id=2412 slot=67 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=33557274 submit_before_us=33557285 submit_after_us=33557525 finish_us=33558454
+
+COMPACT_BURST run_id=2412 slot=67 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=33557275 submit_before_us=33560270 submit_after_us=33560877 finish_us=33562454
+
+COMPACT_BURST run_id=2412 slot=68 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=34057370 submit_before_us=34057381 submit_after_us=34057615 finish_us=34058455
+
+COMPACT_BURST run_id=2412 slot=68 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=34057371 submit_before_us=34060270 submit_after_us=34060877 finish_us=34062459
+
+COMPACT_BURST run_id=2412 slot=69 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=34557294 submit_before_us=34557305 submit_after_us=34557545 finish_us=34558456
+
+COMPACT_BURST run_id=2412 slot=69 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=34557295 submit_before_us=34560271 submit_after_us=34560878 finish_us=34562456
+
+COMPACT_BURST run_id=2412 slot=70 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=35057195 submit_before_us=35057206 submit_after_us=35057436 finish_us=35058457
+
+COMPACT_BURST run_id=2412 slot=70 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=35057196 submit_before_us=35060272 submit_after_us=35060880 finish_us=35062461
+
+COMPACT_BURST run_id=2412 slot=71 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=35557272 submit_before_us=35557283 submit_after_us=35557522 finish_us=35558458
+
+COMPACT_BURST run_id=2412 slot=71 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=35557273 submit_before_us=35560273 submit_after_us=35560881 finish_us=35562458
+
+COMPACT_BURST run_id=2412 slot=72 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=36057215 submit_before_us=36057227 submit_after_us=36057462 finish_us=36058459
+
+COMPACT_BURST run_id=2412 slot=72 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=36057216 submit_before_us=36060275 submit_after_us=36060883 finish_us=36062463
+
+COMPACT_BURST run_id=2412 slot=73 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=36557233 submit_before_us=36557245 submit_after_us=36557483 finish_us=36558460
+
+COMPACT_BURST run_id=2412 slot=73 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=36557235 submit_before_us=36560275 submit_after_us=36560883 finish_us=36562460
+
+COMPACT_BURST run_id=2412 slot=74 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=37057214 submit_before_us=37057226 submit_after_us=37057454 finish_us=37058461
+
+COMPACT_BURST run_id=2412 slot=74 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=37057216 submit_before_us=37060276 submit_after_us=37060885 finish_us=37062465
+
+COMPACT_BURST run_id=2412 slot=75 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=37557293 submit_before_us=37557305 submit_after_us=37557543 finish_us=37558462
+
+COMPACT_BURST run_id=2412 slot=75 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=37557294 submit_before_us=37560278 submit_after_us=37560888 finish_us=37562462
+
+COMPACT_BURST run_id=2412 slot=76 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=38057338 submit_before_us=38057350 submit_after_us=38057584 finish_us=38058463
+
+COMPACT_BURST run_id=2412 slot=76 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=38057339 submit_before_us=38060280 submit_after_us=38060890 finish_us=38062467
+
+COMPACT_BURST run_id=2412 slot=77 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=38557350 submit_before_us=38557362 submit_after_us=38557599 finish_us=38558464
+
+COMPACT_BURST run_id=2412 slot=77 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=38557351 submit_before_us=38560279 submit_after_us=38560890 finish_us=38562464
+
+COMPACT_BURST run_id=2412 slot=78 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=39057272 submit_before_us=39057284 submit_after_us=39057518 finish_us=39058465
+
+COMPACT_BURST run_id=2412 slot=78 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=39057274 submit_before_us=39060281 submit_after_us=39060889 finish_us=39062469
+
+COMPACT_BURST run_id=2412 slot=79 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=39557318 submit_before_us=39557329 submit_after_us=39557567 finish_us=39558466
+
+COMPACT_BURST run_id=2412 slot=79 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=39557319 submit_before_us=39560280 submit_after_us=39560889 finish_us=39562466
+
+COMPACT_BURST run_id=2412 slot=80 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=40057354 submit_before_us=40057365 submit_after_us=40057599 finish_us=40058467
+
+COMPACT_BURST run_id=2412 slot=80 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=40057355 submit_before_us=40060282 submit_after_us=40060892 finish_us=40062471
+
+COMPACT_BURST run_id=2412 slot=81 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=40557310 submit_before_us=40557322 submit_after_us=40557561 finish_us=40558468
+
+COMPACT_BURST run_id=2412 slot=81 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=40557312 submit_before_us=40560283 submit_after_us=40560893 finish_us=40562468
+
+COMPACT_BURST run_id=2412 slot=82 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=41057263 submit_before_us=41057275 submit_after_us=41057508 finish_us=41058469
+
+COMPACT_BURST run_id=2412 slot=82 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=41057264 submit_before_us=41060285 submit_after_us=41060896 finish_us=41062473
+
+COMPACT_BURST run_id=2412 slot=83 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=41557302 submit_before_us=41557313 submit_after_us=41557551 finish_us=41558470
+
+COMPACT_BURST run_id=2412 slot=83 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=41557303 submit_before_us=41560286 submit_after_us=41560898 finish_us=41562470
+
+COMPACT_BURST run_id=2412 slot=84 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=42057327 submit_before_us=42057338 submit_after_us=42057573 finish_us=42058471
+
+COMPACT_BURST run_id=2412 slot=84 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=42057328 submit_before_us=42060286 submit_after_us=42060896 finish_us=42062475
+
+COMPACT_BURST run_id=2412 slot=85 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=42557343 submit_before_us=42557354 submit_after_us=42557593 finish_us=42558472
+
+COMPACT_BURST run_id=2412 slot=85 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=42557344 submit_before_us=42560288 submit_after_us=42560899 finish_us=42562472
+
+COMPACT_BURST run_id=2412 slot=86 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=43057271 submit_before_us=43057282 submit_after_us=43057516 finish_us=43058473
+
+COMPACT_BURST run_id=2412 slot=86 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=43057272 submit_before_us=43060289 submit_after_us=43060899 finish_us=43062477
+
+COMPACT_BURST run_id=2412 slot=87 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=43557259 submit_before_us=43557270 submit_after_us=43557509 finish_us=43558474
+
+COMPACT_BURST run_id=2412 slot=87 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=43557260 submit_before_us=43560289 submit_after_us=43560899 finish_us=43562474
+
+COMPACT_BURST run_id=2412 slot=88 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=44057184 submit_before_us=44057195 submit_after_us=44057424 finish_us=44058475
+
+COMPACT_BURST run_id=2412 slot=88 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=44057185 submit_before_us=44060290 submit_after_us=44060901 finish_us=44062479
+
+COMPACT_BURST run_id=2412 slot=89 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=44557267 submit_before_us=44557279 submit_after_us=44557518 finish_us=44558476
+
+COMPACT_BURST run_id=2412 slot=89 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=44557268 submit_before_us=44560292 submit_after_us=44560902 finish_us=44562476
+
+COMPACT_BURST run_id=2412 slot=90 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=45057247 submit_before_us=45057258 submit_after_us=45057493 finish_us=45058477
+
+COMPACT_BURST run_id=2412 slot=90 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=45057248 submit_before_us=45060292 submit_after_us=45060902 finish_us=45062481
+
+COMPACT_BURST run_id=2412 slot=91 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=45557194 submit_before_us=45557205 submit_after_us=45557435 finish_us=45558478
+
+COMPACT_BURST run_id=2412 slot=91 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=45557195 submit_before_us=45560292 submit_after_us=45560902 finish_us=45562478
+
+COMPACT_BURST run_id=2412 slot=92 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=46057285 submit_before_us=46057297 submit_after_us=46057532 finish_us=46058479
+
+COMPACT_BURST run_id=2412 slot=92 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=46057287 submit_before_us=46060294 submit_after_us=46060903 finish_us=46062483
+
+COMPACT_BURST run_id=2412 slot=93 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=46557276 submit_before_us=46557287 submit_after_us=46557527 finish_us=46558480
+
+COMPACT_BURST run_id=2412 slot=93 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=46557278 submit_before_us=46560294 submit_after_us=46560903 finish_us=46562480
+
+COMPACT_BURST run_id=2412 slot=94 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=47057273 submit_before_us=47057285 submit_after_us=47057520 finish_us=47058481
+
+COMPACT_BURST run_id=2412 slot=94 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=47057274 submit_before_us=47060296 submit_after_us=47060905 finish_us=47062485
+
+COMPACT_BURST run_id=2412 slot=95 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=47557351 submit_before_us=47557362 submit_after_us=47557602 finish_us=47558482
+
+COMPACT_BURST run_id=2412 slot=95 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=47557352 submit_before_us=47560297 submit_after_us=47560906 finish_us=47562482
+
+COMPACT_BURST run_id=2412 slot=96 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=48057323 submit_before_us=48057334 submit_after_us=48057568 finish_us=48058483
+
+COMPACT_BURST run_id=2412 slot=96 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=48057324 submit_before_us=48060298 submit_after_us=48060908 finish_us=48062487
+
+COMPACT_BURST run_id=2412 slot=97 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=48557291 submit_before_us=48557303 submit_after_us=48557542 finish_us=48558484
+
+COMPACT_BURST run_id=2412 slot=97 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=48557292 submit_before_us=48560299 submit_after_us=48560909 finish_us=48562484
+
+COMPACT_BURST run_id=2412 slot=98 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=49057311 submit_before_us=49057322 submit_after_us=49057557 finish_us=49058485
+
+COMPACT_BURST run_id=2412 slot=98 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=49057312 submit_before_us=49060300 submit_after_us=49060909 finish_us=49062489
+
+COMPACT_BURST run_id=2412 slot=99 kind=fragment0 generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=92896 air_us=368 pad_us=10 prepared_us=49557264 submit_before_us=49557275 submit_after_us=49557514 finish_us=49558486
+
+COMPACT_BURST run_id=2412 slot=99 kind=ieee generated=1 attempted=1 started=1 completed=1 timeout=0 iq_bytes=269848 air_us=1088 pad_us=10 prepared_us=49557265 submit_before_us=49560301 submit_after_us=49560912 finish_us=49562486
+
+COMPACT_COST_STATS run_id=2412 logical_slots=100 ble_tx_completed=100 ieee_tx_completed=100 burst_attempted=200 burst_started=200 burst_completed=200 separate_gap_us=1000 reference=dma_software_brackets
+
+COMPACT_TIME_END run_id=2412 trace=burst_brackets_only
+
+

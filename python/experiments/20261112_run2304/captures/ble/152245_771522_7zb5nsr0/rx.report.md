@@ -4,7 +4,7 @@
 - 实验 Run ID：2304（控制记录独立校验并统计匹配 Run ID；总 PHY 包数仍包含其他包）
 - 模式：实时采集
 - 运行状态：正常结束（仅表示程序状态）
-- 有效包：100（BLE CRC及扩展头有效）
+- 有效包：100（BLE CRC及广播结构有效）
 - IQ观察时长：80.000000 s（全部已处理采样，含实验前后余量）
 - 严格 AuxPtr 匹配：0
 - 同频诊断配对：0（不代表规范跟随）
@@ -33,7 +33,6 @@
 候选 CRC/FCS 失败计数不等于唯一物理坏包数；队列未溢出不证明 USB 无丢样。
 当前报告描述解码与测试负载校验，不表示命令执行或执行器同步。
 
-- [rx.ci8](rx.ci8)
 - [rx.events.jsonl](rx.events.jsonl)
 - [rx.hackrf.log](rx.hackrf.log)
 - [rx.packets.jsonl](rx.packets.jsonl)

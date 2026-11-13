@@ -7,7 +7,7 @@
 - 有效包：71（PHY FCS有效）
 - IQ观察时长：40.000000 s（全部已处理采样，含实验前后余量）
 - Command ID：0
-- B2 43 候选：71；记录有效：71
+- 控制记录候选：71；记录有效：71
 - 有效唯一时隙：71；重复：0；乱序：0
 - 最长连续缺失：4（explicit planned range）
 - 有效解码 / DMA 完成：N/A（分子 71；分母 N/A；matching final CONTROL_STATS and full-run coverage required）

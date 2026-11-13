@@ -7,7 +7,7 @@
 - 有效包：10（PHY FCS有效）
 - IQ观察时长：15.000000 s（全部已处理采样，含实验前后余量）
 - Command ID：43
-- B2 43 候选：10；记录有效：10
+- 控制记录候选：10；记录有效：10
 - 有效唯一时隙：10；重复：0；乱序：0
 - 最长连续缺失：0（explicit planned range）
 - 有效解码 / DMA 完成：N/A（分子 10；分母 N/A；matching final CONTROL_STATS and full-run coverage required）

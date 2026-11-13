@@ -25,16 +25,20 @@
 !runs.csv
 !artifacts.csv
 
-# Full packet streams, console logs, raw IQ, lock/temp files stay local.
-*.packets.jsonl
-*.console.log
+
+# Preserve reproducible experiment evidence, including complete decoded streams.
+# Scoped to this results directory; repository-wide JSON/CSV rules are unchanged.
+!*.json
+!*.csv
+!*.jsonl
+!*.log
+
+# Raw IQ, caches and transient files require external storage, not Git.
 *.ci8
 *.cf32
 *.iq
-.index.lock
+__pycache__/
+*.py[cod]
+*.lock
+*.tmp
 .writing-*
-
-# N4 layer-one paired comparisons: preserve conditions and auditable costs.
-!20261112_run240[1-6]/conditions.json
-!20261112_run240[1-6]/analyses/*/comparison.json
-!20261112_run240[1-6]/analyses/*/plan.bursts.csv

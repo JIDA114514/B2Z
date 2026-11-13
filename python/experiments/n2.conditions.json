@@ -1,0 +1,14 @@
+{
+  "joint": {
+    "topology": "0.25m SMA馈线连接",
+    "tx_power": "tx_attenuation=10000 mdB; tx_power=0dBm",
+    "firmware_build": "20261111.1",
+    "attenuation": "无衰减"
+  },
+  "separate": {
+    "topology": "0.25m SMA馈线连接",
+    "tx_power": "tx_attenuation=10000 mdB; tx_power=0dBm",
+    "firmware_build": "20261111.1",
+    "attenuation": "无衰减"
+  }
+}

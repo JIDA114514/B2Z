@@ -18,7 +18,9 @@ python3 python/experiment_tools/manage.py locate python/exadv_rx/results/rx_2026
 python3 python/experiment_tools/manage.py verify
 ```
 
-完整 IQ、逐包流和控制台日志默认不进入 Git，关键数据需另行备份。
+实验归档及兼容结果目录中的 JSON、CSV、JSONL 和文本日志现在允许进入 Git，包括完整逐包解码记录、对照条件、比较结果、逐突发成本、取时阶段、关联表和异常日志。具体包括 `rx.packets.jsonl`、`conditions.json`、`comparison.json`、`plan.bursts.csv`、`timing.*.csv`、`follow.audit.json` 和控制台/回放日志。
+
+完整 IQ（`.ci8`、`.cf32`、`.iq`）、缓存、锁文件和临时文件仍忽略，关键 IQ 需要外部备份。逐包记录应保留完整负载、校验结果和采样索引；它不能替代 IQ 的重新解调能力。更改忽略规则只使文件可被 Git 发现，不等于已经提交或推送。较大的长期逐包记录可先查看单文件体积，再决定独立归档或外部备份；不要通过删除完整负载来缩小关键证据。
 
 ## 阶段综合报告
 

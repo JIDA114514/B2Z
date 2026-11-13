@@ -119,7 +119,7 @@ python3 python/experiment_tools/manage.py verify
 
 ### Git 与大文件
 
-[`python/experiments/.gitignore`](python/experiments/.gitignore) 递归放行小型摘要、配置、清单、指标 CSV、Markdown、设备/板端日志及已有分析图；完整 IQ、完整 `.packets.jsonl`、控制台日志、锁和临时文件默认忽略。`artifacts.csv` 描述本机扫描到的文件，不是 Git 收录清单，也不是外部备份证明；新文件尚未计算哈希时显示 `N/A`。`.events.jsonl` 可提交，但需检查大小。
+[`python/experiments/.gitignore`](python/experiments/.gitignore) 递归放行实验 JSON/CSV/JSONL、Markdown、文本日志及已有分析图，包括完整 `.packets.jsonl`、对照条件、逐突发/取时表和控制台日志；完整 IQ、缓存、锁和临时文件仍默认忽略。`artifacts.csv` 描述本机扫描到的文件，不是 Git 收录清单，也不是外部备份证明；新文件尚未计算哈希时显示 `N/A`。`.events.jsonl` 可提交，但需检查大小。
 
 Git clone 不会恢复忽略的大文件。关键 IQ 和完整逐包流需另外备份；移动到外部存储时保存对应 `*.manifest.json`，记录位置、字节数、哈希及采样率/中心频率/格式。原 results 目录保留说明和兼容规则，后续实验优先使用统一归档。
 

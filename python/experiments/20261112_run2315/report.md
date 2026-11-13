@@ -13,5 +13,9 @@
 
 ## 分析与原始记录
 
+- [analyses/n4_capacity/plan.summary.json](analyses/n4_capacity/plan.summary.json)（历史分析；状态未记录）
+- [analyses/n4_capacity/plan.slots.metrics.csv](analyses/n4_capacity/plan.slots.metrics.csv)
+- [analyses/n4_capacity/plan.tasks.metrics.csv](analyses/n4_capacity/plan.tasks.metrics.csv)
+- [board.board.log](board.board.log)
 
 配置：[experiment.config.json](experiment.config.json)。完整参数、分母依据和异常见各接收报告及原始 JSON。

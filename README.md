@@ -6,7 +6,7 @@
 
 新代码按功能迭代提交，消息格式见[提交约定](CONTRIBUTING.md)。
 
-当前进度与后续优先级以 2026-11-10 更新的[下一阶段计划](doc/next_stage_plan.md)为准。协议字段见[v1 负载草案](doc/control_sync_packet_v1_draft.md)，已有步骤见[多任务实验方案](doc/multi_task_control_experiment_plan.md)和[功能完成路线](doc/control_sync_function_plan.md)，相关先例见[设计研究笔记](doc/sync_control_payload_research.md)。较早文档中的待办状态需结合最新计划与实测报告阅读。
+当前进度与后续优先级以 2026-11-13 更新的[下一阶段计划](doc/next_stage_plan.md)为准。协议字段见[v1 负载草案](doc/control_sync_packet_v1_draft.md)，已有步骤见[多任务实验方案](doc/multi_task_control_experiment_plan.md)和[功能完成路线](doc/control_sync_function_plan.md)，相关先例见[设计研究笔记](doc/sync_control_payload_research.md)。较早文档中的待办状态需结合最新计划与实测报告阅读。
 
 常用工作流有两类：
 
@@ -23,7 +23,7 @@
 
 下一阶段先补齐下面的证据，再对选定主要配置增加独立重复。详细交付物与统计规则见[完整计划](doc/next_stage_plan.md)。
 
-Run 2001 已完成 N1 首轮功能验证：同槽双端有效 93/120、带 BLE 跟随证据的联合任务解析 3/3；这不表示可靠性或同步精度验收完成。[N2](doc/n2_separate_transmission_experiment_plan.md) 的 2101–2103 首轮已完成：固定接收两组均 120/120、任务 3/3；共包突发数减少 1/3，有效波形预算相等；2103 跟随 75/120、任务 3/3。功率配置仍未知，严格空口时序与同步精度未测。N3 的2203已完成缓存前移后300槽固定频点双端初验（联合300/300），2204完成跟随能力审计（91/120、BLE三命令恢复），其同轮IEEE数据缺项移至后续补采与重复阶段。当前按 [N4详细方案](doc/n4_capacity_experiment_plan.md)推进变长共包格式、容量扫描和legacy对照设计；板端变长容量命令已实现，主机v2双端接收与单轮联合分析已适配，待上板空口验证及跨配置容量汇总。各阶段先完成有效初验，主要配置的独立重复后续集中开展。已有 [N1 执行方案](doc/n1_cross_channel_experiment_plan.md)继续作为复测入口。
+Run 2001 已完成 N1 首轮功能验证：同槽双端有效 93/120、带 BLE 跟随证据的联合任务解析 3/3；这不表示可靠性或同步精度验收完成。[N2](doc/n2_separate_transmission_experiment_plan.md) 的 2101–2103 首轮已完成：固定接收两组均 120/120、任务 3/3；共包突发数减少 1/3，有效波形预算相等；2103 跟随 75/120、任务 3/3。功率配置仍未知，严格空口时序与同步精度未测。N3 的2203已完成缓存前移后300槽固定频点双端初验（联合300/300），2204完成跟随能力审计（91/120、BLE三命令恢复），其同轮IEEE数据缺项移至后续补采与重复阶段。N4容量扫描及两层公平对照已有首轮结果，见[两层结果报告](doc/n4_two_layer_results.md)：共包成本收益取决于负载，尚不构成普遍可靠性结论。当前进入 [N5详细方案](doc/n5_mechanism_experiment_plan.md)，先补齐主机在线失更/恢复与探测留出，再开展2501–2503基准和双方向单侧缺失实验；板端复用v1 plan命令。N4等预算重发对照、2204同轮IEEE补采及主要配置重复仍待完成。各阶段先完成有效初验，主要配置的独立重复后续集中开展。已有 [N1 执行方案](doc/n1_cross_channel_experiment_plan.md)继续作为复测入口。
 
 | 顺序 | 工作包 | 要回答的问题 |
 | --- | --- | --- |

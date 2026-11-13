@@ -22,6 +22,7 @@ int32_t b2z_control_start_cmdline(const char *args);
 int32_t b2z_plan_clear_cmdline(const char *args);
 int32_t b2z_plan_add_cmdline(const char *args);
 int32_t b2z_plan_start_cmdline(const char *args);
+int32_t b2z_compact_start_cmdline(const char *args);
 int32_t b2z_capacity_start_cmdline(const char *args);
 int32_t bluebee_perf_stop_cmdline(const char *args);
 int32_t bluebee_perf_status_cmdline(const char *args);

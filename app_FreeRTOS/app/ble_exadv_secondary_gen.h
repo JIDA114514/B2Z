@@ -86,6 +86,20 @@ int32_t ble_exadv_secondary_gen_build_control_mode(
 int32_t b2z_capacity_budget(uint32_t ble_extra, uint32_t ieee_extra);
 int32_t ble_exadv_secondary_gen_build_capacity(
     const struct b2z_control_packet *packet, uint32_t ble_extra, uint32_t ieee_extra);
+/* Actual secondary payload; same legal b/z domain for both comparison arms. */
+int32_t b2z_capacity_pdu_budget(uint32_t ble_extra, uint32_t ieee_extra,
+                              uint8_t rf_mode);
+int32_t ble_exadv_secondary_gen_build_capacity_mode(
+    const struct b2z_control_packet *packet, uint32_t ble_extra,
+    uint32_t ieee_extra, uint8_t rf_mode);
+struct b2z_compact_meta {
+ uint32_t ble_count;
+ const uint32_t *iq[4];
+ uint32_t iq_bytes[4], air_us[4];
+};
+int32_t b2z_compact_build(const struct b2z_control_packet *packet,
+                        uint32_t ble_extra, uint32_t ieee_extra, uint8_t legacy);
+const struct b2z_compact_meta *b2z_compact_get_meta(void);
 const struct ble_exadv_secondary_gen_meta *
 ble_exadv_secondary_gen_get_last_meta(void);
 

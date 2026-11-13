@@ -291,6 +291,30 @@ static void extend_capacity_record(uint8_t *out, const struct b2z_control_packet
 	put_le16(&out[34u + length], b2z_control_crc16(out, 34u + length));
 }
 
+/* C1 is self-contained: ref=slot*period; deltas are unsigned milliseconds. */
+static int32_t compact_record(uint8_t *out, const struct b2z_control_packet *p,
+                              uint32_t n, uint32_t side)
+{
+ uint8_t v2[62];
+ if (!p || n > (side == 1u ? 26u : 6u) || !p->command_id ||
+     p->execute_at_ms < p->ref_tick_ms ||
+     p->execute_at_ms - p->ref_tick_ms > 65535u ||
+     build_control_record(v2, p, side == 1u ? p->ble_target : p->zigbee_target,
+         side == 1u ? p->ble_opcode : p->zigbee_opcode,
+         side == 1u ? p->ble_arg : p->zigbee_arg) < 0)
+  return -1;
+ extend_capacity_record(v2, p, n, side);
+ out[0]=0xC1; out[1]=1;
+ put_le16(out+2,p->run_id); put_le32(out+4,p->slot_index);
+ put_le16(out+8,p->period_ms); put_le32(out+10,p->command_id);
+ memcpy(out+14,v2+20,5);
+ put_le16(out+19,p->valid_until_ms-p->ref_tick_ms);
+ put_le16(out+21,p->execute_at_ms-p->ref_tick_ms);
+ out[23]=n; memcpy(out+24,v2+34,n);
+ put_le16(out+24+n,b2z_control_crc16(out,24+n));
+ return 0;
+}
+
 static int32_t build_zigbee_frame(const uint8_t *payload,
 				  uint32_t payload_len,
 				  uint32_t *frame_len)
@@ -691,8 +715,8 @@ static int32_t build_control_mode_impl(
 	uint8_t whitening_channel = rf_mode != B2Z_CONTROL_RF_SAME_CHANNEL ?
 		3u : BLE_EXADV_DEFAULT_CHANNEL;
 	uint8_t zigbee_record[BLE_EXADV_SECONDARY_GEN_MAX_PAYLOAD_BYTES];
-	uint32_t ble_len = capacity ? 36u + ble_extra : 35u;
-	uint32_t ieee_len = capacity ? 36u + ieee_extra : 35u;
+	uint32_t ble_len = capacity >= 2u ? 26u + ble_extra : capacity ? 36u + ble_extra : 35u;
+	uint32_t ieee_len = capacity >= 2u ? 26u + ieee_extra : capacity ? 36u + ieee_extra : 35u;
 	uint32_t frame_len = 0u;
 	uint32_t bluebee_len;
 	uint32_t bluebee_start = 0u;
@@ -713,7 +737,8 @@ static int32_t build_control_mode_impl(
 
 	if (!packet ||
 	    (capacity && (b2z_capacity_budget(ble_extra, ieee_extra) < 0 ||
-	                  rf_mode != B2Z_CONTROL_RF_STANDARD_CH3)) ||
+	                  (rf_mode != B2Z_CONTROL_RF_STANDARD_CH3 &&
+	                   rf_mode != B2Z_CONTROL_RF_SEPARATE_CH3))) ||
 	    (rf_mode != B2Z_CONTROL_RF_SAME_CHANNEL &&
 	     rf_mode != B2Z_CONTROL_RF_STANDARD_CH3 &&
 	     rf_mode != B2Z_CONTROL_RF_SEPARATE_CH3) ||
@@ -724,7 +749,10 @@ static int32_t build_control_mode_impl(
 				 packet->zigbee_target, packet->zigbee_opcode,
 				 packet->zigbee_arg) < 0)
 		return -1;
-	if (capacity) {
+	if (capacity >= 2u) {
+		if (compact_record(g_ble_control_record, packet, ble_extra, 1u) < 0 ||
+		    compact_record(zigbee_record, packet, ieee_extra, 2u) < 0) return -1;
+	} else if (capacity) {
 		extend_capacity_record(g_ble_control_record, packet, ble_extra, 1u);
 		extend_capacity_record(zigbee_record, packet, ieee_extra, 2u);
 	}
@@ -749,10 +777,10 @@ static int32_t build_control_mode_impl(
 	stage_end = timing_now();
 	mapping_time_us = timing_elapsed_us(stage_start, stage_end);
 	stage_start = stage_end;
-	if (build_iq_from_ll_payload(g_ll_payload, ll_payload_len,
+	if ((capacity != 3u && build_iq_from_ll_payload(g_ll_payload, ll_payload_len,
 				     g_iq_words, BLE_EXADV_MAX_IQ_WORDS,
-				     &iq_word_count) < 0 ||
-	    build_control_primary(did, rf_mode, &primary_iq_word_count) < 0 ||
+				     &iq_word_count) < 0) ||
+	    (capacity != 3u && build_control_primary(did, rf_mode, &primary_iq_word_count) < 0) ||
 	    (separate && build_iq_from_ll_payload(g_bluebee_bytes, bluebee_len,
 		 g_ieee_iq_words, BLE_EXADV_MAX_IQ_WORDS, &ieee_iq_word_count) < 0))
 		return -1;
@@ -806,10 +834,71 @@ static int32_t build_control_mode_impl(
 	return 0;
 }
 
+/* LC buffers remain valid until the next build; all fragments are prepared
+ * before the first transmission. No BLE reconstruction feeds the IEEE path. */
+static uint32_t g_compact_iq[4][24000] __attribute__((aligned(32)));
+static struct b2z_compact_meta g_compact;
+const struct b2z_compact_meta *b2z_compact_get_meta(void) { return &g_compact; }
+int32_t b2z_compact_build(const struct b2z_control_packet *p, uint32_t b,
+                        uint32_t z, uint8_t legacy)
+{
+ if (legacy > 1u || b2z_capacity_budget(b,z)<0) return -1;
+ if (build_control_mode_impl(p, legacy ? 2u : 1u, legacy ? 3u : 2u,b,z)<0) return -1;
+ memset(&g_compact,0,sizeof(g_compact));
+ if (!legacy) return 0;
+ uint32_t length=26u+b, count=length<=27u ? 1u : (length+16u)/17u;
+ g_compact.ble_count=count;
+ for (uint32_t i=0;i<count;i++) {
+  uint8_t data[27], pdu[39], raw[42], ll[47];
+  uint32_t n=length;
+  if (length<=27u) memcpy(data,g_ble_control_record,n);
+  else {
+   uint32_t chunk=length-i*17u; if(chunk>17u)chunk=17u;
+   data[0]=0xC2;put_le16(data+1,p->run_id);put_le32(data+3,p->command_id);
+   data[7]=i;data[8]=count;data[9]=length;
+   memcpy(data+10,g_ble_control_record+i*17u,chunk);n=10u+chunk;
+  }
+  pdu[0]=0x42; /* ADV_NONCONN_IND, random AdvA */
+  pdu[1]=10u+n;
+  for(uint32_t a=0;a<6u;a++)pdu[2+a]=g_default_mac[5u-a];
+  pdu[8]=3u+n;pdu[9]=0xFF;pdu[10]=pdu[11]=0xFF;
+  memcpy(pdu+12,data,n);
+  memcpy(raw,pdu,12u+n);bt_crc24_adv(pdu,12u+n,raw+12u+n);
+  memcpy(ll,g_ble_preamble_and_aa,5);bt_whiten(raw,15u+n,39,ll+5);
+  uint32_t words=0;
+  if(build_iq_from_ll_payload(ll,20u+n,g_compact_iq[i],24000,&words)<0)return -1;
+  g_compact.iq[i]=g_compact_iq[i];g_compact.iq_bytes[i]=words*4u;
+  g_compact.air_us[i]=(20u+n)*8u;
+ }
+ return 0;
+}
+
 int32_t ble_exadv_secondary_gen_build_control_mode(
 	const struct b2z_control_packet *packet, uint8_t rf_mode)
 {
 	return build_control_mode_impl(packet, rf_mode, 0u, 0u, 0u);
+}
+
+/* Both comparison arms retain the joint capacity domain. */
+int32_t b2z_capacity_pdu_budget(uint32_t ble_extra, uint32_t ieee_extra,
+                              uint8_t rf_mode)
+{
+	int32_t joint = b2z_capacity_budget(ble_extra, ieee_extra);
+
+	if (joint < 0)
+		return -1;
+	if (rf_mode == B2Z_CONTROL_RF_STANDARD_CH3)
+		return joint;
+	if (rf_mode == B2Z_CONTROL_RF_SEPARATE_CH3)
+		return 53u + ble_extra;
+	return -1;
+}
+
+int32_t ble_exadv_secondary_gen_build_capacity_mode(
+	const struct b2z_control_packet *packet, uint32_t ble_extra,
+	uint32_t ieee_extra, uint8_t rf_mode)
+{
+	return build_control_mode_impl(packet, rf_mode, 1u, ble_extra, ieee_extra);
 }
 
 int32_t ble_exadv_secondary_gen_build_capacity(

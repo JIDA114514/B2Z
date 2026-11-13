@@ -133,6 +133,53 @@ class ControlGeneratorTests(unittest.TestCase):
         for b,z in ((27,0),(3,6),(0,7),(0xffffffff,0),(0,0xffffffff)):
             self.assertEqual(lib.ble_exadv_secondary_gen_build_capacity(ctypes.byref(packet),b,z),-1)
 
+    def test_v2_separate_matches_joint_and_decodes_waveforms(self):
+        import numpy as np
+        from scipy.signal import resample_poly
+        from python.perf_test.tests.test_bluebee_gen_waveform import iq_complex, demodulate_center_bits
+        from python.zigbee_rx.tests.test_zigbee_receiver import decode
+        from python.exadv_rx.protocol import crc24
+        from python.control_match.protocol import control_record
+        lib = self.lib
+        lib.ble_exadv_secondary_gen_build_capacity_mode.argtypes = [
+            ctypes.POINTER(Packet), ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint8]
+        lib.b2z_capacity_pdu_budget.argtypes = [ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint8]
+        packet = Packet(2402, 7, 3500, 500, 8, 6500, 5500, 1, 1, 1, 2, 1, 2)
+        for b, z in ((0, 0), (26, 0), (2, 6)):
+            self.assertEqual(lib.ble_exadv_secondary_gen_build_capacity_mode(ctypes.byref(packet), b, z, 1), 0)
+            m = lib.ble_exadv_secondary_gen_get_last_meta().contents
+            joint_ble = read_bytes(m.ble_control_record, 36+b)
+            joint_ieee = read_bytes(m.zigbee_payload, 36+z)
+            joint_cost = m.primary_air_us + m.air_us
+            self.assertEqual(lib.ble_exadv_secondary_gen_build_capacity_mode(ctypes.byref(packet), b, z, 2), 0)
+            m = lib.ble_exadv_secondary_gen_get_last_meta().contents
+            self.assertEqual(lib.b2z_capacity_pdu_budget(b, z, 2), 53+b)
+            self.assertEqual(m.pdu_len, 55+b)
+            self.assertEqual(m.air_us, (63+b)*8)
+            self.assertEqual(m.ieee_air_us, (176+4*z)*8)
+            self.assertEqual(m.primary_air_us + m.air_us + m.ieee_air_us, joint_cost)
+            self.assertEqual(read_bytes(m.ble_control_record, 36+b), joint_ble)
+            self.assertEqual(read_bytes(m.zigbee_payload, 36+z), joint_ieee)
+            self.assertEqual((m.rf_mode, m.whitening_channel, m.aux_offset_us), (2, 3, 300000))
+            pdu = read_bytes(m.pdu, m.pdu_len)
+            ll = read_bytes(m.ll_payload, m.ll_payload_len)
+            self.assertEqual(pdu[19:], joint_ble)
+            self.assertEqual(whiten(ll[5:], 3), pdu + crc24(pdu))
+            ble_iq = iq_complex(np.ctypeslib.as_array(m.iq_words, shape=(m.iq_byte_count//4,))[::2])
+            bits = demodulate_center_bits(ble_iq, len(ll)*8)
+            self.assertEqual(np.packbits(bits, bitorder="little").tobytes(), ll)
+            ieee_iq = iq_complex(np.ctypeslib.as_array(m.ieee_iq_words, shape=(m.ieee_iq_byte_count//4,))[::2])
+            iq4 = resample_poly(ieee_iq, 25, 192).astype(np.complex64)
+            _, recovered = decode(np.concatenate((np.zeros(400, np.complex64), iq4, np.zeros(1200, np.complex64))), sample_rate=4_000_000)
+            valid = [r for r in recovered if r["fcs_ok"]]
+            self.assertEqual(len(valid), 1)
+            actual = bytes.fromhex(valid[0]["payload_hex"])
+            self.assertEqual(actual, joint_ieee)
+            self.assertEqual(control_record(actual, "zigbee")["extra_len"], z)
+        for b, z, mode in ((27,0,2), (3,6,2), (0,7,2), (0,0,0), (0,0,3)):
+            self.assertEqual(lib.b2z_capacity_pdu_budget(b,z,mode), -1)
+            self.assertEqual(lib.ble_exadv_secondary_gen_build_capacity_mode(ctypes.byref(packet),b,z,mode), -1)
+
     def test_v1_vectors_and_wire_budget(self):
         packet = Packet(
             1001, 7, 1400, 200, 42, 3000, 2500,

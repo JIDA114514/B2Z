@@ -8,3 +8,20 @@
 !*.png
 !*.pdf
 !*/
+
+# Preserve reproducible experiment evidence, including complete decoded streams.
+# Scoped to this results directory; repository-wide JSON/CSV rules are unchanged.
+!*.json
+!*.csv
+!*.jsonl
+!*.log
+
+# Raw IQ, caches and transient files require external storage, not Git.
+*.ci8
+*.cf32
+*.iq
+__pycache__/
+*.py[cod]
+*.lock
+*.tmp
+.writing-*

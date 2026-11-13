@@ -108,7 +108,7 @@ python3 python/zigbee_rx/receive.py \
 - `.packets.jsonl`：所有 FCS 正确的 PHY 帧、完整 payload、采样时间、观测方式、符号顺序、硬/软判决方法、Run ID、Sequence、测试校验及 disposition。
 - `.summary.json`：完整接收和解码计数、序列缺口、计划范围、处理时延、队列、吞吐、版本与源码 SHA-256。`.summary.txt` 为简短文本，`.report.md` 为可读接收报告；顶层 `report.md` 汇总本轮结果。
 - `.hackrf.log`：设备采集原始输出。
-- `--save-iq`：保存原始输入字节及对应 summary 配置。完整 IQ 和逐包流默认不进入 Git，小型摘要/报告可提交。
+- `--save-iq`：保存原始输入字节及对应 summary 配置。完整 IQ 默认不进入 Git；实验归档及 results 目录中的完整逐包流、摘要、报告和诊断日志可提交。
 
 unique 只统计指定/锁定 Run ID、通过完整确定性填充校验的首次 Sequence；duplicate 和 out_of_order 单独计数。未指定 Run ID 时锁定第一份有效测试 payload；多轮实验建议分别启动并显式设置 Run ID。非测试帧只计 FCS 有效和 non_test，不冒充性能测试成功包。
 

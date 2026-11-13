@@ -45,7 +45,7 @@ calibrated_error_us = layout_error_us - bias
 ## 结果文件
 
 - `validation.manifest.json`：输入配置、原始 IQ SHA-256、原始采集摘要散列、完整重放命令、源码散列及结果文件散列。
-- `analyses/run_<run_id>/{ble,zigbee}/rx.summary.json`：独立重放摘要；对应 `.report.md` 为阅读层，完整逐包流和重放控制台日志默认忽略。
+- `analyses/run_<run_id>/{ble,zigbee}/rx.summary.json`：独立重放摘要；对应 `.report.md` 为阅读层，实验归档及 results 目录中的完整逐包流和重放控制台日志允许提交，原始 IQ 仍忽略。
 - `reference_validation.summary.json`：逐轮四种解码结果、计划分母、条件时间统计和带容差的计划时隙恢复数量。
 - `per_sequence.metrics.csv`：包括两侧均缺失的全部 450 个计划时隙；同时标记 calibration/validation、配对状态、结构偏移和误差。
 - `reference_validation.png/.pdf`：原始位置差、验证集残差、绝对残差 CDF 和四种解码结果。

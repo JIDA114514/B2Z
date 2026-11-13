@@ -1,0 +1,75 @@
+{
+  "schema": "b2z_n3_follow_audit_v1",
+  "run_id": 2103,
+  "diagnostic_detail": "legacy_observations_only",
+  "categories": {
+    "followed": 75,
+    "primary_not_observed": 32,
+    "primary_seen_follow_missing": 13
+  },
+  "planned_slots": 120,
+  "follow_per_primary": {
+    "numerator": 75,
+    "denominator": 88
+  },
+  "follow_per_plan": {
+    "numerator": 75,
+    "denominator": 120
+  },
+  "event_counts": {
+    "primary_valid": 88,
+    "tune_secondary": 88,
+    "secondary_valid": 75,
+    "followed_event": 75,
+    "follow_window_miss": 13
+  },
+  "host_queue_delay_ms": {
+    "n": 0,
+    "min": null,
+    "median": null,
+    "p95": null,
+    "p99": null,
+    "max": null,
+    "mean": null,
+    "median_abs": null,
+    "p95_abs": null,
+    "p99_abs": null,
+    "max_abs": null
+  },
+  "host_retune_ms": {
+    "n": 88,
+    "min": 1.1795309983426705,
+    "median": 1.26585549878655,
+    "p95": 1.7624857908231204,
+    "p99": 1.9665477146918409,
+    "max": 2.1723610116168857,
+    "mean": 1.3312260003162506,
+    "median_abs": 1.26585549878655,
+    "p95_abs": 1.7624857908231204,
+    "p99_abs": 1.9665477146918409,
+    "max_abs": 2.1723610116168857
+  },
+  "timeline_status": "timeline_unverified",
+  "rf_timing_precision": null,
+  "unknown": [
+    "No independently verified retune gap/sample continuity.",
+    "No RF or continuous IQ marker for follow timing.",
+    "No primary candidate is not proof of missing RF transmission.",
+    "Unidentified CRC failures cannot be assigned a slot.",
+    "Device API frequency return is not measured lock/settling time."
+  ],
+  "sources": {
+    "flow": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261110_run2103/analyses/std_ble_flow_20261110_164657_7636d7/flow.events.jsonl",
+      "sha256": "2199020f744092872769b164df8578cb1f6aefa8de6506315ab2071750f9414e"
+    },
+    "flow_summary": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261110_run2103/analyses/std_ble_flow_20261110_164657_7636d7/flow.summary.json",
+      "sha256": "1d52871dac5a500e5c7719c8c4f1f837bcd9185805b53b4f378788b7d482d6cb"
+    },
+    "board": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261110_run2103/board.board.log",
+      "sha256": "4c6da4242f9c21be9f58842b7d84277e6001d6d62ca669281c52b048c8222a04"
+    }
+  }
+}

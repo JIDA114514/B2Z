@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare N2 fixed-frequency runs without inventing RF or execution timing."""
+"""Compare N2/N4 fixed-frequency runs without inventing RF or execution timing."""
 import argparse
 import hashlib
 import json
@@ -7,18 +7,37 @@ from pathlib import Path
 
 
 def compare(joint: dict, separate: dict, conditions: dict) -> dict:
-    for summary, mode in ((joint, "joint"), (separate, "separate_bluebee")):
+    compact=bool(joint.get("compact") or separate.get("compact"))
+    modes=("compact_joint","legacy_bluebee") if compact else ("joint","separate_bluebee")
+    for summary, mode in zip((joint,separate),modes):
         if summary.get("schema") != "b2z_plan_match_v2" or (summary.get("waveform_cost") or {}).get("mode") != mode:
             raise ValueError(f"requires a complete {mode} plan summary with burst costs")
         if "ble_follow" in summary:
             raise ValueError("main N2 comparison requires two fixed-frequency runs; follow verification is separate")
     differences = []
+    if compact:
+        jc,sc=joint.get('compact') or {},separate.get('compact') or {}
+        if jc.get('mode')!='JC' or sc.get('mode')!='LC':raise ValueError('requires JC and LC compact summaries')
+        for key in ('format','ble_extra','ieee_extra','ble_record_bytes','ieee_record_bytes','k',
+                    'period_ms','valid_lead_ms','execute_lead_ms'):
+            if jc.get(key) is None or jc.get(key)!=sc.get(key):differences.append('compact.'+key)
+    jc, sc = joint.get("capacity"), separate.get("capacity")
+    if bool(jc) != bool(sc):
+        differences.append("capacity.format")
+    elif jc and sc:
+        # Physical layout differs intentionally; application content must not.
+        for key in ("version", "ble_extra", "ieee_extra", "ble_record_bytes",
+                    "ieee_record_bytes", "mapped_bytes", "k", "command_rule", "fill",
+                    "valid_lead_ms", "execute_lead_ms"):
+            if jc.get(key) is None or jc.get(key) != sc.get(key):
+                differences.append("capacity." + key)
+
     for key in ("planned_slots", "planned_control_tasks", "planned_task_manifest"):
         if joint.get(key) != separate.get(key):
             differences.append(key)
     if not joint.get("planned_task_manifest") or any(v is None for r in joint["planned_task_manifest"] for v in r.values()):
         differences.append("missing_board_task_configuration")
-    for key in ("period_ms", "aux_channel", "aux_offset_us"):
+    for key in (("period_ms",) if compact else ("period_ms", "aux_channel", "aux_offset_us")):
         if joint["board"].get(key) is None or joint["board"].get(key) != separate["board"].get(key):
             differences.append(f"board.{key}")
     for side in ("ble", "zigbee"):
@@ -26,6 +45,11 @@ def compare(joint: dict, separate: dict, conditions: dict) -> dict:
         b = (separate.get("receiver_configs") or {}).get(side) or {}
         keys = ["sample_rate", "center_hz", "serial", "lna", "vga", "amp", "duration", "block_samples"]
         keys += ["channels", "whitening_channels"] if side == "ble" else ["channel", "demod", "symbol_order"]
+        if compact and side=='ble':
+            if a.get('channels')!=[3] or b.get('channels')!=[39] or a.get('center_hz')!=2410000000 or b.get('center_hz')!=2480000000:
+                differences.append('receiver.ble.compact_expected_frequencies')
+            if a.get('whitening_channels')!=[3] or b.get('whitening_channels')!=[39]:differences.append('receiver.ble.whitening_channels')
+            keys=[k for k in keys if k not in ('channels','whitening_channels','center_hz')]
         for key in keys:
             if key not in a or key not in b or a[key] != b[key]:
                 differences.append(f"receiver.{side}.{key}")
@@ -49,10 +73,13 @@ def compare(joint: dict, separate: dict, conditions: dict) -> dict:
             "unresolved_or_different_conditions": differences, "groups": metrics,
             "joint_minus_separate_submitted_waveform_us": metrics["joint"]["submitted_waveform_us"] - metrics["separate"]["submitted_waveform_us"],
             "conditions": conditions,
+            "comparison_scope": "compact_cost_with_RF_channel_confound" if compact else "same_frequency_v2_or_v1",
+            "reliability_protocol_effect_identifiable": False if compact else None,
             "limitations": ["single rounds do not establish reliability superiority",
                             "submitted waveform length is not measured RF occupancy",
                             "cross-device completion latency, deadlines and physical execution are not measured",
-                            "fewer submissions caused by sender failure are not an efficiency gain"]}
+                            "fewer submissions caused by sender failure are not an efficiency gain"] +
+                            (["JC BLE 2410 MHz versus LC BLE 2480 MHz: reliability differences cannot be attributed solely to format"] if compact else [])}
 
 
 def main(argv=None):
@@ -73,7 +100,7 @@ def main(argv=None):
     result["sources"] = {k: {"path": str(p.resolve()), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()} for k, p in paths.items()}
     args.output_dir.mkdir(parents=True)
     (args.output_dir / "comparison.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
-    lines = ["# N2 共包与分别发送比较", "",
+    lines = ["# N2/N4 共包与分别发送比较", "",
              f"已记录条件一致：{result['recorded_conditions_match']}（只核对已记录配置）", "",
              "| 组 | Run | 联合解析任务 | 提交有效波形 µs | padding µs | 提交成功/完成 | µs/成功任务 |",
              "|---|---:|---|---:|---:|---|---|"]
@@ -81,6 +108,8 @@ def main(argv=None):
         rate = row["joint_parsed_tasks"]
         unit = row["per_joint_decoded_task"]["value_us"]
         lines.append(f"| {name} | {row['run_id']} | {rate['numerator']}/{rate['denominator']} | {row['submitted_waveform_us']} | {row['submitted_zero_padding_us']} | {row['burst_started']}/{row['burst_completed']} | {unit if unit is not None else 'N/A'} |")
+    if compact_mode := result["comparison_scope"].startswith("compact"):
+        lines += ["", "JC/LC BLE信道不同；条件核对通过仅适用于记录的任务及成本比较，不能据此归因可靠性差异。"]
     lines += ["", "差异/未记录项：" + (", ".join(result["unresolved_or_different_conditions"]) or "无"), "",
               "包含全轮时间更新、失败及重发。波形长度不等于实测 RF 占用；发送失败造成的成本减少不能称为效率提升。跨机完成时延、同步精度和执行器动作未测。"]
     (args.output_dir / "comparison.md").write_text("\n".join(lines) + "\n")

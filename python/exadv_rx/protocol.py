@@ -130,6 +130,13 @@ def parse_pdu(pdu: bytes, channel: int) -> dict:
     if len(pdu) < 2 or len(pdu) != 2 + pdu[1]:
         raise ValueError("PDU length mismatch")
     kind = pdu[0] & 15
+    if kind == 2:
+        if channel<37 or pdu[0]!=0x42 or not 6<=pdu[1]<=37:
+            raise ValueError("legacy_shape")
+        return {"channel":channel,"kind":"legacy","pdu_type":kind,
+                "pdu_length":pdu[1],"pdu_hex":pdu.hex(),"crc_ok":True,
+                "extended":{"adva":":".join(f"{b:02X}" for b in pdu[2:8][::-1]),
+                "ad_structures":parse_ad(pdu[8:]),"adv_data_hex":pdu[8:].hex()}}
     if kind != 7:
         raise ValueError("not an extended advertising PDU")
     ext = parse_extended(pdu[2:])

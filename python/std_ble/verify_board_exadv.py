@@ -86,7 +86,7 @@ def validate_secondary(packet: dict, args) -> dict:
         raise ValueError("secondary_ad_structure")
     manufacturer = bytes(ad[1][1])
     raw = ble_manufacturer_record(manufacturer, payload_len)
-    if (getattr(args,"payload_mode","joint")=="ble-only") != (payload_len==52):
+    if (getattr(args,"payload_mode","joint")=="ble-only") != (payload_len==17+len(raw)):
         raise ValueError("secondary_pdu_shape")
     record = control_record(raw, "ble")
     if (sid != 0 or did != (record["slot_index"] & 0x0fff) or

@@ -107,6 +107,23 @@ class BurstCostTests(unittest.TestCase):
 
 
 class ComparisonTests(unittest.TestCase):
+    def test_capacity_comparison_checks_application_not_layout_budget(self):
+        from copy import deepcopy
+        from python.control_match.compare_n2 import compare
+        joint, _, _ = summarize(load(board_log(False)), side(1, "joint"), side(2))
+        separate, _, _ = summarize(load(board_log(True)), side(1, "ble-only"), side(2))
+        cap=dict(version="2",ble_extra="2",ieee_extra="6",ble_record_bytes="38",
+                 ieee_record_bytes="42",mapped_bytes="200",k="1",command_rule="slot_plus_one",
+                 fill="lcg_v2_side_seed",valid_lead_ms="2000",execute_lead_ms="3000")
+        joint['capacity']={**cap,'pdu_payload_bytes':'255'}
+        separate['capacity']={**cap,'pdu_payload_bytes':'55'}
+        result=compare(joint,separate,{})
+        self.assertFalse(any(k.startswith('capacity.') for k in result['unresolved_or_different_conditions']))
+        bad=deepcopy(separate);bad['capacity']['ieee_extra']='0'
+        self.assertIn('capacity.ieee_extra',compare(joint,bad,{})['unresolved_or_different_conditions'])
+        bad['capacity']=None
+        self.assertIn('capacity.format',compare(joint,bad,{})['unresolved_or_different_conditions'])
+
     def test_unrecorded_conditions_are_not_a_fairness_pass(self):
         from python.control_match.compare_n2 import compare
         joint, _, _ = summarize(load(board_log(False)), side(1, "joint"), side(2))

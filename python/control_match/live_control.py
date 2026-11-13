@@ -108,7 +108,7 @@ class ControlSession:
         available = packet["available_sample"]
         try:
             payload = control_payload(packet, self.config.side)
-            if payload is not None and self.config.side == "ble" and packet.get("pdu_length") == 52:
+            if payload is not None and self.config.side == "ble" and packet.get("pdu_length") == 17 + len(payload):
                 raise ValueError("BLE-only separate layout is unsupported by the joint time model")
         except (KeyError, TypeError, ValueError) as exc:
             self._write([{"event": "wire_rejected", "side": self.config.side,

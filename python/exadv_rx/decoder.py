@@ -10,7 +10,10 @@ import math
 import numpy as np
 from scipy import signal
 
-from protocol import channel_frequency, crc24, parse_pdu, whiten
+try:
+    from .protocol import channel_frequency, crc24, parse_pdu, whiten
+except ImportError:
+    from protocol import channel_frequency, crc24, parse_pdu, whiten
 
 SYNC_BYTES = bytes.fromhex("aad6be898e")
 SYNC_BITS = np.unpackbits(np.frombuffer(SYNC_BYTES, dtype=np.uint8), bitorder="little")
@@ -209,7 +212,7 @@ class ChannelDecoder:
             return None, False
         bits, _, _ = initial
         header = whiten(np.packbits(bits[40:56], bitorder="little").tobytes(), self.whitening_channel)
-        if header[0] & 15 != 7 or header[1] == 0:
+        if header[0] & 15 not in (2,7) or header[1] == 0:
             return None, False
         total_bits = 40 + (2 + header[1] + 3) * 8
         full = demod(total_bits)

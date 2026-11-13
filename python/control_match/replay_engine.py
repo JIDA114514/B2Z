@@ -43,7 +43,7 @@ def replay_records(rows: list[dict], config: EngineConfig, total_samples: int,
             raise ValueError(f"packet row {line_no}: {exc}") from exc
         if payload is None:
             continue
-        if policy == "scheduled" and config.side == "ble" and packet.get("pdu_length") == 52:
+        if policy == "scheduled" and config.side == "ble" and packet.get("pdu_length") == 17 + len(payload):
             raise ValueError("BLE-only separate layout does not support the joint scheduled reference")
         if "available_sample" not in packet:
             raise ValueError(f"packet row {line_no}: missing available_sample; replay saved IQ")

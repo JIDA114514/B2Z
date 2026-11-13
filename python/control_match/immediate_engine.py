@@ -66,7 +66,7 @@ class ImmediateControlEngine:
                                 observed_run_id=record["run_id"])]
         events = [self._event("decoded", available_sample, record,
                               packet_start_sample=packet_start_sample)]
-        if record["version"]==2:
+        if record["version"] in (2,3):
             events.append(self._event("rejected", available_sample, record, reason="capacity_decode_only"))
             return events
         if record["flags"] == 0:

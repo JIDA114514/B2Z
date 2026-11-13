@@ -259,7 +259,7 @@ class SideControlEngine:
             return events
         events.append(self._event("decoded", available_sample, record,
                                   packet_start_sample=packet_start_sample))
-        if record["version"]==2:
+        if record["version"] in (2,3):
             # Capacity blobs have no scheduled application handler. In particular,
             # IEEE cannot infer the BLE record length from its own payload.
             events.append(self._event("rejected", available_sample, record,

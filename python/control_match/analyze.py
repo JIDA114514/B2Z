@@ -30,7 +30,7 @@ def extract_ble(packet: dict) -> bytes | None:
         if ad.get("type") != 255 or ad.get("company_id") != 0xffff:
             continue
         data = bytes.fromhex(ad["data_hex"])
-        if data[2:4] == b"\xb2\x43":
+        if data[2:4] == b"\xb2\x43" or data[2:3] == b"\xc1":
             return ble_manufacturer_record(data, packet.get("pdu_length"))
     return None
 
@@ -39,11 +39,15 @@ def extract_zigbee(packet: dict) -> bytes | None:
     if not packet.get("fcs_ok"):
         return None
     data = bytes.fromhex(packet["payload_hex"])
-    return data if data[:2] == b"\xb2\x43" else None
+    return data if data[:2] == b"\xb2\x43" or data[:1]==b"\xc1" else None
 
 
 def read_side(path: Path, side: str, run_id: int, command_id: int) -> dict:
-    extract = extract_ble if side == "ble" else extract_zigbee
+    try:
+        from .compact import BLEControlExtractor
+    except ImportError:
+        from compact import BLEControlExtractor
+    extract = BLEControlExtractor() if side == "ble" else extract_zigbee
     counts = {"rows": 0, "control_candidates": 0, "valid_records": 0,
               "duplicates": 0, "foreign_run_or_command": 0, "invalid": {}}
     by_slot = {}
@@ -56,6 +60,7 @@ def read_side(path: Path, side: str, run_id: int, command_id: int) -> dict:
                 packet = json.loads(line)
                 data = extract(packet)
             except (KeyError, TypeError, ValueError) as exc:
+                if str(exc)=="fragment_conflict":raise ValueError(f"conflicting BLE fragments at row {line_no}") from exc
                 reason = f"packet:{type(exc).__name__}"
                 counts["invalid"][reason] = counts["invalid"].get(reason, 0) + 1
                 continue
@@ -64,7 +69,7 @@ def read_side(path: Path, side: str, run_id: int, command_id: int) -> dict:
             counts["control_candidates"] += 1
             try:
                 record = control_record(data, side)
-                if side == "ble" and packet.get("extended", {}).get("adi", {}).get("did") != (record["slot_index"] & 0xfff):
+                if side == "ble" and packet.get("kind") != "legacy" and packet.get("extended", {}).get("adi", {}).get("did") != (record["slot_index"] & 0xfff):
                     raise ValueError("adi_slot")
             except ValueError as exc:
                 reason = str(exc)
@@ -78,14 +83,23 @@ def read_side(path: Path, side: str, run_id: int, command_id: int) -> dict:
             event = {"record": record, "packet_no": packet.get("packet_no"),
                      "sample_start": packet.get("sample_start"),
                      "available_sample": packet.get("available_sample"),
-                     "wire_format": ("ble-only" if packet.get("pdu_length") == 52 else "joint") if side == "ble" else None,
-                     "sample_time_s": packet.get("sample_time_s"), "line_no": line_no}
+                     "wire_format": ("legacy" if packet.get("kind")=="legacy" else "ble-only" if packet.get("pdu_length") == 17 + len(data) else "joint") if side == "ble" else None,
+                     "sample_time_s": packet.get("sample_time_s"), "line_no": line_no,
+                     "compact_reassembly":packet.get("compact_reassembly")}
             if slot in by_slot:
                 counts["duplicates"] += 1
                 if record != by_slot[slot]["record"] or event["wire_format"] != by_slot[slot]["wire_format"]:
                     raise ValueError(f"conflicting {side} records at slot {slot}")
             else:
                 by_slot[slot] = event
+    if side == "ble":
+        summary_path=path.with_name(path.name.replace(".packets.jsonl",".summary.json"))
+        if summary_path.exists() and summary_path!=path:
+            receiver=json.loads(summary_path.read_text())
+            total=receiver.get("counts",{}).get("samples_processed")
+            rate=receiver.get("config",{}).get("sample_rate")
+            if total is not None and rate:extract.expire(total/rate)
+        extract.finish();counts["fragment_reassembly"]=dict(extract.counts)
     counts["unique_slots"] = len(by_slot)
     return {"side": side, "path": str(path), "counts": counts, "by_slot": by_slot}
 

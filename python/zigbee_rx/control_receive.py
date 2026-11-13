@@ -44,7 +44,7 @@ class ControlTracker:
         self.last_slot = -1
 
     def observe(self, payload: bytes) -> tuple[dict | None, str, str | None]:
-        if payload[:2] != b"\xb2\x43":
+        if payload[:2] != b"\xb2\x43" and payload[:1] != b"\xc1":
             self.counts["non_control"] += 1
             return None, "non_control", None
         self.counts["control_candidates"] += 1

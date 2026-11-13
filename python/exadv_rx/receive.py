@@ -24,6 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from experiment_tools.reporting import output_prefix, write_receiver_reports
 from control_match.packet_adapter import control_payload
 from control_match.protocol import control_record
+from control_match.compact import BLEControlExtractor
 from control_match.control_engine import EngineConfig
 from control_match.live_control import ControlSession
 from exadv_rx.arguments import parse_args
@@ -174,6 +175,8 @@ def main(argv=None):
     with paths["packets"].open("x") as packets_file, paths["events"].open("x") as events_file, paths["stderr"].open("x") as stderr_file:
         capture = Capture(args, save, stderr_file)
 
+        compact_extractor = BLEControlExtractor()
+
         def process(iq, final=False):
             before = time.monotonic()
             iq = dc_blocker.feed(iq)
@@ -190,7 +193,7 @@ def main(argv=None):
                 if aux and aux["phy"] != 0:
                     counts["aux_ptr_unsupported_phy"] += 1
                 try:
-                    raw_control = control_payload(packet, "ble")
+                    raw_control = compact_extractor(packet) if packet["kind"]=="legacy" else control_payload(packet, "ble")
                     if raw_control is not None:
                         record = control_record(raw_control, "ble")
                         packet["control_record"] = record
@@ -200,6 +203,9 @@ def main(argv=None):
                 except (ValueError, KeyError, TypeError) as exc:
                     packet["control_error"] = str(exc)
                     counts["invalid_control_records"] += 1
+                for key,value in compact_extractor.counts.items():
+                    counts["compact_"+key]=value
+                counts["compact_pending"]=len(compact_extractor.pending)
                 packets_file.write(json.dumps(packet, ensure_ascii=False) + "\n")
                 if control:
                     control.observe_packet(packet)
@@ -273,18 +279,22 @@ def main(argv=None):
             if pending_bytes:
                 error = error or "truncated IQ sample at end of capture"
             process(np.empty(0, np.complex64), final=True)
+    compact_extractor.expire(counts["samples_processed"] / args.sample_rate)
+    compact_extractor.finish()
+    for key,value in compact_extractor.counts.items():counts["compact_"+key]=value
+    counts["compact_pending"]=0
     wall = time.monotonic() - started
     here = Path(__file__).resolve().parent
     source_paths = [here / name for name in ("receive.py", "arguments.py", "decoder.py", "protocol.py")]
     source_paths += [here.parent / "experiment_tools" / name for name in ("receiver_defaults.py", "reporting.py")]
-    source_paths += [here.parent / "control_match" / name for name in ("protocol.py", "analyze.py", "packet_adapter.py")]
+    source_paths += [here.parent / "control_match" / name for name in ("protocol.py", "analyze.py", "packet_adapter.py", "compact.py")]
     if control:
         source_paths += [here.parent / "control_match" / name for name in
                          ("control_engine.py", "live_control.py", "packet_adapter.py", "protocol.py")]
     receiver_status = "error" if error else "interrupted" if interrupted else "complete"
     control_result = control.finish(receiver_status) if control else None
     summary = {
-        "schema": "exadv_rx_v3", "control_parser": "b243_v1_v2", "receiver_version": "2026-10-26-window-retry1", "start_utc": start_utc,
+        "schema": "exadv_rx_v3", "control_parser": "b243_v1_v2_c1", "receiver_version": "2026-10-26-window-retry1", "start_utc": start_utc,
         "end_utc": datetime.now(timezone.utc).isoformat(),
         "status": receiver_status,
         "error": error, "config": {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()},

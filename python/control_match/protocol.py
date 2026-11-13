@@ -6,6 +6,12 @@ import binascii
 
 def control_record(data: bytes, side: str | None = None) -> dict:
     """Parse one side's independently recovered 35-byte application record."""
+    if data[:1] == b"\xc1":
+        try:
+            from .compact import compact_record
+        except ImportError:
+            from compact import compact_record
+        return compact_record(data, side)
     if len(data) < 35:
         raise ValueError("control_length")
     version=data[2]
@@ -76,6 +82,13 @@ def capacity_extension(run_id: int, slot: int, side: str, length: int) -> bytes:
 
 def ble_manufacturer_record(data: bytes, pdu_length: int) -> bytes:
     """Validate envelope sizes without decoding or reconstructing IEEE content."""
+    if data[:3]==b"\xff\xff\xc1" and len(data)>=28:
+        length=26+data[25]
+        mapped=len(data)-2-length
+        if (data[25]>26 or not 136<=mapped<=160 or mapped%4 or
+                data[25]+mapped-136>26 or pdu_length!=15+len(data)):
+            raise ValueError("compact_wire_budget")
+        return data[2:2+length]
     if len(data)<37 or data[:4]!=b"\xff\xff\xb2\x43":
         raise ValueError("control_wire_budget")
     version=data[4]
@@ -87,7 +100,9 @@ def ble_manufacturer_record(data: bytes, pdu_length: int) -> bytes:
         raise ValueError("version")
     ble_len=36+data[35]
     mapped=len(data)-2-ble_len
-    if (not 229<=pdu_length<=255 or pdu_length!=15+len(data) or
-            mapped<176 or mapped>200 or mapped%4 or data[35]+mapped-176>26):
+    if (data[35]>26 or pdu_length!=15+len(data) or
+            not ((mapped==0 and pdu_length==53+data[35]) or
+                 (229<=pdu_length<=255 and 176<=mapped<=200 and
+                  mapped%4==0 and data[35]+mapped-176<=26))):
         raise ValueError("control_wire_budget")
     return data[2:2+ble_len]

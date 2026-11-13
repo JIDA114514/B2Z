@@ -94,11 +94,13 @@ def read_plan(path: Path, run_id: int) -> dict:
         if (capacity.get("version")!="2" or capacity.get("k")!="1" or
                 capacity.get("command_rule")!="slot_plus_one" or
                 capacity.get("fill")!="lcg_v2_side_seed" or
-                stats.get("rf_mode")!="standard_secondary_ch3" or
+                stats.get("rf_mode") not in ("standard_secondary_ch3", "separate_secondary_ch3") or
+                capacity.get("rf_mode", stats.get("rf_mode")) != stats.get("rf_mode") or
                 not 0<=b<=26 or not 0<=z<=6 or b+4*z>26):
             raise ValueError("invalid capacity config")
+        separate = stats.get("rf_mode") == "separate_secondary_ch3"
         expected=dict(ble_record_bytes=36+b,ieee_record_bytes=36+z,
-                      mapped_bytes=176+4*z,pdu_payload_bytes=229+b+4*z)
+                      mapped_bytes=176+4*z,pdu_payload_bytes=53+b if separate else 229+b+4*z)
         if any(int(capacity[k])!=v for k,v in expected.items()):
             raise ValueError("capacity budget mismatch")
         actual=matching("CAPACITY_SLOT")
@@ -110,9 +112,33 @@ def read_plan(path: Path, run_id: int) -> dict:
                 raise ValueError("capacity build or command mismatch")
             if any(int(r[k])!=(v if built else 0) for k,v in expected.items()):
                 raise ValueError("actual capacity slot budget mismatch")
-        capacity={**capacity,"ieee_marker_offset_us":480+8*b}
-    bursts = read_bursts(matching, stats, by_slot, capacity=capacity)
-    return {"stats": stats, "tasks": tasks, "slots": by_slot, "bursts": bursts, "capacity": capacity}
+        capacity={**capacity,"rf_mode":stats["rf_mode"],
+                  "ieee_marker_offset_us":None if separate else 480+8*b}
+    compact_rows=matching("COMPACT_CONFIG")
+    compact=None
+    if compact_rows:
+        compact=compact_rows[-1]
+        if capacity or any(r!=compact for r in compact_rows):raise ValueError("conflicting compact config")
+        b,z=int(compact["ble_extra"]),int(compact["ieee_extra"])
+        mode=compact.get("mode")
+        if (compact.get("format")!="C1" or mode not in ("JC","LC") or compact.get("k")!="1" or
+            not 0<=b<=26 or not 0<=z<=6 or b+4*z>26 or
+            int(compact["ble_record_bytes"])!=26+b or int(compact["ieee_record_bytes"])!=26+z or
+            compact.get("period_ms")!=stats.get("period_ms") or
+            compact.get("valid_lead_ms")!="2000" or compact.get("execute_lead_ms")!="3000" or
+            stats.get("rf_mode") != ("standard_secondary_ch3" if mode=="JC" else "legacy_separate_ch39")):
+            raise ValueError("invalid compact config")
+        compact_slots=matching("COMPACT_SLOT")
+        if len(compact_slots)!=planned or {int(r["slot"]) for r in compact_slots}!=set(by_slot):raise ValueError("compact slots incomplete")
+        expected=dict(ble_record_bytes=26+b,ieee_record_bytes=26+z,mapped_bytes=136+4*z,
+                      secondary_payload_bytes=179+b+4*z if mode=="JC" else 0)
+        for r in compact_slots:
+            slot=int(r['slot']);built=int(r['built'])
+            if built not in (0,1) or built!=by_slot[slot]['board_generated'] or int(r['command_id'])!=slot+1:
+                raise ValueError("compact slot identity/build")
+            if any(int(r[k])!=(v if built else 0) for k,v in expected.items()):raise ValueError("compact slot budget")
+    bursts = read_bursts(matching, stats, by_slot, capacity=capacity, compact=compact)
+    return {"stats": stats, "tasks": tasks, "slots": by_slot, "bursts": bursts, "capacity": capacity, "compact": compact}
 
 
 def load_side(path: Path, side: str, run_id: int, commands: set[int]) -> dict:
@@ -145,11 +171,20 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
         events = {side: data["by_slot"].get(slot) for side, data in sides.items()}
         for side, event in events.items():
             if side == "ble" and event and event.get("wire_format") is not None:
-                expected = "ble-only" if plan["stats"].get("rf_mode") == "separate_secondary_ch3" else "joint"
+                expected = "legacy" if (plan.get("compact") or {}).get("mode")=="LC" else "ble-only" if plan["stats"].get("rf_mode") == "separate_secondary_ch3" else "joint"
                 if event["wire_format"] != expected:
                     raise ValueError("BLE wire format disagrees with board RF mode")
             if event:
                 record=event["record"]; cap=plan.get("capacity")
+                compact=plan.get("compact")
+                if compact:
+                    n=int(compact["ble_extra" if side=="ble" else "ieee_extra"])
+                    if (record["version"]!=3 or record.get("extra_len")!=n or record["command_id"]!=slot+1 or
+                        record["period_ms"]!=int(plan["stats"]["period_ms"]) or
+                        record["valid_until_ms"]!=record["ref_tick_ms"]+2000 or
+                        record["execute_at_ms"]!=record["ref_tick_ms"]+3000):
+                        raise ValueError("decoded compact configuration mismatch")
+                elif record["version"]==3:raise ValueError("C1 requires COMPACT_CONFIG")
                 if cap:
                     extra=int(cap["ble_extra" if side=="ble" else "ieee_extra"])
                     if record["version"]!=2 or record.get("extra_len")!=extra or record["command_id"]!=slot+1 or record["period_ms"]!=int(plan["stats"]["period_ms"]):
@@ -233,7 +268,8 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
     if any(slot not in plan["slots"] for data in sides.values() for slot in data["by_slot"]):
         raise ValueError("decoded slot is outside board plan")
     summary = {"schema": "b2z_plan_match_v2", "run_id": int(plan["stats"]["run_id"]),
-               "capacity": plan.get("capacity"),
+               "capacity": plan.get("capacity"), "compact":plan.get("compact"),
+               "ble_fragment_reassembly":next((v.get("fragment_reassembly") for v in ble.get("counts",{}).values() if isinstance(v,dict)),None),
                "planned_slots": len(slot_rows), "board_tx_completed": int(plan["stats"]["tx_completed"]),
                "planned_control_tasks": len(tasks),
                "ble_valid_attempts": sum(r["ble_valid"] for r in slot_rows),
@@ -326,7 +362,7 @@ def main() -> int:
         "git_head": subprocess.run(["git", "rev-parse", "HEAD"], cwd=Path(__file__).resolve().parent,
                                    capture_output=True, text=True).stdout.strip(),
         "module_sha256": {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
-                          for name in ("plan_analyze.py", "burst_cost.py", "analyze.py", "flow_input.py", "protocol.py")},
+                          for name in ("plan_analyze.py", "burst_cost.py", "analyze.py", "flow_input.py", "protocol.py", "compact.py")},
         "board_firmware_version": "not_inferred_from_host_checkout"}
     summary["sources"] = {"board": {"path": str(board_path.resolve()),
                                      "sha256": hashlib.sha256(board_path.read_bytes()).hexdigest()},
@@ -368,8 +404,17 @@ def main() -> int:
                   f"- 扩展 BLE/IEEE：{c['ble_extra']}/{c['ieee_extra']} B；本侧内容独立恢复后校验。",
                   f"- 记录 BLE/IEEE：{c['ble_record_bytes']}/{c['ieee_record_bytes']} B；映射区：{c['mapped_bytes']} B。",
                   f"- secondary PDU payload：{c['pdu_payload_bytes']}/255 B。",
-                  f"- 布局标记位置差：{c['ieee_marker_offset_us']} µs（由板端配置计算，非RF测量）。",
+                  (f"- 布局标记位置差：{c['ieee_marker_offset_us']} µs（由板端配置计算，非RF测量）。"
+                   if c["ieee_marker_offset_us"] is not None else
+                   "- 分别发送：映射区位于独立IEEE突发，不在BLE PDU内；不使用共包时间偏移。"),
                   "- 容量探针只计解析；不把扩展数据校验计为实际命令执行。"]
+    if summary.get("compact"):
+        c=summary["compact"]
+        lines += ["", "## C1紧凑格式", "",
+                  f"- 模式：{c['mode']}；BLE/IEEE扩展：{c['ble_extra']}/{c['ieee_extra']} B。",
+                  "- LC只在完整BLE分片重组及应用校验后计有效；IEEE独立解析。",
+                  f"- BLE分片统计（完整接收流）：{summary.get('ble_fragment_reassembly')}。",
+                  "- 无跨设备共同采样原点；不报告执行精度、绝对RF时延或实测能耗。"]
     if summary["waveform_cost"] is not None:
         cost = summary["waveform_cost"]
         unit = cost["per_joint_decoded_task"]["value_us"]

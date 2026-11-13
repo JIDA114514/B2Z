@@ -166,7 +166,7 @@ def receiver_lines(summary):
              f"实验 Run ID：{show(config.get('run_id'))}（{run_note}）",
              f"模式：{'离线回放' if config.get('iq_file') else '实时采集'}",
              f"运行状态：{state}（仅表示程序状态）",
-             f"有效包：{show(counts.get('packets' if role == 'ble' else 'fcs_valid_packets', 0))}（{'BLE CRC及扩展头有效' if role == 'ble' else 'PHY FCS有效'}）",
+             f"有效包：{show(counts.get('packets' if role == 'ble' else 'fcs_valid_packets', 0))}（{'BLE CRC及广播结构有效' if role == 'ble' else 'PHY FCS有效'}）",
              f"IQ观察时长：{show(observation(summary), 6)} s（全部已处理采样，含实验前后余量）"]
     if role == "ble":
         lines += [f"严格 AuxPtr 匹配：{show(summary.get('matched_events'))}",
@@ -177,7 +177,7 @@ def receiver_lines(summary):
     elif role == "zigbee_control":
         rx = summary.get("receiver", {})
         lines += [f"Command ID：{show(summary.get('command_id'))}",
-                  f"B2 43 候选：{show(counts.get('control_candidates', 0))}；记录有效：{show(counts.get('valid_control_records', 0))}",
+                  f"控制记录候选：{show(counts.get('control_candidates', 0))}；记录有效：{show(counts.get('valid_control_records', 0))}",
                   f"有效唯一时隙：{show(rx.get('unique'))}；重复：{show(rx.get('duplicate'))}；乱序：{show(rx.get('out_of_order'))}",
                   f"最长连续缺失：{show(rx.get('longest_loss_burst'))}（{rx.get('loss_scope', '范围未记录')}）",
                   f"有效解码 / DMA 完成：{ratio_text(summary.get('ratios', {}).get('control_decode_per_dma'))}"]
@@ -193,6 +193,9 @@ def receiver_lines(summary):
         for key, label in (("gross", "总吞吐"), ("application", "应用 goodput")):
             rate = summary.get("throughput", {}).get(key, {})
             lines.append(f"{label}：{show(rate.get('byte_s'))} B/s（{show(rate.get('bit_s'))} bit/s）")
+    if role == "ble" and any(k.startswith("compact_") for k in counts):
+        lines += ["C1分片重组（本地IQ时间，非跨端同步）：" + ", ".join(
+            f"{k}={v}" for k,v in counts.items() if k.startswith("compact_"))]
     lines += [f"采集队列：溢出 {capture.get('queue_overflow', 0)}；高水位 {show(capture.get('queue_high_water'))}",
               "时间基准：相对 IQ 标称采样时间；独立采集未经校准不能直接相减。"]
     if summary.get("error"):

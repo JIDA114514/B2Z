@@ -33,3 +33,8 @@
 *.iq
 .index.lock
 .writing-*
+
+# N4 layer-one paired comparisons: preserve conditions and auditable costs.
+!20261112_run240[1-6]/conditions.json
+!20261112_run240[1-6]/analyses/*/comparison.json
+!20261112_run240[1-6]/analyses/*/plan.bursts.csv

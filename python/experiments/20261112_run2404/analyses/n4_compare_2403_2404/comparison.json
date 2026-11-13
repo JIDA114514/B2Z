@@ -1,0 +1,94 @@
+{
+  "schema": "b2z_n2_comparison_v1",
+  "recorded_conditions_match": true,
+  "unresolved_or_different_conditions": [],
+  "groups": {
+    "joint": {
+      "run_id": 2404,
+      "joint_parsed_tasks": {
+        "numerator": 100,
+        "denominator": 100,
+        "value": 1.0
+      },
+      "planned_waveform_us": 225600,
+      "submitted_waveform_us": 225600,
+      "submitted_zero_padding_us": 2000,
+      "burst_attempted": 200,
+      "burst_started": 200,
+      "burst_completed": 200,
+      "uncertain_bursts": 0,
+      "per_joint_decoded_task": {
+        "numerator_us": 225600,
+        "denominator": 100,
+        "value_us": 2256.0
+      },
+      "quadrants": {
+        "joint_valid_attempts": 100,
+        "ble_only_attempts": 0,
+        "zigbee_only_attempts": 0,
+        "neither_attempts": 0
+      }
+    },
+    "separate": {
+      "run_id": 2403,
+      "joint_parsed_tasks": {
+        "numerator": 100,
+        "denominator": 100,
+        "value": 1.0
+      },
+      "planned_waveform_us": 225600,
+      "submitted_waveform_us": 225600,
+      "submitted_zero_padding_us": 3000,
+      "burst_attempted": 300,
+      "burst_started": 300,
+      "burst_completed": 300,
+      "uncertain_bursts": 0,
+      "per_joint_decoded_task": {
+        "numerator_us": 225600,
+        "denominator": 100,
+        "value_us": 2256.0
+      },
+      "quadrants": {
+        "joint_valid_attempts": 100,
+        "ble_only_attempts": 0,
+        "zigbee_only_attempts": 0,
+        "neither_attempts": 0
+      }
+    }
+  },
+  "joint_minus_separate_submitted_waveform_us": 0,
+  "conditions": {
+    "joint": {
+      "topology": "0.25m SMA馈线连接",
+      "tx_power": "tx_attenuation=10000 mdB; tx_power=0dBm",
+      "firmware_build": "20261112.1",
+      "attenuation": "无衰减"
+    },
+    "separate": {
+      "topology": "0.25m SMA馈线连接",
+      "tx_power": "tx_attenuation=10000 mdB; tx_power=0dBm",
+      "firmware_build": "20261112.1",
+      "attenuation": "无衰减"
+    }
+  },
+  "limitations": [
+    "single rounds do not establish reliability superiority",
+    "submitted waveform length is not measured RF occupancy",
+    "cross-device completion latency, deadlines and physical execution are not measured",
+    "fewer submissions caused by sender failure are not an efficiency gain"
+  ],
+  "sources": {
+    "joint_summary": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261112_run2404/analyses/n4_fair/plan.summary.json",
+      "sha256": "74bc605fb95bc76ae705f2647b435628c3f88d8be885f5d4e58d855725ddb63a"
+    },
+    "separate_summary": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261112_run2403/analyses/n4_fair/plan.summary.json",
+      "sha256": "06c1a0700f17f0c746ec97342837a898e20c62561844f45df8d7b13aaabb7d8f"
+    },
+    "conditions": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261112_run2404/conditions.json",
+      "sha256": "7ea94470e47b55bd3d1a5c509396d85d89657439443803ead9d0218439207757"
+    }
+  }
+}

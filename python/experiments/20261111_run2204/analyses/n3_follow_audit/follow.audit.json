@@ -1,0 +1,81 @@
+{
+  "schema": "b2z_n3_follow_audit_v1",
+  "run_id": 2204,
+  "diagnostic_detail": "new_stage_logs",
+  "categories": {
+    "primary_seen_follow_missing": 13,
+    "followed": 91,
+    "primary_not_observed": 16
+  },
+  "planned_slots": 120,
+  "follow_per_primary": {
+    "numerator": 91,
+    "denominator": 104
+  },
+  "follow_per_plan": {
+    "numerator": 91,
+    "denominator": 120
+  },
+  "event_counts": {
+    "tune_request": 209,
+    "tune_return": 209,
+    "packet_dequeued": 195,
+    "primary_valid": 104,
+    "tune_secondary": 104,
+    "secondary_window_enter": 104,
+    "follow_window_miss": 13,
+    "secondary_window_exit": 104,
+    "secondary_valid": 91,
+    "followed_event": 91,
+    "capture_end": 1
+  },
+  "host_queue_delay_ms": {
+    "n": 195,
+    "min": 0.03538202145136893,
+    "median": 0.25322899455204606,
+    "p95": 0.8942282031057394,
+    "p99": 1.1849149339832366,
+    "max": 1.2740200036205351,
+    "mean": 0.31454047062792456,
+    "median_abs": 0.25322899455204606,
+    "p95_abs": 0.8942282031057394,
+    "p99_abs": 1.1849149339832366,
+    "max_abs": 1.2740200036205351
+  },
+  "host_retune_ms": {
+    "n": 104,
+    "min": 1.1884459818247706,
+    "median": 1.2527599901659414,
+    "p95": 1.5773696621181441,
+    "p99": 1.943427476508077,
+    "max": 9.143133996985853,
+    "mean": 1.3785161930942336,
+    "median_abs": 1.2527599901659414,
+    "p95_abs": 1.5773696621181441,
+    "p99_abs": 1.943427476508077,
+    "max_abs": 9.143133996985853
+  },
+  "timeline_status": "timeline_unverified",
+  "rf_timing_precision": null,
+  "unknown": [
+    "No independently verified retune gap/sample continuity.",
+    "No RF or continuous IQ marker for follow timing.",
+    "No primary candidate is not proof of missing RF transmission.",
+    "Unidentified CRC failures cannot be assigned a slot.",
+    "Device API frequency return is not measured lock/settling time."
+  ],
+  "sources": {
+    "flow": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261111_run2204/analyses/std_ble_flow_20261111_185600_7a077c/flow.events.jsonl",
+      "sha256": "5ad219a945553445f92c6855d3c227c5924a48f745fd27be2c5c3a5fdaf5609c"
+    },
+    "flow_summary": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261111_run2204/analyses/std_ble_flow_20261111_185600_7a077c/flow.summary.json",
+      "sha256": "044b84afac7e50faf602a9fe4ef315222bccd92ad1de1222757f1e29fb2857f0"
+    },
+    "board": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261111_run2204/board.board.log",
+      "sha256": "43cdb1ffa9307c5cb370b2fc8fc4a18eca0f4b61a2211adc6c93d08ebea0517a"
+    }
+  }
+}

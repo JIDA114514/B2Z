@@ -19,3 +19,7 @@ python3 python/experiment_tools/manage.py verify
 ```
 
 完整 IQ、逐包流和控制台日志默认不进入 Git，关键数据需另行备份。
+
+## 阶段综合报告
+
+- [N4两层公平对照首轮报告](../../doc/n4_two_layer_results.md)：2401–2406与2411–2416的联合解析、成本、适用范围及证据限制；[CSV/JSON与图表](n4_two_layer_summary/README.md)。该汇总不代表新增实验轮次。

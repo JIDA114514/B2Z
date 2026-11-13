@@ -1,0 +1,13 @@
+run_id,layer,mode,ble_extra,ieee_extra,planned_tasks,ble_valid,ieee_valid,joint_tasks,joint_attempts,ble_only,ieee_only,neither,ble_channel,ieee_channel,capture_s,submitted_waveform_us,padding_us,completed_bursts,us_per_joint_task,deadline_miss,dma_timeout,retune_failure,auxptr_dma_window_miss,report
+2401,1,J2,0,0,100,100,100,100,100,0,0,0,3,12,80.0,204800,2000,200,2048.0,0,0,0,0,python/experiments/20261112_run2401/analyses/n4_fair/plan.report.md
+2402,1,S2,0,0,100,100,100,100,100,0,0,0,3,12,80.0,204800,3000,300,2048.0,0,0,0,0,python/experiments/20261112_run2402/analyses/n4_fair/plan.report.md
+2403,1,S2,26,0,100,100,100,100,100,0,0,0,3,12,80.0,225600,3000,300,2256.0,0,0,0,0,python/experiments/20261112_run2403/analyses/n4_fair/plan.report.md
+2404,1,J2,26,0,100,100,100,100,100,0,0,0,3,12,80.0,225600,2000,200,2256.0,0,0,0,0,python/experiments/20261112_run2404/analyses/n4_fair/plan.report.md
+2405,1,J2,2,6,100,100,100,100,100,0,0,0,3,12,70.0,225600,2000,200,2256.0,0,0,0,0,python/experiments/20261112_run2405/analyses/n4_fair/plan.report.md
+2406,1,S2,2,6,100,100,100,100,100,0,0,0,3,12,70.0,225600,3000,300,2256.0,0,0,0,0,python/experiments/20261112_run2406/analyses/n4_fair/plan.report.md
+2411,2,JC,0,0,100,100,100,100,100,0,0,0,3,12,70.0,164800,2000,200,1648.0,0,0,0,0,python/experiments/20261113_run2411/analyses/n4_compact/plan.report.md
+2412,2,LC,0,0,100,100,100,100,100,0,0,0,39,12,70.0,145600,2000,200,1456.0,0,0,0,0,python/experiments/20261113_run2412/analyses/n4_compact/plan.report.md
+2413,2,LC,26,0,100,100,100,100,100,0,0,0,39,12,70.0,246400,5000,500,2464.0,0,0,0,0,python/experiments/20261113_run2413/analyses/n4_compact/plan.report.md
+2414,2,JC,26,0,100,100,100,100,100,0,0,0,3,12,70.0,185600,2000,200,1856.0,0,0,0,0,python/experiments/20261113_run2414/analyses/n4_compact/plan.report.md
+2415,2,JC,2,6,100,100,100,100,100,0,0,0,3,12,70.0,185600,2000,200,1856.0,0,0,0,0,python/experiments/20261113_run2415/analyses/n4_compact/plan.report.md
+2416,2,LC,2,6,100,100,100,100,100,0,0,0,39,12,70.0,198400,3000,300,1984.0,0,0,0,0,python/experiments/20261113_run2416/analyses/n4_compact/plan.report.md

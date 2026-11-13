@@ -1,0 +1,7 @@
+layer,joint_run,baseline_run,ble_extra,ieee_extra,joint_us_per_task,baseline_us_per_task,joint_cost_change_percent,joint_bursts_per_task,baseline_bursts_per_task,recorded_conditions_match,source
+1,2401,2402,0,0,2048.0,2048.0,0.0,2.0,3.0,True,python/experiments/20261112_run2402/analyses/n4_compare_2401_2402/comparison.json
+1,2404,2403,26,0,2256.0,2256.0,0.0,2.0,3.0,True,python/experiments/20261112_run2404/analyses/n4_compare_2403_2404/comparison.json
+1,2405,2406,2,6,2256.0,2256.0,0.0,2.0,3.0,True,python/experiments/20261112_run2406/analyses/n4_compare_2405_2406/comparison.json
+2,2411,2412,0,0,1648.0,1456.0,13.186813186813184,2.0,2.0,True,python/experiments/20261113_run2412/analyses/n4_compact_compare_2411_2412/comparison.json
+2,2414,2413,26,0,1856.0,2464.0,-24.675324675324674,2.0,5.0,True,python/experiments/20261113_run2414/analyses/n4_compact_compare_2413_2414/comparison.json
+2,2415,2416,2,6,1856.0,1984.0,-6.451612903225811,2.0,3.0,True,python/experiments/20261113_run2416/analyses/n4_compact_compare_2415_2416/comparison.json

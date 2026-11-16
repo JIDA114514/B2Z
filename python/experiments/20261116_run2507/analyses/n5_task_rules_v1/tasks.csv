@@ -1,0 +1,127 @@
+condition,evidence,run_id,command_id,first_slot,planned_attempts,selected_planned_attempts,board_tx_completed_original,ble_observed_attempts,ble_selected_observed_attempts,ble_first_valid_slot,ble_decoded,ble_accepted,ble_processed,ble_duplicates,ble_reject_reasons,zigbee_observed_attempts,zigbee_selected_observed_attempts,zigbee_first_valid_slot,zigbee_decoded,zigbee_accepted,zigbee_processed,zigbee_duplicates,zigbee_reject_reasons,joint_decoded,joint_processed_software
+immediate_original,saved_decode_immediate_replay,2507,51,70,1,1,1,1,1,70,1,1,1,0,{},1,1,70,1,1,1,0,{},1,1
+immediate_original,saved_decode_immediate_replay,2507,52,90,3,3,3,3,3,90,1,1,1,2,{},3,3,90,1,1,1,2,{},1,1
+immediate_original,saved_decode_immediate_replay,2507,53,150,3,3,3,1,1,152,1,1,1,0,{},3,3,150,1,1,1,2,{},1,1
+immediate_original,saved_decode_immediate_replay,2507,54,190,5,5,5,0,0,,0,0,0,0,{},5,5,190,1,1,1,4,{},0,0
+immediate_original,saved_decode_immediate_replay,2507,55,240,3,3,3,3,3,240,1,1,1,2,{},3,3,240,1,1,1,2,{},1,1
+immediate_original,saved_decode_immediate_replay,2507,56,270,3,3,3,0,0,,0,0,0,0,{},3,3,270,1,1,1,2,{},0,0
+original_uncalibrated,saved_decode_sample_replay,2507,51,70,1,1,1,1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+original_uncalibrated,saved_decode_sample_replay,2507,52,90,3,3,3,3,3,90,1,0,0,0,"{""time_quality_insufficient"": 3}",3,3,90,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+original_uncalibrated,saved_decode_sample_replay,2507,53,150,3,3,3,1,1,152,1,0,0,0,"{""time_quality_insufficient"": 1}",3,3,150,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+original_uncalibrated,saved_decode_sample_replay,2507,54,190,5,5,5,0,0,,0,0,0,0,{},5,5,190,1,0,0,0,"{""time_quality_insufficient"": 5}",0,0
+original_uncalibrated,saved_decode_sample_replay,2507,55,240,3,3,3,3,3,240,1,0,0,0,"{""time_quality_insufficient"": 3}",3,3,240,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+original_uncalibrated,saved_decode_sample_replay,2507,56,270,3,3,3,0,0,,0,0,0,0,{},3,3,270,1,0,0,0,"{""time_quality_insufficient"": 3}",0,0
+repeat_first1_uncalibrated,counterfactual_input_filter,2507,51,70,1,1,1,1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+repeat_first1_uncalibrated,counterfactual_input_filter,2507,52,90,3,1,3,3,1,90,1,0,0,0,"{""time_quality_insufficient"": 1}",3,1,90,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+repeat_first1_uncalibrated,counterfactual_input_filter,2507,53,150,3,1,3,1,0,,0,0,0,0,{},3,1,150,1,0,0,0,"{""time_quality_insufficient"": 1}",0,0
+repeat_first1_uncalibrated,counterfactual_input_filter,2507,54,190,5,1,5,0,0,,0,0,0,0,{},5,1,190,1,0,0,0,"{""time_quality_insufficient"": 1}",0,0
+repeat_first1_uncalibrated,counterfactual_input_filter,2507,55,240,3,1,3,3,1,240,1,0,0,0,"{""time_quality_insufficient"": 1}",3,1,240,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+repeat_first1_uncalibrated,counterfactual_input_filter,2507,56,270,3,1,3,0,0,,0,0,0,0,{},3,1,270,1,0,0,0,"{""time_quality_insufficient"": 1}",0,0
+repeat_first3_uncalibrated,counterfactual_input_filter,2507,51,70,1,1,1,1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+repeat_first3_uncalibrated,counterfactual_input_filter,2507,52,90,3,3,3,3,3,90,1,0,0,0,"{""time_quality_insufficient"": 3}",3,3,90,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+repeat_first3_uncalibrated,counterfactual_input_filter,2507,53,150,3,3,3,1,1,152,1,0,0,0,"{""time_quality_insufficient"": 1}",3,3,150,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+repeat_first3_uncalibrated,counterfactual_input_filter,2507,54,190,5,3,5,0,0,,0,0,0,0,{},5,3,190,1,0,0,0,"{""time_quality_insufficient"": 3}",0,0
+repeat_first3_uncalibrated,counterfactual_input_filter,2507,55,240,3,3,3,3,3,240,1,0,0,0,"{""time_quality_insufficient"": 3}",3,3,240,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+repeat_first3_uncalibrated,counterfactual_input_filter,2507,56,270,3,3,3,0,0,,0,0,0,0,{},3,3,270,1,0,0,0,"{""time_quality_insufficient"": 3}",0,0
+repeat_all_uncalibrated,counterfactual_input_filter,2507,51,70,1,1,1,1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+repeat_all_uncalibrated,counterfactual_input_filter,2507,52,90,3,3,3,3,3,90,1,0,0,0,"{""time_quality_insufficient"": 3}",3,3,90,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+repeat_all_uncalibrated,counterfactual_input_filter,2507,53,150,3,3,3,1,1,152,1,0,0,0,"{""time_quality_insufficient"": 1}",3,3,150,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+repeat_all_uncalibrated,counterfactual_input_filter,2507,54,190,5,5,5,0,0,,0,0,0,0,{},5,5,190,1,0,0,0,"{""time_quality_insufficient"": 5}",0,0
+repeat_all_uncalibrated,counterfactual_input_filter,2507,55,240,3,3,3,3,3,240,1,0,0,0,"{""time_quality_insufficient"": 3}",3,3,240,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+repeat_all_uncalibrated,counterfactual_input_filter,2507,56,270,3,3,3,0,0,,0,0,0,0,{},3,3,270,1,0,0,0,"{""time_quality_insufficient"": 3}",0,0
+lead_500ms_uncalibrated,synthetic_protocol_replay,2507,51,70,1,1,1,1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+lead_500ms_uncalibrated,synthetic_protocol_replay,2507,52,90,3,1,3,3,1,90,1,0,0,0,"{""time_quality_insufficient"": 1}",3,1,90,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+lead_500ms_uncalibrated,synthetic_protocol_replay,2507,53,150,3,1,3,1,0,,0,0,0,0,{},3,1,150,1,0,0,0,"{""time_quality_insufficient"": 1}",0,0
+lead_500ms_uncalibrated,synthetic_protocol_replay,2507,54,190,5,1,5,0,0,,0,0,0,0,{},5,1,190,1,0,0,0,"{""time_quality_insufficient"": 1}",0,0
+lead_500ms_uncalibrated,synthetic_protocol_replay,2507,55,240,3,1,3,3,1,240,1,0,0,0,"{""time_quality_insufficient"": 1}",3,1,240,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+lead_500ms_uncalibrated,synthetic_protocol_replay,2507,56,270,3,1,3,0,0,,0,0,0,0,{},3,1,270,1,0,0,0,"{""time_quality_insufficient"": 1}",0,0
+lead_2000ms_uncalibrated,synthetic_protocol_replay,2507,51,70,1,1,1,1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+lead_2000ms_uncalibrated,synthetic_protocol_replay,2507,52,90,3,1,3,3,1,90,1,0,0,0,"{""time_quality_insufficient"": 1}",3,1,90,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+lead_2000ms_uncalibrated,synthetic_protocol_replay,2507,53,150,3,1,3,1,0,,0,0,0,0,{},3,1,150,1,0,0,0,"{""time_quality_insufficient"": 1}",0,0
+lead_2000ms_uncalibrated,synthetic_protocol_replay,2507,54,190,5,1,5,0,0,,0,0,0,0,{},5,1,190,1,0,0,0,"{""time_quality_insufficient"": 1}",0,0
+lead_2000ms_uncalibrated,synthetic_protocol_replay,2507,55,240,3,1,3,3,1,240,1,0,0,0,"{""time_quality_insufficient"": 1}",3,1,240,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+lead_2000ms_uncalibrated,synthetic_protocol_replay,2507,56,270,3,1,3,0,0,,0,0,0,0,{},3,1,270,1,0,0,0,"{""time_quality_insufficient"": 1}",0,0
+lead_5000ms_uncalibrated,synthetic_protocol_replay,2507,51,70,1,1,1,1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+lead_5000ms_uncalibrated,synthetic_protocol_replay,2507,52,90,3,1,3,3,1,90,1,0,0,0,"{""time_quality_insufficient"": 1}",3,1,90,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+lead_5000ms_uncalibrated,synthetic_protocol_replay,2507,53,150,3,1,3,1,0,,0,0,0,0,{},3,1,150,1,0,0,0,"{""time_quality_insufficient"": 1}",0,0
+lead_5000ms_uncalibrated,synthetic_protocol_replay,2507,54,190,5,1,5,0,0,,0,0,0,0,{},5,1,190,1,0,0,0,"{""time_quality_insufficient"": 1}",0,0
+lead_5000ms_uncalibrated,synthetic_protocol_replay,2507,55,240,3,1,3,3,1,240,1,0,0,0,"{""time_quality_insufficient"": 1}",3,1,240,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+lead_5000ms_uncalibrated,synthetic_protocol_replay,2507,56,270,3,1,3,0,0,,0,0,0,0,{},3,1,270,1,0,0,0,"{""time_quality_insufficient"": 1}",0,0
+delay_0ms_uncalibrated,saved_decode_sample_replay,2507,51,70,1,1,1,1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+delay_0ms_uncalibrated,saved_decode_sample_replay,2507,52,90,3,3,3,3,3,90,1,0,0,0,"{""time_quality_insufficient"": 3}",3,3,90,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+delay_0ms_uncalibrated,saved_decode_sample_replay,2507,53,150,3,3,3,1,1,152,1,0,0,0,"{""time_quality_insufficient"": 1}",3,3,150,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+delay_0ms_uncalibrated,saved_decode_sample_replay,2507,54,190,5,5,5,0,0,,0,0,0,0,{},5,5,190,1,0,0,0,"{""time_quality_insufficient"": 5}",0,0
+delay_0ms_uncalibrated,saved_decode_sample_replay,2507,55,240,3,3,3,3,3,240,1,0,0,0,"{""time_quality_insufficient"": 3}",3,3,240,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+delay_0ms_uncalibrated,saved_decode_sample_replay,2507,56,270,3,3,3,0,0,,0,0,0,0,{},3,3,270,1,0,0,0,"{""time_quality_insufficient"": 3}",0,0
+delay_10ms_uncalibrated,synthetic_processing_delay,2507,51,70,1,1,1,1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+delay_10ms_uncalibrated,synthetic_processing_delay,2507,52,90,3,3,3,3,3,90,1,0,0,0,"{""time_quality_insufficient"": 3}",3,3,90,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+delay_10ms_uncalibrated,synthetic_processing_delay,2507,53,150,3,3,3,1,1,152,1,0,0,0,"{""time_quality_insufficient"": 1}",3,3,150,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+delay_10ms_uncalibrated,synthetic_processing_delay,2507,54,190,5,5,5,0,0,,0,0,0,0,{},5,5,190,1,0,0,0,"{""time_quality_insufficient"": 5}",0,0
+delay_10ms_uncalibrated,synthetic_processing_delay,2507,55,240,3,3,3,3,3,240,1,0,0,0,"{""time_quality_insufficient"": 3}",3,3,240,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+delay_10ms_uncalibrated,synthetic_processing_delay,2507,56,270,3,3,3,0,0,,0,0,0,0,{},3,3,270,1,0,0,0,"{""time_quality_insufficient"": 3}",0,0
+delay_100ms_uncalibrated,synthetic_processing_delay,2507,51,70,1,1,1,1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,1,70,1,0,0,0,"{""time_quality_insufficient"": 1}",1,0
+delay_100ms_uncalibrated,synthetic_processing_delay,2507,52,90,3,3,3,3,3,90,1,0,0,0,"{""time_quality_insufficient"": 3}",3,3,90,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+delay_100ms_uncalibrated,synthetic_processing_delay,2507,53,150,3,3,3,1,1,152,1,0,0,0,"{""time_quality_insufficient"": 1}",3,3,150,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+delay_100ms_uncalibrated,synthetic_processing_delay,2507,54,190,5,5,5,0,0,,0,0,0,0,{},5,5,190,1,0,0,0,"{""time_quality_insufficient"": 5}",0,0
+delay_100ms_uncalibrated,synthetic_processing_delay,2507,55,240,3,3,3,3,3,240,1,0,0,0,"{""time_quality_insufficient"": 3}",3,3,240,1,0,0,0,"{""time_quality_insufficient"": 3}",1,0
+delay_100ms_uncalibrated,synthetic_processing_delay,2507,56,270,3,3,3,0,0,,0,0,0,0,{},3,3,270,1,0,0,0,"{""time_quality_insufficient"": 3}",0,0
+original_synthetic_bound_1ms,saved_decode_sample_replay+synthetic_reference_bound,2507,51,70,1,1,1,1,1,70,1,1,1,0,{},1,1,70,1,1,1,0,{},1,1
+original_synthetic_bound_1ms,saved_decode_sample_replay+synthetic_reference_bound,2507,52,90,3,3,3,3,3,90,1,1,1,2,{},3,3,90,1,1,1,2,{},1,1
+original_synthetic_bound_1ms,saved_decode_sample_replay+synthetic_reference_bound,2507,53,150,3,3,3,1,1,152,1,1,1,0,{},3,3,150,1,1,1,2,{},1,1
+original_synthetic_bound_1ms,saved_decode_sample_replay+synthetic_reference_bound,2507,54,190,5,5,5,0,0,,0,0,0,0,{},5,5,190,1,1,1,4,{},0,0
+original_synthetic_bound_1ms,saved_decode_sample_replay+synthetic_reference_bound,2507,55,240,3,3,3,3,3,240,1,1,1,2,{},3,3,240,1,1,1,2,{},1,1
+original_synthetic_bound_1ms,saved_decode_sample_replay+synthetic_reference_bound,2507,56,270,3,3,3,0,0,,0,0,0,0,{},3,3,270,1,1,1,2,{},0,0
+repeat_first1_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,51,70,1,1,1,1,1,70,1,1,1,0,{},1,1,70,1,1,1,0,{},1,1
+repeat_first1_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,52,90,3,1,3,3,1,90,1,1,1,0,{},3,1,90,1,1,1,0,{},1,1
+repeat_first1_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,53,150,3,1,3,1,0,,0,0,0,0,{},3,1,150,1,1,1,0,{},0,0
+repeat_first1_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,54,190,5,1,5,0,0,,0,0,0,0,{},5,1,190,1,1,1,0,{},0,0
+repeat_first1_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,55,240,3,1,3,3,1,240,1,1,1,0,{},3,1,240,1,1,1,0,{},1,1
+repeat_first1_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,56,270,3,1,3,0,0,,0,0,0,0,{},3,1,270,1,1,1,0,{},0,0
+repeat_first3_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,51,70,1,1,1,1,1,70,1,1,1,0,{},1,1,70,1,1,1,0,{},1,1
+repeat_first3_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,52,90,3,3,3,3,3,90,1,1,1,2,{},3,3,90,1,1,1,2,{},1,1
+repeat_first3_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,53,150,3,3,3,1,1,152,1,1,1,0,{},3,3,150,1,1,1,2,{},1,1
+repeat_first3_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,54,190,5,3,5,0,0,,0,0,0,0,{},5,3,190,1,1,1,2,{},0,0
+repeat_first3_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,55,240,3,3,3,3,3,240,1,1,1,2,{},3,3,240,1,1,1,2,{},1,1
+repeat_first3_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,56,270,3,3,3,0,0,,0,0,0,0,{},3,3,270,1,1,1,2,{},0,0
+repeat_all_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,51,70,1,1,1,1,1,70,1,1,1,0,{},1,1,70,1,1,1,0,{},1,1
+repeat_all_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,52,90,3,3,3,3,3,90,1,1,1,2,{},3,3,90,1,1,1,2,{},1,1
+repeat_all_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,53,150,3,3,3,1,1,152,1,1,1,0,{},3,3,150,1,1,1,2,{},1,1
+repeat_all_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,54,190,5,5,5,0,0,,0,0,0,0,{},5,5,190,1,1,1,4,{},0,0
+repeat_all_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,55,240,3,3,3,3,3,240,1,1,1,2,{},3,3,240,1,1,1,2,{},1,1
+repeat_all_synthetic_bound_1ms,counterfactual_input_filter+synthetic_reference_bound,2507,56,270,3,3,3,0,0,,0,0,0,0,{},3,3,270,1,1,1,2,{},0,0
+lead_500ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,51,70,1,1,1,1,1,70,1,1,1,0,{},1,1,70,1,1,1,0,{},1,1
+lead_500ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,52,90,3,1,3,3,1,90,1,1,1,0,{},3,1,90,1,1,1,0,{},1,1
+lead_500ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,53,150,3,1,3,1,0,,0,0,0,0,{},3,1,150,1,1,1,0,{},0,0
+lead_500ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,54,190,5,1,5,0,0,,0,0,0,0,{},5,1,190,1,1,1,0,{},0,0
+lead_500ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,55,240,3,1,3,3,1,240,1,1,1,0,{},3,1,240,1,1,1,0,{},1,1
+lead_500ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,56,270,3,1,3,0,0,,0,0,0,0,{},3,1,270,1,1,1,0,{},0,0
+lead_2000ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,51,70,1,1,1,1,1,70,1,1,1,0,{},1,1,70,1,1,1,0,{},1,1
+lead_2000ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,52,90,3,1,3,3,1,90,1,1,1,0,{},3,1,90,1,1,1,0,{},1,1
+lead_2000ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,53,150,3,1,3,1,0,,0,0,0,0,{},3,1,150,1,1,1,0,{},0,0
+lead_2000ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,54,190,5,1,5,0,0,,0,0,0,0,{},5,1,190,1,1,1,0,{},0,0
+lead_2000ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,55,240,3,1,3,3,1,240,1,1,1,0,{},3,1,240,1,1,1,0,{},1,1
+lead_2000ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,56,270,3,1,3,0,0,,0,0,0,0,{},3,1,270,1,1,1,0,{},0,0
+lead_5000ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,51,70,1,1,1,1,1,70,1,1,1,0,{},1,1,70,1,1,1,0,{},1,1
+lead_5000ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,52,90,3,1,3,3,1,90,1,1,1,0,{},3,1,90,1,1,1,0,{},1,1
+lead_5000ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,53,150,3,1,3,1,0,,0,0,0,0,{},3,1,150,1,1,1,0,{},0,0
+lead_5000ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,54,190,5,1,5,0,0,,0,0,0,0,{},5,1,190,1,1,1,0,{},0,0
+lead_5000ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,55,240,3,1,3,3,1,240,1,1,1,0,{},3,1,240,1,1,1,0,{},1,1
+lead_5000ms_synthetic_bound_1ms,synthetic_protocol_replay+synthetic_reference_bound,2507,56,270,3,1,3,0,0,,0,0,0,0,{},3,1,270,1,1,1,0,{},0,0
+delay_0ms_synthetic_bound_1ms,saved_decode_sample_replay+synthetic_reference_bound,2507,51,70,1,1,1,1,1,70,1,1,1,0,{},1,1,70,1,1,1,0,{},1,1
+delay_0ms_synthetic_bound_1ms,saved_decode_sample_replay+synthetic_reference_bound,2507,52,90,3,3,3,3,3,90,1,1,1,2,{},3,3,90,1,1,1,2,{},1,1
+delay_0ms_synthetic_bound_1ms,saved_decode_sample_replay+synthetic_reference_bound,2507,53,150,3,3,3,1,1,152,1,1,1,0,{},3,3,150,1,1,1,2,{},1,1
+delay_0ms_synthetic_bound_1ms,saved_decode_sample_replay+synthetic_reference_bound,2507,54,190,5,5,5,0,0,,0,0,0,0,{},5,5,190,1,1,1,4,{},0,0
+delay_0ms_synthetic_bound_1ms,saved_decode_sample_replay+synthetic_reference_bound,2507,55,240,3,3,3,3,3,240,1,1,1,2,{},3,3,240,1,1,1,2,{},1,1
+delay_0ms_synthetic_bound_1ms,saved_decode_sample_replay+synthetic_reference_bound,2507,56,270,3,3,3,0,0,,0,0,0,0,{},3,3,270,1,1,1,2,{},0,0
+delay_10ms_synthetic_bound_1ms,synthetic_processing_delay+synthetic_reference_bound,2507,51,70,1,1,1,1,1,70,1,1,1,0,{},1,1,70,1,1,1,0,{},1,1
+delay_10ms_synthetic_bound_1ms,synthetic_processing_delay+synthetic_reference_bound,2507,52,90,3,3,3,3,3,90,1,1,1,2,{},3,3,90,1,1,1,2,{},1,1
+delay_10ms_synthetic_bound_1ms,synthetic_processing_delay+synthetic_reference_bound,2507,53,150,3,3,3,1,1,152,1,1,1,0,{},3,3,150,1,1,1,2,{},1,1
+delay_10ms_synthetic_bound_1ms,synthetic_processing_delay+synthetic_reference_bound,2507,54,190,5,5,5,0,0,,0,0,0,0,{},5,5,190,1,1,1,4,{},0,0
+delay_10ms_synthetic_bound_1ms,synthetic_processing_delay+synthetic_reference_bound,2507,55,240,3,3,3,3,3,240,1,1,1,2,{},3,3,240,1,1,1,2,{},1,1
+delay_10ms_synthetic_bound_1ms,synthetic_processing_delay+synthetic_reference_bound,2507,56,270,3,3,3,0,0,,0,0,0,0,{},3,3,270,1,1,1,2,{},0,0
+delay_100ms_synthetic_bound_1ms,synthetic_processing_delay+synthetic_reference_bound,2507,51,70,1,1,1,1,1,70,1,1,1,0,{},1,1,70,1,1,1,0,{},1,1
+delay_100ms_synthetic_bound_1ms,synthetic_processing_delay+synthetic_reference_bound,2507,52,90,3,3,3,3,3,90,1,1,1,2,{},3,3,90,1,1,1,2,{},1,1
+delay_100ms_synthetic_bound_1ms,synthetic_processing_delay+synthetic_reference_bound,2507,53,150,3,3,3,1,1,152,1,1,1,0,{},3,3,150,1,1,1,2,{},1,1
+delay_100ms_synthetic_bound_1ms,synthetic_processing_delay+synthetic_reference_bound,2507,54,190,5,5,5,0,0,,0,0,0,0,{},5,5,190,1,1,1,4,{},0,0
+delay_100ms_synthetic_bound_1ms,synthetic_processing_delay+synthetic_reference_bound,2507,55,240,3,3,3,3,3,240,1,1,1,2,{},3,3,240,1,1,1,2,{},1,1
+delay_100ms_synthetic_bound_1ms,synthetic_processing_delay+synthetic_reference_bound,2507,56,270,3,3,3,0,0,,0,0,0,0,{},3,3,270,1,1,1,2,{},0,0

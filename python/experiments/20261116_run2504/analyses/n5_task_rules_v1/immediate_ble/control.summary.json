@@ -1,0 +1,68 @@
+{
+  "control_observations": 300,
+  "policy": "immediate",
+  "events": {
+    "decoded": 300,
+    "time_update_ignored": 282,
+    "accepted": 6,
+    "software_processed": 6,
+    "duplicate": 12
+  },
+  "reasons": {},
+  "engine": {
+    "side": "ble",
+    "run_id": 2504,
+    "current_sample": 720000000,
+    "task_status": {
+      "51": "processed",
+      "52": "processed",
+      "53": "processed",
+      "54": "processed",
+      "55": "processed",
+      "56": "processed"
+    },
+    "software_state": {
+      "1": 6
+    },
+    "software_triggers": [
+      {
+        "target_id": 1,
+        "arg": 3,
+        "local_sample": 308215808
+      },
+      {
+        "target_id": 1,
+        "arg": 5,
+        "local_sample": 488177664
+      }
+    ],
+    "time_model": null,
+    "deadline_policy": "not_evaluated_no_time_reference"
+  },
+  "foreign_run_ids": [],
+  "time_reference": "one_receiver_iq_sample_domain",
+  "progress_step_samples": 65536,
+  "progress_scope": "sample-domain replay; no host dispatch-time reconstruction",
+  "software_only": true,
+  "schema": "b2z_immediate_baseline_replay_v1",
+  "side": "ble",
+  "run_id": 2504,
+  "target_ids": [
+    1
+  ],
+  "sample_rate": 4000000,
+  "assumed_reference_bound_ms": null,
+  "assumption_status": "no time reference used; deadline and target-time checks not evaluated",
+  "generated_utc": "2026-11-16T10:14:24.262826+00:00",
+  "sources": {
+    "packets": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261116_run2504/captures/ble/112031_953819_zgq_3ypu/rx.packets.jsonl",
+    "packets_sha256": "687a18561276ae17940a22e46bd2e432c064abbc44ae82261f89503b7f7a4726",
+    "receiver_summary": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261116_run2504/captures/ble/112031_953819_zgq_3ypu/rx.summary.json"
+  },
+  "limitations": [
+    "one receiver only; no cross-device execution error",
+    "software state/actions are sample-domain replay, not physical actuator events",
+    "sender planned timestamp is not calibrated RF start",
+    "immediate baseline does not schedule against execute_at_ms or evaluate runtime expiry"
+  ]
+}

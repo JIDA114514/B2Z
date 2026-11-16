@@ -1,0 +1,99 @@
+{
+  "schema": "b2z_n5_task_ablation_v1",
+  "run_id": 2508,
+  "generated_utc": "2026-11-16T10:14:25.622862+00:00",
+  "code_version": "de896599c6902664a156254e57a22074f67f0c9b",
+  "tool_sha256": "46fca22960253a043ee6ad29a3089f067f961a72482f5fbc8ddcf76170d0a519",
+  "config_sha256": "2c63076e59b3ba7630f35161ae1734b65406b332e5c3f307ceb45c4cd1d32edc",
+  "analysis_sources": {
+    "immediate_engine.py": "ac81707e77cf6cbb6dd9b2a69f4f00a4a036fc997b91180d3b5d3d8ce01712d8",
+    "packet_adapter.py": "5c389c2a0a2b7464291f77fdbe67f184a4ec382df3988b9e45508cd9577c7dc2",
+    "n3_follow_analyze.py": "0daaefaad2e099ae8ab566b3a44b56eb3d66c1ce79fa362daa5370e0d645490d",
+    "analyze.py": "9bc7f530185eb91841a5bf80ce0d6a33b0cf3216b4dfaaccd6cd681c246640fb",
+    "n3_timing.py": "461e9f8b03f4b395afeb489b444807efbdb82cdc9d7f898e97a7dbd754013d3a",
+    "n3_analyze.py": "480a6d5a307401590d1650749f98f5aae84be8a76bceb4f1decb9b01ccb25838",
+    "compact.py": "a97175474d8d2a6b95327a43728340cfec36960c4ba7178939f62952f6c7ece9",
+    "plan_analyze.py": "87637afa227fd323baae80bf0631002665887b35c3d83bc77919388d20fffdd9",
+    "sync_replay.py": "77d16eb7737eaa5c2a30984c64bea898e59c595587d89c5e3850305b48e71acd",
+    "replay_engine.py": "77f4fe206509a983954664db2e97f309f47aa5a3722321fa55080e5640a1a92a",
+    "n5_observation.py": "de28e24b07ee2e605deedb39608fac819bcaf3eb6edebfd9a26e144c1f672309",
+    "live_control.py": "705495ef1dd1603c52e746c736d30695d8d651308d469d058336046eac47b8f2",
+    "n3_holdover.py": "6ac59ec222bed1a41c396213e64805c7e2320db0c8077f229c27f89b29b78a1f",
+    "compare_n2.py": "b92af8585d8c4da4f95b78d9d362904896ef7df15f4eaff798f9396e6bf4547f",
+    "holdover_analyze.py": "bd5ff8a5ac36aa216868c9eb541aa9dc9f8b7bc66d7b1a2b415ac40751b0c3dd",
+    "__init__.py": "8c82d267bd2f8783f2588a27cc94adf9f8e20675baaff56fd1adf390782a6df0",
+    "n5_task_ablate.py": "46fca22960253a043ee6ad29a3089f067f961a72482f5fbc8ddcf76170d0a519",
+    "control_engine.py": "cc33f1d9e0a195b9c6ea1ce150d060ba71cb01d510c4a726cb547e5e40bec55f",
+    "flow_input.py": "72d612a8e47a63a7ad958451ca0209f6a07a3d73a7a4c1afeb79631cde288a52",
+    "n5_analyze.py": "75518c61775e3af61f372d8b8c41b7f6b89f66ae4b2f01cc2283921fe94c1b2d",
+    "burst_cost.py": "20f11d6639f6059fdb567648a04fc3fac2b3240bd82432655178015e49842082",
+    "protocol.py": "890e36da22df1900b01552388aa8058ebe0dd5791f78b377969326b01b5eb54f",
+    "n5_config.py": "11b89788104d96e6f9c988bc19e0fe0a424b912983ef257914fd09513b73a003"
+  },
+  "sources": {
+    "config": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/control_match/configs/n5_2508.json",
+      "sha256": "9ededce147beee9d4051809093b616193e76d201cf6f9ad7961bb087a1503657"
+    },
+    "board": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261116_run2508/board.board.log",
+      "sha256": "6ad158ab516a9e05ae9b3bb028e63a36cfd5697e72b172924dfbc256680a6267"
+    },
+    "ble_packets": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261116_run2508/captures/ble/163057_032070_lpgvkhjd/rx.packets.jsonl",
+      "sha256": "2e5550e8b9d3323377acfc7fdae97941ff3931b04de77d2e6a0b09b2ef04f474"
+    },
+    "ble_summary": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261116_run2508/captures/ble/163057_032070_lpgvkhjd/rx.summary.json",
+      "sha256": "56d864aa5fc3497090097186d87723b6d9a2bdc31d5ded28137e07110e96ca96"
+    },
+    "ble_events": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261116_run2508/captures/ble/163057_032070_lpgvkhjd/rx.control.events.jsonl",
+      "sha256": "e8de7ba2046165bb37510e7a98e66edc75b42f9b90da382a2256725abffe735e"
+    },
+    "zigbee_packets": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261116_run2508/captures/zigbee/163058_963879_k6mcue_u/rx.packets.jsonl",
+      "sha256": "6f45989c5cff96b68eab11f7e2f6bbddcb9e3a9604fec7144924c8a08fda9690"
+    },
+    "zigbee_summary": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261116_run2508/captures/zigbee/163058_963879_k6mcue_u/rx.summary.json",
+      "sha256": "6d73a4ccc6c4bd87d0684e093f6a4da1e86bf2a2ebf6c38ec2cb34f6fcf78cb4"
+    },
+    "zigbee_events": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261116_run2508/captures/zigbee/163058_963879_k6mcue_u/rx.control.events.jsonl",
+      "sha256": "daa49c0b2e451ee1f0a3019e151bf03cef9cda840cb4c505761cc16fc32751be"
+    }
+  },
+  "condition_count": 21,
+  "task_denominator": 6,
+  "board_waveform_cost_original": {
+    "schema": "b2z_waveform_cost_v1",
+    "mode": "joint",
+    "logical_slots": 300,
+    "ble_tx_completed": 300,
+    "ieee_tx_completed": 300,
+    "burst_attempted": 600,
+    "burst_started": 600,
+    "burst_completed": 600,
+    "planned_waveform_us": 602400,
+    "submitted_waveform_us": 602400,
+    "submitted_zero_padding_us": 6000,
+    "attempted_waveform_budget_us": 602400,
+    "uncertain_bursts": 0,
+    "per_joint_decoded_task": {
+      "numerator_us": 602400,
+      "denominator": 2,
+      "value_us": 301200.0
+    },
+    "actual_rf_airtime_us": null,
+    "scope": "All slots including sync-only, repeats and failed DMA completions; successful DMA start allocates full waveform. Failed submissions listed separately; actual emitted fraction unknown. Padding is zero IQ, not proof of zero RF energy."
+  },
+  "limits": [
+    "offline software replay; no new RF trial or actuator action",
+    "1 ms bound is synthetic, not measured synchronization accuracy",
+    "mutated v1 application bytes enter after PHY decode; outer BLE CRC / IEEE FCS is not regenerated",
+    "repeat filters do not change original board RF cost",
+    "immediate policy does not assess deadlines",
+    "DMA completion is not independently measured RF completion"
+  ]
+}

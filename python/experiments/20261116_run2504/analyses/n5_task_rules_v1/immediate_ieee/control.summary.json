@@ -1,0 +1,68 @@
+{
+  "control_observations": 300,
+  "policy": "immediate",
+  "events": {
+    "decoded": 300,
+    "time_update_ignored": 282,
+    "accepted": 6,
+    "software_processed": 6,
+    "duplicate": 12
+  },
+  "reasons": {},
+  "engine": {
+    "side": "zigbee",
+    "run_id": 2504,
+    "current_sample": 720000000,
+    "task_status": {
+      "51": "processed",
+      "52": "processed",
+      "53": "processed",
+      "54": "processed",
+      "55": "processed",
+      "56": "processed"
+    },
+    "software_state": {
+      "2": 6
+    },
+    "software_triggers": [
+      {
+        "target_id": 2,
+        "arg": 3,
+        "local_sample": 314966016
+      },
+      {
+        "target_id": 2,
+        "arg": 5,
+        "local_sample": 494927872
+      }
+    ],
+    "time_model": null,
+    "deadline_policy": "not_evaluated_no_time_reference"
+  },
+  "foreign_run_ids": [],
+  "time_reference": "one_receiver_iq_sample_domain",
+  "progress_step_samples": 65536,
+  "progress_scope": "sample-domain replay; no host dispatch-time reconstruction",
+  "software_only": true,
+  "schema": "b2z_immediate_baseline_replay_v1",
+  "side": "zigbee",
+  "run_id": 2504,
+  "target_ids": [
+    2
+  ],
+  "sample_rate": 4000000,
+  "assumed_reference_bound_ms": null,
+  "assumption_status": "no time reference used; deadline and target-time checks not evaluated",
+  "generated_utc": "2026-11-16T10:14:24.260344+00:00",
+  "sources": {
+    "packets": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261116_run2504/captures/zigbee/112030_270549_t3mb8b3c/rx.packets.jsonl",
+    "packets_sha256": "35359ff049a1123b71012711086848ecf7af3fac457feb25c24a67e5d673d24e",
+    "receiver_summary": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261116_run2504/captures/zigbee/112030_270549_t3mb8b3c/rx.summary.json"
+  },
+  "limitations": [
+    "one receiver only; no cross-device execution error",
+    "software state/actions are sample-domain replay, not physical actuator events",
+    "sender planned timestamp is not calibrated RF start",
+    "immediate baseline does not schedule against execute_at_ms or evaluate runtime expiry"
+  ]
+}

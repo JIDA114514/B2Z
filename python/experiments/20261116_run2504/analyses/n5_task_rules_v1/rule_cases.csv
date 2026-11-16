@@ -1,0 +1,21 @@
+case,input,expected,actual,passed,evidence
+wrong_target,"valid CRC, target_id=2, local target_id=1",rejected:wrong_target,"[""decoded"", ""clock_updated"", ""rejected:wrong_target""]",1,synthetic_engine_test
+unsupported_valid_opcode,"opcode=2 valid on wire, absent from configured supported set",rejected:unsupported,"[""decoded"", ""clock_updated"", ""rejected:unsupported""]",1,synthetic_engine_test
+unknown_opcode,"opcode=9, CRC rebuilt",invalid_record:command_semantics,"[""invalid_record:command_semantics""]",1,synthetic_engine_test
+app_crc_error,application byte flipped after CRC,invalid_record:app_crc16,"[""invalid_record:app_crc16""]",1,synthetic_engine_test
+same_command_conflict,"same command_id, changed arg, valid CRC",rejected:conflicting_task,"[""decoded"", ""rejected:conflicting_task""]",1,synthetic_engine_test
+same_command_duplicate,same command_id and task fields in another slot,duplicate,"[""decoded"", ""clock_updated"", ""duplicate""]",1,synthetic_engine_test
+duplicate_slot,same slot/ref/marker twice,clock_duplicate,"[""decoded"", ""clock_duplicate""]",1,synthetic_engine_test
+out_of_order_training,slot 0 becomes available after slot 2,out_of_order_training,"[""decoded"", ""out_of_order_training""]",1,synthetic_engine_test
+expired,available_sample is after valid_until,rejected:expired,"[""decoded"", ""clock_updated"", ""rejected:expired""]",1,synthetic_engine_test
+late,guard + uncertainty reaches target,rejected:late,"[""decoded"", ""clock_updated"", ""rejected:late""]",1,synthetic_engine_test
+foreign_run,run_id=9002,foreign_run,"[""foreign_run""]",1,synthetic_engine_test
+unknown_reference,no reference bound,rejected:time_quality_insufficient,"[""decoded"", ""clock_updated"", ""rejected:time_quality_insufficient""]",1,synthetic_engine_test
+accepted_with_synthetic_bound,synthetic 1 ms reference bound,accepted,"[""decoded"", ""clock_updated"", ""accepted"", ""scheduled""]",1,synthetic_engine_test
+processing_late,advance 60 samples after scheduled target,cancelled:processing_late,"[""schedule_frozen"", ""cancelled:processing_late""]",1,synthetic_engine_test
+schedule_freeze,advance to 100 ms before target under synthetic 1 ms bound,schedule_frozen,"[""schedule_frozen""]",1,synthetic_engine_test
+timeline_anomaly,invalidate N5 sample axis,timeline_anomaly:synthetic_discontinuity,"[""observation_transition"", ""timeline_anomaly:synthetic_discontinuity""]",1,synthetic_engine_test
+explicit_restart,restart creates new observation segment,observation_transition,"[""observation_transition"", ""timeline_anomaly:synthetic_discontinuity"", ""observation_transition""]",1,synthetic_engine_test
+pending_cancelled_on_timeline_break,accepted task cancelled when N5 sample axis is invalidated,cancelled:timeline_unverified,"[""observation_transition"", ""timeline_anomaly:synthetic_discontinuity"", ""cancelled:timeline_unverified""]",1,synthetic_engine_test
+zero_denominator,"ratio(0, 0)",N/A,N/A,1,synthetic_reporting_test
+all_tasks_missing,no decoded packet on either side,6_tasks_0_joint,6_tasks_0_joint,1,synthetic_reporting_test

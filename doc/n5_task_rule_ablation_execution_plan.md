@@ -63,23 +63,23 @@ jq '{run_id, side, control_observations, events, reasons, assumption_status}' \
   /tmp/n5_task_rules_2504_ieee_immediate_v1/control.summary.json
 ```
 
-## 3. 需要先实现的消融入口
+## 3. 消融入口与完整执行命令
 
-当前 `replay_engine.py` 没有按计划尝试序号筛选、重写提前量及应用 CRC、注入处理延迟的 CLI。不得把下面的目标命令写成已经能运行。新增 `python/control_match/n5_task_ablate.py` 后，先以 `--help`、专项单测和一轮临时输出验收，再运行全矩阵。入口的契约如下：
+`replay_engine.py` 保留单侧原始回放接口。`python/control_match/n5_task_ablate.py` 已实现双侧独立回放、计划尝试筛选、提前量字段及应用 CRC 重建、处理延迟注入、合成规则案例和结果归档。先以 `--help`、专项单测和一轮临时输出验收，再运行全矩阵。入口的契约如下：
 
 - 输入：`--experiment-dir`、`--config`、`--run-id`、`--output-dir`；显式读取两侧唯一的完整录制和板端逐槽日志，拒绝多份歧义录制、配置/Run ID 不符、无 `available_sample`、时间轴异常和既有输出目录。
 - 固定输出：`manifest.json`（输入文件 SHA256、配置哈希、代码版本、参数及证据类型）、`conditions.csv`、`tasks.csv`、`events.jsonl`、`rule_cases.csv`、`report.md`；每个条件保留每侧的原始观察数、被筛选数和拒绝原因。两侧独立回放，最后才生成联合表。
 - 原始 5 s 条件保持真实字节和原始有效期；修改提前量时重建 v1 的 `execute_at_ms`、`valid_until_ms` 和应用 CRC16，并明确标记 `synthetic_protocol_replay`，不得修改原始 JSONL。
 - 定时接受分成 `uncalibrated` 与 `synthetic_bound_1ms` 两张表。1 ms 是功能测试假设，不是设备校准值；立即处理基线只报告解析、去重和软件事件，不评价截止时间。
 
-实现后，先运行：
+运行前检查：
 
 ```bash
 PYTHONPATH=python python3 -m control_match.n5_task_ablate --help
 PYTHONPATH=python python3 -m unittest discover -s python/control_match/tests -p 'test_n5_task_ablate.py'
 ```
 
-正式一键命令（入口完成并通过上述检查后执行；每轮输出目录必须尚不存在）：
+正式一键命令（每轮输出目录必须尚不存在）：
 
 ```bash
 for run_id in 2504 2507 2508; do
@@ -102,6 +102,7 @@ done
 为隔离目标时刻变化，本组只用每个任务首发计划槽的一次机会，保留相同可用样本位置；有效期固定为首发计划时刻后 400 ms，目标时刻分别为首发后 500、2000、5000 ms。这样三种条件的接收机会和接受截止相同，且 `valid_until_ms < execute_at_ms`；它们全是**合成字段**，包括这组的 5 s 条件。另列原始任务的 5 s/原始有效期作为物理字段锚点，不能与合成 5 s 混称同一协议条件。
 
 每侧重建并重新校验完整 v1 应用记录及 CRC，保持 `run_id`、`command_id`、目标、opcode、参数、槽号、`ref_tick_ms` 和包的 IQ 样本索引不变。若固定有效期后首次可用时刻已晚于截止，按实际规则拒绝，不能把包移到较早时刻。报告 `accepted`、`late`、`expired`、冻结、取消和 `software_processed`；未校准表仅描述解析和严格拒绝。
+改写后的应用字节直接进入软件引擎，不重建 BLE 外层 CRC 或 IEEE FCS，也不声称这些合成字段曾在空口发送。
 
 ### 3.3 处理延迟：0/10/100 ms
 

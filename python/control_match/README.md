@@ -137,3 +137,10 @@ N5 机制实验使用 `n5_config.py` 生成预登记 JSON，两侧接收器通�
 四象限、缺失/恢复、现场探测和 N3 策略回放。具体命令与测量限制见
 [实验方案](../../doc/n5_mechanism_experiment_plan.md)。N5 默认未知参考界，tracking 不授权定时处理。
 测试使用合成记录，不构成独立双接收端无线实验或同步精度证据。
+
+N5 任务规则消融入口 `n5_task_ablate.py` 对两侧保存的逐包轨迹独立回放 K=1/3/全部、
+0.5/2/5 s 合成提前量及 0/10/100 ms 合成处理延迟，另输出异常规则案例。
+使用 `--experiment-dir --config --run-id --output-dir`；输出目录必须尚不存在。
+结果包括 `manifest.json`、`conditions.csv`、`tasks.csv`、`events.jsonl`、
+`rule_cases.csv` 和 `report.md`。完整命令、口径及归档要求见
+[任务规则消融执行方案](../../doc/n5_task_rule_ablation_execution_plan.md)。

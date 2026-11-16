@@ -271,24 +271,21 @@ def relative_link(path, directory):
     return Path(os.path.relpath(path, directory)).as_posix()
 
 
-def build_session(directory):
-    records = load_summaries(directory)
-    metadata = directory / "experiment.config.json"
-    if not metadata.exists():
-        write_json(metadata, {"schema": "experiment_v1", "experiment_id": directory.name,
-                              "origin": "automatic", "scope": "See individual receiver and analysis records; grouping alone does not establish joint reception."})
+def _session_data(directory, records):
+    """Render session information in memory; never write into the directory."""
     unique_heading = "唯一有效记录" if any(receiver_role(value) == "zigbee_control" for _, value in records) else "唯一测试包"
     lines = [f"# 实验：{directory.name}", "", "本页自动生成；人工观察请写入 notes.md。运行正常结束不代表达到实验目标。", "",
              "## 接收结果", "", f"| 记录 | 接收链 | 模式 | 程序状态 | 实验Run ID | 解码Run ID | 有效包 | {unique_heading} | IQ时长(s) |",
              "|---|---|---|---|---|---|---|---|---|"]
     runs = []
+    receiver_reports = []
     for path, value in records:
         role = receiver_role(value)
         if not role:
             continue
         mode = "replay" if value.get("config", {}).get("iq_file") else "live"
         markdown = Path(str(path).removesuffix(".summary.json") + ".report.md")
-        atomic_text(markdown, receiver_markdown(value, path))
+        receiver_reports.append((markdown, receiver_markdown(value, path)))
         relative = relative_link(path, directory)
         count = value.get("counts", {}).get("packets" if role == "ble" else "fcs_valid_packets", 0)
         unique = value.get("receiver", {}).get("unique")
@@ -324,7 +321,7 @@ def build_session(directory):
             link = relative_link(path, directory)
             lines.append(f"- [{link}]({link})")
     lines += ["", "配置：[experiment.config.json](experiment.config.json)。完整参数、分母依据和异常见各接收报告及原始 JSON。", ""]
-    atomic_text(directory / "report.md", "\n".join(lines))
+    report = "\n".join(lines)
     statuses = {value["status"] for _, value in records if value.get("status")}
     state = next((status for status in ("error", "unreadable", "running", "interrupted", "complete") if status in statuses), "unrecorded")
     run_ids = {str(r[key]) for r in runs for key in ("experiment_run_id", "run_id") if r[key] is not None}
@@ -332,6 +329,26 @@ def build_session(directory):
            "status": state, "receiver_records": len(runs), "live_records": sum(r["mode"] == "live" for r in runs),
            "replay_records": sum(r["mode"] == "replay" for r in runs), "analysis_records": len(records) - len(runs),
            "report": f"{directory.name}/report.md"}
+    return row, runs, report, receiver_reports
+
+
+def collect_session(directory):
+    """Read historical summaries for global indexes without modifying them."""
+    row, runs, _, _ = _session_data(directory, load_summaries(directory))
+    return row, runs
+
+
+def build_session(directory):
+    """Regenerate reports for this explicitly selected session only."""
+    directory = Path(directory)
+    row, runs, report, receiver_reports = _session_data(directory, load_summaries(directory))
+    metadata = directory / "experiment.config.json"
+    if not metadata.exists():
+        write_json(metadata, {"schema": "experiment_v1", "experiment_id": directory.name,
+                              "origin": "automatic", "scope": "See individual receiver and analysis records; grouping alone does not establish joint reception."})
+    for path, markdown in receiver_reports:
+        atomic_text(path, markdown)
+    atomic_text(directory / "report.md", report)
     return row, runs
 
 
@@ -356,7 +373,7 @@ def rebuild_index(root=EXPERIMENTS):
         rows, runs = [], []
         for directory in sorted(root.iterdir()):
             if directory.is_dir() and (directory / "experiment.config.json").exists():
-                row, detail = build_session(directory)
+                row, detail = collect_session(directory)
                 rows.append(row)
                 runs.extend(detail)
         write_csv(root / "index.csv", INDEX_FIELDS, rows)
@@ -389,7 +406,7 @@ def rebuild_index(root=EXPERIMENTS):
 def refresh_session(directory):
     directory = Path(directory).resolve()
     # One lock protects session reports and both indexes from simultaneous receivers.
-    root = EXPERIMENTS if session_for(directory / "report.md") else directory.parent
+    root = EXPERIMENTS if session_for(directory / "report.md", root=EXPERIMENTS) else directory.parent
     with archive_lock(root):
         build_session(directory)
     if root == EXPERIMENTS:

@@ -3,14 +3,17 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+import subprocess
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from experiment_tools.reporting import (EXPERIMENTS, PROJECT, rebuild_index, receiver_role,
-                                        resolve_recorded_path, write_json)
+                                        resolve_recorded_path, write_json, load_summaries,
+                                        build_session, archive_lock)
 
 
 def sha256(path):
@@ -83,7 +86,7 @@ def migrate(apply=False):
     if manifest_path.exists():
         manifest = json.loads(manifest_path.read_text())
         if manifest["status"] == "complete":
-            print(f"Already migrated: {len(manifest['paths'])} files. Rebuilding reports/index.")
+            print(f"Already migrated: {len(manifest['paths'])} files. Refreshing index only.")
             if apply:
                 rebuild_index()
             return
@@ -123,6 +126,11 @@ def migrate(apply=False):
     manifest["status"] = "complete"
     write_json(manifest_path, manifest)
     print("Moved original files without editing their contents.", flush=True)
+    # A first-time migration explicitly creates reports for only its newly
+    # selected groups. The ordinary index refresh remains historical-read-only.
+    with archive_lock(EXPERIMENTS):
+        for name in groups:
+            build_session(PROJECT / name)
     print("Indexed:", rebuild_index(), flush=True)
 
 
@@ -138,11 +146,63 @@ def verify():
     print(f"Verified byte sizes and SHA-256 for {len(manifest['paths'])} migrated artifacts.")
 
 
+def report_rebuild_plan(names, root=EXPERIMENTS):
+    """List exact report targets; preview does not create files or locks."""
+    root = Path(root).resolve()
+    if not names:
+        raise ValueError("rebuild-reports requires at least one --session")
+    plan = []
+    for name in names:
+        if Path(name).name != name or name in (".", ".."):
+            raise ValueError("--session must be one experiment directory name")
+        directory = root / name
+        if (directory.resolve().parent != root or not directory.is_dir() or
+                not (directory / "experiment.config.json").is_file()):
+            raise ValueError(f"session is not a registered experiment: {name}")
+        targets = [directory / "report.md"]
+        for path, value in load_summaries(directory):
+            if receiver_role(value):
+                targets.append(Path(str(path).removesuffix(".summary.json") + ".report.md"))
+        plan.append((directory, sorted(set(targets))))
+    return plan
+
+
+def rebuild_reports(names, *, apply=False, root=EXPERIMENTS):
+    """Explicit historical maintenance; ordinary receiver/index paths never call this."""
+    root = Path(root).resolve()
+    plan = report_rebuild_plan(names, root)
+    for _, targets in plan:
+        for path in targets:
+            print(f"{'REBUILD' if apply else 'PREVIEW'} {path}")
+    if not apply:
+        return None
+    before = {str(path.relative_to(root)): sha256(path) if path.exists() else None
+              for _, targets in plan for path in targets}
+    with archive_lock(root):
+        for directory, _ in plan:
+            build_session(directory)
+    rebuild_index(root)
+    after = {str(path.relative_to(root)): sha256(path) for _, targets in plan for path in targets}
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%fZ")
+    record = {"schema": "explicit_report_rebuild_v1", "created_utc": timestamp,
+              "sessions": [directory.name for directory, _ in plan],
+              "code_version": subprocess.check_output(["git", "-C", str(PROJECT), "rev-parse", "HEAD"], text=True).strip(),
+              "reporting_sha256": sha256(PROJECT / "python/experiment_tools/reporting.py"),
+              "before_sha256": before, "after_sha256": after,
+              "scope": "Explicit derived report regeneration; global indexes refreshed read-only"}
+    log = root / "report_rebuilds" / (timestamp + ".json")
+    write_json(log, record)
+    print(f"Recorded rebuild: {log}")
+    return log
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("index", "migrate", "verify", "locate"))
+    parser.add_argument("command", choices=("index", "migrate", "verify", "locate", "rebuild-reports"))
     parser.add_argument("path", nargs="?", help="original project-relative or absolute artifact path for locate")
     parser.add_argument("--apply", action="store_true", help="execute migration; otherwise preview")
+    parser.add_argument("--session", action="append", default=[],
+                        help="experiment directory name to rebuild; repeat for multiple sessions")
     args = parser.parse_args()
     if args.command == "migrate":
         migrate(args.apply)
@@ -152,6 +212,11 @@ def main():
         if not args.path:
             parser.error("locate requires an artifact path")
         print(resolve_recorded_path(args.path))
+    elif args.command == "rebuild-reports":
+        try:
+            rebuild_reports(args.session, apply=args.apply)
+        except ValueError as exc:
+            parser.error(str(exc))
     else:
         print("Indexed experiments / receiver records:", rebuild_index())
 

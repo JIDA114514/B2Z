@@ -1,4 +1,5 @@
 import csv
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 import os
@@ -7,13 +8,135 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from experiment_tools.manage import legacy_plan
-from experiment_tools.reporting import PROJECT, rebuild_index, ratio_text, receiver_markdown
+from experiment_tools.manage import rebuild_reports
+from experiment_tools.reporting import PROJECT, rebuild_index, ratio_text, receiver_markdown, write_receiver_reports
 
 
 class ReportingTests(unittest.TestCase):
+    def test_parallel_receiver_reports_keep_index_and_history(self):
+        import experiment_tools.reporting as reporting
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            old = root / "old_run"
+            current = root / "new_run"
+            for directory in (old, current):
+                directory.mkdir()
+                (directory / "experiment.config.json").write_text("{}")
+            (old / "report.md").write_text("preserve this report\n")
+
+            def receive(role):
+                prefix = current / "captures" / role / "rx"
+                paths = {key: Path(str(prefix) + suffix) for key, suffix in (
+                    ("summary", ".summary.json"), ("report", ".report.md"),
+                    ("text", ".summary.txt"))}
+                summary = {"schema": "exadv_rx_v3" if role == "ble" else "zigbee_rx_v1",
+                           "status": "complete", "config": {"run_id": 8},
+                           "counts": {"packets": 1, "fcs_valid_packets": 1}}
+                write_receiver_reports(summary, paths, current)
+
+            with patch.object(reporting, "EXPERIMENTS", root):
+                with ThreadPoolExecutor(max_workers=2) as pool:
+                    list(pool.map(receive, ("ble", "zigbee")))
+            self.assertEqual((old / "report.md").read_text(), "preserve this report\n")
+            with (root / "index.csv").open() as handle:
+                rows = {row["experiment_id"]: row for row in csv.DictReader(handle)}
+            self.assertEqual(rows["new_run"]["receiver_records"], "2")
+            self.assertEqual(rows["new_run"]["live_records"], "2")
+
+    def test_explicit_output_outside_archive_does_not_create_index(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            prefix = Path(temporary) / "custom" / "rx"
+            paths = {key: Path(str(prefix) + suffix) for key, suffix in (
+                ("summary", ".summary.json"), ("report", ".report.md"),
+                ("text", ".summary.txt"))}
+            write_receiver_reports({"schema": "exadv_rx_v3", "status": "complete",
+                                    "config": {"run_id": 9}, "counts": {"packets": 0}}, paths)
+            self.assertTrue(paths["report"].exists())
+            self.assertFalse((Path(temporary) / "index.csv").exists())
+
+    def test_index_is_read_only_for_every_registered_session(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            session = root / "old_run"
+            session.mkdir()
+            (session / "experiment.config.json").write_text("{}")
+            (session / "notes.md").write_text("human notes\n")
+            (session / "report.md").write_text("original report\n")
+            (session / "rx.summary.json").write_text(json.dumps({
+                "schema": "zigbee_rx_v1", "status": "complete", "config": {"run_id": 5},
+                "counts": {"fcs_valid_packets": 2}}))
+            before = {str(p.relative_to(session)): hashlib.sha256(p.read_bytes()).hexdigest()
+                      for p in session.rglob("*") if p.is_file()}
+            self.assertEqual(rebuild_index(root), (1, 1))
+            after = {str(p.relative_to(session)): hashlib.sha256(p.read_bytes()).hexdigest()
+                     for p in session.rglob("*") if p.is_file()}
+            self.assertEqual(after, before)
+            self.assertTrue((root / "index.csv").exists())
+
+    def test_explicit_rebuild_previews_and_only_writes_named_session(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for name in ("first", "second"):
+                session = root / name
+                session.mkdir()
+                (session / "experiment.config.json").write_text("{}")
+                (session / "report.md").write_text("old report\n")
+            with self.assertRaisesRegex(ValueError, "requires at least one"):
+                rebuild_reports([], root=root)
+            with self.assertRaisesRegex(ValueError, "one experiment directory"):
+                rebuild_reports(["../first"], root=root)
+            self.assertIsNone(rebuild_reports(["first"], root=root))
+            self.assertEqual((root / "first/report.md").read_text(), "old report\n")
+            self.assertFalse((root / "report_rebuilds").exists())
+            log = rebuild_reports(["first"], apply=True, root=root)
+            self.assertTrue(log.exists())
+            self.assertEqual((root / "second/report.md").read_text(), "old report\n")
+            self.assertIn("# 实验：first", (root / "first/report.md").read_text())
+            record = json.loads(log.read_text())
+            self.assertEqual(record["sessions"], ["first"])
+            self.assertNotEqual(record["before_sha256"]["first/report.md"],
+                                record["after_sha256"]["first/report.md"])
+
+    def test_new_receiver_does_not_modify_historical_session(self):
+        """A real receiver report call may update only its session and root indexes."""
+        import experiment_tools.reporting as reporting
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            historical = root / "old_run"
+            current = root / "new_run"
+            historical.mkdir()
+            current.mkdir()
+            (historical / "experiment.config.json").write_text("{}")
+            (current / "experiment.config.json").write_text("{}")
+            (historical / "report.md").write_text("Historical report preserved\n")
+            (historical / "notes.md").write_text("Manual observations\n")
+            (historical / "captures").mkdir()
+            (historical / "captures" / "rx.summary.json").write_text(json.dumps({
+                "schema": "exadv_rx_v3", "status": "complete", "config": {"run_id": 7},
+                "counts": {"packets": 1}}))
+
+            def inventory():
+                return {str(path.relative_to(historical)): hashlib.sha256(path.read_bytes()).hexdigest()
+                        for path in historical.rglob("*") if path.is_file()}
+
+            before = inventory()
+            prefix = current / "captures" / "ble" / "rx"
+            paths = {key: Path(str(prefix) + suffix) for key, suffix in (
+                ("summary", ".summary.json"), ("report", ".report.md"), ("text", ".summary.txt"))}
+            summary = {"schema": "exadv_rx_v3", "status": "complete",
+                       "config": {"run_id": 8}, "counts": {"packets": 1}}
+            with patch.object(reporting, "EXPERIMENTS", root):
+                write_receiver_reports(summary, paths, current)
+            self.assertEqual(inventory(), before)
+            self.assertTrue((root / "index.csv").exists())
+            self.assertTrue((current / "report.md").exists())
+
     def test_control_receiver_markdown_renders_after_capture(self):
         summary = {"schema": "zigbee_control_rx_v1", "status": "complete",
                    "config": {"run_id": 1007, "command_id": 43},
@@ -43,9 +166,9 @@ class ReportingTests(unittest.TestCase):
                 "runpy.run_path(script,run_name='__main__')"
             )
             for family in ("exadv_rx", "zigbee_rx", "exadv_rx"):
-                command = [sys.executable, "-c", bootstrap, str(PROJECT / "python" / family / "receive.py"), "--run-id", "71"]
+                command = [sys.executable, "-c", bootstrap, str(PROJECT / "python" / family / "receive.py"), "--run-id", "71", "--duration", "0"]
                 result = subprocess.run(command, env=environment, capture_output=True, text=True, timeout=30)
-                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(result.returncode, 0, (result.stdout, result.stderr))
             sessions = list(archive.glob("????????_run71"))
             self.assertEqual(len(sessions), 1)
             session = sessions[0]
@@ -60,7 +183,7 @@ class ReportingTests(unittest.TestCase):
                 role = "ble" if value["schema"].startswith("exadv") else "zigbee"
                 serials[role] = config["serial"]
                 self.assertEqual(config["run_id"], 71)
-                self.assertEqual(config["duration"], 40)
+                self.assertEqual(config["duration"], 0)
                 self.assertEqual(config["sample_rate"], 8000000)
                 self.assertTrue(config["save_iq"])
                 self.assertTrue(config["quiet"])

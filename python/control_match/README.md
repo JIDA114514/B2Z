@@ -130,3 +130,10 @@ python3 python/control_match/replay_engine.py \
 ## N4 v2 容量包
 
 共享解析器支持35 B v1与36+n B v2；v2独立校验长度、应用CRC及本侧扩展字节。plan_analyze.py自动核对CAPACITY_CONFIG/SLOT并输出单轮字节预算、联合解析和波形成本。两侧采集及分析命令见[N4第7节](../../doc/n4_capacity_experiment_plan.md#7-主机接收与单轮联合分析2026-11-12)。容量记录不是已实现的扩展数据执行协议；实时/立即处理返回capacity_decode_only，旧N3工具拒绝v2固定偏移假设。
+
+
+N5 机制实验使用 `n5_config.py` 生成预登记 JSON，两侧接收器通过 `--n5-config` 启用
+候选训练、固定探测留出、采样进度失更检测及重获状态；`n5_analyze.py` 输出全任务、
+四象限、缺失/恢复、现场探测和 N3 策略回放。具体命令与测量限制见
+[实验方案](../../doc/n5_mechanism_experiment_plan.md)。N5 默认未知参考界，tracking 不授权定时处理。
+测试使用合成记录，不构成独立双接收端无线实验或同步精度证据。

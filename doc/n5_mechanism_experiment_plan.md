@@ -19,7 +19,7 @@
 - v1 共包沿用已核算的 224 B PDU payload；IEEE 标记相对 BLE 前导码的位置补偿为 472 µs，仅用于此格式。每侧自行恢复并校验完整字段，再合并统计。
 - 现有 `SideControlEngine` 只支持 v1 在线定时语义。N4 的 v2/C1 是容量/解析路径，不能直接作为已支持在线调度的格式。先用 v1 隔离机制；若最终论文把 C1 与时间调度作为同一完整方案，后续必须适配并补做该格式的桥接验证。
 - 板端已有最多 16 个 plan 条目，支持同步条目、同任务重复和逐槽日志；本计划无需新增串口命令或修改旧性能协议。
-- 现有在线引擎已有采样域更新、去重、拒绝与软件处理记录，但缺少预登记探测留出、完整失更/重获状态和 N5 汇总。**正式 N5 采集先完成第 3 节软件任务**。以下现有命令只能产生基础记录，不能独自完成 N5 验收。
+- 在线引擎已接入 N5 预登记探测留出、失更/重获观测状态和汇总入口（2026-11-16 软件实现）。使用下文 `--n5-config` 才启用这些功能；未带此参数的历史采集不能补称现场 N5 证据。软件测试不替代后续空口验收。
 
 ## 3. 先做的软件任务
 
@@ -142,7 +142,37 @@ python3 python/control_match/plan_analyze.py \
   --run-id 2501 --analysis-id n5_integrity
 ```
 
-正式采集需在上述命令基础上使用第 3 节实现后的 N5 配置接口；实现后在此补齐配置生成、接收附加参数和 N5 分析命令。`plan_analyze.py` 不替代在线失更与独立探测分析。
+N5 软件接口（从仓库根目录执行）：
+
+```bash
+PYTHONPATH=python python3 -m control_match.n5_config \
+  --run-id 2501 --output python/control_match/configs/n5_2501.json
+```
+
+该命令拒绝覆盖文件，保存任务字段、候选/探测槽、N3 消融策略、阈值、代码版本、源码哈希及配置哈希。2502/2503 另外生成对应 run 的配置，使用 `--intervention-description '实际操作及恢复方法'`，并按计划增加 `--intervention-window 100 109 --intervention-window 150 179 --intervention-window 220 259`。哈希只能检测变更，不能单独证明文件在采集前存在；接收启动时会将完整配置写入事件日志，分析时逐字典核对。
+
+上述两条接收命令均增加：
+
+```text
+--n5-config python/control_match/configs/n5_2501.json
+```
+
+保留 `--control-target-id`，不提供假设参考界；N5 CLI 会拒绝带假设参考界的采集配置。两侧必须使用同一份配置。原始 packets 保留完整独立解码结果，control.events 包含配置、块采样进度/队列深度、观测状态、模型训练槽、探测评分和异常事件；control.tasks 即使零接收也列出六个任务。
+
+```bash
+python3 python/control_match/n5_analyze.py \
+  --experiment-dir python/experiments/YYYYMMDD_run2501 \
+  --config python/control_match/configs/n5_2501.json \
+  --analysis-id n5_mechanism
+```
+
+多份 capture 时使用 `--ble-packets` / `--zigbee-packets` 明确选择，避免混轮。结果在独立 analysis 目录，拒绝覆盖；保存配置、输入/分析源码哈希、CSV、JSON、Markdown 和 CDF。模型策略结果始终标 replay；现场探测和转换保留原事件模式，缺少现场记录写 not_measured。immediate 以原始 available_sample 回放，标记未评估截止时间。
+
+观测年龄在每个处理块推进，不等下一个包到达；因此转换检测时刻受块进度量化及队列积压影响，不是精确主机实时截止点。探测使用包起点之前已可用的历史模型版本，永不训练。重获候选窗口独立于旧模型的 innovation 门限；旧模型保留供探测评分。采集异常会进入 timeline_unverified；当前接收器异常后结束采集，不自动拼接新流。引擎显式 restart API 可开启新段，需重新获取八点，不能跨段评分。
+
+发生队列溢出、截断或采集异常的侧，在离线精度分析中保守排除整侧轨迹，仍保留解析与缺失统计。缺失表是板端 DMA 代理支持下的解码缺失，无法判明无线/USB/主机损失原因；没有告警不证明无硬件丢样。`plan_analyze.py` 仍可用于单独核查完整性。
+
+软件验证：`PYTHONPATH=python python3 -m unittest discover -s python/control_match/tests`；N5 专项测试名称 `test_n5*.py`，均为合成记录或软件回放证据。真实空口失更与重新获取、三轮独立重复仍待采集。
 
 ## 6. 时间模型消融：同一轨迹、固定验证集
 
@@ -195,4 +225,4 @@ BLE 候选训练用偶数槽，IEEE 用奇数槽并排除探测槽，以验证�
 3. 机制消融与规则测试输出可复查结果，明确真值不可测、覆盖不足及失败原因未知部分。不要求任何算法必然优于基线。
 4. N3 的2204同轮IEEE补采、N4同预算重发对照、C1时间语义桥接（若主张涉及）及主要配置至少三轮重复仍单列，N5初验完成不会自动关闭这些事项。
 
-下一步先实现第3节主机功能及预登记配置生成器，补齐本文执行接口，再开始2501。板端暂不增加命令。
+第3节主机软件及执行接口已补齐；完成本机验证并冻结配置后开展2501。板端暂不增加命令。

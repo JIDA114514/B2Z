@@ -120,7 +120,8 @@ def main(argv=None) -> int:
         files["iq"] = Path(str(prefix) + "." + args.format)
     control_config = None
     if args.control_target_id:
-        control_config = EngineConfig(side="zigbee", run_id=args.run_id, sample_rate=args.sample_rate,
+        from control_match.n5_config import load as load_n5
+        control_config = EngineConfig(n5_registration=load_n5(args.n5_config, args.run_id) if getattr(args, "n5_config", None) else None, side="zigbee", run_id=args.run_id, sample_rate=args.sample_rate,
                                       target_ids=frozenset(args.control_target_id),
                                       sender_id=args.control_sender_id,
                                       accept_broadcast=args.control_accept_broadcast,
@@ -189,6 +190,8 @@ def main(argv=None) -> int:
                     if time.monotonic() - last_data > args.stall_timeout:
                         raise RuntimeError("capture stalled")
                     continue
+                if control and capture.error:
+                    control.timeline_event(capture.error)
                 last_data = time.monotonic()
                 raw = pending + chunk
                 n = len(raw) // width * width
@@ -203,6 +206,8 @@ def main(argv=None) -> int:
                     raise RuntimeError("non-finite IQ")
                 counts["samples_processed"] += len(iq)
                 process(iq)
+                if control:
+                    control.progress(counts["samples_processed"], capture.queue.qsize())
                 if time.monotonic() - last_status >= 5:
                     last_status = time.monotonic()
                     print(f"status samples={counts['samples_processed']} fcs_ok={counts['fcs_valid_packets']} "
@@ -223,6 +228,13 @@ def main(argv=None) -> int:
                 error = error or f"hackrf_transfer exited {capture.proc.returncode}"
             if pending:
                 error = error or "truncated IQ sample"
+            if control and (error or interrupted):
+                control.timeline_event(error or "capture_interrupted")
+            if (args.duration and counts["samples_processed"] < int(args.duration * args.sample_rate)
+                    and not interrupted):
+                error = error or "capture shorter than requested duration"
+                if control:
+                    control.timeline_event(error)
             process(np.empty(0, np.complex64), final=True)
     counts.update(tracker.counts)
     ratio_result = {"numerator": tracker.counts["unique"], "denominator": None,

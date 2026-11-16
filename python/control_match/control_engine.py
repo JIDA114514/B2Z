@@ -43,6 +43,7 @@ class EngineConfig:
     guard_ms: float = 10.0
     freeze_ms: float = 100.0
     max_processing_late_ms: float = 50.0
+    n5_registration: dict | None = None
 
     def __post_init__(self) -> None:
         if self.side not in ("ble", "zigbee") or not 1 <= self.run_id <= 65535:
@@ -161,6 +162,9 @@ class SideControlEngine:
     def __init__(self, config: EngineConfig):
         self.config = config
         self.clock = _LocalClock(config)
+        if config.n5_registration is not None:
+            from control_match.n5_observation import ObservationClock
+            self.clock = ObservationClock(config, config.n5_registration)
         self.current_sample = 0
         self.tasks: dict[int, _Task] = {}
         self.signatures: dict[int, tuple] = {}
@@ -177,6 +181,32 @@ class SideControlEngine:
                           target_id=record["target_id"], opcode=record["opcode"], arg=record["arg"])
         result.update(fields)
         return result
+
+    def _observation_events(self):
+        events = []
+        while self.clock.transitions:
+            transition = self.clock.transitions.pop(0)
+            sample = transition.pop("local_sample")
+            events.append(self._event("observation_transition", sample, **transition))
+        return events
+
+    def timeline_event(self, reason, *, restart=False):
+        if self.config.n5_registration is None:
+            return []
+        self.clock.invalidate()
+        events = self._observation_events()
+        events.append(self._event("timeline_anomaly", self.current_sample, reason=reason,
+                                  segment=self.clock.segment))
+        for task in self.tasks.values():
+            if task.status == "pending":
+                task.status = "cancelled"
+                events.append(self._event("cancelled", self.current_sample, task.record,
+                                          reason="timeline_unverified"))
+        if restart:
+            self.current_sample = 0
+            self.clock.restart()
+            events.extend(self._observation_events())
+        return events
 
     def _quality(self, sender_ms: float) -> float | None:
         value = self.clock.uncertainty_ms(sender_ms)
@@ -206,6 +236,9 @@ class SideControlEngine:
             raise ValueError("current_sample must advance monotonically")
         self.current_sample = current_sample
         events = []
+        if self.config.n5_registration is not None:
+            self.clock.advance(current_sample)
+            events.extend(self._observation_events())
         for task in self.tasks.values():
             if task.status != "pending":
                 continue
@@ -272,9 +305,20 @@ class SideControlEngine:
             events.append(self._event("rejected", available_sample, record,
                                       reason="conflicting_task"))
             return events
+        if self.config.n5_registration is not None:
+            if record["period_ms"] != self.config.n5_registration["period_ms"]:
+                events.append(self._event("rejected", available_sample, record, reason="registration_period_mismatch"))
+                return events
+            if record["slot_index"] in self.config.n5_registration["probes"]:
+                events.append(self._event("probe_score", available_sample,
+                                          **self.clock.score(record["slot_index"], packet_start_sample)))
         clock_status = self.clock.observe(record["slot_index"], record["ref_tick_ms"],
                                           packet_start_sample)
-        events.append(self._event(clock_status, available_sample, record, **self.clock.details()))
+        events.append(self._event(clock_status, available_sample, record,
+                                  sample_start=packet_start_sample, available_sample=available_sample,
+                                  **self.clock.details()))
+        if self.config.n5_registration is not None:
+            events.extend(self._observation_events())
         if clock_status == "clock_updated":
             events.extend(self._refresh_pending(available_sample))
             events.extend(self.advance(available_sample))

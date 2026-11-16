@@ -39,6 +39,7 @@ def parse_args(argv=None, *, control_mode=False):
                        help="separate IEEE preamble has no joint 472 us reference offset")
         p.add_argument("--command-id", type=int,
                        help="optional B2 43 command ID filter; omit for a multi-task run")
+        p.add_argument("--n5-config", type=str, help="Frozen N5 registration JSON")
         p.add_argument("--control-target-id", type=int, action="append",
                        help="enable B2 43 software-control processing for this node/group ID; repeatable")
         p.add_argument("--control-sender-id", default="configured_board")
@@ -98,6 +99,13 @@ def parse_args(argv=None, *, control_mode=False):
                 raise ValueError("control assumed reference bound must be finite and nonnegative")
         if a.expected_packets is not None and a.expected_packets < 0:
             raise ValueError("expected-packets must be nonnegative")
+        if getattr(a, "n5_config", None):
+            if not a.control_target_id or a.control_assumed_reference_bound_ms is not None:
+                raise ValueError("N5 requires control-target-id and an unknown reference bound")
+            if a.control_target_id != [2] or a.control_layout != "joint":
+                raise ValueError("N5 preset requires its registered side target and joint layout")
+            if a.command_id is not None:
+                raise ValueError("N5 requires all commands; omit command-id")
         if a.iq_file:
             if not a.iq_file.is_file():
                 raise ValueError("iq-file not found")

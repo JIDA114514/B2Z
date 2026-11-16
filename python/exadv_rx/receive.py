@@ -147,7 +147,8 @@ def main(argv=None):
         paths["iq"] = Path(str(prefix) + "." + args.format)
     control_config = None
     if args.control_target_id:
-        control_config = EngineConfig(side="ble", run_id=args.run_id, sample_rate=args.sample_rate,
+        from control_match.n5_config import load as load_n5
+        control_config = EngineConfig(n5_registration=load_n5(args.n5_config, args.run_id) if getattr(args, "n5_config", None) else None, side="ble", run_id=args.run_id, sample_rate=args.sample_rate,
                                       target_ids=frozenset(args.control_target_id),
                                       sender_id=args.control_sender_id,
                                       accept_broadcast=args.control_accept_broadcast,
@@ -245,6 +246,8 @@ def main(argv=None):
                     if time.monotonic() - last_data > args.stall_timeout:
                         raise RuntimeError("capture stalled: no IQ received within stall-timeout")
                     continue
+                if control and capture.error:
+                    control.timeline_event(capture.error)
                 last_data = time.monotonic()
                 raw = pending_bytes + chunk
                 size = len(raw) // width * width
@@ -259,6 +262,8 @@ def main(argv=None):
                     raise RuntimeError("non-finite IQ in input")
                 counts["samples_processed"] += len(iq)
                 process(iq)
+                if control:
+                    control.progress(counts["samples_processed"], capture.queue.qsize())
                 if time.monotonic() - last_status >= 5:
                     last_status = time.monotonic()
                     print(f"status samples={counts['samples_processed']} packets={counts['packets']} "
@@ -278,6 +283,13 @@ def main(argv=None):
                 error = error or f"hackrf_transfer exited {capture.proc.returncode}"
             if pending_bytes:
                 error = error or "truncated IQ sample at end of capture"
+            if control and (error or interrupted):
+                control.timeline_event(error or "capture_interrupted")
+            if (args.duration and counts["samples_processed"] < int(args.duration * args.sample_rate)
+                    and not interrupted):
+                error = error or "capture shorter than requested duration"
+                if control:
+                    control.timeline_event(error)
             process(np.empty(0, np.complex64), final=True)
     compact_extractor.expire(counts["samples_processed"] / args.sample_rate)
     compact_extractor.finish()
@@ -290,7 +302,8 @@ def main(argv=None):
     source_paths += [here.parent / "control_match" / name for name in ("protocol.py", "analyze.py", "packet_adapter.py", "compact.py")]
     if control:
         source_paths += [here.parent / "control_match" / name for name in
-                         ("control_engine.py", "live_control.py", "packet_adapter.py", "protocol.py")]
+                         ("control_engine.py", "live_control.py", "packet_adapter.py", "protocol.py",
+                          "n5_observation.py", "n5_config.py", "n3_holdover.py")]
     receiver_status = "error" if error else "interrupted" if interrupted else "complete"
     control_result = control.finish(receiver_status) if control else None
     summary = {

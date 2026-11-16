@@ -43,6 +43,7 @@ def parse_args(argv=None):
     parser.add_argument("--run-id", type=int, help="experiment Run ID for archiving only; BLE payload is not filtered")
     parser.add_argument("--control-layout", choices=("joint", "separate"), default="joint",
                         help="N2 separate captures are decode-only; no shared RF epoch")
+    parser.add_argument("--n5-config", type=str, help="Frozen N5 registration JSON")
     parser.add_argument("--control-target-id", type=int, action="append",
                         help="enable B2 43 software-control processing for this node/group ID; repeatable")
     parser.add_argument("--control-sender-id", default="configured_board")
@@ -88,6 +89,11 @@ def parse_args(argv=None):
             raise ValueError("pair-tolerance-us must be finite and nonnegative")
         if not math.isfinite(args.diagnostic_pair_window_us) or not 0 < args.diagnostic_pair_window_us <= 10000:
             raise ValueError("diagnostic-pair-window-us must be in (0, 10000]")
+        if getattr(args, "n5_config", None):
+            if not args.control_target_id or args.control_assumed_reference_bound_ms is not None:
+                raise ValueError("N5 requires control-target-id and an unknown reference bound")
+            if args.control_target_id != [1] or args.control_layout != "joint":
+                raise ValueError("N5 preset requires its registered side target and joint layout")
         if not args.iq_file and args.format != "ci8":
             raise ValueError("HackRF live capture uses ci8")
         if args.iq_file and not args.iq_file.is_file():

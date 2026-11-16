@@ -45,6 +45,13 @@ class ControlSession:
         self.counts = Counter()
         self.reasons = Counter()
         self.tasks: dict[int, dict] = {}
+        if config.n5_registration:
+            for task in config.n5_registration['tasks']:
+                self.tasks[task['command_id']] = dict(run_id=config.run_id, command_id=task['command_id'],
+                    target_id=task[config.side+'_target'], opcode=task[config.side+'_opcode'],
+                    arg=task[config.side+'_arg'], decoded_packets=0, duplicate_attempts=0,
+                    status='not_decoded', slots=set())
+            self._write([self.engine._event('registration', 0, registration=config.n5_registration)])
 
     def _write(self, events: list[dict], packet_no: int | None = None) -> None:
         for event in events:
@@ -79,6 +86,8 @@ class ControlSession:
                                                   "status": "decoded", "slots": set()})
         kind, sample = event["event"], event["local_sample"]
         if kind == "decoded":
+            if row["status"] == "not_decoded":
+                row["status"] = "decoded"
             row["decoded_packets"] += 1
             row["slots"].add(event["slot_index"])
             row.setdefault("first_decoded_sample", sample)
@@ -124,7 +133,21 @@ class ControlSession:
     def advance(self, sample: int) -> None:
         self._write(self.engine.advance(sample))
 
+    def progress(self, sample: int, queue_blocks: int = 0) -> None:
+        self.advance(sample)
+        if self.config.n5_registration:
+            self._write([self.engine._event('sample_progress', sample, queue_blocks=queue_blocks,
+                                          **self.engine.clock.details())])
+
+    def timeline_event(self, reason: str, *, restart=False) -> None:
+        self._write(self.engine.timeline_event(reason, restart=restart))
+
     def finish(self, receiver_status: str) -> dict:
+        if self.config.n5_registration:
+            if receiver_status != 'complete':
+                self.timeline_event('receiver_' + receiver_status)
+            self._write([self.engine._event('capture_end', self.engine.current_sample,
+                                          receiver_status=receiver_status, **self.engine.clock.details())])
         self.stream.close()
         rows = []
         for command_id, task in sorted(self.tasks.items()):
@@ -136,6 +159,7 @@ class ControlSession:
             writer.writeheader()
             writer.writerows(rows)
         result = {"schema": "b2z_live_control_v1", "side": self.config.side,
+                  "n5_registration": self.config.n5_registration,
                   "run_id": self.config.run_id, "sender_id": self.config.sender_id,
                   "receiver_status": receiver_status,
                   "observation_mode": "offline_sample_replay" if self.offline else "live_software",

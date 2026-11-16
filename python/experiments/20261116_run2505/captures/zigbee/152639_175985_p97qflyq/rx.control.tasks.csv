@@ -1,0 +1,7 @@
+run_id,command_id,target_id,opcode,arg,decoded_packets,unique_slots,duplicate_attempts,first_decoded_sample,last_decoded_sample,accepted_sample,target_sample,processed_sample,processing_lateness_ms,status,last_rejection_reason,cancellation_reason
+2505,51,2,1,1,1,1,0,158269440,158269440,,,,,rejected,time_quality_insufficient,
+2505,52,2,1,2,3,3,0,198246400,202244096,,,,,rejected,time_quality_insufficient,
+2505,53,2,2,3,3,3,0,318242816,322240512,,,,,rejected,time_quality_insufficient,
+2505,54,2,1,4,5,5,0,398262272,406257664,,,,,rejected,time_quality_insufficient,
+2505,55,2,2,5,3,3,0,498270208,502267904,,,,,rejected,time_quality_insufficient,
+2505,56,2,1,6,3,3,0,558235648,562233344,,,,,rejected,time_quality_insufficient,

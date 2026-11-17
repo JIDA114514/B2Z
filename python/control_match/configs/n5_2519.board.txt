@@ -1,0 +1,15 @@
+b2z_plan_clear?
+b2z_plan_add? 0 70 0 0
+b2z_plan_add? 51 3 40000 39000 1 1 1 2 1 1
+b2z_plan_add? 0 17 0 0
+b2z_plan_add? 52 3 50000 49000 1 1 2 2 1 2
+b2z_plan_add? 0 57 0 0
+b2z_plan_add? 53 3 80000 79000 1 2 3 2 2 3
+b2z_plan_add? 0 37 0 0
+b2z_plan_add? 54 3 100000 99000 1 1 4 2 1 4
+b2z_plan_add? 0 47 0 0
+b2z_plan_add? 55 3 125000 124000 1 2 5 2 2 5
+b2z_plan_add? 0 27 0 0
+b2z_plan_add? 56 3 140000 139000 1 1 6 2 1 6
+b2z_plan_add? 0 27 0 0
+b2z_plan_start? 2519 500 1

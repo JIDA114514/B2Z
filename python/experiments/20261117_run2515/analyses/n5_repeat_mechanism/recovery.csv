@@ -1,0 +1,5 @@
+side,stale_sample,first_recovery_sample,recovered_sample,recovery_ms,training_packets,observation_mode,segment,acquisition_ms,censor_reason
+ble,278790144,290848768,318832640,10010.624,8,live_software,0,6995.968,
+ble,382795776,430833664,462815232,20004.864,8,live_software,0,7995.392,
+ble,646840320,,,,,live_software,0,,capture_end_without_recovery
+zigbee,651296768,,,,,live_software,0,,capture_end_without_recovery

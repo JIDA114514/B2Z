@@ -1,0 +1,4 @@
+side,first_slot,last_slot,slots,nominal_missing_duration_ms,left_observed,right_observed,left_censored,right_censored,dma_completed_slots,board_uncompleted_slots,cause,timeline_anomalies_present,evidence
+ble,150,200,51,25500,True,True,False,False,51,0,undetermined; DMA completion is not RF completion,False,decoded_packet_absence_with_board_DMA_proxy
+ble,202,202,1,500,True,True,False,False,1,0,undetermined; DMA completion is not RF completion,False,decoded_packet_absence_with_board_DMA_proxy
+ble,279,279,1,500,True,True,False,False,1,0,undetermined; DMA completion is not RF completion,False,decoded_packet_absence_with_board_DMA_proxy

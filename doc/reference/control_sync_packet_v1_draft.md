@@ -1,10 +1,12 @@
 # 连续单包双协议控制与粗粒度同步：v1 负载草案
 
-状态：**P1 设计草案；发送端原型已上板，BLE 与 IEEE 802.15.4 软件接收链已在不同轮次分别恢复新控制记录；[ZigBee 侧实时控制接收](../python/zigbee_rx/README.md#b2-43-控制包实时分析)与[离线双侧匹配](../python/control_match/README.md)已实现，尚未完成同一轮独立双接收端的联合验证**。更新：2026-11-03。串口使用方法见[FreeRTOS 命令说明](../app_FreeRTOS/README.md#十六v1-双协议控制与时间广播命令待上板验证)。该格式服务于一个发送 SDR、两个独立接收 SDR 的实验。每个广播事件只有一个携带应用数据的 secondary `AUX_ADV_IND`；同一任务可以在后续事件重发。此处的 IEEE 802.15.4 侧首先使用现有接收器可恢复的 **PHY 帧及实验应用负载**，不是已经实现的 ZigBee MAC/NWK/APS/ZCL 命令，也不承诺商用设备兼容。
+> 整理标注（2026-11-18）：技术参考保留原评估时点的描述；其中待办不等于当前未完成项。当前进度与后续安排见[文档导航](../README.md)。
+
+状态：**P1 设计草案；发送端原型已上板，BLE 与 IEEE 802.15.4 软件接收链已在不同轮次分别恢复新控制记录；[ZigBee 侧实时控制接收](../../python/zigbee_rx/README.md#b2-43-控制包实时分析)与[离线双侧匹配](../../python/control_match/README.md)已实现，尚未完成同一轮独立双接收端的联合验证**。更新：2026-11-03。串口使用方法见[FreeRTOS 命令说明](../../app_FreeRTOS/README.md#十六v1-双协议控制与时间广播命令待上板验证)。该格式服务于一个发送 SDR、两个独立接收 SDR 的实验。每个广播事件只有一个携带应用数据的 secondary `AUX_ADV_IND`；同一任务可以在后续事件重发。此处的 IEEE 802.15.4 侧首先使用现有接收器可恢复的 **PHY 帧及实验应用负载**，不是已经实现的 ZigBee MAC/NWK/APS/ZCL 命令，也不承诺商用设备兼容。
 
 ## 0. 现有接收证据及其边界
 
-[`20261029_run1001`](../python/experiments/20261029_run1001/report.md) 的 BLE 接收器记录 93 个同频辅助包，其中 81 个与 primary 形成同频诊断配对；严格 AuxPtr 配对为 0。ZigBee 接收器记录 118 个 FCS 正确帧，逐包内容实际为 **20 B** 性能测试负载，而采集参数设为 `--payload-len 30`，故原报告的 `unique=0` 是长度过滤结果。用现有完整填充校验器按 20 B 对 118 行逐包记录重新检查，118 行均通过 Run ID 1001、Sequence 和填充校验，118 个 Sequence 各不相同（范围 0–149）。这支持两条独立 PHY 接收链在该轮均可恢复目标信号；但两侧还没有共同的控制字段，BLE 未按 Run ID 解码，同频模式未证明规范 AuxPtr 跟随，且缺少配对板端最终计数，不能据此计算联合成功率或无线 PRR。
+[`20261029_run1001`](../../python/experiments/20261029_run1001/report.md) 的 BLE 接收器记录 93 个同频辅助包，其中 81 个与 primary 形成同频诊断配对；严格 AuxPtr 配对为 0。ZigBee 接收器记录 118 个 FCS 正确帧，逐包内容实际为 **20 B** 性能测试负载，而采集参数设为 `--payload-len 30`，故原报告的 `unique=0` 是长度过滤结果。用现有完整填充校验器按 20 B 对 118 行逐包记录重新检查，118 行均通过 Run ID 1001、Sequence 和填充校验，118 个 Sequence 各不相同（范围 0–149）。这支持两条独立 PHY 接收链在该轮均可恢复目标信号；但两侧还没有共同的控制字段，BLE 未按 Run ID 解码，同频模式未证明规范 AuxPtr 跟随，且缺少配对板端最终计数，不能据此计算联合成功率或无线 PRR。
 
 ## 1. 每个广播事件的层次
 
@@ -106,4 +108,4 @@ B2 43 01 01 E9 03 07 00 00 00 78 05 00 00 C8 00
 3. 按规范修正当前生成器 `Aux PHY LE 1M=0x01` 的错误编码（应为 0），核实 primary AuxPtr 指示的信道/偏移与实际 secondary 一致；固定频点同频调试和完整 exadv 跟随分别验收。
 4. 在同 IQ 双解码确认后，再进行独立双 HackRF 的命令匹配和时间模型实验。P1 草案不修改旧 `bluebee_*_perf_start?` 命令、测试头、填充或 Sequence 规则。
 
-规范依据：[Bluetooth Core Link Layer](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/low-energy-controller/link-layer-specification.html)、[Bluetooth GAP AD 结构](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host/generic-access-profile.html)、[Bluetooth CSS Manufacturer Specific Data](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/CSS_v12/out/en/supplement-to-the-bluetooth-core-specification/data-types-specification.html)；实际 4:1 映射、扩展头和 PHY/FCS 算法以仓库[现有生成器](../python/std_ble/generate_ble_exadv_iq_30_72M.py)为准。
+规范依据：[Bluetooth Core Link Layer](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/low-energy-controller/link-layer-specification.html)、[Bluetooth GAP AD 结构](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host/generic-access-profile.html)、[Bluetooth CSS Manufacturer Specific Data](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/CSS_v12/out/en/supplement-to-the-bluetooth-core-specification/data-types-specification.html)；实际 4:1 映射、扩展头和 PHY/FCS 算法以仓库[现有生成器](../../python/std_ble/generate_ble_exadv_iq_30_72M.py)为准。

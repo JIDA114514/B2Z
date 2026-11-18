@@ -181,12 +181,12 @@ python3 python/perf_test/bluebee_throughput_scan.py report \
 
 BLE（Bluetooth Low Energy）工作在 2.4 GHz ISM 频段，共有 40 个信道（37/38/39 为 advertising channel，0~36 为 data channel），信道间隔 2 MHz。本项目的 cross-technology communication（CTC）方案利用 BLE physical layer 的 GFSK 调制来承载 ZigBee 的 DSSS chip 序列，因此必须从物理层角度理解 BLE 的帧结构、调制方式和数据完整性机制。
 
-BLE 核心规范参考 `doc/BLE_Core_v5.1.pdf`（Vol 6, Part B: Link Layer Specification），标准广播包结构参考 `doc/ble_header.png`。
+BLE 核心规范参考 `doc/BLE_Core_v5.1.pdf`（Vol 6, Part B: Link Layer Specification），标准广播包结构参考 `doc/reference/ble_header.png`。
 
 ### 1. BLE 链路层数据帧结构
 
 BLE advertising channel PDU 的标准结构：
-![ble_header](../doc/ble_header.png)
+![ble_header](../doc/reference/ble_header.png)
 
 - **Preamble（1 byte）**：固定 `0xAA`（`10101010`），用于接收端时钟恢复和 AGC 锁定。
 - **Access Address（4 bytes）**：advertising channel 固定为 `0x8E89BED6`（小端序无线发送）。Preamble 和 Access Address 共 5 bytes 不经过白化，接收端可以据此做 packet detection。

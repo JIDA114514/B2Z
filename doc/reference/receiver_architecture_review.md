@@ -1,8 +1,10 @@
 # 接收脚本架构评估与优化方案
 
+> 整理标注（2026-11-18）：技术参考保留原评估时点的描述；其中待办不等于当前未完成项。当前进度与后续安排见[文档导航](../README.md)。
+
 归档日期：2026-11-16。评估基线：`cdf0a2d2cd121b62a8211ce91a599ecc98b2a758`。
 
-状态：架构评估及待实施方案，不是重构完成记录，也不是性能实验结果。承接 [N5 实验方案](n5_mechanism_experiment_plan.md) 第 3 节软件实现。本次归档不修改接收算法、协议格式或实验统计口径。
+状态：架构评估及待实施方案，不是重构完成记录，也不是性能实验结果。承接 [N5 实验方案](../plans/n5_mechanism_experiment_plan.md) 第 3 节软件实现。本次归档不修改接收算法、协议格式或实验统计口径。
 
 ## 1. 结论与范围
 
@@ -34,12 +36,12 @@
 
 | 编号 | 问题与源码依据 | 影响 | 优先级 |
 | --- | --- | --- | --- |
-| A1 | [BLE 接收入口](../python/exadv_rx/receive.py) 内的 `Capture` 与 [IEEE 采集模块](../python/zigbee_rx/hackrf_capture.py) 中的 `Capture` 语法树完全相同；三个接收入口重复管理队列、字节拼接、IQ 转换、异常和收尾 | 采集缺陷修复需要多处同步，两侧及不同实验入口容易产生行为差异 | 高 |
-| A2 | 接收入口调用 `advance()` 和 `progress()`；[控制会话](../python/control_match/live_control.py) 直接调用引擎私有 `_event()` 并访问 `engine.clock`；引擎内部也推进时间 | 因果顺序和状态更新规则分散在调用方；修改进度记录时必须了解时钟内部实现 | 高 |
-| A3 | [N5 观测时钟](../python/control_match/n5_observation.py) 继承 [控制引擎](../python/control_match/control_engine.py) 中的私有 `_LocalClock`，通过复制拟合字段切换模型；控制引擎反过来识别 N5 配置并创建该时钟 | 拟合算法、实验策略和命令调度相互依赖，新增策略或格式时修改范围扩大 | 高 |
-| A4 | [packet_adapter.py](../python/control_match/packet_adapter.py) 从分析入口 `analyze.py` 导入负载提取函数；[n5_analyze.py](../python/control_match/n5_analyze.py) 从多个分析入口复用工具函数 | 在线代码依赖离线分析入口，公共能力位置不清楚，入口脚本承担隐含基础库职责 | 中高 |
+| A1 | [BLE 接收入口](../../python/exadv_rx/receive.py) 内的 `Capture` 与 [IEEE 采集模块](../../python/zigbee_rx/hackrf_capture.py) 中的 `Capture` 语法树完全相同；三个接收入口重复管理队列、字节拼接、IQ 转换、异常和收尾 | 采集缺陷修复需要多处同步，两侧及不同实验入口容易产生行为差异 | 高 |
+| A2 | 接收入口调用 `advance()` 和 `progress()`；[控制会话](../../python/control_match/live_control.py) 直接调用引擎私有 `_event()` 并访问 `engine.clock`；引擎内部也推进时间 | 因果顺序和状态更新规则分散在调用方；修改进度记录时必须了解时钟内部实现 | 高 |
+| A3 | [N5 观测时钟](../../python/control_match/n5_observation.py) 继承 [控制引擎](../../python/control_match/control_engine.py) 中的私有 `_LocalClock`，通过复制拟合字段切换模型；控制引擎反过来识别 N5 配置并创建该时钟 | 拟合算法、实验策略和命令调度相互依赖，新增策略或格式时修改范围扩大 | 高 |
+| A4 | [packet_adapter.py](../../python/control_match/packet_adapter.py) 从分析入口 `analyze.py` 导入负载提取函数；[n5_analyze.py](../../python/control_match/n5_analyze.py) 从多个分析入口复用工具函数 | 在线代码依赖离线分析入口，公共能力位置不清楚，入口脚本承担隐含基础库职责 | 中高 |
 | A5 | 包、模型与事件主要通过字典传递，字段含义由调用方掌握，包括 `sample_start`、`available_sample`、段号、校验状态和证据模式 | 缺字段、时间域混用及模式误标难以在统一接口处发现；同一负载存在重复解析与校验 | 中高 |
-| A6 | [plan_analyze.py](../python/control_match/plan_analyze.py) 的 `load_side()` 按 command 分别调用 `read_side()` 扫描文件；N5 的命令 0 加六任务会使同侧包文件扫描七遍，之后分析入口还会全量读取 | 分析开销随任务数及记录量增加，解析与统计逻辑重复运行 | 中 |
+| A6 | [plan_analyze.py](../../python/control_match/plan_analyze.py) 的 `load_side()` 按 command 分别调用 `read_side()` 扫描文件；N5 的命令 0 加六任务会使同侧包文件扫描七遍，之后分析入口还会全量读取 | 分析开销随任务数及记录量增加，解析与统计逻辑重复运行 | 中 |
 | A7 | 直接脚本导入、包导入、`sys.path` 修改与导入回退混用 | 启动方式和测试环境影响模块解析，不利于统一复用及打包 | 中 |
 
 评估时对 A7 做过入口检查：`PYTHONPATH=python python3 -m exadv_rx.receive --help` 因找不到 `decoder` 失败；同方式运行 `zigbee_rx.control_receive --help` 成功。这不表示当前文档中的直接脚本启动命令失效。

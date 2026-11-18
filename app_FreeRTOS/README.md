@@ -1,6 +1,6 @@
 # app_FreeRTOS — 裸机到 FreeRTOS 移植说明
 
-本文档对比 [app_B2Z/](../app_B2Z/)（裸机 no-OS 程序），描述 [app_FreeRTOS/](./) 在 Zynq-7020 平台上移植到 FreeRTOS 后的关键变化，以及应用代码如何通过 FreeRTOS 实现多任务调度和功能执行。
+本文档对比 [app_B2Z/](../app_B2Z)（裸机 no-OS 程序），描述 [app_FreeRTOS/](.) 在 Zynq-7020 平台上移植到 FreeRTOS 后的关键变化，以及应用代码如何通过 FreeRTOS 实现多任务调度和功能执行。
 
 ## 一、执行模型：从超级循环到抢占式多任务
 
@@ -581,7 +581,7 @@ hdl/projects/antsdre310/antsdre310.sdk/app/src/app/
 
 ## 十六、v1 双协议控制与时间广播命令（待上板验证）
 
-新命令使用同一个性能任务的时隙调度与 DMA 轮询，但生成独立的 35 B BLE 控制记录和 35 B IEEE 802.15.4 实验控制负载，不改变旧性能命令的测试头、填充和 Sequence 规则。格式见[负载草案](../doc/control_sync_packet_v1_draft.md)。
+新命令使用同一个性能任务的时隙调度与 DMA 轮询，但生成独立的 35 B BLE 控制记录和 35 B IEEE 802.15.4 实验控制负载，不改变旧性能命令的测试头、填充和 Sequence 规则。格式见[负载草案](../doc/reference/control_sync_packet_v1_draft.md)。
 
 ```text
 b2z_control_start? <run_id> <command_id>
@@ -623,25 +623,25 @@ b2z_plan_start? 1501 200
 
 `CONTROL_PLAN_START` 和逐条 `CONTROL_PLAN_ENTRY` 给出启动清单。运行中 `bluebee_perf_status?` 返回累计 `CONTROL_PLAN_STATS`；结束时依次输出最终累计统计、`CONTROL_PLAN_TASK` 和每个已到达时隙的 `CONTROL_PLAN_SLOT`。时隙记录包含生成、primary/secondary DMA 提交与完成、超时、deadline miss 和相对计划 secondary 的 DMA 延迟；未尝试的已到达时隙保留零标记。串口行在发送结束后输出，应完整保存原始日志。DMA 完成不等于已校准的空口发送时间，接收侧任务成功还需独立解码和关联。
 
-两块 HackRF 的启动顺序、首轮计划、数据归档和功能判定见[多任务共包实验方案](../doc/multi_task_control_experiment_plan.md)。
+两块 HackRF 的启动顺序、首轮计划、数据归档和功能判定见[多任务共包实验方案](../doc/archive/multi_task_control_experiment_plan.md)。
 
 
 ## N2 分别发送模式
 
 `b2z_plan_start? <run_id> <period_ms> 2` 新增 BLE-only ch3 secondary + 独立 BlueBee 2410 MHz 的顺序发送，primary 仍为 ch39，周期至少 500 ms。模式 0/1 和旧性能协议保持不变；`b2z_control_start?` 最后一个可选 rf_mode 也支持 2。正式成本实验使用 plan 入口，单任务 control 入口没有逐突发清单。
 
-计划最终输出增加 `CONTROL_BURST` 与 `CONTROL_COST_STATS`，在 RF 运行结束后打印。旧 tx_completed 保持 BLE secondary 口径，独立 IEEE 完成数必须从新日志取得。每段波形尾部为 10 µs 标称零样本，BLE DMA 完成后等待至少 1000 µs 才提交 IEEE；软件间隔不是 RF 实测。主机语法/波形验证已完成，实际构建、上板、接收验证由实验者执行。任务清单与全部指令见 [N2 执行方案](../doc/n2_separate_transmission_experiment_plan.md#7-已实现接口与首轮执行指令2026-11-10)。
+计划最终输出增加 `CONTROL_BURST` 与 `CONTROL_COST_STATS`，在 RF 运行结束后打印。旧 tx_completed 保持 BLE secondary 口径，独立 IEEE 完成数必须从新日志取得。每段波形尾部为 10 µs 标称零样本，BLE DMA 完成后等待至少 1000 µs 才提交 IEEE；软件间隔不是 RF 实测。主机语法/波形验证已完成，实际构建、上板、接收验证由实验者执行。任务清单与全部指令见 [N2 执行方案](../doc/plans/n2_separate_transmission_experiment_plan.md#7-已实现接口与首轮执行指令2026-11-10)。
 
 ## N3 板端软件取时
 
 计划实验默认新增 `CONTROL_TIME_META/SLOT/STAGE/LATE/END`，覆盖生成、DMA stop/clear、缓存刷新、DAC同步、首次提交寄存器写入、调用返回、轮询与往返切频。原命令、包格式和 N2 计数保留。原始 64 位 tick 采用十六进制字符串，独立 valid 标志区分缺失；这些是软件取时，不是实际 RF 起点。
 
-完整字段解释、失败/分段限制及串口保存要求见 [N3 日志接口](../doc/n3_time_reference_experiment_plan.md#10-板端实现状态与日志接口2026-11-11)。默认开启，可通过编译宏 `B2Z_N3_TRACE_ENABLED=0` 禁用；不要求立即开展优化干预。300 槽最终串口输出较长，必须保存到 `CONTROL_TIME_END`。主机解析适配仍待完成，由用户自行构建和上板。
+完整字段解释、失败/分段限制及串口保存要求见 [N3 日志接口](../doc/plans/n3_time_reference_experiment_plan.md#10-板端实现状态与日志接口2026-11-11)。默认开启，可通过编译宏 `B2Z_N3_TRACE_ENABLED=0` 禁用；不要求立即开展优化干预。300 槽最终串口输出较长，必须保存到 `CONTROL_TIME_END`。主机解析适配仍待完成，由用户自行构建和上板。
 
 
 ### 2201 后的 secondary 提交时序修正
 
-标准跨信道控制将 secondary 缓存刷新移到 AuxPtr 等待前，提交时不重复刷新；同频诊断与旧性能入口保留原流程。N3 日志增加 `secondary_cache` 阶段标记，主机解析器同时支持新旧日志。SDK 源码已同步，ARM 语法检查通过；尚待用户构建上板与短轮时序验证。验收步骤见 [N3 方案](../doc/n3_time_reference_experiment_plan.md) 末节。
+标准跨信道控制将 secondary 缓存刷新移到 AuxPtr 等待前，提交时不重复刷新；同频诊断与旧性能入口保留原流程。N3 日志增加 `secondary_cache` 阶段标记，主机解析器同时支持新旧日志。SDK 源码已同步，ARM 语法检查通过；尚待用户构建上板与短轮时序验证。验收步骤见 [N3 方案](../doc/plans/n3_time_reference_experiment_plan.md) 末节。
 
 ### N4 v2 容量命令（2026-11-12）
 
@@ -651,4 +651,4 @@ b2z_capacity_start? 2301 500 100 0 0
 
 参数依次为run_id、周期ms、槽数、BLE扩展字节、IEEE扩展字节。固定joint跨信道模式，每槽一个独立任务（command_id=slot+1），不占用或修改手工plan。容量限制为229+b+4z≤255，周期≥500 ms、槽数≤1024、总时长≤600 s。状态/停止沿用bluebee_perf_status?/bluebee_perf_stop?。保留完整CAPACITY_*、CONTROL_PLAN_*、CONTROL_BURST和CONTROL_TIME日志。
 
-v2使用长度字段及覆盖完整扩展的应用CRC；旧v1和性能协议不变。命令与格式详见[N4方案第6节](../doc/n4_capacity_experiment_plan.md#6-板端接口与冻结格式2026-11-12)。板端与SDK已同步并完成本地检查，用户负责构建上板；主机v2接收与单轮联合分析已适配，命令见N4方案第7节；须使用更新后的脚本验收容量包。
+v2使用长度字段及覆盖完整扩展的应用CRC；旧v1和性能协议不变。命令与格式详见[N4方案第6节](../doc/plans/n4_capacity_experiment_plan.md#6-板端接口与冻结格式2026-11-12)。板端与SDK已同步并完成本地检查，用户负责构建上板；主机v2接收与单轮联合分析已适配，命令见N4方案第7节；须使用更新后的脚本验收容量包。

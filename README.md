@@ -6,7 +6,7 @@
 
 新代码按功能迭代提交，消息格式见[提交约定](CONTRIBUTING.md)。
 
-当前进度与后续优先级以 2026-11-13 更新的[下一阶段计划](doc/next_stage_plan.md)为准。协议字段见[v1 负载草案](doc/control_sync_packet_v1_draft.md)，已有步骤见[多任务实验方案](doc/multi_task_control_experiment_plan.md)和[功能完成路线](doc/control_sync_function_plan.md)，相关先例见[设计研究笔记](doc/sync_control_payload_research.md)。较早文档中的待办状态需结合最新计划与实测报告阅读。
+文档统一从[文档导航](doc/README.md)进入，当前优先级见[论文决策与实验清单](doc/paper/current_research_plan.md)。按“确定论文目标 → 完成必要实现与实验 → 冻结版本并重复 → 撰写论文”推进。协议字段见[v1 负载草案](doc/reference/control_sync_packet_v1_draft.md)，查新结论须结合[证据审查](doc/paper/novelty_ab_claims_review_20261118.md)阅读。
 
 常用工作流有两类：
 
@@ -19,26 +19,15 @@
 
 ## 当前证据与下一阶段
 
-[1703–1705](doc/holdover_1703_1705_review.md)已有三轮独立录制上的离线相对时间保持复核；[1801](python/experiments/20261109_run1801/notes.md)在同频诊断模式下实现同槽双端有效 300/300、三任务联合解析 3/3，并完成[立即处理软件基线](python/experiments/20261109_run1801/analyses/immediate_baseline/report.md)。1801 的实时定时软件处理仍为 0/3，假设 1 ms 参考界的回放结果不能当作实测同步精度。[1906](python/experiments/20261109_run1906/analyses/std_ble_flow_20261109_182005_0f42d1/flow.summary.json)完成 9/10 个实际 BLE 跨信道跟随事件，缺失 DID 2 的 primary；该轮没有同时验证 IEEE 接收，也未校准空口 AuxPtr 时间。
+截至 2026-11-18，N1/N2 已有跨信道双端与分别发送对照记录；N3 有固定频点时间参考记录，2204 缺同期 IEEE 数据，需用新 Run ID 同轮补采；N4 已有[容量和两层公平对照首轮结果](doc/results/n4_two_layer_results.md)，等预算重发对照待完成。
 
-下一阶段先补齐下面的证据，再对选定主要配置增加独立重复。详细交付物与统计规则见[完整计划](doc/next_stage_plan.md)。
+N5 已完成[2509–2517 独立重复](doc/results/n5_independent_repeat_results.md)和[任务规则回放消融](doc/results/n5_task_rule_ablation_results.md)。[2518–2520 均一 K 试采](doc/results/n5_uniform_k_pilot_results.md)跑通 K=5/3/1，尚不足以确认一般可靠性增益。最终论文范围与必要实验清单待确定；后续先完成所需软件功能并各做一次实测，再冻结版本开展参数化重复。具体方案与结果由[文档导航](doc/README.md)统一关联，早期阶段安排保留在[历史总计划](doc/archive/next_stage_plan.md)。
 
-Run 2001 已完成 N1 首轮功能验证：同槽双端有效 93/120、带 BLE 跟随证据的联合任务解析 3/3；这不表示可靠性或同步精度验收完成。[N2](doc/n2_separate_transmission_experiment_plan.md) 的 2101–2103 首轮已完成：固定接收两组均 120/120、任务 3/3；共包突发数减少 1/3，有效波形预算相等；2103 跟随 75/120、任务 3/3。功率配置仍未知，严格空口时序与同步精度未测。N3 的2203已完成缓存前移后300槽固定频点双端初验（联合300/300），2204完成跟随能力审计（91/120、BLE三命令恢复），其同轮IEEE数据缺项移至后续补采与重复阶段。N4容量扫描及两层公平对照已有首轮结果，见[两层结果报告](doc/n4_two_layer_results.md)：共包成本收益取决于负载，尚不构成普遍可靠性结论。当前进入 [N5详细方案](doc/n5_mechanism_experiment_plan.md)，先补齐主机在线失更/恢复与探测留出，再开展2501–2503基准和双方向单侧缺失实验；板端复用v1 plan命令。N4等预算重发对照、2204同轮IEEE补采及主要配置重复仍待完成。各阶段先完成有效初验，主要配置的独立重复后续集中开展。已有 [N1 执行方案](doc/n1_cross_channel_experiment_plan.md)继续作为复测入口。
-
-| 顺序 | 工作包 | 要回答的问题 |
-| --- | --- | --- |
-| N1 | 同轮跨信道双端多任务：一块 HackRF 做 BLE 跟随，另一块固定 IEEE ch12 | 跟随、独立双协议解码、时间更新和多任务解析能否在最终配置下同时成立？ |
-| N2 | 实现分别发送基线，并与共包立即处理、共包时间模型处理对照 | 在相同任务、截止时间及明确重发策略下，共包的联合解析率、RF 成本和完成时延有何收益或代价？ |
-| N3 | 拆分板端 DMA 准备/提交/返回取时，建立独立时间参考与误差预算 | 记录偏差与实际发送偏差如何区分，能支持哪一层同步精度结论？取时诊断可与 N1/N2 并行 |
-| N4/N5 | 容量与 legacy 对照、有效包数/更新间隔/失更/提前量/K 次重复等消融 | exadv 容量具体解决什么约束，效果来自哪些机制，哪些条件会失败？ |
-
-计划进一步要求四项证据：最终跨信道发送与实际跟随接收条件下的相对时间保持、真实单侧漏收后的在线恢复、逐槽发送延迟与保持残差的归因、N1 跟随失败的阶段分解。2001 的 27 个 IEEE-only 槽是真实解码缺失，但尚无 BLE 在线保持/恢复精度；1703–1705 的同频离线掩码结果不能替代这些交付。跨信道固定接收 IQ 的相对预测为当前必测项；实际跟随时间精度取决于采样连续性是否可核验，无法核验时保留为未测。计划不要求新增硬件测量设备，具体观测范围、实验分层与未知原因处理见[下一阶段计划](doc/next_stage_plan.md)。
-
-没有可审计的共同参考误差界时，论文结论限定为共包时间信息分发、相对时间保持及软件调度原型。主机回调时差、拟合残差及 `auxptr_dma_window_miss` 软件代理计数不能直接代替实际空口或跨设备同步精度。成本计入全部 primary、secondary、时间更新和重发，任务失败保留在分母内。商用芯片、执行器和更多独立节点作为扩展，创新性与性能收益仍需查新和对照支撑。
+已有 N1 跟随与 N5 固定频点在线机制属于分项证据，不能合称跟随模式下已验证完整在线时间机制。没有可审计的共同参考误差界时，结论限定为共包时间信息分发、相对时间保持及软件调度原型。主机回调时差、拟合残差及 DMA 软件代理计数不能直接代替实际空口或跨设备同步精度。成本计入全部 primary、secondary、时间更新和重发，失败任务保留在分母内。
 
 ## 接收结果与实验归档
 
-实验统一存放在 [`python/experiments/`](python/experiments/)。先看[实验索引](python/experiments/index.md)，进入某一轮的 `report.md`，再按需查看两侧接收报告、结构化数据和人工记录。
+实验统一存放在 [`python/experiments/`](python/experiments)。先看[实验索引](python/experiments/index.md)，进入某一轮的 `report.md`，再按需查看两侧接收报告、结构化数据和人工记录。
 
 ```text
 python/experiments/

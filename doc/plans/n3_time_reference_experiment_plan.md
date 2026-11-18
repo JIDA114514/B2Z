@@ -1,6 +1,8 @@
 # N3：板端取时、跨信道相对时间保持与误差归因实验方案
 
-制定日期：2026-11-11。依据 [next_stage_plan.md](next_stage_plan.md) 的 N3、N3-A、N3-B；承接 N2 的 2101–2103 首轮功能与成本初验。本文件是待执行计划，不是新增实验结果。先完成软件与一次有效初验，主要配置独立重复随后集中开展。
+> 整理标注（2026-11-18）：本文件保留实验设计、执行命令与预登记约束；阶段状态见[文档导航](../README.md)，已使用的 Run ID 不应直接复用。
+
+制定日期：2026-11-11。依据 [next_stage_plan.md](../archive/next_stage_plan.md) 的 N3、N3-A、N3-B；承接 N2 的 2101–2103 首轮功能与成本初验。本文件是待执行计划，不是新增实验结果。先完成软件与一次有效初验，主要配置独立重复随后集中开展。
 
 ## 1. 本阶段要回答的问题
 
@@ -287,8 +289,8 @@ python3 python/control_match/n3_analyze.py \
 
 已对 2101 运行并保存：
 
-- [探索报告](../python/experiments/20261110_run2101/analyses/n3_exploratory_20261111/n3.report.md)：两侧各120条混合任务记录；6个探测点。仅用于工具适配，不能推断尾部分位数或选取最优策略。
-- [2103 跟随能力审计](../python/experiments/20261110_run2103/analyses/n3_follow_audit_20261111/follow.audit.md)：75次成功、32槽无有效primary、13槽primary后缺失；旧日志细分阶段为未知，时间轴未验证。
+- [探索报告](../../python/experiments/20261110_run2101/analyses/n3_exploratory_20261111/n3.report.md)：两侧各120条混合任务记录；6个探测点。仅用于工具适配，不能推断尾部分位数或选取最优策略。
+- [2103 跟随能力审计](../../python/experiments/20261110_run2103/analyses/n3_follow_audit_20261111/follow.audit.md)：75次成功、32槽无有效primary、13槽primary后缺失；旧日志细分阶段为未知，时间轴未验证。
 
 2101 没有 N3 新取时，使用显式 `--allow-legacy-timing`，输出 `legacy_missing_stages`，保留已有逐槽 late，不用全轮均值回填。复核命令如下；已有输出不可覆盖，重跑时换一个分析目录：
 

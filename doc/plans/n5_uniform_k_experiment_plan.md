@@ -1,8 +1,10 @@
 # N5 均一 K 物理对照实验计划
 
-制定于 2026-11-17。承接 [N5 独立重复结果](n5_independent_repeat_results.md)、[任务规则消融](n5_task_rule_ablation_execution_plan.md)及 [N4 公平对照](n4_fair_comparison_plan.md)。2509–2517 已证明单侧失更与重获路径可跨轮观察；本计划不再要求补采这组机制实验。原轮的实际操作偏差保留在记录中，不用于剔除结果。
+> 整理标注（2026-11-18）：本文件保留实验设计、执行命令与预登记约束；阶段状态见[文档导航](../README.md)，已使用的 Run ID 不应直接复用。 已有结果见[均一 K 试采结果](../results/n5_uniform_k_pilot_results.md)。
 
-执行记录：2518–2520 实际分别采用 K=5/3/1，而非下文原定的三轮 K=5 条件搜索；其结果作为探索性首组试采，见[试采核查](n5_uniform_k_pilot_results.md)。本计划原有预登记内容保留，确认性轮次仍需在固定无线条件下交替重复。
+制定于 2026-11-17。承接 [N5 独立重复结果](../results/n5_independent_repeat_results.md)、[任务规则消融](n5_task_rule_ablation_execution_plan.md)及 [N4 公平对照](n4_fair_comparison_plan.md)。2509–2517 已证明单侧失更与重获路径可跨轮观察；本计划不再要求补采这组机制实验。原轮的实际操作偏差保留在记录中，不用于剔除结果。
+
+执行记录：2518–2520 实际分别采用 K=5/3/1，而非下文原定的三轮 K=5 条件搜索；其结果作为探索性首组试采，见[试采核查](../results/n5_uniform_k_pilot_results.md)。本计划原有预登记内容保留，确认性轮次仍需在固定无线条件下交替重复。
 
 ## 1. 目标与可识别的结论
 

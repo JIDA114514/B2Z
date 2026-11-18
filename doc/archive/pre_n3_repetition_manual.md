@@ -1,7 +1,9 @@
 # N3 前已完成实验的必要重复：实验操作手册
 
+> 整理标注（2026-11-18）：历史方案，保留原有设计与阶段待办供追溯；正文中的“当前”“下一步”指制定时状态。最新入口见[文档导航](../README.md)，后续优先级见[当前决策清单](../paper/current_research_plan.md)。
+
 版本：2026-11-11  
-适用范围：`doc/next_stage_plan.md` 中 **N3 之前**的 N1、N2 已完成实验的必要重复。  
+适用范围：`doc/archive/next_stage_plan.md` 中 **N3 之前**的 N1、N2 已完成实验的必要重复。  
 不包含：N3-A/N3-B（2201/2203）、N4、N5、绝对同步/硬件校准、商用设备、多节点、执行器。
 
 > 本手册只回答一件事：**哪些已完成的 N3 前实验必须补重复，以及每一轮怎么用现有串口命令和脚本再跑一遍。**  
@@ -654,10 +656,10 @@ dma_timeout = 0
 
 ## 附录 B：关键命令来源
 
-- N1 任务清单与接收命令：`doc/n1_cross_channel_experiment_plan.md`
-- N2 任务清单、2101/2102/2103 命令、分析与比较：`doc/n2_separate_transmission_experiment_plan.md`
-- 任务格式与字节预算：`doc/control_sync_packet_v1_draft.md`
-- 当前阶段边界：`doc/next_stage_plan.md`
+- N1 任务清单与接收命令：`doc/plans/n1_cross_channel_experiment_plan.md`
+- N2 任务清单、2101/2102/2103 命令、分析与比较：`doc/plans/n2_separate_transmission_experiment_plan.md`
+- 任务格式与字节预算：`doc/reference/control_sync_packet_v1_draft.md`
+- 当前阶段边界：`doc/archive/next_stage_plan.md`
 
 ---
 

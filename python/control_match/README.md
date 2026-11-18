@@ -47,7 +47,7 @@ python3 python/control_match/sync_replay.py \
 
 结果写入 `sync.report.md`、`sync.summary.json`、`sync.sweep.csv` 和 `sync.validation.csv`，列出实际训练时隙、训练跨度、最近更新时隙、验证样本数及误差。所有配置使用同一批更晚的共同验证包。该误差是两个独立模型对共同 RF 事件的时间估计差，固定的包内标记和接收路径偏差尚未独立校准；不表示绝对同步精度或执行时差。单轮离线屏蔽包是回放实验，不能充当新的物理独立重复。
 
-1703/1704 的 300 槽固定验证集、不同包训练和周期更新由 `holdover_analyze.py` 处理。它接受两侧显式逐包路径、Run ID 和新输出目录，生成 32 种策略的汇总、逐验证槽 CSV 与采样间隔质量表；命令示例与解释见[时间保持实验方案](../../doc/independent_sync_holdover_experiment_plan.md)。验证包只用于打分，不参与模型拟合。
+1703/1704 的 300 槽固定验证集、不同包训练和周期更新由 `holdover_analyze.py` 处理。它接受两侧显式逐包路径、Run ID 和新输出目录，生成 32 种策略的汇总、逐验证槽 CSV 与采样间隔质量表；命令示例与解释见[时间保持实验方案](../../doc/archive/independent_sync_holdover_experiment_plan.md)。验证包只用于打分，不参与模型拟合。
 
 ## 多任务板端计划匹配
 
@@ -59,7 +59,7 @@ python3 python/control_match/plan_analyze.py \
   --run-id 1601 --analysis-id plan_match
 ```
 
-若同侧有多份录制，指定 `--ble-packets` 与 `--zigbee-packets`。两侧可从不同重发槽恢复同一任务；同槽共同有效数与逐任务联合解析数分别报告。该脚本不从两台独立 IQ 的样本索引推算执行时差。下一轮连续时间更新与三任务实验见[方案](../../doc/integrated_sync_control_experiment_plan.md)。
+若同侧有多份录制，指定 `--ble-packets` 与 `--zigbee-packets`。两侧可从不同重发槽恢复同一任务；同槽共同有效数与逐任务联合解析数分别报告。该脚本不从两台独立 IQ 的样本索引推算执行时差。下一轮连续时间更新与三任务实验见[方案](../../doc/archive/integrated_sync_control_experiment_plan.md)。
 
 ## 单侧时间与软件命令模块
 
@@ -76,7 +76,7 @@ python3 python/exadv_rx/receive.py --run-id 1101 --control-target-id 1
 python3 python/zigbee_rx/control_receive.py --run-id 1101 --command-id 43 --control-target-id 2
 ```
 
-每个接收目录增加 `rx.control.events.jsonl`、`rx.control.tasks.csv`、`rx.control.summary.json` 和 `rx.control.report.md`。实时模式的事件另带 `host_monotonic_ns`，它包含解码和软件处理时延，不能作为空口时间戳。默认未提供参考误差上界，定时命令会被拒绝；仅做功能演示时可在**两侧各自的命令**加 `--control-assumed-reference-bound-ms 1`，结果会标记此上界未经校准。`--control-target-id` 可重复指定多个本机目标；`--control-accept-broadcast` 启用广播目标。`--control-sender-id` 只是本侧配置的来源标签，v1 负载并不携带可认证的发送者身份。该功能仍只有软件状态和软件事件，不表示物理控制或独立设备同步精度。板端多任务计划的验证步骤见[实验方案](../../doc/multi_task_control_experiment_plan.md)。
+每个接收目录增加 `rx.control.events.jsonl`、`rx.control.tasks.csv`、`rx.control.summary.json` 和 `rx.control.report.md`。实时模式的事件另带 `host_monotonic_ns`，它包含解码和软件处理时延，不能作为空口时间戳。默认未提供参考误差上界，定时命令会被拒绝；仅做功能演示时可在**两侧各自的命令**加 `--control-assumed-reference-bound-ms 1`，结果会标记此上界未经校准。`--control-target-id` 可重复指定多个本机目标；`--control-accept-broadcast` 启用广播目标。`--control-sender-id` 只是本侧配置的来源标签，v1 负载并不携带可认证的发送者身份。该功能仍只有软件状态和软件事件，不表示物理控制或独立设备同步精度。板端多任务计划的验证步骤见[实验方案](../../doc/archive/multi_task_control_experiment_plan.md)。
 
 例如在项目根目录回放一份已重新解码的 BLE 逐包记录：
 
@@ -110,14 +110,14 @@ python3 python/control_match/replay_engine.py \
 
 ## N1 跨信道跟随记录联合分析
 
-`plan_analyze.py --ble-flow <flow.events.jsonl>` 可替代 `--ble-packets`，将 std_ble 实际跟随证据与独立 IEEE 包流、完整板端计划日志进行联合分析。两选项互斥；默认不会自动挑选 flow，避免混淆多轮采集。完整指令见 [N1 执行方案](../../doc/n1_cross_channel_experiment_plan.md)。
+`plan_analyze.py --ble-flow <flow.events.jsonl>` 可替代 `--ble-packets`，将 std_ble 实际跟随证据与独立 IEEE 包流、完整板端计划日志进行联合分析。两选项互斥；默认不会自动挑选 flow，避免混淆多轮采集。完整指令见 [N1 执行方案](../../doc/plans/n1_cross_channel_experiment_plan.md)。
 
 新记录的 BLE CRC 与应用字段重新校验；旧格式只能保留验证器的 CRC 成功断言，缺少 UTC 录制窗口时拒绝跨端联合验收。UTC 窗口只用于检查两侧录制是否重叠。报告 `b2z_plan_match_v2` 增加 `ble_follow` 比率、缺失槽、本侧任务参数，以及逐槽 `ble_primary_valid`、`ble_followed`、`followed_joint_valid`；没有软件状态机观测的处理字段为 `null`、状态为 `not_measured`。不生成虚构的样本索引或同步执行精度。
 
 
 ## N2 分别发送与成本分析
 
-`plan_analyze.py` 支持板端 `rf_mode=2`，校验 52 B BLE-only 与 224 B 共包格式，独立统计 BLE/IEEE DMA 完成。新增 `plan.bursts.csv` 和 `waveform_cost`，成本包含所有时间更新和重发；旧日志无突发清单时为未测。`compare_n2.py` 对两个固定频点实验核对任务、接收和 RF 配置，输出 Markdown/JSON；完整命令见 [N2 第 7 节](../../doc/n2_separate_transmission_experiment_plan.md#7-已实现接口与首轮执行指令2026-11-10)。
+`plan_analyze.py` 支持板端 `rf_mode=2`，校验 52 B BLE-only 与 224 B 共包格式，独立统计 BLE/IEEE DMA 完成。新增 `plan.bursts.csv` 和 `waveform_cost`，成本包含所有时间更新和重发；旧日志无突发清单时为未测。`compare_n2.py` 对两个固定频点实验核对任务、接收和 RF 配置，输出 Markdown/JSON；完整命令见 [N2 第 7 节](../../doc/plans/n2_separate_transmission_experiment_plan.md#7-已实现接口与首轮执行指令2026-11-10)。
 
 分别发送两侧不共享 RF 起点。接收时指定 `--control-layout separate`，本阶段仅支持有效解析及 immediate 软件回放，禁止套用 joint scheduled 时间模型。DMA 调用包围时刻、完成时刻和波形预算均不冒充实测 RF 时间。
 
@@ -125,17 +125,17 @@ python3 python/control_match/replay_engine.py \
 
 正式入口 `n3_analyze.py` 使用显式 JSON 配置核对计划、混合命令、训练与留出探测槽，检查历史包解码可用时刻；输出单侧预测、双侧相对估计差、更新年龄、N3板端阶段、关联CSV及图表。旧 `holdover_analyze.py` 默认行为保留，新增 `--config --experiment-dir` 可委托新版流程。新配置位于 `configs/n3_2201.json`，历史探索配置单列。
 
-`n3_follow_analyze.py` 审计 std_ble 新旧跟随事件，细分已知阶段与未知项。主机软件时刻和解调字节进度不等于RF时间或连续IQ，当前始终标记时间轴未验证。完整执行指令和输出说明见 [N3第11节](../../doc/n3_time_reference_experiment_plan.md#11-主机实现与最终分析命令2026-11-11)。
+`n3_follow_analyze.py` 审计 std_ble 新旧跟随事件，细分已知阶段与未知项。主机软件时刻和解调字节进度不等于RF时间或连续IQ，当前始终标记时间轴未验证。完整执行指令和输出说明见 [N3第11节](../../doc/plans/n3_time_reference_experiment_plan.md#11-主机实现与最终分析命令2026-11-11)。
 
 ## N4 v2 容量包
 
-共享解析器支持35 B v1与36+n B v2；v2独立校验长度、应用CRC及本侧扩展字节。plan_analyze.py自动核对CAPACITY_CONFIG/SLOT并输出单轮字节预算、联合解析和波形成本。两侧采集及分析命令见[N4第7节](../../doc/n4_capacity_experiment_plan.md#7-主机接收与单轮联合分析2026-11-12)。容量记录不是已实现的扩展数据执行协议；实时/立即处理返回capacity_decode_only，旧N3工具拒绝v2固定偏移假设。
+共享解析器支持35 B v1与36+n B v2；v2独立校验长度、应用CRC及本侧扩展字节。plan_analyze.py自动核对CAPACITY_CONFIG/SLOT并输出单轮字节预算、联合解析和波形成本。两侧采集及分析命令见[N4第7节](../../doc/plans/n4_capacity_experiment_plan.md#7-主机接收与单轮联合分析2026-11-12)。容量记录不是已实现的扩展数据执行协议；实时/立即处理返回capacity_decode_only，旧N3工具拒绝v2固定偏移假设。
 
 
 N5 机制实验使用 `n5_config.py` 生成预登记 JSON，两侧接收器通过 `--n5-config` 启用
 候选训练、固定探测留出、采样进度失更检测及重获状态；`n5_analyze.py` 输出全任务、
 四象限、缺失/恢复、现场探测和 N3 策略回放。具体命令与测量限制见
-[实验方案](../../doc/n5_mechanism_experiment_plan.md)。N5 默认未知参考界，tracking 不授权定时处理。
+[实验方案](../../doc/plans/n5_mechanism_experiment_plan.md)。N5 默认未知参考界，tracking 不授权定时处理。
 测试使用合成记录，不构成独立双接收端无线实验或同步精度证据。
 
 N5 任务规则消融入口 `n5_task_ablate.py` 对两侧保存的逐包轨迹独立回放 K=1/3/全部、
@@ -143,4 +143,4 @@ N5 任务规则消融入口 `n5_task_ablate.py` 对两侧保存的逐包轨迹�
 使用 `--experiment-dir --config --run-id --output-dir`；输出目录必须尚不存在。
 结果包括 `manifest.json`、`conditions.csv`、`tasks.csv`、`events.jsonl`、
 `rule_cases.csv` 和 `report.md`。完整命令、口径及归档要求见
-[任务规则消融执行方案](../../doc/n5_task_rule_ablation_execution_plan.md)。
+[任务规则消融执行方案](../../doc/plans/n5_task_rule_ablation_execution_plan.md)。

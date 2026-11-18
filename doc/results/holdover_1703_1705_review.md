@@ -14,4 +14,4 @@
 
 三轮方向一致：在本组受控记录中，短跨度两点估频后长期失更会放大相对估计差；历史点增多或周期更新可降低误差。这是**三个独立物理录制轮次上的离线时间模型复核**，不是实际丢包后的在线成功率。1705 两侧各有一个相邻间隔相对名义周期偏差略超 1 ms，未见超过 5 ms 的间隔。三轮均无实测 RF 起点、共享采集触发或执行器动作。因此现有结果支持相对时间参考保持研究，不给出绝对时钟同步误差、同步执行精度或严格尾部误差界。
 
-逐轮原始口径见 [1703 报告](../python/experiments/20261109_run1703/analyses/holdover_preregistered_v2/report.md)、[1704 报告](../python/experiments/20261109_run1704/analyses/holdover_preregistered_v1/report.md)与 [1705 报告](../python/experiments/20261109_run1705/analyses/holdover_preregistered_v1/report.md)。混合时间更新与三任务控制的后续功能结果见 [1801 实验记录](../python/experiments/20261109_run1801/notes.md)。
+逐轮原始口径见 [1703 报告](../../python/experiments/20261109_run1703/analyses/holdover_preregistered_v2/report.md)、[1704 报告](../../python/experiments/20261109_run1704/analyses/holdover_preregistered_v1/report.md)与 [1705 报告](../../python/experiments/20261109_run1705/analyses/holdover_preregistered_v1/report.md)。混合时间更新与三任务控制的后续功能结果见 [1801 实验记录](../../python/experiments/20261109_run1801/notes.md)。

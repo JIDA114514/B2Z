@@ -1,10 +1,12 @@
 # N5：时间保持机制、真实失更与控制失败行为实验方案
 
-制定日期：2026-11-13。依据 [下一阶段计划](next_stage_plan.md)，承接 N3 的 2203/2204 和 [N4 两层结果](n4_two_layer_results.md)。这是待实现、待执行的方案，不是实验结果。先取得每项一次有效功能证据，主要条件的三轮独立重复随后集中进行。
+> 整理标注（2026-11-18）：本文件保留实验设计、执行命令与预登记约束；阶段状态见[文档导航](../README.md)，已使用的 Run ID 不应直接复用。 已有结果见[N5 独立重复结果](../results/n5_independent_repeat_results.md)。
 
-2504/2507/2508 首轮结果之后的三条件独立重复矩阵及实际采集命令见 [N5 独立重复实验方案](n5_independent_repeat_experiment_plan.md)；已完成的任务规则回放见 [首轮消融结果](n5_task_rule_ablation_results.md)。
+制定日期：2026-11-13。依据 [下一阶段计划](../archive/next_stage_plan.md)，承接 N3 的 2203/2204 和 [N4 两层结果](../results/n4_two_layer_results.md)。这是待实现、待执行的方案，不是实验结果。先取得每项一次有效功能证据，主要条件的三轮独立重复随后集中进行。
 
-接收软件的结构问题、渐进式优化顺序及回归要求另见 [接收脚本架构评估与优化方案](receiver_architecture_review.md)（2026-11-16，待实施；不替代本方案的无线实验验收）。
+2504/2507/2508 首轮结果之后的三条件独立重复矩阵及实际采集命令见 [N5 独立重复实验方案](n5_independent_repeat_experiment_plan.md)；已完成的任务规则回放见 [首轮消融结果](../results/n5_task_rule_ablation_results.md)。
+
+接收软件的结构问题、渐进式优化顺序及回归要求另见 [接收脚本架构评估与优化方案](../reference/receiver_architecture_review.md)（2026-11-16，待实施；不替代本方案的无线实验验收）。
 
 ## 1. 要回答的问题与结论边界
 

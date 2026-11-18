@@ -1,6 +1,8 @@
 # N5 下一步：单侧失更与基准的独立重复实验方案
 
-制定于 2026-11-16。依据 [N5 原方案](n5_mechanism_experiment_plan.md)、[2504/2507/2508 首轮现场结果](n5_task_rule_ablation_results.md)和[下一阶段总计划](next_stage_plan.md)。本方案只安排当前设备和现有板端命令即可完成的下一组物理实验；以下为**预定采集**，不是已取得的结果。
+> 整理标注（2026-11-18）：本文件保留实验设计、执行命令与预登记约束；阶段状态见[文档导航](../README.md)，已使用的 Run ID 不应直接复用。 已有结果见[N5 独立重复结果](../results/n5_independent_repeat_results.md)。
+
+制定于 2026-11-16。依据 [N5 原方案](n5_mechanism_experiment_plan.md)、[2504/2507/2508 首轮现场结果](../results/n5_task_rule_ablation_results.md)和[下一阶段总计划](../archive/next_stage_plan.md)。本方案只安排当前设备和现有板端命令即可完成的下一组物理实验；以下为**预定采集**，不是已取得的结果。
 
 ## 1. 问题、范围和先后顺序
 

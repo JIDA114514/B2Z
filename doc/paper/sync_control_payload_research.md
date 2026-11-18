@@ -1,11 +1,13 @@
 # 共包控制与同步负载：既有方案调研
 
+> 整理标注（2026-11-18）：早期设计研究笔记；实现与实测状态以[文档导航](../README.md)及对应结果为准。
+
 资料核对：2026-10-30。本文整理**原始论文、标准和厂商实例**中可借鉴的机制，供单个 `AUX_ADV_IND` 中 BLE/BlueBee 双协议控制负载设计使用。它是候选方案研究笔记，不是共包协议定义、系统性查新结论或同步性能实测。
 
 ## 1. 本项目现状与问题边界
 
-- [现有同 IQ 验证](../python/sync_validation/README.md)只用旧性能帧的 Run ID/Sequence 将独立恢复的 BLE、802.15.4 结果关联；旧帧没有 BLE 独立控制命令或同步字段。它从已解码 PDU 计算包内位置补偿，当前旧布局为 `216 µs`，不是今后任意布局的常数。该结果不能证明两块 HackRF 的时钟同步。
-- [BLE 接收器说明](../python/exadv_rx/README.md)明确固定 secondary 接收和同频诊断尚非完整 AuxPtr 跟随；旧生成器的 Aux PHY 值也需按规范修正和重新验证。即使收到 secondary，也不能以此推出跨信道 exadv 兼容。
+- [现有同 IQ 验证](../../python/sync_validation/README.md)只用旧性能帧的 Run ID/Sequence 将独立恢复的 BLE、802.15.4 结果关联；旧帧没有 BLE 独立控制命令或同步字段。它从已解码 PDU 计算包内位置补偿，当前旧布局为 `216 µs`，不是今后任意布局的常数。该结果不能证明两块 HackRF 的时钟同步。
+- [BLE 接收器说明](../../python/exadv_rx/README.md)明确固定 secondary 接收和同频诊断尚非完整 AuxPtr 跟随；旧生成器的 Aux PHY 值也需按规范修正和重新验证。即使收到 secondary，也不能以此推出跨信道 exadv 兼容。
 - 当前无线发送端只有一块 SDR、接收端是两块 HackRF，暂无共享触发或时钟、商用执行器及回传链路。后文的“同步执行”只在测得执行事件后才能使用；现阶段可设计并验证的是时间字段恢复、包参考点估计、软件命令解析和相应的误差边界。
 
 ## 2. 文献与业界方案
@@ -18,7 +20,7 @@
 | [BlueSync，IEEE IoT Journal，2022](https://ieeexplore.ieee.org/document/9555832/) | 研究 BLE 非连接广播的时间同步、漂移补偿，以及同步误差与能耗的权衡。 | 周期广播、时钟校正及节能本身已具备期刊先例；本项目应把贡献限定到双协议共包命令与共同时间语义，并提供独立双端证据。 |
 | [Crocs，Yu 等，EWSN 2018](https://tns.thss.tsinghua.edu.cn/sun/members/XiuzhenGuo/Crocs_confer.pdf) | 面向 Wi-Fi/ZigBee，把跨技术可识别的时间对齐信号与时间戳传输分开，再估计时钟偏移和频率差。 | 跨技术同步及“先捕获共同事件、再解释时间值”已有直接先例；其 Wi-Fi 信标、跨技术编码和精度不能直接搬到 BLE/BlueBee 的单 secondary。 |
 | [X-Sync，Hofmann 等，2021](https://www.carloalbertoboano.com/documents/hofmann21xsync.pdf) | 在现成 BLE 与 IEEE 802.15.4 设备上用跨技术信号传时序信息，通过重复 RSS 采样、帧起点搜索和时钟偏差估计实现跨技术同步；论文支持双向信息交换。 | 这是与本项目协议组合最接近的已知同步工作，不能把 BLE/802.15.4 跨技术校时本身当作新颖性。需要比较其额外信号/双向条件与本项目“同一个 `AUX_ADV_IND` 同时携带两侧控制和共同时间语义”的成本及能力；其精度数字不是本项目目标保证。 |
-| [BlueBee，Jiang 等，SenSys 2017](../python/ctc_sim/bluebee/BlueBee.pdf) | 将可被 ZigBee 接收的 PHY 帧映射到 BLE 负载，验证跨协议接收和应用控制等先例。 | 双协议通信与控制能力已有基础；本项目需要证明的是在 exadv 的单个 secondary 中共置两侧命令与时间语义，以及相对分别发送等基线的实测收益。原论文的 BLE 4.2 长帧实验不能视为 exadv AuxPtr 跟随验证。 |
+| [BlueBee，Jiang 等，SenSys 2017](../../python/ctc_sim/bluebee/BlueBee.pdf) | 将可被 ZigBee 接收的 PHY 帧映射到 BLE 负载，验证跨协议接收和应用控制等先例。 | 双协议通信与控制能力已有基础；本项目需要证明的是在 exadv 的单个 secondary 中共置两侧命令与时间语义，以及相对分别发送等基线的实测收益。原论文的 BLE 4.2 长帧实验不能视为 exadv AuxPtr 跟随验证。 |
 | [TPSN，Ganeriwal 等，SenSys 2003](https://escholarship.org/uc/item/5mh7m01j) | 节点间双向消息交换并估计时钟偏移及传输延迟，网络通过层级同步。 | 可作为双向校准/反馈扩展的对照，不应把单向广播误称为已测得单向传播时延。 |
 | [Glossy，Ferrari 等，IPSN 2011](https://nes-lab.org/wordpress/wp-content/uploads/2022/02/ferrari11glossy.pdf) | 严格时序的接收后快速重发、转发计数与槽长用于洪泛及参考时刻推算；论文测得的可靠性/精度依赖并发发送的硬件时序。 | 可以借鉴“重复提升收到至少一次的机会”及“转发/尝试次数和 RF 成本均要计数”。本项目一台发送 SDR 的 K 次重发**不是 Glossy 并发洪泛**，不能引用其性能数值作本系统预期。 |
 | [IEEE 802.15.4 TSCH 的 IETF 最小配置 RFC 8180](https://www.rfc-editor.org/rfc/rfc8180.html)、[RFC 7554](https://www.rfc-editor.org/rfc/rfc7554.html) | 增强信标用于入网时取得 ASN 和时间偏移；长期维持需接触时间源，失去联系则失去同步。守护时间与时钟 ppm 共同决定可容忍的同步间隔；RFC 7554 的 `10 ppm × 100 s = 1 ms` 是说明性例子。 | 负载应标识时间域、参考序号和失去更新后的失效规则；执行提前量/容差必须随测得的参考误差及漂移界限设定。ASN/TSCH 不能直接宣称为当前自定义帧已实现。 |

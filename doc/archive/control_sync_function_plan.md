@@ -1,8 +1,10 @@
 # 共包控制与同步：功能完成路线
 
+> 整理标注（2026-11-18）：历史方案，保留原有设计与阶段待办供追溯；正文中的“当前”“下一步”指制定时状态。最新入口见[文档导航](../README.md)，后续优先级见[当前决策清单](../paper/current_research_plan.md)。
+
 更新：2026-11-04。目标是在连续广播的**同一个 secondary PDU** 内，让 BLE 与 IEEE 802.15.4 两条独立接收链分别取得本侧命令和共同时间语义，并完成粗粒度的软件定时控制。射频接收率优化与可靠性扫描暂缓；功能验收可先使用确定性测试向量、保存的 IQ 和离线回放。功能正确不等于无线可靠、独立设备绝对同步或物理执行器同步。
 
-代码进度：单侧时间与命令处理模块 [`control_engine.py`](../python/control_match/control_engine.py)、[逐包回放入口](../python/control_match/replay_engine.py)及两条实时接收链的 `available_sample`、逐事件 JSONL、逐任务 CSV/JSON/Markdown 已实现。保存的 run 1101 两份独立 IQ 重新解码后，各侧在显式模拟参考界下各形成一次样本时间域软件处理事件，并与单侧回放判决一致；这不是实测执行同步。板端一轮多任务计划已上板并用于 run 1601；[`plan_analyze.py`](../python/control_match/plan_analyze.py) 现可核对完整板端日志与两侧逐任务解码。下一项是[连续时间更新中插入多任务的双端实验](integrated_sync_control_experiment_plan.md)，然后建立公平对照。
+代码进度：单侧时间与命令处理模块 [`control_engine.py`](../../python/control_match/control_engine.py)、[逐包回放入口](../../python/control_match/replay_engine.py)及两条实时接收链的 `available_sample`、逐事件 JSONL、逐任务 CSV/JSON/Markdown 已实现。保存的 run 1101 两份独立 IQ 重新解码后，各侧在显式模拟参考界下各形成一次样本时间域软件处理事件，并与单侧回放判决一致；这不是实测执行同步。板端一轮多任务计划已上板并用于 run 1601；[`plan_analyze.py`](../../python/control_match/plan_analyze.py) 现可核对完整板端日志与两侧逐任务解码。下一项是[连续时间更新中插入多任务的双端实验](integrated_sync_control_experiment_plan.md)，然后建立公平对照。
 
 ## 现状和缺口
 

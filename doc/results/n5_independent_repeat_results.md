@@ -1,6 +1,6 @@
 # N5 独立重复：2509–2517 核查结果
 
-核查日期：2026-11-17。依据 [预登记方案](n5_independent_repeat_experiment_plan.md)，对九轮 `board.board.log`、两侧接收摘要和逐包记录运行 `plan_analyze.py` 与 `n5_analyze.py`，结果保存在各实验目录的 `analyses/n5_repeat_integrity/` 和 `analyses/n5_repeat_mechanism/`。本表中的“任务”仅指联合命令解析，不是实际执行。
+核查日期：2026-11-17。依据 [预登记方案](../plans/n5_independent_repeat_experiment_plan.md)，对九轮 `board.board.log`、两侧接收摘要和逐包记录运行 `plan_analyze.py` 与 `n5_analyze.py`，结果保存在各实验目录的 `analyses/n5_repeat_integrity/` 和 `analyses/n5_repeat_mechanism/`。本表中的“任务”仅指联合命令解析，不是实际执行。
 
 | 条件 | Run | BLE 有效槽 | IEEE 有效槽 | 联合有效槽 | 联合解析任务 | BLE/IEEE 探测覆盖 | 发送期间受影响侧 stale→重获 |
 | --- | ---: | ---: | ---: | ---: | ---: | --- | --- |
@@ -22,4 +22,4 @@
 
 归档限制：各 `notes.md` 的 C 组操作方法行误写为 BLE，条件、预登记配置和逐槽缺失均指向 IEEE；应补正现场元数据。`board.board.log` 有实际 `CONTROL_PLAN_ENTRY/STATS/TASK/SLOT`，但没有清空、添加及启动命令的串口回显；板端固件/bitstream 的可审计标识也未见归档。实验目录中的原始接收记录与本次分析可复查，不能据此推断接收处理从未丢样。所有软件时间参考仍未校准共同基准，`joint_software_processed_tasks=0`，不支持跨设备同步精度或实际执行成功率结论。
 
-**推进决定（2026-11-17）：**用户确认 2511、2515 的操作偏差不影响本组核心目标，即单侧失更、在线 stale 与重获路径的跨轮检出；这组机制覆盖不再补采，可进入[均一 K 物理对照计划](n5_uniform_k_experiment_plan.md)。原 2511、2515 保留并标注实际窗口，不能将其用于严格相同干预时长下的效应量比较。K 的物理收益和执行/同步精度仍需对应独立实验。
+**推进决定（2026-11-17）：**用户确认 2511、2515 的操作偏差不影响本组核心目标，即单侧失更、在线 stale 与重获路径的跨轮检出；这组机制覆盖不再补采，可进入[均一 K 物理对照计划](../plans/n5_uniform_k_experiment_plan.md)。原 2511、2515 保留并标注实际窗口，不能将其用于严格相同干预时长下的效应量比较。K 的物理收益和执行/同步精度仍需对应独立实验。

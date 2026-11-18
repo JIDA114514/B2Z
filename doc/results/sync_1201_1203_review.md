@@ -12,7 +12,7 @@
 | 1202 | 52/100 | 66/100 | 47/100 | 5/100 | 19/100 | 29/100 |
 | 1203 | 44/100 | 71/100 | 43/100 | 1/100 | 28/100 | 28/100 |
 
-三轮描述性合计为 BLE 142/300、IEEE 802.15.4 208/300、同一时隙双方有效 **135/300**。每轮独立报告是主要结果，不将 300 个可能相关的时隙视作 300 次独立重复。此处没有控制命令，故不能报告控制任务成功率或执行成功率。详见各轮的 [1201 匹配报告](../python/experiments/20261104_run1201/analyses/control_match_with_board/control.report.md)、[1202 匹配报告](../python/experiments/20261104_run1202/analyses/control_match_with_board/control.report.md)、[1203 匹配报告](../python/experiments/20261104_run1203/analyses/control_match_with_board/control.report.md)。
+三轮描述性合计为 BLE 142/300、IEEE 802.15.4 208/300、同一时隙双方有效 **135/300**。每轮独立报告是主要结果，不将 300 个可能相关的时隙视作 300 次独立重复。此处没有控制命令，故不能报告控制任务成功率或执行成功率。详见各轮的 [1201 匹配报告](../../python/experiments/20261104_run1201/analyses/control_match_with_board/control.report.md)、[1202 匹配报告](../../python/experiments/20261104_run1202/analyses/control_match_with_board/control.report.md)、[1203 匹配报告](../../python/experiments/20261104_run1203/analyses/control_match_with_board/control.report.md)。
 
 ## 预设 50 ms 容差的相对时间回放
 
@@ -24,7 +24,7 @@
 | 1202 | 0 | 22 | 0.957 ms | 1.396 ms | 1.420 ms | 22/22 |
 | 1203 | 0 | 21 | 0.095 ms | 0.182 ms | 0.191 ms | 21/21 |
 
-三轮留出包合计 **63/63** 满足条件性的 50 ms 相对估计判据。将未被双方共同有效解码的包计入计划时隙后，后 40 个时隙的联合解码且相对估计达标数为 20/40、22/40、21/40；三轮描述性合计 **63/120**。这仍不是同步执行成功率。K=32 在三轮时隙 60 前均训练包不足；K=1–16 的误差不随 K 单调下降，因为训练跨度、最后一次更新的年龄和实际发送时刻波动一起变化。K=16 `disjoint` 配置的 IEEE 802.15.4 最后训练包距第一个验证时隙分别为 1.2 s、2.8 s、0.2 s，不能把逐轮差异单独归因为接收包数。详见 [1201 回放](../python/experiments/20261104_run1201/analyses/sync_replay_20261104T061648_567618Z/sync.report.md)、[1202 回放](../python/experiments/20261104_run1202/analyses/sync_replay_20261104T061722_049379Z/sync.report.md)、[1203 回放](../python/experiments/20261104_run1203/analyses/sync_replay_20261104T061729_905716Z/sync.report.md)。
+三轮留出包合计 **63/63** 满足条件性的 50 ms 相对估计判据。将未被双方共同有效解码的包计入计划时隙后，后 40 个时隙的联合解码且相对估计达标数为 20/40、22/40、21/40；三轮描述性合计 **63/120**。这仍不是同步执行成功率。K=32 在三轮时隙 60 前均训练包不足；K=1–16 的误差不随 K 单调下降，因为训练跨度、最后一次更新的年龄和实际发送时刻波动一起变化。K=16 `disjoint` 配置的 IEEE 802.15.4 最后训练包距第一个验证时隙分别为 1.2 s、2.8 s、0.2 s，不能把逐轮差异单独归因为接收包数。详见 [1201 回放](../../python/experiments/20261104_run1201/analyses/sync_replay_20261104T061648_567618Z/sync.report.md)、[1202 回放](../../python/experiments/20261104_run1202/analyses/sync_replay_20261104T061722_049379Z/sync.report.md)、[1203 回放](../../python/experiments/20261104_run1203/analyses/sync_replay_20261104T061729_905716Z/sync.report.md)。
 
 ## 结论边界
 

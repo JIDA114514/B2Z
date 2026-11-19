@@ -66,10 +66,12 @@ side: BLE=1, IEEE=2
 | --- | --- |
 | `UC1_CONFIG` | 模式、profile、任务/槽数、K、预算/剩余预算、长度、周期、marker 候选值/有效标志、计划原点偏移与填充版本 |
 | `CONTROL_PLAN_ENTRY/TASK/SLOT` | 固定任务语义、尝试覆盖、发送计数；core 静默明确标为 silent=1 |
-| `UC1_STATS` | 计划/已处理/完整成功/失败尝试、静默槽数、全部计划波形预算；完整成功要求各突发 DMA 完成且频率恢复成功 |
+| `UC1_STATS` | `final=0` 为状态快照、`final=1` 为最终统计；计划/已处理/完整成功/失败尝试、静默槽数、全部计划波形预算；完整成功要求各突发 DMA 完成且频率恢复成功 |
 | `COMPACT_SLOT` | 该 slot 的记录与布局长度；UC1 command_id 按真实任务输出，不再假设 slot+1 |
 | `UC1_BURST` | primary/secondary/fragment0..4/ieee 的生成、提交、完成、超时、波形/pad 与软件时间括号 |
 | `UC1_COST_STATS` | 逐突发汇总；历史 `tx_completed` 仍表示 BLE 部分完成，IEEE 与完整尝试另计 |
+
+分析器仅采用终态 UC1_STATS；重复终态必须一致。旧固件没有 final 字段时，按同 run_id 的 CONTROL_PLAN_STATS final=1 上下文识别，兼容 2701 原日志。
 
 计划尝试未进入处理可能来自时隙跳过或提前停止；结合 reached_slots 与逐槽日志判断，不以 processed 数作任务分母。全部失败时运行循环仍可能到达 complete，这只表示计划结束，不表示实验验收成功。
 

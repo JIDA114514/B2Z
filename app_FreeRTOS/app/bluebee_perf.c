@@ -664,8 +664,8 @@ static void b2z_plan_print_stats(const struct bluebee_perf_runtime *snapshot,
         uint32_t planned=snapshot->config.uc1_profile ? 300u :
             snapshot->config.uc1_tasks*snapshot->config.uc1_k;
         uint32_t mode=snapshot->config.capacity==3u ? 3u : snapshot->config.control_rf_mode;
-        console_print("UC1_STATS run_id=%d planned_attempts=%d processed_attempts=%d completed_attempts=%d failed_attempts=%d planned_silent_slots=%d planned_air_us=%d completion=dma_all_bursts_and_restore\r\n",
-            (long)snapshot->config.run_id,(long)planned,
+        console_print("UC1_STATS final=%d run_id=%d planned_attempts=%d processed_attempts=%d completed_attempts=%d failed_attempts=%d planned_silent_slots=%d planned_air_us=%d completion=dma_all_bursts_and_restore\r\n",
+            (long)final,(long)snapshot->config.run_id,(long)planned,
             (long)snapshot->counters.uc1_attempts_processed,
             (long)snapshot->counters.uc1_attempts_completed,
             (long)snapshot->counters.uc1_attempts_failed,

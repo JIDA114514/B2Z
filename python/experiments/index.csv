@@ -97,6 +97,8 @@ experiment_id,run_ids,status,receiver_records,live_records,replay_records,analys
 20261117_run2520,2520,complete,2,2,0,4,20261117_run2520/report.md
 20261117_run2601,2601,complete,2,2,0,0,20261117_run2601/report.md
 20261117_run2602,2602,complete,2,2,0,0,20261117_run2602/report.md
+20261119_run2701,2701,complete,2,2,0,1,20261119_run2701/report.md
+20261119_run2702,2702,complete,2,2,0,0,20261119_run2702/report.md
 history_ble_rx_20261026_150021_003660,,complete,2,1,1,0,history_ble_rx_20261026_150021_003660/report.md
 history_ble_rx_20261026_150507_618440,,complete,2,1,1,0,history_ble_rx_20261026_150507_618440/report.md
 history_ble_rx_20261026_152018_750312,,complete,3,1,2,0,history_ble_rx_20261026_152018_750312/report.md

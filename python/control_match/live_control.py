@@ -45,13 +45,21 @@ class ControlSession:
         self.counts = Counter()
         self.reasons = Counter()
         self.tasks: dict[int, dict] = {}
-        if config.n5_registration:
-            for task in config.n5_registration['tasks']:
-                self.tasks[task['command_id']] = dict(run_id=config.run_id, command_id=task['command_id'],
-                    target_id=task[config.side+'_target'], opcode=task[config.side+'_opcode'],
-                    arg=task[config.side+'_arg'], decoded_packets=0, duplicate_attempts=0,
-                    status='not_decoded', slots=set())
-            self._write([self.engine._event('registration', 0, registration=config.n5_registration)])
+        reg = config.n5_registration or config.uc1_config
+        if reg:
+            for task in reg["tasks"]:
+                self.tasks[task["command_id"]] = dict(
+                    run_id=config.run_id,
+                    command_id=task["command_id"],
+                    target_id=task[config.side + "_target"],
+                    opcode=task[config.side + "_opcode"],
+                    arg=task[config.side + "_arg"],
+                    decoded_packets=0,
+                    duplicate_attempts=0,
+                    status="not_decoded",
+                    slots=set(),
+                )
+            self._write([self.engine._event("registration", 0, registration=reg)])
 
     def _write(self, events: list[dict], packet_no: int | None = None) -> None:
         for event in events:
@@ -112,13 +120,27 @@ class ControlSession:
             row["processed_sample"] = sample
             row["processing_lateness_ms"] = event["lateness_ms"]
 
-    def observe_packet(self, packet: dict) -> None:
+    def observe_packet(
+        self,
+        packet: dict,
+        *,
+        raw_payload: bytes | None = None,
+        timing_eligible_override: bool | None = None,
+    ) -> None:
         """Consume one locally decoded, outer-CRC-valid packet."""
         available = packet["available_sample"]
+        layout = self.config.uc1_config["layout"] if self.config.uc1_config is not None else None
+        override = timing_eligible_override
         try:
-            payload = control_payload(packet, self.config.side)
-            if payload is not None and self.config.side == "ble" and packet.get("pdu_length") == 17 + len(payload):
-                raise ValueError("BLE-only separate layout is unsupported by the joint time model")
+            payload = raw_payload if raw_payload is not None else control_payload(packet, self.config.side, layout=layout)
+            if payload is not None and self.config.side == "ble":
+                if packet.get("kind") == "legacy":
+                    override = False
+                elif packet.get("pdu_length") == 17 + len(payload):
+                    if self.config.uc1_config is not None:
+                        override = False
+                    else:
+                        raise ValueError("BLE-only separate layout is unsupported by the joint time model")
         except (KeyError, TypeError, ValueError) as exc:
             self._write([{"event": "wire_rejected", "side": self.config.side,
                           "sender_id": self.config.sender_id, "run_id": self.config.run_id,
@@ -127,15 +149,22 @@ class ControlSession:
                         packet.get("packet_no"))
             return
         if payload is not None:
-            self._write(self.engine.observe(payload, packet["sample_start"], available),
-                        packet.get("packet_no"))
+            self._write(
+                self.engine.observe(
+                    payload,
+                    packet["sample_start"],
+                    available,
+                    timing_eligible_override=override,
+                ),
+                packet.get("packet_no"),
+            )
 
     def advance(self, sample: int) -> None:
         self._write(self.engine.advance(sample))
 
     def progress(self, sample: int, queue_blocks: int = 0) -> None:
         self.advance(sample)
-        if self.config.n5_registration:
+        if self.engine.registration:
             self._write([self.engine._event('sample_progress', sample, queue_blocks=queue_blocks,
                                           **self.engine.clock.details())])
 
@@ -143,7 +172,7 @@ class ControlSession:
         self._write(self.engine.timeline_event(reason, restart=restart))
 
     def finish(self, receiver_status: str) -> dict:
-        if self.config.n5_registration:
+        if self.engine.registration:
             if receiver_status != 'complete':
                 self.timeline_event('receiver_' + receiver_status)
             self._write([self.engine._event('capture_end', self.engine.current_sample,
@@ -160,6 +189,7 @@ class ControlSession:
             writer.writerows(rows)
         result = {"schema": "b2z_live_control_v1", "side": self.config.side,
                   "n5_registration": self.config.n5_registration,
+                  "uc1_config": self.config.uc1_config,
                   "run_id": self.config.run_id, "sender_id": self.config.sender_id,
                   "receiver_status": receiver_status,
                   "observation_mode": "offline_sample_replay" if self.offline else "live_software",

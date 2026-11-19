@@ -42,12 +42,33 @@ def extract_zigbee(packet: dict) -> bytes | None:
     return data if data[:2] == b"\xb2\x43" or data[:1]==b"\xc1" else None
 
 
-def read_side(path: Path, side: str, run_id: int, command_id: int) -> dict:
+def read_side(
+    path: Path,
+    side: str,
+    run_id: int,
+    command_id: int | None = None,
+    *,
+    layout: dict | None = None,
+    fragment_limits: dict | None = None,
+    allowed_run_id: int | None = None,
+    allowed_senders: set[str] | frozenset[str] | None = None,
+) -> dict:
     try:
         from .compact import BLEControlExtractor
     except ImportError:
         from compact import BLEControlExtractor
-    extract = BLEControlExtractor() if side == "ble" else extract_zigbee
+    if side == "ble":
+        lim = fragment_limits or {}
+        extract = BLEControlExtractor(
+            timeout=lim.get("timeout_s", 2.0),
+            pending_limit=lim.get("pending_limit"),
+            closed_limit=lim.get("closed_limit"),
+            allowed_run_id=allowed_run_id,
+            allowed_senders=allowed_senders,
+            layout=layout,
+        )
+    else:
+        extract = extract_zigbee
     counts = {"rows": 0, "control_candidates": 0, "valid_records": 0,
               "duplicates": 0, "foreign_run_or_command": 0, "invalid": {}}
     by_slot = {}
@@ -60,22 +81,23 @@ def read_side(path: Path, side: str, run_id: int, command_id: int) -> dict:
                 packet = json.loads(line)
                 data = extract(packet)
             except (KeyError, TypeError, ValueError) as exc:
-                if str(exc)=="fragment_conflict":raise ValueError(f"conflicting BLE fragments at row {line_no}") from exc
-                reason = f"packet:{type(exc).__name__}"
+                if str(exc) == "fragment_conflict":
+                    raise ValueError(f"conflicting BLE fragments at row {line_no}") from exc
+                reason = str(exc) if str(exc).startswith("c3_") or str(exc) == "fragment_time_order" else f"packet:{type(exc).__name__}"
                 counts["invalid"][reason] = counts["invalid"].get(reason, 0) + 1
                 continue
             if data is None:
                 continue
             counts["control_candidates"] += 1
             try:
-                record = control_record(data, side)
+                record = control_record(data, side, layout=layout)
                 if side == "ble" and packet.get("kind") != "legacy" and packet.get("extended", {}).get("adi", {}).get("did") != (record["slot_index"] & 0xfff):
                     raise ValueError("adi_slot")
             except ValueError as exc:
                 reason = str(exc)
                 counts["invalid"][reason] = counts["invalid"].get(reason, 0) + 1
                 continue
-            if (record["run_id"], record["command_id"]) != (run_id, command_id):
+            if record["run_id"] != run_id or (command_id is not None and record["command_id"] != command_id):
                 counts["foreign_run_or_command"] += 1
                 continue
             counts["valid_records"] += 1
@@ -83,9 +105,9 @@ def read_side(path: Path, side: str, run_id: int, command_id: int) -> dict:
             event = {"record": record, "packet_no": packet.get("packet_no"),
                      "sample_start": packet.get("sample_start"),
                      "available_sample": packet.get("available_sample"),
-                     "wire_format": ("legacy" if packet.get("kind")=="legacy" else "ble-only" if packet.get("pdu_length") == 17 + len(data) else "joint") if side == "ble" else None,
+                     "wire_format": ("legacy" if packet.get("kind") == "legacy" else "ble-only" if packet.get("pdu_length") == 17 + len(data) else "joint") if side == "ble" else None,
                      "sample_time_s": packet.get("sample_time_s"), "line_no": line_no,
-                     "compact_reassembly":packet.get("compact_reassembly")}
+                     "compact_reassembly": packet.get("compact_reassembly")}
             if slot in by_slot:
                 counts["duplicates"] += 1
                 if record != by_slot[slot]["record"] or event["wire_format"] != by_slot[slot]["wire_format"]:
@@ -93,13 +115,18 @@ def read_side(path: Path, side: str, run_id: int, command_id: int) -> dict:
             else:
                 by_slot[slot] = event
     if side == "ble":
-        summary_path=path.with_name(path.name.replace(".packets.jsonl",".summary.json"))
-        if summary_path.exists() and summary_path!=path:
-            receiver=json.loads(summary_path.read_text())
-            total=receiver.get("counts",{}).get("samples_processed")
-            rate=receiver.get("config",{}).get("sample_rate")
-            if total is not None and rate:extract.expire(total/rate)
-        extract.finish();counts["fragment_reassembly"]=dict(extract.counts)
+        summary_path = path.with_name(path.name.replace(".packets.jsonl", ".summary.json"))
+        if summary_path.exists() and summary_path != path:
+            receiver = json.loads(summary_path.read_text())
+            total = receiver.get("counts", {}).get("samples_processed")
+            rate = receiver.get("config", {}).get("sample_rate")
+            if total is not None and rate:
+                extract.expire(total / rate)
+        extract.finish()
+        counts["fragment_reassembly"] = dict(extract.counts)
+        counts["fragment_reassembly"]["closed_count"] = len(extract.closed)
+        counts["fragment_reassembly"]["pending_count"] = len(extract.pending)
+        counts["fragment_reassembly"]["closed_exhausted"] = extract.closed_exhausted
     counts["unique_slots"] = len(by_slot)
     return {"side": side, "path": str(path), "counts": counts, "by_slot": by_slot}
 

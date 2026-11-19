@@ -9,12 +9,12 @@ except ImportError:
     from protocol import control_record
 
 
-def control_payload(packet: dict, side: str) -> bytes | None:
+def control_payload(packet: dict, side: str, layout: dict | None = None) -> bytes | None:
     if side == "ble":
         payload = extract_ble(packet)
         if payload is not None:
             try:
-                record = control_record(payload, side)
+                record = control_record(payload, side, layout=layout)
             except ValueError:
                 pass  # The engine reports the application-level rejection.
             else:

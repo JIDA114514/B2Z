@@ -4,14 +4,26 @@ from __future__ import annotations
 import binascii
 
 
-def control_record(data: bytes, side: str | None = None) -> dict:
-    """Parse one side's independently recovered 35-byte application record."""
+def control_record(
+    data: bytes,
+    side: str | None = None,
+    layout: dict | None = None,
+    *,
+    verify_test_fill: bool = False,
+) -> dict:
+    """Parse one side's independently recovered application record (v1/v2/C1/UC1)."""
     if data[:1] == b"\xc1":
         try:
-            from .compact import compact_record
+            from .compact import compact_record, uc1_record
         except ImportError:
-            from compact import compact_record
-        return compact_record(data, side)
+            from compact import compact_record, uc1_record
+        if len(data) < 2:
+            raise ValueError("compact_shape")
+        if data[1] == 0x01:
+            return compact_record(data, side)
+        if data[1] in (0x10, 0x11):
+            return uc1_record(data, side, layout=layout, verify_test_fill=verify_test_fill)
+        raise ValueError("unknown_c1_version_type")
     if len(data) < 35:
         raise ValueError("control_length")
     version=data[2]
@@ -82,13 +94,23 @@ def capacity_extension(run_id: int, slot: int, side: str, length: int) -> bytes:
 
 def ble_manufacturer_record(data: bytes, pdu_length: int) -> bytes:
     """Validate envelope sizes without decoding or reconstructing IEEE content."""
-    if data[:3]==b"\xff\xff\xc1" and len(data)>=28:
-        length=26+data[25]
-        mapped=len(data)-2-length
-        if (data[25]>26 or not 136<=mapped<=160 or mapped%4 or
-                data[25]+mapped-136>26 or pdu_length!=15+len(data)):
-            raise ValueError("compact_wire_budget")
-        return data[2:2+length]
+    if data[:3] == b"\xff\xff\xc1" and len(data) >= 28:
+        ver_type = data[3]
+        n = data[25]
+        length = 26 + n
+        mapped = len(data) - 2 - length
+        if ver_type == 0x01:
+            if (n > 26 or not 136 <= mapped <= 160 or mapped % 4 or
+                    n + mapped - 136 > 26 or pdu_length != 15 + len(data)):
+                raise ValueError("compact_wire_budget")
+            return data[2:2 + length]
+        if ver_type in (0x10, 0x11):
+            joint_ok = (136 <= mapped <= 160 and mapped % 4 == 0 and n + mapped - 136 <= 26)
+            separate_ok = (mapped == 0 and pdu_length == 43 + n)
+            if n > 26 or pdu_length != 15 + len(data) or not (joint_ok or separate_ok):
+                raise ValueError("uc1_wire_budget")
+            return data[2:2 + length]
+        raise ValueError("unknown_c1_version_type")
     if len(data)<37 or data[:4]!=b"\xff\xff\xb2\x43":
         raise ValueError("control_wire_budget")
     version=data[4]

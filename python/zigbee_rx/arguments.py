@@ -40,6 +40,7 @@ def parse_args(argv=None, *, control_mode=False):
         p.add_argument("--command-id", type=int,
                        help="optional B2 43 command ID filter; omit for a multi-task run")
         p.add_argument("--n5-config", type=str, help="Frozen N5 registration JSON")
+        p.add_argument("--uc1-config", type=str, help="Frozen UC1 manifest JSON")
         p.add_argument("--control-target-id", type=int, action="append",
                        help="enable B2 43 software-control processing for this node/group ID; repeatable")
         p.add_argument("--control-sender-id", default="configured_board")
@@ -99,6 +100,8 @@ def parse_args(argv=None, *, control_mode=False):
                 raise ValueError("control assumed reference bound must be finite and nonnegative")
         if a.expected_packets is not None and a.expected_packets < 0:
             raise ValueError("expected-packets must be nonnegative")
+        if getattr(a, "n5_config", None) and getattr(a, "uc1_config", None):
+            raise ValueError("cannot combine --n5-config and --uc1-config")
         if getattr(a, "n5_config", None):
             if not a.control_target_id or a.control_assumed_reference_bound_ms is not None:
                 raise ValueError("N5 requires control-target-id and an unknown reference bound")
@@ -106,6 +109,22 @@ def parse_args(argv=None, *, control_mode=False):
                 raise ValueError("N5 preset requires its registered side target and joint layout")
             if a.command_id is not None:
                 raise ValueError("N5 requires all commands; omit command-id")
+        if getattr(a, "uc1_config", None):
+            from control_match.uc1_config import load as load_uc1
+            uc1 = load_uc1(a.uc1_config, a.run_id)
+            expected_ch = uc1["layout"]["ieee_channel"]
+            expected_layout = "joint" if uc1["mode"] == "JC" else "separate"
+            if a.channel != expected_ch:
+                raise ValueError(f"UC1 {uc1['mode']} requires IEEE channel {expected_ch}")
+            if a.control_layout != expected_layout:
+                raise ValueError(f"UC1 {uc1['mode']} requires --control-layout {expected_layout}")
+            if a.command_id is not None:
+                raise ValueError("UC1 requires all commands; omit --command-id")
+            if uc1["profile"] == "time":
+                if not a.control_target_id or a.control_assumed_reference_bound_ms is not None:
+                    raise ValueError("UC1 time profile requires --control-target-id 2 and unknown reference bound")
+                if a.control_target_id != [2]:
+                    raise ValueError("UC1 time profile requires --control-target-id 2 on ZigBee side")
         if a.iq_file:
             if not a.iq_file.is_file():
                 raise ValueError("iq-file not found")

@@ -30,15 +30,216 @@ def one(items: list[dict], name: str) -> dict:
     return items[0]
 
 
-def read_plan(path: Path, run_id: int) -> dict:
+def _read_uc1_plan(matching, stats: dict, run_id: int, *, allow_incomplete: bool = False, rows=None) -> dict:
+    try:
+        from .uc1_config import uc1_cost, TIME_FIRST_SLOTS, CODE_TO_MODE, RF_MODE_NAMES
+    except ImportError:
+        from uc1_config import uc1_cost, TIME_FIRST_SLOTS, CODE_TO_MODE, RF_MODE_NAMES
+
+    uc1_rows = matching("UC1_CONFIG")
+    uc1 = uc1_rows[-1]
+    if any(r != uc1 for r in uc1_rows):
+        raise ValueError("UC1_CONFIG changed during run")
+    terminal = []
+    final_context = False
+    for line in rows or []:
+        if line.startswith("CONTROL_PLAN_STATS "):
+            r = fields(line)
+            final_context = r.get("run_id") == str(run_id) and r.get("final") == "1"
+        elif line.startswith("UC1_STATS "):
+            r = fields(line)
+            if r.get("run_id") == str(run_id) and (
+                r.get("final") == "1" or ("final" not in r and final_context)
+            ):
+                terminal.append({k: v for k, v in r.items() if k != "final"})
+            final_context = False
+    if not terminal or any(r != terminal[0] for r in terminal):
+        raise ValueError("missing or conflicting final UC1_STATS")
+    uc1_stats = terminal[0]
+
+    mode_code = int(uc1["mode"])
+    profile_code = int(uc1["profile"])
+    b, z = int(uc1["ble_extra"]), int(uc1["ieee_extra"])
+    tasks_count = int(uc1["tasks"])
+    planned = int(uc1["slots"])
+    k = int(uc1["k"])
+    budget_us = int(uc1["budget_us"])
+    period_ms = int(uc1["period_ms"])
+    if (
+        uc1.get("version") != "1"
+        or mode_code not in (1, 2, 3)
+        or profile_code not in (0, 1)
+        or not 0 <= b <= 26
+        or not 0 <= z <= 6
+        or b + 4 * z > 26
+        or not 1 <= k <= 4
+        or uc1.get("fill") != "lcg_uc1_command_seed"
+    ):
+        raise ValueError("invalid UC1_CONFIG domain or fill")
+    mode_name = CODE_TO_MODE[mode_code]
+    expected_cost = uc1_cost(b, z, mode_code)
+    expected_slots = 300 if profile_code == 1 else 10 + 6 * tasks_count
+    expected_marker_valid = 1 if mode_code == 1 else 0
+    expected_marker_offset = (400 + 8 * b) if mode_code == 1 else 0
+    expected_epoch_offset = 0 if mode_code == 3 else 300000
+    if (
+        int(uc1["cost_per_attempt_us"]) != expected_cost
+        or int(uc1["unused_per_task_us"]) != budget_us - k * expected_cost
+        or budget_us < k * expected_cost
+        or planned != expected_slots
+        or int(uc1["marker_offset_valid"]) != expected_marker_valid
+        or int(uc1["marker_offset_us"]) != expected_marker_offset
+        or int(uc1["reference_epoch_offset_us"]) != expected_epoch_offset
+        or stats.get("rf_mode") != RF_MODE_NAMES[mode_name]
+        or int(stats["planned_slots"]) != planned
+        or int(stats["tasks"]) != tasks_count
+        or int(stats["period_ms"]) != period_ms
+    ):
+        raise ValueError("UC1_CONFIG disagrees with protocol budget or CONTROL_PLAN_STATS")
+    if profile_code == 1 and (mode_code != 1 or tasks_count != 6 or k != 3):
+        raise ValueError("invalid UC1 time profile configuration")
+
+    expected_planned_attempts = 300 if profile_code == 1 else tasks_count * k
+    if (
+        int(uc1_stats["planned_attempts"]) != expected_planned_attempts
+        or int(uc1_stats["planned_silent_slots"]) != planned - expected_planned_attempts
+        or int(uc1_stats["planned_air_us"]) != expected_planned_attempts * expected_cost
+        or int(uc1_stats["completed_attempts"]) + int(uc1_stats["failed_attempts"]) != int(uc1_stats["processed_attempts"])
+        or int(uc1_stats["processed_attempts"]) > expected_planned_attempts
+    ):
+        raise ValueError("UC1_STATS disagrees with planned attempts or budget")
+
+    reached = int(stats["reached_slots"])
+    for key in ("reached_slots", "generated", "primary_completed", "tx_completed"):
+        if not 0 <= int(stats[key]) <= planned:
+            raise ValueError(f"invalid board {key} count")
+
+    tasks = matching("CONTROL_PLAN_TASK")
+    if len(tasks) != tasks_count:
+        raise ValueError("incomplete CONTROL_PLAN_TASK lines for UC1")
+    tasks.sort(key=lambda r: int(r["first_slot"]))
+    by_slot = {}
+    for slot in range(planned):
+        if profile_code == 1:
+            by_slot[slot] = {
+                "entry": slot,
+                "command_id": 0,
+                "silent": 0,
+                "board_tx_completed": 0,
+                "board_primary_completed": 0,
+                "board_generated": 0,
+            }
+        else:
+            by_slot[slot] = {
+                "entry": None,
+                "command_id": 0,
+                "silent": 1,
+                "board_tx_completed": 0,
+                "board_primary_completed": 0,
+                "board_generated": 0,
+            }
+    for index, task in enumerate(tasks):
+        entry, command, first, repeats = (
+            int(task[key]) for key in ("entry", "command_id", "first_slot", "repeats")
+        )
+        expected_first = TIME_FIRST_SLOTS[index] if profile_code == 1 else 10 + 6 * index
+        expected_valid = (expected_first + (4 if profile_code == 1 else 5)) * period_ms
+        expected_exec = (expected_first + 6) * period_ms
+        if (
+            entry != index
+            or command != index + 1
+            or first != expected_first
+            or repeats != k
+            or int(task["valid_until_ms"]) != expected_valid
+            or int(task["execute_at_ms"]) != expected_exec
+            or not 0 <= int(task["tx_completed"]) <= repeats
+        ):
+            raise ValueError(f"UC1 CONTROL_PLAN_TASK mismatch at entry {index}")
+        for slot in range(first, first + repeats):
+            by_slot[slot].update(entry=entry, command_id=command, silent=0)
+
+    slot_rows = matching("CONTROL_PLAN_SLOT")
+    if len(slot_rows) != reached:
+        raise ValueError("CONTROL_PLAN_SLOT count disagrees with reached_slots")
+    seen = set()
+    active_rows = []
+    for row in slot_rows:
+        slot = int(row["slot"])
+        if slot not in by_slot or slot in seen:
+            raise ValueError("missing, duplicate or out-of-range UC1 CONTROL_PLAN_SLOT")
+        seen.add(slot)
+        if row.get("silent") == "1":
+            if by_slot[slot]["silent"] != 1 or row.get("invalid_plan") != "0":
+                raise ValueError(f"unexpected silent marker at slot {slot}")
+            continue
+        if by_slot[slot]["silent"] != 0:
+            raise ValueError(f"silent slot {slot} logged as active")
+        if int(row["command_id"]) != by_slot[slot]["command_id"]:
+            raise ValueError(f"board slot {slot} disagrees with its UC1 task")
+        completed = int(row["tx_completed"])
+        if completed not in (0, 1):
+            raise ValueError(f"invalid per-slot DMA completion at {slot}")
+        by_slot[slot]["board_tx_completed"] = completed
+        by_slot[slot]["board_primary_completed"] = int(row["primary_completed"])
+        by_slot[slot]["board_generated"] = int(row["generated"])
+        active_rows.append(row)
+    if not allow_incomplete and reached != planned:
+        raise ValueError("UC1 board plan did not reach all planned slots")
+    for metric in ("generated", "primary_completed", "tx_completed", "deadline_miss", "dma_timeout"):
+        if sum(int(r[metric]) for r in active_rows) != int(stats[metric]):
+            raise ValueError(f"board UC1 per-slot {metric} total disagrees with final stats")
+
+    compact_slots = matching("COMPACT_SLOT")
+    if len(compact_slots) != planned or {int(r["slot"]) for r in compact_slots} != set(by_slot):
+        raise ValueError("UC1 COMPACT_SLOT records incomplete")
+    expected_bytes = dict(
+        ble_record_bytes=26 + b,
+        ieee_record_bytes=26 + z,
+        mapped_bytes=136 + 4 * z,
+        secondary_payload_bytes=(179 + b + 4 * z if mode_code == 1 else 43 + b if mode_code == 2 else 0),
+    )
+    for r in compact_slots:
+        slot = int(r["slot"])
+        built = int(r["built"])
+        if built not in (0, 1) or built != by_slot[slot]["board_generated"]:
+            raise ValueError(f"UC1 COMPACT_SLOT build mismatch at slot {slot}")
+        if int(r["command_id"]) != by_slot[slot]["command_id"]:
+            raise ValueError(f"UC1 COMPACT_SLOT command_id mismatch at slot {slot}")
+        if any(int(r[key]) != (val if built else 0) for key, val in expected_bytes.items()):
+            raise ValueError(f"UC1 COMPACT_SLOT byte budget mismatch at slot {slot}")
+
+    bursts = read_bursts(matching, stats, by_slot, uc1=uc1)
+    uc1_enriched = {
+        **uc1,
+        "mode_name": mode_name,
+        "profile_name": "time" if profile_code == 1 else "core",
+        "rf_mode": stats["rf_mode"],
+        "ieee_marker_offset_us": expected_marker_offset if expected_marker_valid else None,
+        "marker_offset_valid_bool": bool(expected_marker_valid),
+    }
+    return {
+        "stats": stats,
+        "tasks": tasks,
+        "slots": by_slot,
+        "bursts": bursts,
+        "capacity": None,
+        "compact": None,
+        "uc1": uc1_enriched,
+        "uc1_stats": uc1_stats,
+    }
+
+
+def read_plan(path: Path, run_id: int, *, allow_incomplete: bool = False) -> dict:
     rows = path.read_text(encoding="utf-8").splitlines()
     matching = lambda prefix: [fields(line) for line in rows
                                if line.startswith(prefix + " ") and
                                fields(line).get("run_id") == str(run_id)]
     stats = one([r for r in matching("CONTROL_PLAN_STATS") if r.get("final") == "1"],
                 "final CONTROL_PLAN_STATS")
-    if stats.get("state") != "complete":
+    if not allow_incomplete and stats.get("state") != "complete":
         raise ValueError("board plan did not complete")
+    if matching("UC1_CONFIG"):
+        return _read_uc1_plan(matching, stats, run_id, allow_incomplete=allow_incomplete, rows=rows)
     tasks = matching("CONTROL_PLAN_TASK")
     slots = matching("CONTROL_PLAN_SLOT")
     planned = int(stats["planned_slots"])
@@ -141,15 +342,48 @@ def read_plan(path: Path, run_id: int) -> dict:
     return {"stats": stats, "tasks": tasks, "slots": by_slot, "bursts": bursts, "capacity": capacity, "compact": compact}
 
 
-def load_side(path: Path, side: str, run_id: int, commands: set[int]) -> dict:
-    by_slot, counts = {}, {}
-    for command in commands:
-        stream = read_side(path, side, run_id, command)
-        counts[command] = stream["counts"]
-        for slot, event in stream["by_slot"].items():
-            if slot in by_slot:
-                raise ValueError(f"{side}: conflicting commands at slot {slot}")
-            by_slot[slot] = event
+def load_side(
+    path: Path,
+    side: str,
+    run_id: int,
+    commands: set[int] | None = None,
+    *,
+    layout: dict | None = None,
+    fragment_limits: dict | None = None,
+    single_pass: bool = False,
+) -> dict:
+    if single_pass or layout is not None or fragment_limits is not None:
+        stream = read_side(
+            path,
+            side,
+            run_id,
+            None,
+            layout=layout,
+            fragment_limits=fragment_limits,
+            allowed_run_id=run_id if fragment_limits is not None else None,
+        )
+        by_slot = stream["by_slot"]
+        if commands is not None:
+            filtered = {}
+            unexpected = 0
+            for slot, event in by_slot.items():
+                if event["record"]["command_id"] in commands:
+                    filtered[slot] = event
+                else:
+                    unexpected += 1
+            if unexpected:
+                stream["counts"]["foreign_run_or_command"] += unexpected
+            by_slot = filtered
+        counts = {"all": stream["counts"]}
+    else:
+        by_slot, counts = {}, {}
+        for command in (commands or set()):
+            stream = read_side(path, side, run_id, command)
+            counts[command] = stream["counts"]
+            for slot, event in stream["by_slot"].items():
+                if slot in by_slot:
+                    raise ValueError(f"{side}: conflicting commands at slot {slot}")
+                by_slot[slot] = event
     summary_path = path.with_name("rx.control.summary.json")
     live = json.loads(summary_path.read_text(encoding="utf-8")) if summary_path.exists() else None
     if live and (live["side"], live["run_id"]) != (side, run_id):
@@ -169,27 +403,47 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
             raise ValueError("flow configuration differs from board plan")
     for slot, board in sorted(plan["slots"].items()):
         events = {side: data["by_slot"].get(slot) for side, data in sides.items()}
+        uc1 = plan.get("uc1")
         for side, event in events.items():
             if side == "ble" and event and event.get("wire_format") is not None:
-                expected = "legacy" if (plan.get("compact") or {}).get("mode")=="LC" else "ble-only" if plan["stats"].get("rf_mode") == "separate_secondary_ch3" else "joint"
+                if uc1:
+                    expected = "legacy" if uc1["mode_name"] == "LC" else "ble-only" if uc1["mode_name"] == "SC" else "joint"
+                else:
+                    expected = "legacy" if (plan.get("compact") or {}).get("mode") == "LC" else "ble-only" if plan["stats"].get("rf_mode") == "separate_secondary_ch3" else "joint"
                 if event["wire_format"] != expected:
                     raise ValueError("BLE wire format disagrees with board RF mode")
             if event:
-                record=event["record"]; cap=plan.get("capacity")
-                compact=plan.get("compact")
+                record = event["record"]
+                cap = plan.get("capacity")
+                compact = plan.get("compact")
+                if uc1:
+                    n = int(uc1["ble_extra" if side == "ble" else "ieee_extra"])
+                    if (
+                        record.get("wire_format") != "UC1"
+                        or record.get("wire_version") != 1
+                        or record.get("extra_len") != n
+                        or record["period_ms"] != int(plan["stats"]["period_ms"])
+                        or not record.get("test_fill_ok", False)
+                    ):
+                        raise ValueError(f"{side}: decoded UC1 configuration or test fill mismatch at slot {slot}")
+                    if board.get("silent"):
+                        raise ValueError(f"{side}: decoded UC1 record in planned silent slot {slot}")
+                elif record.get("wire_format") == "UC1":
+                    raise ValueError("UC1 records require UC1_CONFIG board records")
                 if compact:
-                    n=int(compact["ble_extra" if side=="ble" else "ieee_extra"])
-                    if (record["version"]!=3 or record.get("extra_len")!=n or record["command_id"]!=slot+1 or
-                        record["period_ms"]!=int(plan["stats"]["period_ms"]) or
-                        record["valid_until_ms"]!=record["ref_tick_ms"]+2000 or
-                        record["execute_at_ms"]!=record["ref_tick_ms"]+3000):
+                    n = int(compact["ble_extra" if side == "ble" else "ieee_extra"])
+                    if (record["version"] != 3 or record.get("extra_len") != n or record["command_id"] != slot + 1 or
+                            record["period_ms"] != int(plan["stats"]["period_ms"]) or
+                            record["valid_until_ms"] != record["ref_tick_ms"] + 2000 or
+                            record["execute_at_ms"] != record["ref_tick_ms"] + 3000):
                         raise ValueError("decoded compact configuration mismatch")
-                elif record["version"]==3:raise ValueError("C1 requires COMPACT_CONFIG")
+                elif record["version"] == 3:
+                    raise ValueError("C1 requires COMPACT_CONFIG")
                 if cap:
-                    extra=int(cap["ble_extra" if side=="ble" else "ieee_extra"])
-                    if record["version"]!=2 or record.get("extra_len")!=extra or record["command_id"]!=slot+1 or record["period_ms"]!=int(plan["stats"]["period_ms"]):
+                    extra = int(cap["ble_extra" if side == "ble" else "ieee_extra"])
+                    if record["version"] != 2 or record.get("extra_len") != extra or record["command_id"] != slot + 1 or record["period_ms"] != int(plan["stats"]["period_ms"]):
                         raise ValueError(f"{side}: decoded capacity configuration mismatch at slot {slot}")
-                elif record["version"]==2:
+                elif record["version"] == 2:
                     raise ValueError("v2 capacity packets require CAPACITY_CONFIG/SLOT board records")
             if event and event["record"]["command_id"] != board["command_id"]:
                 raise ValueError(f"{side}: decoded command disagrees with board at slot {slot}")
@@ -222,7 +476,7 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
                 for key in TASK_FIELDS):
             raise ValueError(f"shared task fields disagree for command {command}")
         for side, events in side_events.items():
-            keys = TASK_FIELDS + ("target_id", "opcode", "arg")
+            keys = TASK_FIELDS + ("target_id", "opcode", "arg") + (("extra_len", "extra_hex") if plan.get("uc1") else ())
             expected_keys = {"target_id": f"{side}_target", "opcode": f"{side}_opcode",
                              "arg": f"{side}_arg", "execute_at_ms": "execute_at_ms", "valid_until_ms": "valid_until_ms"}
             for event in events:
@@ -268,8 +522,9 @@ def summarize(plan: dict, ble: dict, zigbee: dict) -> tuple[dict, list[dict], li
     if any(slot not in plan["slots"] for data in sides.values() for slot in data["by_slot"]):
         raise ValueError("decoded slot is outside board plan")
     summary = {"schema": "b2z_plan_match_v2", "run_id": int(plan["stats"]["run_id"]),
-               "capacity": plan.get("capacity"), "compact":plan.get("compact"),
-               "ble_fragment_reassembly":next((v.get("fragment_reassembly") for v in ble.get("counts",{}).values() if isinstance(v,dict)),None),
+               "capacity": plan.get("capacity"), "compact": plan.get("compact"),
+               "uc1": plan.get("uc1"), "uc1_stats": plan.get("uc1_stats"),
+               "ble_fragment_reassembly": next((v.get("fragment_reassembly") for v in ble.get("counts", {}).values() if isinstance(v, dict)), None),
                "planned_slots": len(slot_rows), "board_tx_completed": int(plan["stats"]["tx_completed"]),
                "planned_control_tasks": len(tasks),
                "ble_valid_attempts": sum(r["ble_valid"] for r in slot_rows),
@@ -355,14 +610,32 @@ def main() -> int:
     board_path = args.board_log or args.experiment_dir / "board.board.log"
     plan = read_plan(board_path, args.run_id)
     commands = {int(row["command_id"]) for row in plan["tasks"]}
-    sides = {side: flow if side == "ble" and flow is not None else load_side(path, side, args.run_id, commands)
-             for side, path in paths.items()}
+    if plan.get("uc1") and plan["uc1"].get("profile_name") == "time":
+        commands.add(0)
+    uc1_layout = None
+    if plan.get("uc1"):
+        u = plan["uc1"]
+        uc1_layout = {
+            "mode": u["mode_name"],
+            "run_id": int(u["run_id"]),
+            "period_ms": int(u["period_ms"]),
+            "ble_extra": int(u["ble_extra"]),
+            "ieee_extra": int(u["ieee_extra"]),
+            "marker_offset_valid": u["marker_offset_valid_bool"],
+            "marker_offset_us": u["ieee_marker_offset_us"],
+        }
+    sides = {
+        side: flow
+        if side == "ble" and flow is not None
+        else load_side(path, side, args.run_id, commands, layout=uc1_layout, single_pass=bool(plan.get("uc1")))
+        for side, path in paths.items()
+    }
     summary, slot_rows, task_rows = summarize(plan, sides["ble"], sides["zigbee"])
     summary["analysis_version"] = {
         "git_head": subprocess.run(["git", "rev-parse", "HEAD"], cwd=Path(__file__).resolve().parent,
                                    capture_output=True, text=True).stdout.strip(),
         "module_sha256": {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
-                          for name in ("plan_analyze.py", "burst_cost.py", "analyze.py", "flow_input.py", "protocol.py", "compact.py")},
+                          for name in ("plan_analyze.py", "burst_cost.py", "analyze.py", "flow_input.py", "protocol.py", "compact.py", "uc1_config.py")},
         "board_firmware_version": "not_inferred_from_host_checkout"}
     summary["sources"] = {"board": {"path": str(board_path.resolve()),
                                      "sha256": hashlib.sha256(board_path.read_bytes()).hexdigest()},
@@ -408,6 +681,15 @@ def main() -> int:
                    if c["ieee_marker_offset_us"] is not None else
                    "- 分别发送：映射区位于独立IEEE突发，不在BLE PDU内；不使用共包时间偏移。"),
                   "- 容量探针只计解析；不把扩展数据校验计为实际命令执行。"]
+    if summary.get("uc1"):
+        u = summary["uc1"]
+        us = summary.get("uc1_stats") or {}
+        lines += ["", "## UC1 统一紧凑格式", "",
+                  f"- 模式：{u['mode_name']}；profile：{u['profile_name']}；K：{u['k']}；每任务预算：{u['budget_us']} µs（未用 {u['unused_per_task_us']} µs）。",
+                  f"- BLE/IEEE 扩展：{u['ble_extra']}/{u['ieee_extra']} B；布局偏移：{u['ieee_marker_offset_us'] if u['ieee_marker_offset_us'] is not None else 'N/A (non-joint)'} µs。",
+                  f"- 板端尝试（计划/处理/完成/失败/静默）：{us.get('planned_attempts')}/{us.get('processed_attempts')}/{us.get('completed_attempts')}/{us.get('failed_attempts')}/{us.get('planned_silent_slots')}。",
+                  f"- BLE 分片统计（C3/完整接收流）：{summary.get('ble_fragment_reassembly')}。",
+                  "- 无跨设备共同校准时间基准；deadline 状态及完整统计见 uc1_analyze.py。"]
     if summary.get("compact"):
         c=summary["compact"]
         lines += ["", "## C1紧凑格式", "",

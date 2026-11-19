@@ -17,6 +17,7 @@ except ImportError:
 
 _TASK_FIELDS = ("version", "flags", "run_id", "period_ms", "command_id",
                 "target_id", "opcode", "arg", "execute_at_ms", "valid_until_ms")
+_UC1_TASK_FIELDS = _TASK_FIELDS + ("extra_len", "extra_hex")
 
 
 class ImmediateControlEngine:
@@ -26,6 +27,7 @@ class ImmediateControlEngine:
         self.config = config
         self.current_sample = 0
         self.signatures: dict[int, tuple] = {}
+        self.conflicted_tasks: set[int] = set()
         self.status: dict[int, str] = {}
         self.state: dict[int, int] = {}
         self.triggers: list[dict] = []
@@ -57,8 +59,9 @@ class ImmediateControlEngine:
                 packet_start_sample > available_sample):
             raise ValueError("invalid packet or availability sample")
         self.advance(available_sample)
+        layout = self.config.uc1_config["layout"] if self.config.uc1_config is not None else None
         try:
-            record = control_record(payload, self.config.side)
+            record = control_record(payload, self.config.side, layout=layout)
         except (ValueError, TypeError) as exc:
             return [self._event("invalid_record", available_sample, reason=str(exc))]
         if record["run_id"] != self.config.run_id:
@@ -73,10 +76,13 @@ class ImmediateControlEngine:
             events.append(self._event("time_update_ignored", available_sample, record))
             return events
         command_id = record["command_id"]
-        signature = tuple(record[key] for key in _TASK_FIELDS)
-        if command_id in self.signatures and self.signatures[command_id] != signature:
+        sig_fields = _UC1_TASK_FIELDS if record.get("wire_format") == "UC1" else _TASK_FIELDS
+        signature = tuple(record[key] for key in sig_fields)
+        if command_id in self.conflicted_tasks or (command_id in self.signatures and self.signatures[command_id] != signature):
+            self.conflicted_tasks.add(command_id)
+            extra = {"already_processed": True} if self.status.get(command_id) == "processed" else {}
             events.append(self._event("rejected", available_sample, record,
-                                      reason="conflicting_task"))
+                                      reason="conflicting_task", **extra))
             return events
         self.signatures[command_id] = signature
         if command_id in self.status:

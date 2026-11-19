@@ -145,14 +145,25 @@ def main(argv=None):
               ("stderr", ".hackrf.log"))}
     if args.save_iq:
         paths["iq"] = Path(str(prefix) + "." + args.format)
+    uc1_cfg = None
+    if getattr(args, "uc1_config", None):
+        from control_match.uc1_config import load as load_uc1
+        uc1_cfg = load_uc1(args.uc1_config, args.run_id)
+    uc1_layout = uc1_cfg["layout"] if uc1_cfg else None
     control_config = None
     if args.control_target_id:
         from control_match.n5_config import load as load_n5
-        control_config = EngineConfig(n5_registration=load_n5(args.n5_config, args.run_id) if getattr(args, "n5_config", None) else None, side="ble", run_id=args.run_id, sample_rate=args.sample_rate,
-                                      target_ids=frozenset(args.control_target_id),
-                                      sender_id=args.control_sender_id,
-                                      accept_broadcast=args.control_accept_broadcast,
-                                      external_reference_bound_ms=args.control_assumed_reference_bound_ms)
+        control_config = EngineConfig(
+            n5_registration=load_n5(args.n5_config, args.run_id) if getattr(args, "n5_config", None) else None,
+            uc1_config=uc1_cfg,
+            side="ble",
+            run_id=args.run_id,
+            sample_rate=args.sample_rate,
+            target_ids=frozenset(args.control_target_id),
+            sender_id=args.control_sender_id,
+            accept_broadcast=args.control_accept_broadcast,
+            external_reference_bound_ms=args.control_assumed_reference_bound_ms,
+        )
         paths.update(ControlSession.artifact_paths(prefix))
     for path in paths.values():
         if path.exists():
@@ -176,7 +187,14 @@ def main(argv=None):
     with paths["packets"].open("x") as packets_file, paths["events"].open("x") as events_file, paths["stderr"].open("x") as stderr_file:
         capture = Capture(args, save, stderr_file)
 
-        compact_extractor = BLEControlExtractor()
+        frag_limits = uc1_cfg["fragment_limits"] if uc1_cfg else {}
+        compact_extractor = BLEControlExtractor(
+            timeout=frag_limits.get("timeout_s", 2.0),
+            pending_limit=frag_limits.get("pending_limit"),
+            closed_limit=frag_limits.get("closed_limit"),
+            allowed_run_id=args.run_id if uc1_cfg else None,
+            layout=uc1_layout,
+        )
 
         def process(iq, final=False):
             before = time.monotonic()
@@ -193,10 +211,11 @@ def main(argv=None):
                 aux = packet["extended"].get("aux_ptr")
                 if aux and aux["phy"] != 0:
                     counts["aux_ptr_unsupported_phy"] += 1
+                raw_control = None
                 try:
-                    raw_control = compact_extractor(packet) if packet["kind"]=="legacy" else control_payload(packet, "ble")
+                    raw_control = compact_extractor(packet) if packet["kind"] == "legacy" else control_payload(packet, "ble", layout=uc1_layout)
                     if raw_control is not None:
-                        record = control_record(raw_control, "ble")
+                        record = control_record(raw_control, "ble", layout=uc1_layout)
                         packet["control_record"] = record
                         counts["valid_control_records"] += 1
                         if args.run_id is None or record["run_id"] == args.run_id:
@@ -204,12 +223,17 @@ def main(argv=None):
                 except (ValueError, KeyError, TypeError) as exc:
                     packet["control_error"] = str(exc)
                     counts["invalid_control_records"] += 1
-                for key,value in compact_extractor.counts.items():
-                    counts["compact_"+key]=value
-                counts["compact_pending"]=len(compact_extractor.pending)
+                for key, value in compact_extractor.counts.items():
+                    counts["compact_" + key] = value
+                counts["compact_pending"] = len(compact_extractor.pending)
+                counts["compact_closed"] = len(compact_extractor.closed)
                 packets_file.write(json.dumps(packet, ensure_ascii=False) + "\n")
                 if control:
-                    control.observe_packet(packet)
+                    if packet["kind"] == "legacy":
+                        if raw_control is not None:
+                            control.observe_packet(packet, raw_payload=raw_control, timing_eligible_override=False)
+                    else:
+                        control.observe_packet(packet)
                 for event in matcher.feed(packet):
                     events_file.write(json.dumps(event) + "\n")
                 if args.diagnostic_pairs:
@@ -293,13 +317,17 @@ def main(argv=None):
             process(np.empty(0, np.complex64), final=True)
     compact_extractor.expire(counts["samples_processed"] / args.sample_rate)
     compact_extractor.finish()
-    for key,value in compact_extractor.counts.items():counts["compact_"+key]=value
-    counts["compact_pending"]=0
+    for key, value in compact_extractor.counts.items():
+        counts["compact_" + key] = value
+    counts["compact_pending"] = 0
+    counts["compact_closed"] = len(compact_extractor.closed)
     wall = time.monotonic() - started
     here = Path(__file__).resolve().parent
     source_paths = [here / name for name in ("receive.py", "arguments.py", "decoder.py", "protocol.py")]
     source_paths += [here.parent / "experiment_tools" / name for name in ("receiver_defaults.py", "reporting.py")]
     source_paths += [here.parent / "control_match" / name for name in ("protocol.py", "analyze.py", "packet_adapter.py", "compact.py")]
+    if uc1_cfg:
+        source_paths.append(here.parent / "control_match" / "uc1_config.py")
     if control:
         source_paths += [here.parent / "control_match" / name for name in
                          ("control_engine.py", "live_control.py", "packet_adapter.py", "protocol.py",
@@ -307,7 +335,7 @@ def main(argv=None):
     receiver_status = "error" if error else "interrupted" if interrupted else "complete"
     control_result = control.finish(receiver_status) if control else None
     summary = {
-        "schema": "exadv_rx_v3", "control_parser": "b243_v1_v2_c1", "receiver_version": "2026-10-26-window-retry1", "start_utc": start_utc,
+        "schema": "exadv_rx_v3", "control_parser": "b243_v1_v2_c1_uc1_c3", "uc1_config_sha256": uc1_cfg["sha256"] if uc1_cfg else None, "receiver_version": "2026-10-26-window-retry1", "start_utc": start_utc,
         "end_utc": datetime.now(timezone.utc).isoformat(),
         "status": receiver_status,
         "error": error, "config": {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()},

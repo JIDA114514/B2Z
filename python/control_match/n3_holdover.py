@@ -43,7 +43,8 @@ def default_config(slots=300, period_ms=500, exploratory=False):
 
 
 def validate_config(c):
-    if c.get('schema') != 'b2z_n3_config_v1' or type(c.get('exploratory')) is not bool:
+    is_uc1 = c.get('schema') == 'b2z_uc1_config_v1' and c.get('profile') == 'time' and c.get('wire_format') == 'UC1'
+    if not is_uc1 and (c.get('schema') != 'b2z_n3_config_v1' or type(c.get('exploratory')) is not bool):
         raise ValueError('invalid N3 config schema/exploratory flag')
     def unique(values):
         return isinstance(values,list) and all(type(x) is int and x >= 0 for x in values) and len(set(values)) == len(values)
@@ -51,7 +52,12 @@ def validate_config(c):
         raise ValueError('slots must explicitly cover consecutive plan slots')
     if not unique(c['probes']) or not c['probes'] or not set(c['probes']) <= set(c['slots']):
         raise ValueError('invalid probes')
-    if type(c['period_ms']) is not int or c['period_ms'] <= 0 or c['ieee_marker_offset_us'] != 472:
+    if is_uc1:
+        b = (c.get('layout') or {}).get('ble_extra')
+        expected_offset = 400 + 8 * b if type(b) is int and 0 <= b <= 26 else None
+        if type(c['period_ms']) is not int or c['period_ms'] <= 0 or expected_offset is None or c.get('ieee_marker_offset_us') != expected_offset:
+            raise ValueError('invalid period or unsupported UC1 joint marker offset')
+    elif type(c['period_ms']) is not int or c['period_ms'] <= 0 or c['ieee_marker_offset_us'] != 472:
         raise ValueError('invalid period or unsupported joint marker offset')
     if not c['thresholds_us'] or any(not math.isfinite(v) or v <= 0 for v in c['thresholds_us']):
         raise ValueError('invalid thresholds')

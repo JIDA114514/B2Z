@@ -33,10 +33,26 @@ from zigbee_rx.zigbee_protocol import channel_frequency, ratio
 class ControlTracker:
     """Count only this receiver's independently decoded, FCS-correct payloads."""
 
-    def __init__(self, run_id: int, command_id: int | None, expected_packets: int | None):
+    def __init__(self, run_id: int, command_id: int | None, expected_packets: int | None,
+                 layout: dict | None = None, uc1_config: dict | None = None):
         self.run_id = run_id
         self.command_id = command_id
         self.expected_packets = expected_packets
+        self.layout = layout
+        self.active_slots = None
+        if uc1_config is not None:
+            self.active_slots = sorted({
+                slot for task in uc1_config["tasks"]
+                if command_id is None or task["command_id"] == command_id
+                for slot in range(task["first_slot"], task["first_slot"] + task["attempts"])
+            })
+            if uc1_config["profile"] == "time":
+                if command_id is None:
+                    self.active_slots = list(range(uc1_config["planned_slots"]))
+                elif command_id == 0:
+                    command_slots = {slot for task in uc1_config["tasks"]
+                                     for slot in range(task["first_slot"], task["first_slot"] + task["attempts"])}
+                    self.active_slots = sorted(set(range(uc1_config["planned_slots"])) - command_slots)
         self.counts = Counter()
         self.invalid_reasons = Counter()
         self.seen: dict[int, dict] = {}
@@ -49,7 +65,7 @@ class ControlTracker:
             return None, "non_control", None
         self.counts["control_candidates"] += 1
         try:
-            record = control_record(payload, "zigbee")
+            record = control_record(payload, "zigbee", layout=self.layout)
         except ValueError as exc:
             reason = str(exc)
             self.counts["invalid_control"] += 1
@@ -65,19 +81,24 @@ class ControlTracker:
         if self.expected_packets is not None and slot >= self.expected_packets:
             self.counts["out_of_range_control"] += 1
             return record, "out_of_range_control", None
-        task_key = tuple(record[key] for key in
-                         (*TASK_FIELDS, "target_id", "opcode", "arg"))
-        prior_task = self.task_keys.get(record["command_id"])
-        if prior_task is not None and task_key != prior_task:
-            self.counts["conflicting_task_fields"] += 1
-            return record, "conflicting_task_fields", None
+        if record["flags"] != 0:
+            extra_keys = ("extra_len", "extra_hex") if record.get("wire_format") == "UC1" else ()
+            task_key = tuple(record[key] for key in
+                             (*TASK_FIELDS, "target_id", "opcode", "arg", *extra_keys))
+            prior_task = self.task_keys.get(record["command_id"])
+            if prior_task is not None and task_key != prior_task:
+                self.counts["conflicting_task_fields"] += 1
+                return record, "conflicting_task_fields", None
+        else:
+            task_key = None
+            prior_task = None
         if slot in self.seen:
             if self.seen[slot] == record:
                 self.counts["duplicate"] += 1
                 return record, "duplicate", None
             self.counts["conflicting_slot"] += 1
             return record, "conflicting_slot", None
-        if prior_task is None:
+        if task_key is not None and prior_task is None:
             self.task_keys[record["command_id"]] = task_key
         if slot < self.last_slot:
             self.counts["out_of_order"] += 1
@@ -86,8 +107,12 @@ class ControlTracker:
         self.counts["unique"] += 1
         return record, "unique", None
 
-    def longest_loss_burst(self) -> int:
-        if self.expected_packets is not None:
+    def longest_loss_burst(self) -> int | None:
+        if self.active_slots is not None:
+            slots = self.active_slots
+        elif any(r.get("wire_format") == "UC1" for r in self.seen.values()):
+            return None  # Slot gaps have unknown transmit intent without a manifest.
+        elif self.expected_packets is not None:
             slots = range(self.expected_packets)
         elif self.seen:
             slots = range(min(self.seen), max(self.seen) + 1)
@@ -106,7 +131,12 @@ def main(argv=None) -> int:
     if board and args.expected_packets is not None and args.expected_packets != board["scheduled"]:
         raise ValueError("--expected-packets differs from board scheduled count")
     planned = args.expected_packets if args.expected_packets is not None else (board["scheduled"] if board else None)
-    tracker = ControlTracker(args.run_id, args.command_id, planned)
+    uc1_cfg = None
+    if getattr(args, "uc1_config", None):
+        from control_match.uc1_config import load as load_uc1
+        uc1_cfg = load_uc1(args.uc1_config, args.run_id)
+    uc1_layout = uc1_cfg["layout"] if uc1_cfg else None
+    tracker = ControlTracker(args.run_id, args.command_id, planned, layout=uc1_layout, uc1_config=uc1_cfg)
     decoder = ZigBeeDecoder(args.sample_rate, args.center_hz, channel_frequency(args.channel),
                             args.demod, args.symbol_order, args.cutoff_hz, args.cfo_hz,
                             args.soft_retry, args.preamble_max_distance)
@@ -121,11 +151,17 @@ def main(argv=None) -> int:
     control_config = None
     if args.control_target_id:
         from control_match.n5_config import load as load_n5
-        control_config = EngineConfig(n5_registration=load_n5(args.n5_config, args.run_id) if getattr(args, "n5_config", None) else None, side="zigbee", run_id=args.run_id, sample_rate=args.sample_rate,
-                                      target_ids=frozenset(args.control_target_id),
-                                      sender_id=args.control_sender_id,
-                                      accept_broadcast=args.control_accept_broadcast,
-                                      external_reference_bound_ms=args.control_assumed_reference_bound_ms)
+        control_config = EngineConfig(
+            n5_registration=load_n5(args.n5_config, args.run_id) if getattr(args, "n5_config", None) else None,
+            uc1_config=uc1_cfg,
+            side="zigbee",
+            run_id=args.run_id,
+            sample_rate=args.sample_rate,
+            target_ids=frozenset(args.control_target_id),
+            sender_id=args.control_sender_id,
+            accept_broadcast=args.control_accept_broadcast,
+            external_reference_bound_ms=args.control_assumed_reference_bound_ms,
+        )
         files.update(ControlSession.artifact_paths(prefix))
     if any(path.exists() for path in files.values()):
         raise FileExistsError(f"output prefix already exists: {prefix}")
@@ -246,15 +282,19 @@ def main(argv=None) -> int:
     here = Path(__file__).resolve().parent
     sources = [here / name for name in ("control_receive.py", "arguments.py", "zigbee_decoder.py",
                                         "zigbee_protocol.py", "dsp.py", "hackrf_capture.py")]
-    sources += [here.parent / "control_match" / name for name in ("protocol.py", "analyze.py")]
+    sources += [here.parent / "control_match" / name for name in ("protocol.py", "analyze.py", "compact.py")]
     sources += [here.parent / "experiment_tools" / name for name in ("receiver_defaults.py", "reporting.py")]
+    if uc1_cfg:
+        sources.append(here.parent / "control_match" / "uc1_config.py")
     if control:
         sources += [here.parent / "control_match" / name for name in
-                    ("control_engine.py", "live_control.py", "packet_adapter.py")]
+                    ("control_engine.py", "live_control.py", "packet_adapter.py", "n5_observation.py", "n3_holdover.py")]
     receiver_status = "error" if error else "interrupted" if interrupted else "complete"
     control_result = control.finish(receiver_status) if control else None
     result = {
-        "schema": "zigbee_control_rx_v1", "receiver_version": "control-v1-live1",
+        "schema": "zigbee_control_rx_v1", "control_parser": "b243_v1_v2_c1_uc1",
+        "uc1_config_sha256": uc1_cfg["sha256"] if uc1_cfg else None,
+        "receiver_version": "control-v1-live1",
         "status": receiver_status, "error": error,
         "start_utc": start_utc, "end_utc": datetime.now(timezone.utc).isoformat(),
         "config": {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()},
@@ -268,7 +308,11 @@ def main(argv=None) -> int:
         "receiver": {"unique": tracker.counts["unique"], "duplicate": tracker.counts["duplicate"],
                      "out_of_order": tracker.counts["out_of_order"],
                      "longest_loss_burst": tracker.longest_loss_burst(),
-                     "loss_scope": "explicit planned range" if planned is not None else "min..max valid received slot",
+                     "loss_scope": ("consecutive planned active attempts; includes board and receive losses"
+                                    if tracker.active_slots is not None else
+                                    "unknown without UC1 manifest" if tracker.longest_loss_burst() is None else
+                                    "explicit planned range" if planned is not None else "min..max valid received slot"),
+                     "planned_active_attempts": len(tracker.active_slots) if tracker.active_slots is not None else None,
                      "invalid_reasons": dict(tracker.invalid_reasons)},
         "planned_slots": planned, "board": board,
         "ratios": {"control_decode_per_dma": ratio_result},

@@ -2,40 +2,61 @@
 from __future__ import annotations
 
 
-def read_bursts(matching, stats: dict, slots: dict, capacity: dict | None = None, compact: dict | None = None) -> dict | None:
-    rows = matching("COMPACT_BURST" if compact else "CONTROL_BURST")
-    totals = matching("COMPACT_COST_STATS" if compact else "CONTROL_COST_STATS")
-    separate = stats.get("rf_mode") == "separate_secondary_ch3"
-    legacy = compact is not None and compact["mode"] == "LC"
-    if not rows and not totals and not separate and compact is None:
+def read_bursts(
+    matching,
+    stats: dict,
+    slots: dict,
+    capacity: dict | None = None,
+    compact: dict | None = None,
+    uc1: dict | None = None,
+) -> dict | None:
+    if uc1 is not None:
+        rows = matching("UC1_BURST")
+        totals = matching("UC1_COST_STATS")
+    else:
+        rows = matching("COMPACT_BURST" if compact else "CONTROL_BURST")
+        totals = matching("COMPACT_COST_STATS" if compact else "CONTROL_COST_STATS")
+    uc1_mode = int(uc1["mode"]) if uc1 is not None else None
+    separate = (uc1_mode == 2) if uc1 is not None else (stats.get("rf_mode") == "separate_secondary_ch3")
+    legacy = (uc1_mode == 3) if uc1 is not None else (compact is not None and compact["mode"] == "LC")
+    if not rows and not totals and not separate and compact is None and uc1 is None:
         return None  # Historical logs cannot support measured submission costs.
     if len(totals) != 1:
-        raise ValueError("one complete CONTROL_COST_STATS is required")
+        raise ValueError("one complete " + ("UC1_COST_STATS" if uc1 is not None else "CONTROL_COST_STATS") + " is required")
     kinds = {"primary": 136, "secondary": 496 if separate else 1872}
     if separate:
         kinds["ieee"] = 1376
     if capacity is not None:
         # read_plan has already checked config and actual per-slot lengths.
         # LE 1M: payload + 2-byte PDU header + preamble/AA (5) + CRC (3).
-        payload=int(capacity["pdu_payload_bytes"])
+        payload = int(capacity["pdu_payload_bytes"])
         b, z = int(capacity["ble_extra"]), int(capacity["ieee_extra"])
-        expected = 53+b if separate else 229+b+4*z
-        if (capacity.get("version")!="2" or not 0<=b<=26 or not 0<=z<=6 or
-                b+4*z>26 or payload!=expected):
+        expected = 53 + b if separate else 229 + b + 4 * z
+        if (capacity.get("version") != "2" or not 0 <= b <= 26 or not 0 <= z <= 6 or
+                b + 4 * z > 26 or payload != expected):
             raise ValueError("invalid capacity waveform configuration")
-        kinds["secondary"]=(payload+10)*8
+        kinds["secondary"] = (payload + 10) * 8
         if separate:
-            kinds["ieee"]=(176+4*z)*8
+            kinds["ieee"] = (176 + 4 * z) * 8
 
     if compact:
-        b,z=int(compact["ble_extra"]),int(compact["ieee_extra"])
+        b, z = int(compact["ble_extra"]), int(compact["ieee_extra"])
         if legacy:
-            length=26+b
-            sizes=[length] if length<=27 else [10+min(17,length-i) for i in range(0,length,17)]
-            kinds={f"fragment{i}":(20+n)*8 for i,n in enumerate(sizes)}
-            kinds["ieee"]=(136+4*z)*8
+            length = 26 + b
+            sizes = [length] if length <= 27 else [10 + min(17, length - i) for i in range(0, length, 17)]
+            kinds = {f"fragment{i}": (20 + n) * 8 for i, n in enumerate(sizes)}
+            kinds["ieee"] = (136 + 4 * z) * 8
         else:
-            kinds={"primary":136,"secondary":(189+b+4*z)*8}
+            kinds = {"primary": 136, "secondary": (189 + b + 4 * z) * 8}
+
+    if uc1 is not None:
+        try:
+            from .uc1_config import uc1_burst_table
+        except ImportError:
+            from uc1_config import uc1_burst_table
+        b, z = int(uc1["ble_extra"]), int(uc1["ieee_extra"])
+        kinds = dict(uc1_burst_table(b, z, uc1_mode))
+
     parsed = {}
     integers = ("slot", "generated", "attempted", "started", "completed", "timeout",
                 "iq_bytes", "air_us", "pad_us", "prepared_us", "submit_before_us",
@@ -53,7 +74,7 @@ def read_bursts(matching, stats: dict, slots: dict, capacity: dict | None = None
         if g:
             if row["air_us"] != kinds[kind] or row["pad_us"] != 10 or row["iq_bytes"] <= 0:
                 raise ValueError("burst waveform budget differs from " +
-                                 ("validated compact format" if compact else "validated v2 capacity format" if capacity is not None else "frozen N2 format"))
+                                 ("validated UC1 format" if uc1 else "validated compact format" if compact else "validated v2 capacity format" if capacity is not None else "frozen N2 format"))
         elif any(row[k] for k in integers if k != "slot"):
             raise ValueError("ungenerated burst has observations")
         if a and not row["prepared_us"] <= row["submit_before_us"] <= row["submit_after_us"]:
@@ -66,28 +87,35 @@ def read_bursts(matching, stats: dict, slots: dict, capacity: dict | None = None
     if len(parsed) != len(slots) * len(kinds):
         raise ValueError("missing CONTROL_BURST rows, including unsent bursts")
     for slot, board in slots.items():
+        if board.get("silent"):
+            if any(parsed[slot, kind]["generated"] != 0 for kind in kinds):
+                raise ValueError("silent slot has generated bursts")
+            board["board_ble_tx_completed"] = 0
+            board["board_ieee_tx_completed"] = 0
+            continue
         if any(parsed[slot, kind]["generated"] != board["board_generated"] for kind in kinds):
             raise ValueError("burst generation disagrees with plan slot")
         if legacy:
             if board["board_primary_completed"] != 0:
                 raise ValueError("legacy has no primary")
-            ble_completed = int(all(parsed[slot,k]["completed"] for k in kinds if k!="ieee"))
+            ble_completed = int(all(parsed[slot, k]["completed"] for k in kinds if k != "ieee"))
             if ble_completed != board["board_tx_completed"]:
                 raise ValueError("legacy fragment completion disagrees with plan")
         else:
             for kind, metric in (("primary", "board_primary_completed"), ("secondary", "board_tx_completed")):
-                if parsed[slot,kind]["completed"] != board[metric]:
+                if parsed[slot, kind]["completed"] != board[metric]:
                     raise ValueError("burst completion disagrees with plan slot")
-            ble_completed=parsed[slot,"secondary"]["completed"]
+            ble_completed = parsed[slot, "secondary"]["completed"]
         ordered = [parsed[slot, k] for k in kinds if parsed[slot, k]["attempted"]]
         if any(b["submit_before_us"] < a["finish_us"] for a, b in zip(ordered, ordered[1:])):
             raise ValueError("overlapping sequential DMA observations")
         if legacy:
-            all_rows=[parsed[slot,k] for k in kinds]
-            for a,b in zip(all_rows,all_rows[1:]):
-                if b['attempted'] and not a['completed']:raise ValueError("legacy skipped unfinished fragment")
-            for a,b in zip(ordered,ordered[1:]):
-                if not a["completed"] or b["submit_before_us"]-a["finish_us"]<1000:
+            all_rows = [parsed[slot, k] for k in kinds]
+            for a, b in zip(all_rows, all_rows[1:]):
+                if b["attempted"] and not a["completed"]:
+                    raise ValueError("legacy skipped unfinished fragment")
+            for a, b in zip(ordered, ordered[1:]):
+                if not a["completed"] or b["submit_before_us"] - a["finish_us"] < 1000:
                     raise ValueError("legacy fragment software gap or completion")
         if separate and parsed[slot, "ieee"]["attempted"]:
             ble = parsed[slot, "secondary"]
@@ -100,23 +128,36 @@ def read_bursts(matching, stats: dict, slots: dict, capacity: dict | None = None
               "ieee_tx_completed": sum(r["board_ieee_tx_completed"] for r in slots.values()),
               **{f"burst_{name}": sum(r[name] for r in parsed.values()) for name in ("attempted", "started", "completed")}}
     if any(int(totals[0][k]) != v for k, v in counts.items()):
-        raise ValueError("burst totals disagree with CONTROL_COST_STATS")
+        raise ValueError("burst totals disagree with " + ("UC1_COST_STATS" if uc1 is not None else "CONTROL_COST_STATS"))
+    planned_active = sum(1 for r in slots.values() if not r.get("silent"))
+    mode_label = (
+        ("uc1_legacy" if legacy else "uc1_separate" if separate else "uc1_joint")
+        if uc1 is not None
+        else ("legacy_bluebee" if legacy else "compact_joint" if compact else "separate_bluebee" if separate else "joint")
+    )
     return {"rows": list(parsed.values()), "counts": counts, "separate": separate,
-            "planned_waveform_us": sum(kinds.values()) * len(slots),
-            "mode": "legacy_bluebee" if legacy else "compact_joint" if compact else "separate_bluebee" if separate else "joint"}
+            "planned_waveform_us": sum(kinds.values()) * planned_active,
+            "planned_active_slots": planned_active,
+            "mode": mode_label}
 
 
 def cost_summary(bursts: dict, successful_tasks: int) -> dict:
     rows = bursts["rows"]
     submitted = sum(r["air_us"] for r in rows if r["started"])
+    completed = sum(r["air_us"] for r in rows if r["completed"])
     padding = sum(r["pad_us"] for r in rows if r["started"])
     attempted = sum(r["air_us"] for r in rows if r["attempted"])
     return {"schema": "b2z_waveform_cost_v1", "mode": bursts.get("mode", "separate_bluebee" if bursts["separate"] else "joint"),
             **bursts["counts"], "planned_waveform_us": bursts["planned_waveform_us"],
-            "submitted_waveform_us": submitted, "submitted_zero_padding_us": padding,
+            "submitted_waveform_us": submitted, "completed_waveform_us": completed,
+            "submitted_zero_padding_us": padding,
             "attempted_waveform_budget_us": attempted,
             "uncertain_bursts": sum(r["attempted"] and not r["completed"] for r in rows),
             "per_joint_decoded_task": {"numerator_us": submitted, "denominator": successful_tasks,
                                       "value_us": submitted / successful_tasks if successful_tasks else None},
+            "per_joint_decoded_task_planned": {"numerator_us": bursts["planned_waveform_us"], "denominator": successful_tasks,
+                                               "value_us": bursts["planned_waveform_us"] / successful_tasks if successful_tasks else None},
+            "per_joint_decoded_task_completed": {"numerator_us": completed, "denominator": successful_tasks,
+                                                 "value_us": completed / successful_tasks if successful_tasks else None},
             "actual_rf_airtime_us": None,
             "scope": "All slots including sync-only, repeats and failed DMA completions; successful DMA start allocates full waveform. Failed submissions listed separately; actual emitted fraction unknown. Padding is zero IQ, not proof of zero RF energy."}

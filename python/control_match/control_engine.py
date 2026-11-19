@@ -20,6 +20,7 @@ except ImportError:
 Side = Literal["ble", "zigbee"]
 _TASK_FIELDS = ("version", "flags", "run_id", "period_ms", "command_id",
                 "target_id", "opcode", "arg", "execute_at_ms", "valid_until_ms")
+_UC1_TASK_FIELDS = _TASK_FIELDS + ("extra_len", "extra_hex")
 
 
 @dataclass(frozen=True)
@@ -44,12 +45,15 @@ class EngineConfig:
     freeze_ms: float = 100.0
     max_processing_late_ms: float = 50.0
     n5_registration: dict | None = None
+    uc1_config: dict | None = None
 
     def __post_init__(self) -> None:
         if self.side not in ("ble", "zigbee") or not 1 <= self.run_id <= 65535:
             raise ValueError("side and run_id must identify one receiver run")
         if self.sample_rate <= 0 or not self.sender_id:
             raise ValueError("sample_rate and sender_id are required")
+        if self.n5_registration is not None and self.uc1_config is not None:
+            raise ValueError("cannot combine n5_registration and uc1_config")
         if any(not 1 <= target <= 0xfffe for target in self.target_ids):
             raise ValueError("target_ids must be configured v1 node/group IDs")
         if not self.supported_opcodes <= {0, 1, 2}:
@@ -79,9 +83,26 @@ class _LocalClock:
         self.intercept = 0.0
         self.residual_ms = 0.0
         self.rate_fitted = False
-        # The ZigBee PHY preamble begins 472 us after the BLE preamble in v1.
-        self.marker_offset_samples = (0.0 if config.side == "ble" else
-                                      config.sample_rate * 472 / 1_000_000)
+        if config.uc1_config is not None:
+            layout = config.uc1_config.get("layout") or {}
+            if layout.get("marker_offset_valid") and layout.get("marker_offset_us") is not None:
+                self.marker_offset_us: int | None = int(layout["marker_offset_us"])
+                self.marker_offset_samples: float | None = (
+                    0.0 if config.side == "ble" else config.sample_rate * self.marker_offset_us / 1_000_000
+                )
+            else:
+                self.marker_offset_us = None
+                self.marker_offset_samples = None
+        elif config.n5_registration is not None:
+            self.marker_offset_us = int(config.n5_registration.get("ieee_marker_offset_us", 472))
+            self.marker_offset_samples = (
+                0.0 if config.side == "ble" else config.sample_rate * self.marker_offset_us / 1_000_000
+            )
+        else:
+            # The ZigBee PHY preamble begins 472 us after the BLE preamble in v1.
+            self.marker_offset_us = 472
+            self.marker_offset_samples = (0.0 if config.side == "ble" else
+                                          config.sample_rate * 472 / 1_000_000)
 
     @property
     def latest_ref_ms(self) -> int | None:
@@ -101,6 +122,8 @@ class _LocalClock:
         return bound + self.residual_ms + age * self.config.drift_bound_ppm / 1_000_000
 
     def observe(self, slot: int, ref_ms: int, packet_start_sample: float) -> str:
+        if self.marker_offset_samples is None:
+            return "clock_layout_unavailable"
         sample = packet_start_sample - self.marker_offset_samples
         if slot in self.points:
             old_ref, old_sample = self.points[slot]
@@ -161,13 +184,28 @@ class SideControlEngine:
 
     def __init__(self, config: EngineConfig):
         self.config = config
+        self.registration = (
+            config.n5_registration
+            if config.n5_registration is not None
+            else config.uc1_config
+            if (
+                config.uc1_config is not None
+                and config.uc1_config.get("profile") == "time"
+                and (config.uc1_config.get("layout") or {}).get("marker_offset_valid")
+            )
+            else None
+        )
         self.clock = _LocalClock(config)
-        if config.n5_registration is not None:
-            from control_match.n5_observation import ObservationClock
-            self.clock = ObservationClock(config, config.n5_registration)
+        if self.registration is not None:
+            try:
+                from .n5_observation import ObservationClock
+            except ImportError:
+                from control_match.n5_observation import ObservationClock
+            self.clock = ObservationClock(config, self.registration)
         self.current_sample = 0
         self.tasks: dict[int, _Task] = {}
         self.signatures: dict[int, tuple] = {}
+        self.conflicted_tasks: set[int] = set()
         self.state: dict[int, int] = {}
         self.triggers: list[dict] = []
 
@@ -179,6 +217,8 @@ class SideControlEngine:
         if record is not None:
             result.update(command_id=record["command_id"], slot_index=record["slot_index"],
                           target_id=record["target_id"], opcode=record["opcode"], arg=record["arg"])
+            if record.get("wire_format") == "UC1":
+                result.update(wire_format="UC1", wire_version=record.get("wire_version", 1))
         result.update(fields)
         return result
 
@@ -191,7 +231,7 @@ class SideControlEngine:
         return events
 
     def timeline_event(self, reason, *, restart=False):
-        if self.config.n5_registration is None:
+        if self.registration is None:
             return []
         self.clock.invalidate()
         events = self._observation_events()
@@ -236,7 +276,7 @@ class SideControlEngine:
             raise ValueError("current_sample must advance monotonically")
         self.current_sample = current_sample
         events = []
-        if self.config.n5_registration is not None:
+        if self.registration is not None:
             self.clock.advance(current_sample)
             events.extend(self._observation_events())
         for task in self.tasks.values():
@@ -274,15 +314,16 @@ class SideControlEngine:
         return events
 
     def observe(self, payload: bytes, packet_start_sample: float,
-                available_sample: int) -> list[dict]:
+                available_sample: int, *, timing_eligible_override: bool | None = None) -> list[dict]:
         """Consume independently decoded application bytes at availability time."""
         if (not isinstance(available_sample, int) or available_sample < self.current_sample or
                 not math.isfinite(packet_start_sample) or packet_start_sample < 0 or
                 packet_start_sample > available_sample):
             raise ValueError("invalid packet or availability sample")
         events = self.advance(available_sample)
+        layout = self.config.uc1_config["layout"] if self.config.uc1_config is not None else None
         try:
-            record = control_record(payload, self.config.side)
+            record = control_record(payload, self.config.side, layout=layout)
         except (ValueError, TypeError) as exc:
             events.append(self._event("invalid_record", available_sample, reason=str(exc)))
             return events
@@ -290,26 +331,67 @@ class SideControlEngine:
             events.append(self._event("foreign_run", available_sample, record,
                                       observed_run_id=record["run_id"]))
             return events
-        events.append(self._event("decoded", available_sample, record,
-                                  packet_start_sample=packet_start_sample))
-        if record["version"] in (2,3):
+        is_uc1 = record.get("wire_format") == "UC1"
+        timing_eligible = True if not is_uc1 else bool(record.get("timing_eligible"))
+        if timing_eligible_override is False:
+            timing_eligible = False
+        decoded_extra = {"packet_start_sample": packet_start_sample}
+        if is_uc1:
+            decoded_extra["timing_eligible"] = timing_eligible
+            decoded_extra["layout_match"] = record.get("layout_match")
+        events.append(self._event("decoded", available_sample, record, **decoded_extra))
+        if record["version"] in (2, 3):
             # Capacity blobs have no scheduled application handler. In particular,
             # IEEE cannot infer the BLE record length from its own payload.
             events.append(self._event("rejected", available_sample, record,
                                       reason="capacity_decode_only"))
             return events
         command_id = record["command_id"]
-        signature = tuple(record[key] for key in _TASK_FIELDS) if record["flags"] else None
-        if (signature is not None and command_id in self.signatures and
-                self.signatures[command_id] != signature):
+        sig_fields = _UC1_TASK_FIELDS if is_uc1 else _TASK_FIELDS
+        signature = tuple(record[key] for key in sig_fields) if record["flags"] else None
+        if ((is_uc1 and command_id in self.conflicted_tasks) or
+                (signature is not None and command_id in self.signatures and
+                 self.signatures[command_id] != signature)):
+            self.conflicted_tasks.add(command_id)
+            existing = self.tasks.get(command_id)
+            if is_uc1 and existing and existing.status == "pending":
+                existing.status = "cancelled"
+                events.append(self._event("cancelled", available_sample, existing.record,
+                                          reason="conflicting_task"))
+            extra = {"already_processed": True} if (existing and existing.status == "processed") else {}
             events.append(self._event("rejected", available_sample, record,
-                                      reason="conflicting_task"))
+                                      reason="conflicting_task", **extra))
             return events
-        if self.config.n5_registration is not None:
-            if record["period_ms"] != self.config.n5_registration["period_ms"]:
+
+        if is_uc1 and not timing_eligible:
+            skip_reason = (
+                "layout_missing" if layout is None
+                else "layout_mismatch" if record.get("layout_match") is False
+                else "layout_not_timing_eligible"
+            )
+            events.append(self._event("clock_skipped", available_sample, record, reason=skip_reason))
+            if record["flags"] == 0:
+                return events
+            self.signatures[command_id] = signature
+            task = self.tasks.get(command_id)
+            if task is not None:
+                events.append(self._event("duplicate", available_sample, record, task_status=task.status))
+                return events
+            if (record["target_id"] not in self.config.target_ids and
+                    not (record["target_id"] == 0xffff and self.config.accept_broadcast)):
+                reason = "wrong_target"
+            elif record["opcode"] not in self.config.supported_opcodes:
+                reason = "unsupported"
+            else:
+                reason = "timing_layout_unavailable"
+            events.append(self._event("rejected", available_sample, record, reason=reason))
+            return events
+
+        if self.registration is not None:
+            if record["period_ms"] != self.registration["period_ms"]:
                 events.append(self._event("rejected", available_sample, record, reason="registration_period_mismatch"))
                 return events
-            if record["slot_index"] in self.config.n5_registration["probes"]:
+            if record["slot_index"] in self.registration["probes"]:
                 events.append(self._event("probe_score", available_sample,
                                           **self.clock.score(record["slot_index"], packet_start_sample)))
         clock_status = self.clock.observe(record["slot_index"], record["ref_tick_ms"],
@@ -317,7 +399,7 @@ class SideControlEngine:
         events.append(self._event(clock_status, available_sample, record,
                                   sample_start=packet_start_sample, available_sample=available_sample,
                                   **self.clock.details()))
-        if self.config.n5_registration is not None:
+        if self.registration is not None:
             events.extend(self._observation_events())
         if clock_status == "clock_updated":
             events.extend(self._refresh_pending(available_sample))
@@ -330,12 +412,15 @@ class SideControlEngine:
             events.append(self._event("duplicate", available_sample, record,
                                       task_status=task.status))
             return events
+        if is_uc1 and command_id in self.conflicted_tasks:
+            events.append(self._event("rejected", available_sample, record, reason="conflicting_task"))
+            return events
         if (record["target_id"] not in self.config.target_ids and
                 not (record["target_id"] == 0xffff and self.config.accept_broadcast)):
             reason = "wrong_target"
         elif record["opcode"] not in self.config.supported_opcodes:
             reason = "unsupported"
-        elif clock_status in ("clock_outlier", "clock_rate_outlier", "conflicting_slot"):
+        elif clock_status in ("clock_outlier", "clock_rate_outlier", "conflicting_slot", "clock_layout_unavailable"):
             reason = "time_quality_insufficient"
         else:
             now_ms = self.clock.sender_ms(available_sample)
@@ -367,4 +452,5 @@ class SideControlEngine:
         return {"side": self.config.side, "run_id": self.config.run_id,
                 "current_sample": self.current_sample, "clock": self.clock.details(),
                 "task_status": {str(key): task.status for key, task in self.tasks.items()},
+                "conflicted_tasks": sorted(self.conflicted_tasks),
                 "software_state": dict(self.state), "software_triggers": list(self.triggers)}

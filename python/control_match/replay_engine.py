@@ -36,30 +36,59 @@ def replay_records(rows: list[dict], config: EngineConfig, total_samples: int,
     if not isinstance(step, int) or step <= 0:
         raise ValueError("progress step must be a positive sample count")
     observations = []
+    layout = config.uc1_config["layout"] if config.uc1_config is not None else None
+    extractor = None
+    if config.side == "ble":
+        try:
+            from .compact import BLEControlExtractor
+        except ImportError:
+            from compact import BLEControlExtractor
+        limits = (config.uc1_config or {}).get("fragment_limits") or {}
+        extractor = BLEControlExtractor(
+            timeout=limits.get("timeout_s", 2.0),
+            pending_limit=limits.get("pending_limit"),
+            closed_limit=limits.get("closed_limit"),
+            allowed_run_id=config.run_id if config.uc1_config is not None else None,
+            layout=layout,
+        )
     for line_no, packet in enumerate(rows, 1):
         try:
-            payload = control_payload(packet, config.side)
+            if config.side == "ble" and packet.get("kind") == "legacy":
+                payload = extractor(packet)
+            else:
+                payload = control_payload(packet, config.side, layout=layout)
         except (KeyError, TypeError, ValueError) as exc:
+            if str(exc) in ("c3_fragment_conflict", "c3_closed_conflict") or str(exc).startswith("c3_fragment_record:"):
+                continue
             raise ValueError(f"packet row {line_no}: {exc}") from exc
         if payload is None:
             continue
-        if policy == "scheduled" and config.side == "ble" and packet.get("pdu_length") == 17 + len(payload):
-            raise ValueError("BLE-only separate layout does not support the joint scheduled reference")
+        timing_override = None
+        if config.side == "ble":
+            if packet.get("kind") == "legacy":
+                timing_override = False
+            elif packet.get("pdu_length") == 17 + len(payload):
+                if policy == "scheduled" and config.uc1_config is None:
+                    raise ValueError("BLE-only separate layout does not support the joint scheduled reference")
+                timing_override = False
         if "available_sample" not in packet:
             raise ValueError(f"packet row {line_no}: missing available_sample; replay saved IQ")
         if packet["available_sample"] > total_samples:
             raise ValueError(f"packet row {line_no}: availability exceeds capture")
-        observations.append((payload, packet["sample_start"], packet["available_sample"]))
+        observations.append((payload, packet["sample_start"], packet["available_sample"], timing_override))
     if policy not in ("scheduled", "immediate"):
         raise ValueError("policy must be scheduled or immediate")
     engine = SideControlEngine(config) if policy == "scheduled" else ImmediateControlEngine(config)
     events = []
     cursor = 0
-    for payload, start, available in observations:
+    for payload, start, available, timing_override in observations:
         while (cursor // step + 1) * step < available:
             cursor = (cursor // step + 1) * step
             events.extend(engine.advance(cursor))
-        events.extend(engine.observe(payload, start, available))
+        if policy == "scheduled":
+            events.extend(engine.observe(payload, start, available, timing_eligible_override=timing_override))
+        else:
+            events.extend(engine.observe(payload, start, available))
         cursor = available
     while (cursor // step + 1) * step <= total_samples:
         cursor = (cursor // step + 1) * step

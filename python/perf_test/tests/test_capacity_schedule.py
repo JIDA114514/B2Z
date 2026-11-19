@@ -36,6 +36,30 @@ int main(void) {
  assert(b2z_task_count(&c)==1);
  for(uint32_t s=0;s<3;s++) assert(b2z_plan_entry_for_slot(&c,s,&tmp)==&c.plan[0]);
  assert(b2z_plan_entry_for_slot(&c,3,&tmp)==0);
+ memset(&c,0,sizeof(c));c.uc1=1;c.capacity=2;c.uc1_tasks=100;c.uc1_k=3;
+ c.expected_packets=610;c.run_id=2701;c.control.period_ms=500;
+ assert(b2z_task_count(&c)==100);
+ uint32_t sent=0;
+ for(uint32_t slot=0;slot<610;slot++) {
+  const struct b2z_plan_entry *e=b2z_plan_entry_for_slot(&c,slot,&tmp);
+  int active=slot>=10 && (slot-10)%6<3;
+  assert((e!=0)==active);
+  if(e) {
+   sent++;uint32_t task=(slot-10)/6;
+   assert(e->packet.command_id==task+1);
+   assert(e->packet.valid_until_ms==(10+task*6)*500+2500);
+   assert(e->packet.execute_at_ms==(10+task*6)*500+3000);
+  }
+ }
+ assert(sent==300);
+ c.uc1_tasks=6;c.uc1_profile=1;c.expected_packets=300;
+ uint32_t commands=0,updates=0;
+ for(uint32_t slot=0;slot<300;slot++) {
+  const struct b2z_plan_entry *e=b2z_plan_entry_for_slot(&c,slot,&tmp);assert(e);
+  if(e->packet.command_id) commands++;else {updates++;assert(!e->packet.execute_at_ms);}
+ }
+ assert(commands==18 && updates==282);
+ assert(!b2z_plan_entry_for_slot(&c,300,&tmp));
  return 0;
 }
 '''

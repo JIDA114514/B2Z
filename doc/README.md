@@ -40,7 +40,7 @@
 
 技术资料：[v1 包格式](reference/control_sync_packet_v1_draft.md)、[接收架构评估](reference/receiver_architecture_review.md)、[早期负载调研](paper/sync_control_payload_research.md)、[BLE 5.1 规范](BLE_Core_v5.1.pdf)。规范 PDF 保留原路径，兼容项目指引。
 
-已接受的设计基准：[统一紧凑协议 UC1 方案](reference/unified_compact_protocol_proposal.md)（2026-11-19）。固定布局配置下连接紧凑格式与在线机制；尚未实现，不替代历史协议及实测结果。旧性能命令和可选扫描见[旧性能协议](reference/legacy_performance_protocol.md)。
+已接受的设计基准：[统一紧凑协议 UC1 方案](reference/unified_compact_protocol_proposal.md)（2026-11-19）。固定布局配置下连接紧凑格式与在线机制；板端本地实现已完成，主机适配与实机验证待完成，不替代历史协议及实测结果。旧性能命令和可选扫描见[旧性能协议](reference/legacy_performance_protocol.md)。
 
 历史入口：[原 N1–N5 总路线](archive/next_stage_plan.md)、[N3 前重复手册](archive/pre_n3_repetition_manual.md)、[功能路线](archive/control_sync_function_plan.md)、[多任务初验](archive/multi_task_control_experiment_plan.md)、[1801 连续更新时间与任务](archive/integrated_sync_control_experiment_plan.md)、[早期独立时间保持](archive/independent_sync_holdover_experiment_plan.md)。
 
@@ -51,3 +51,5 @@
 - 历史报告发现错误时保留修订依据；原始查新报告须连同后续审查一起引用。
 - 文档链接使用相对路径；移动时更新活动文档引用。根目录两个旧文件是历史引用兼容入口，没有重复正文。
 - 本次整理移动 26 篇 Markdown 和 1 张图片；实验数据、实验索引及原始日志未改动。
+
+板端实现进度：[UC1 板端接口与本地验证](reference/uc1_board_interface.md)，主机适配和实机验证待完成。

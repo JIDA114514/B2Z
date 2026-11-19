@@ -315,6 +315,43 @@ static int32_t compact_record(uint8_t *out, const struct b2z_control_packet *p,
  return 0;
 }
 
+/* UC1 keeps application bytes stable across attempts. Zero-command records
+ * carry zero padding of the configured length, preserving the joint layout. */
+static int32_t uc1_record(uint8_t *out, const struct b2z_control_packet *p,
+                          uint32_t n, uint32_t side)
+{
+ uint8_t core[35];
+ if (!p || (side != 1u && side != 2u) || n > (side == 1u ? 26u : 6u) ||
+     build_control_record(core,p,side==1u?p->ble_target:p->zigbee_target,
+         side==1u?p->ble_opcode:p->zigbee_opcode,
+         side==1u?p->ble_arg:p->zigbee_arg)<0 ||
+     (core[22]==0u && (core[23] || core[24])) ||
+     (p->command_id && p->execute_at_ms-p->ref_tick_ms>65535u)) return -1;
+ memset(out,0,26u+n);
+ out[0]=0xC1; out[1]=p->command_id ? 0x11 : 0x10;
+ put_le16(out+2,p->run_id);put_le32(out+4,p->slot_index);
+ put_le16(out+8,p->period_ms);put_le32(out+10,p->command_id);
+ memcpy(out+14,core+20,5);out[23]=(uint8_t)n;
+ if (p->command_id) {
+  put_le16(out+19,p->valid_until_ms-p->ref_tick_ms);
+  put_le16(out+21,p->execute_at_ms-p->ref_tick_ms);
+  uint32_t state=0xB2430100u ^ ((uint32_t)p->run_id<<16) ^
+      p->command_id ^ (side*0x9E3779B9u);
+  for(uint32_t i=0;i<n;i++) {state=state*1664525u+1013904223u;out[24+i]=state>>24;}
+ }
+ put_le16(out+24+n,b2z_control_crc16(out,24+n));
+ return 0;
+}
+
+int32_t b2z_uc1_cost(uint32_t b, uint32_t z, uint8_t mode)
+{
+ if(b2z_capacity_budget(b,z)<0 || mode<1u || mode>3u) return -1;
+ if(mode!=3u) return (int32_t)(1648u+8u*b+32u*z);
+ uint32_t length=26u+b;
+ return (int32_t)(8u*((length<=27u ? 20u+length :
+          35u*((length+11u)/12u)+length)+136u+4u*z));
+}
+
 static int32_t build_zigbee_frame(const uint8_t *payload,
 				  uint32_t payload_len,
 				  uint32_t *frame_len)
@@ -749,7 +786,10 @@ static int32_t build_control_mode_impl(
 				 packet->zigbee_target, packet->zigbee_opcode,
 				 packet->zigbee_arg) < 0)
 		return -1;
-	if (capacity >= 2u) {
+	if (capacity >= 4u) {
+		if (uc1_record(g_ble_control_record, packet, ble_extra, 1u) < 0 ||
+		    uc1_record(zigbee_record, packet, ieee_extra, 2u) < 0) return -1;
+	} else if (capacity >= 2u) {
 		if (compact_record(g_ble_control_record, packet, ble_extra, 1u) < 0 ||
 		    compact_record(zigbee_record, packet, ieee_extra, 2u) < 0) return -1;
 	} else if (capacity) {
@@ -777,10 +817,10 @@ static int32_t build_control_mode_impl(
 	stage_end = timing_now();
 	mapping_time_us = timing_elapsed_us(stage_start, stage_end);
 	stage_start = stage_end;
-	if ((capacity != 3u && build_iq_from_ll_payload(g_ll_payload, ll_payload_len,
+	if ((capacity != 3u && capacity != 5u && build_iq_from_ll_payload(g_ll_payload, ll_payload_len,
 				     g_iq_words, BLE_EXADV_MAX_IQ_WORDS,
 				     &iq_word_count) < 0) ||
-	    (capacity != 3u && build_control_primary(did, rf_mode, &primary_iq_word_count) < 0) ||
+	    (capacity != 3u && capacity != 5u && build_control_primary(did, rf_mode, &primary_iq_word_count) < 0) ||
 	    (separate && build_iq_from_ll_payload(g_bluebee_bytes, bluebee_len,
 		 g_ieee_iq_words, BLE_EXADV_MAX_IQ_WORDS, &ieee_iq_word_count) < 0))
 		return -1;
@@ -836,27 +876,37 @@ static int32_t build_control_mode_impl(
 
 /* LC buffers remain valid until the next build; all fragments are prepared
  * before the first transmission. No BLE reconstruction feeds the IEEE path. */
-static uint32_t g_compact_iq[4][24000] __attribute__((aligned(32)));
+static uint32_t g_compact_iq[5][24000] __attribute__((aligned(32)));
 static struct b2z_compact_meta g_compact;
 const struct b2z_compact_meta *b2z_compact_get_meta(void) { return &g_compact; }
-int32_t b2z_compact_build(const struct b2z_control_packet *p, uint32_t b,
-                        uint32_t z, uint8_t legacy)
+static int32_t compact_build_impl(const struct b2z_control_packet *p, uint32_t b,
+                        uint32_t z, uint8_t mode, uint8_t unified)
 {
- if (legacy > 1u || b2z_capacity_budget(b,z)<0) return -1;
- if (build_control_mode_impl(p, legacy ? 2u : 1u, legacy ? 3u : 2u,b,z)<0) return -1;
+ uint8_t legacy=mode==3u;
+ if (mode<1u || mode>3u || b2z_capacity_budget(b,z)<0) return -1;
+ if (build_control_mode_impl(p, mode==1u ? 1u : 2u,
+     unified ? (legacy ? 5u : 4u) : (legacy ? 3u : 2u),b,z)<0) return -1;
  memset(&g_compact,0,sizeof(g_compact));
  if (!legacy) return 0;
- uint32_t length=26u+b, count=length<=27u ? 1u : (length+16u)/17u;
+ uint32_t length=26u+b, chunk_size=unified ? 12u : 17u;
+ uint32_t count=length<=27u ? 1u : (length+chunk_size-1u)/chunk_size;
  g_compact.ble_count=count;
  for (uint32_t i=0;i<count;i++) {
   uint8_t data[27], pdu[39], raw[42], ll[47];
   uint32_t n=length;
   if (length<=27u) memcpy(data,g_ble_control_record,n);
   else {
-   uint32_t chunk=length-i*17u; if(chunk>17u)chunk=17u;
-   data[0]=0xC2;put_le16(data+1,p->run_id);put_le32(data+3,p->command_id);
-   data[7]=i;data[8]=count;data[9]=length;
-   memcpy(data+10,g_ble_control_record+i*17u,chunk);n=10u+chunk;
+   uint32_t chunk=length-i*chunk_size; if(chunk>chunk_size)chunk=chunk_size;
+   uint32_t header=unified ? 15u : 10u;
+   if(unified) {
+    data[0]=0xC3;data[1]=1;put_le16(data+2,p->run_id);
+    put_le32(data+4,p->slot_index);put_le32(data+8,p->command_id);
+    data[12]=i;data[13]=count;data[14]=length;
+   } else {
+    data[0]=0xC2;put_le16(data+1,p->run_id);put_le32(data+3,p->command_id);
+    data[7]=i;data[8]=count;data[9]=length;
+   }
+   memcpy(data+header,g_ble_control_record+i*chunk_size,chunk);n=header+chunk;
   }
   pdu[0]=0x42; /* ADV_NONCONN_IND, random AdvA */
   pdu[1]=10u+n;
@@ -871,6 +921,18 @@ int32_t b2z_compact_build(const struct b2z_control_packet *p, uint32_t b,
   g_compact.air_us[i]=(20u+n)*8u;
  }
  return 0;
+}
+
+int32_t b2z_compact_build(const struct b2z_control_packet *p, uint32_t b,
+                        uint32_t z, uint8_t legacy)
+{
+ if(legacy>1u)return -1;
+ return compact_build_impl(p,b,z,legacy ? 3u : 1u,0u);
+}
+int32_t b2z_uc1_build(const struct b2z_control_packet *p, uint32_t b,
+                    uint32_t z, uint8_t mode)
+{
+ return compact_build_impl(p,b,z,mode,1u);
 }
 
 int32_t ble_exadv_secondary_gen_build_control_mode(

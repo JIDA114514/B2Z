@@ -10,8 +10,8 @@ from python.zigbee_rx.tests.test_zigbee_receiver import decode
 from python.exadv_rx.protocol import whiten, crc24
 
 class CompactMeta(C.Structure):
-    _fields_=[('ble_count',C.c_uint32),('iq',C.POINTER(C.c_uint32)*4),
-              ('iq_bytes',C.c_uint32*4),('air_us',C.c_uint32*4)]
+    _fields_=[('ble_count',C.c_uint32),('iq',C.POINTER(C.c_uint32)*5),
+              ('iq_bytes',C.c_uint32*5),('air_us',C.c_uint32*5)]
 
 class CompactTests(unittest.TestCase):
     setUpClass=classmethod(ControlGeneratorTests.setUpClass.__func__)

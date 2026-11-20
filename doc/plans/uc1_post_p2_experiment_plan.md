@@ -1,6 +1,6 @@
 # UC1 冻结后的 P3/P4 实验计划
 
-本轮沿用已冻结的收发代码、固件和分析口径。P2 归档提交为 `ef5e237`。论文核心结果回答两个问题：代表负载下每次完整发送花多少波形预算，以及在同一预算上限下有多少计划任务能被双方解析。[P2 复核](../results/uc1_p2_2701_2718_review_20261120.md)
+本轮沿用已冻结的收发代码、固件和分析口径。P2 归档提交为 `ef5e237`。论文核心结果回答两个问题：代表负载下每次完整发送花多少波形预算，以及在同一预算上限下有多少计划任务能被双方解析。[P2 复核](../results/uc1_p2_2701_2718_review_20261120.md) · [详细操作指导手册](uc1_post_p2_operation_guide.md)
 
 ## 哪些证据已经够用
 
@@ -103,8 +103,8 @@ prepare_uc1() {
 
 ### 3. 采集、分析和当轮验收
 
-1. 开启串口**直接落盘日志**（关闭终端有限行数回滚缓冲——P4 单轮 100 任务 `board.board.log` 约 1.5–2.5 MB，避免首部 `UC1_CONFIG` 或尾部 `UC1_STATS final=1` 被截断）。将 `.host.sh` 中的 BLE、IEEE 两条命令分别复制到两个终端运行（必要时附加固定的 `--serial`）。JC/SC 的 BLE 信道为 3，LC 为 39，IEEE 均为 12。两端均开始收流后，在串口粘贴 `.board.txt` 最后一行。P3 板端约 95 s、接收 120 s；P4 分别为 305 s、330 s。
-2. 保存完整串口日志到本轮目录的 `board.board.log`，核对文件中同时存在命令回显、`UC1_CONFIG`、`CONTROL_PLAN_*`、逐突发日志和 `UC1_STATS final=1`。两端完成后，运行该轮 `.host.sh` 的最后一条联合分析命令。在 `notes.md` 记实际布局或照片编号、HackRF 序列号、块号、时间、标称功率/衰减及任何移动或异常。
+1. 将 `.host.sh` 中的 BLE、IEEE 两条接收命令分别复制到两个终端运行（必要时附加固定的 `--serial`）。JC/SC 的 BLE 信道为 3，LC 为 39，IEEE 均为 12。两端均开始收流后，在第三个终端运行 `.host.sh` 中的板端串口自动发送与落盘命令（也可直接执行 `python3 python/control_match/uc1_board_send.py --run-id <RUN_ID>`，默认 `/dev/ttyUSB1`、`115200 8N1`，需先关闭其他占用 `/dev/ttyUSB1` 的串口工具）。P3 板端 RF 发送约 95 s、接收 120 s；P4 分别为 305 s、330 s（注意 P4 结束后板端还会以 115200 波特率连续转储约 2–3 分钟的逐槽/突发统计，脚本会一直写盘直到收到 `CONTROL_TIME_END` / `COMPACT_TIME_END` 并自动校验后退出，中途请勿中断）。
+2. `uc1_board_send.py` 退出时会自动将完整日志保存到本轮目录的 `board.board.log` 并调用 `read_plan()` 核对 `UC1_CONFIG`、`CONTROL_PLAN_*`、逐突发日志和 `UC1_STATS final=1`。两端接收与串口转储均完成后，运行该轮 `.host.sh` 的最后一条联合分析命令。在 `notes.md` 记实际布局或照片编号、HackRF 序列号、块号、时间、标称功率/衰减及任何移动或异常。
 3. 核对两侧 capture 完成状态、溢出/截断告警、双侧 `clipped_components` 与 `clip_ratio = clipped_components / (2 * samples_processed)`（零星 `< 1e-4` 仅记录不否决；`>= 1e-3` 或 `1e-4`–`1e-3` 伴随近距高增益/异常丢包触发饱和复查）、板端完成次数与失败次数、分析报告的计划分母。保留失败尝试与所有无线缺失。有配置错误或确定的采集损坏时记录原因，并从 `2767` 起分配替代 run ID 补采。
 4. P3 每个块三轮共 90 项计划任务。两块各自的合并联合成功数均落在 **18–76 / 90**、**至少有一个相同模式**在两块中均满足 $1 \le s_m \le 29$，且采集质量可用（无队列溢出/截断及显著饱和），即登记该布局、三轮各自分子分母、`clip_ratio` 与入选日期，然后进入 P4。若首布局偏高（>76/90）可增大距离或在室内极限时统一增大 `tx_attenuation`，偏低（<18/90）可缩短距离，触发显著饱和复查时统一下调 `VGA` 或增大 `tx_attenuation`。完成 P3 后写定 P4 布局与排程。
 5. P4 每完成一个负载在一个区组内的六轮，分别对 `1`（K=1）和 `Q`（6000 µs）做一次 JC/SC/LC 比较，输出目录按 `python/experiments/p4_comparisons/b<block>_<point>_<k1|q6000>/` 归档（三组共 12 份）。传入 `--conditions` 的 JSON 必须为三模式均填齐 `topology`、`tx_power`、`attenuation`、`firmware_build` 四个非空字段（缺任一项会被比较器判为 `unknown`）：

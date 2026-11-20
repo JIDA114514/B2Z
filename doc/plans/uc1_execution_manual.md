@@ -37,7 +37,7 @@
 ```bash
 python3 python/control_match/uc1_config.py \
   --run-id 2718 --mode JC --profile core \
-  --ble-extra 0 --ieee-extra 0 --tasks 10 \
+  --ble-extra 26 --ieee-extra 0 --tasks 10 \
   --policy k --value 1 \
   --phase P2 --stage verification --rf-condition R0 \
   --sample-rate 4000000 --lna 16 --vga 10 --save-iq \
@@ -155,10 +155,10 @@ python3 python/zigbee_rx/control_receive.py --run-id <JC_RUN> \
 
 | 示例 Run | 点 (`b,z`) | 模式 | 板端命令（逐轮发送） | BLE `--channels` & `--control-layout` | ZigBee `--control-layout` |
 | ---: | --- | --- | --- | --- | --- |
-| 新编号（如 2718） | A (`0,0`) | JC | `b2z_uc1_start? <RUN_ID> 500 10 0 0 1 0 1 0` | `--channels 3 --control-layout joint` | `joint` |
+| （2701作为测试实验已有参数）2704 | A (`0,0`) | JC | `b2z_uc1_start? 2704 500 10 0 0 1 0 1 0` | `--channels 3 --control-layout joint` | `joint` |
 | 已完成 2702 | A (`0,0`) | SC | 已采集；重采时用新编号 | `--channels 3 --control-layout separate` | `separate` |
 | 2703 | A (`0,0`) | LC | `b2z_uc1_start? 2703 500 10 0 0 3 0 1 0` | `--channels 39 --control-layout separate` | `separate` |
-| 新编号（2701 已完成预算 K=3 的另组初验） | B (`26,0`) | JC | `b2z_uc1_start? 2704 500 10 26 0 1 0 1 0` | `--channels 3 --control-layout joint` | `joint` |
+| （2701 已完成预算 K=3 的另组初验）2718 | B (`26,0`) | JC | `b2z_uc1_start? 2718 500 10 26 0 1 0 1 0` | `--channels 3 --control-layout joint` | `joint` |
 | 2705 | B (`26,0`) | SC | `b2z_uc1_start? 2705 500 10 26 0 2 0 1 0` | `--channels 3 --control-layout separate` | `separate` |
 | 2706 | B (`26,0`) | LC | `b2z_uc1_start? 2706 500 10 26 0 3 0 1 0` | `--channels 39 --control-layout separate` | `separate` |
 | 2707 | C (`2,6`) | JC | `b2z_uc1_start? 2707 500 10 2 6 1 0 1 0` | `--channels 3 --control-layout joint` | `joint` |
@@ -176,6 +176,8 @@ python3 python/zigbee_rx/control_receive.py --run-id <JC_RUN> \
 - 验收核对：`uc1.summary.json` 中 `ble_fragment_reassembly` 不应出现 C3 分片（`c3_fragments` 为 0 或缺失），10 条 27 B 记录直接单帧恢复。
 
 ### H4：4 组重发与同预算短配置（`Q=6000 µs`）
+
+后续新采集的 manifest **必须**使用 `--policy budget --value 6000` 生成，不能只按表中的期望 K 使用 `--policy k`；生成后核对 `policy=budget`、`budget_us=6000`、`unused_per_task_us`，并以导出的 `.board.txt` 为板端命令来源。2026-11-20 已采集的 2711–2714 使用显式 K manifest、板端却记录 6000 µs 预算；原记录保留，显式 `--reconcile-board-budget` 的独立核验已证明实际 K、每次成本和剩余预算与 P2 预期一致，可作为 H4 桥接初验通过依据，无须为 P2 重采。原始板端命令未独立保存，这四轮不能冒充 manifest 完全一致的确认性重复。
 
 | 示例 Run | 点 (`b,z`) | 模式 | 期望 K | 期望单尝试成本 (µs) | 板端命令 |
 | ---: | --- | --- | ---: | ---: | --- |
@@ -240,7 +242,18 @@ python3 python/zigbee_rx/control_receive.py --run-id <JC_RUN> \
   python3 -m unittest python.control_match.tests.test_uc1_receive -q
   ```
   其中覆盖坏 CRC、未知版本/类型、跨尝试混片、`pending_overflow` / `closed_capacity_exhausted`、错布局拒绝时间处理；保存命令、测试结果和代码版本，标为合成/本地证据。
-- H4/H5 实录后的注入回放**尚无可直接执行的通用命令**。如将它作为 P2 必过项，应先补一个独立回放工具：读取已独立解码的本侧记录及 IQ 索引，在副本中逐类注入上述错误，输出事件和时钟/任务状态，并保持原数据只读。不能把错误 manifest 直接交给实录分析器充当回放；该命令可能先因哈希校验拒绝输入。未完成此项前，H6 只能标为“单元级已验、实录注入待做”，不能宣称 H1–H6 全部通过。
+- 使用独立的 [实录包流回放工具](../../python/control_match/uc1_h6_replay.py) 在已解码包副本的内存中注入故障。2714 C3 分片的 7 个案例（含跨 slot 混片）、2715 时间配置的 4 个案例已通过，报告分别保存在 `20261120_run2714/analyses/h6_fault_injection_replay_v3/` 和 `20261120_run2715/analyses/h6_fault_injection_replay_v2/`。复跑时把 `--analysis-id` 换为未使用的新名称，工具会拒绝覆盖已有输出：
+  ```bash
+  python3 python/control_match/uc1_h6_replay.py \
+    --experiment-dir python/experiments/20261120_run2714 \
+    --config python/control_match/configs/uc1_2714.json \
+    --analysis-id h6_fault_injection_replay_recheck
+  python3 python/control_match/uc1_h6_replay.py \
+    --experiment-dir python/experiments/20261120_run2715 \
+    --config python/control_match/configs/uc1_2715.json \
+    --analysis-id h6_fault_injection_replay_recheck
+  ```
+  此证据类型为实录包流上的**离线合成故障注入**，不是空口异常实测；原始逐包文件、IQ 和冻结 manifest 保持只读。H4 的 2711–2714 已按上一节独立对账通过 P2 初验，配置溯源例外须继续披露。
 
 ---
 

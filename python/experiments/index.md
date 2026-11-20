@@ -120,6 +120,7 @@
 | [20261120_run2716](20261120_run2716/report.md) | 2716 | complete | 2 | 0 | 4 |
 | [20261120_run2717](20261120_run2717/report.md) | 2717 | complete | 2 | 0 | 4 |
 | [20261120_run2718](20261120_run2718/report.md) | 2718 | complete | 2 | 1 | 1 |
+| [20261120_run2719](20261120_run2719/report.md) | 2719 | complete | 2 | 0 | 1 |
 | [history_ble_rx_20261026_150021_003660](history_ble_rx_20261026_150021_003660/report.md) | N/A | complete | 1 | 1 | 0 |
 | [history_ble_rx_20261026_150507_618440](history_ble_rx_20261026_150507_618440/report.md) | N/A | complete | 1 | 1 | 0 |
 | [history_ble_rx_20261026_152018_750312](history_ble_rx_20261026_152018_750312/report.md) | N/A | complete | 1 | 2 | 0 |

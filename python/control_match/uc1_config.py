@@ -521,6 +521,11 @@ def export_commands(
         f" --sample-rate {dev['sample_rate']} --lna {dev['lna']} --vga {dev['vga']}{amp_flag}"
         f" --duration {dur} {iq_flag}{control_zig}{exp_arg}"
     )
+    board_serial_cmd = (
+        f"python3 python/control_match/uc1_board_send.py"
+        f" --config {cfg_str}"
+        f" --experiment-dir {exp_dir_display}"
+    )
     analyze_cmd = (
         f"python3 python/control_match/uc1_analyze.py"
         f" --experiment-dir {exp_dir_display}"
@@ -541,6 +546,7 @@ def export_commands(
     return {
         "board_text": board_text,
         "board_command": cfg["board_command"],
+        "board_serial": board_serial_cmd,
         "ble_rx": ble_cmd,
         "zigbee_rx": zig_cmd,
         "analyze": analyze_cmd,
@@ -679,6 +685,9 @@ def main(argv=None) -> int:
                 "",
                 "# IEEE 802.15.4 receiver:",
                 cmds["zigbee_rx"],
+                "",
+                "# Board serial trigger & log saver (run after both receivers start streaming):",
+                cmds["board_serial"],
                 "",
                 "# Joint analysis (after both captures and board.board.log are saved):",
                 cmds["analyze"],

@@ -1,0 +1,2387 @@
+{
+  "schema": "b2z_uc1_analysis_v1",
+  "wire_format": "UC1",
+  "wire_version": 1,
+  "run_id": 2715,
+  "config_sha256": "9bef537e6d40acf197c3c8482621e3616810ff318cb11a4cfc0b89cd79a5a0b1",
+  "phase": "P2",
+  "stage": "verification",
+  "rf_condition": "R0",
+  "block": null,
+  "point": "B",
+  "profile": "time",
+  "mode": "JC",
+  "policy": "k",
+  "policy_value": 3,
+  "k": 3,
+  "period_ms": 500,
+  "layout": {
+    "wire_format": "UC1",
+    "wire_version": 1,
+    "run_id": 2715,
+    "mode": "JC",
+    "rf_mode": "standard_secondary_ch3",
+    "period_ms": 500,
+    "ble_extra": 26,
+    "ieee_extra": 0,
+    "ble_record_bytes": 52,
+    "ieee_record_bytes": 26,
+    "mapped_bytes": 136,
+    "secondary_payload_bytes": 205,
+    "ble_fragments_per_attempt": 1,
+    "ble_channel": 3,
+    "ieee_channel": 12,
+    "phy": "LE_1M",
+    "reference_point": "planned_secondary_start",
+    "reference_epoch_offset_us": 300000,
+    "marker_offset_us": 608,
+    "marker_offset_valid": true,
+    "fill": "lcg_uc1_command_seed"
+  },
+  "capture_evidence": "overlapping_live_capture_intervals",
+  "anomalies": {
+    "ble": [],
+    "zigbee": []
+  },
+  "first_attempt": {
+    "joint": {
+      "numerator": 6,
+      "denominator": 6,
+      "value": 1.0
+    },
+    "quadrants": {
+      "both": 6,
+      "ble_only": 0,
+      "zigbee_only": 0,
+      "neither": 0
+    }
+  },
+  "within_planned_attempts": {
+    "joint": {
+      "numerator": 6,
+      "denominator": 6,
+      "value": 1.0
+    },
+    "quadrants": {
+      "both": 6,
+      "ble_only": 0,
+      "zigbee_only": 0,
+      "neither": 0
+    },
+    "different_slot_joint_tasks": 0,
+    "ble_first_valid_attempt_hist": {
+      "1": 6
+    },
+    "zigbee_first_valid_attempt_hist": {
+      "1": 6
+    }
+  },
+  "deadline_class": {
+    "joint_on_time": {
+      "numerator": 0,
+      "denominator": 6,
+      "value": 0.0
+    },
+    "joint_late": {
+      "numerator": 0,
+      "denominator": 6,
+      "value": 0.0
+    },
+    "joint_unknown": {
+      "numerator": 6,
+      "denominator": 6,
+      "value": 1.0
+    },
+    "joint_not_decoded": {
+      "numerator": 0,
+      "denominator": 6,
+      "value": 0.0
+    },
+    "method": "local_iq_uncalibrated_until_verified",
+    "audit_note": "Uncalibrated independent HackRF IQ timelines cannot certify RF deadline compliance; decoded tasks without calibrated external reference bounds remain classified as unknown."
+  },
+  "joint_software_processed_tasks": 0,
+  "waveform_cost": {
+    "schema": "b2z_waveform_cost_v1",
+    "mode": "uc1_joint",
+    "logical_slots": 300,
+    "ble_tx_completed": 300,
+    "ieee_tx_completed": 300,
+    "burst_attempted": 600,
+    "burst_started": 600,
+    "burst_completed": 600,
+    "planned_waveform_us": 556800,
+    "submitted_waveform_us": 556800,
+    "completed_waveform_us": 556800,
+    "submitted_zero_padding_us": 6000,
+    "attempted_waveform_budget_us": 556800,
+    "uncertain_bursts": 0,
+    "per_joint_decoded_task": {
+      "numerator_us": 556800,
+      "denominator": 6,
+      "value_us": 92800.0
+    },
+    "per_joint_decoded_task_planned": {
+      "numerator_us": 556800,
+      "denominator": 6,
+      "value_us": 92800.0
+    },
+    "per_joint_decoded_task_completed": {
+      "numerator_us": 556800,
+      "denominator": 6,
+      "value_us": 92800.0
+    },
+    "actual_rf_airtime_us": null,
+    "scope": "All slots including sync-only, repeats and failed DMA completions; successful DMA start allocates full waveform. Failed submissions listed separately; actual emitted fraction unknown. Padding is zero IQ, not proof of zero RF energy.",
+    "budget_per_task_us": 5568,
+    "budget_total_us": 33408,
+    "unused_budget_per_task_us": 0,
+    "unused_budget_total_us": 0,
+    "command_submitted_waveform_us": 33408,
+    "time_update_submitted_waveform_us": 523392,
+    "planned_attempts": 300,
+    "planned_time_updates": 282,
+    "planned_silent_slots": 0,
+    "board_uc1_stats": {
+      "run_id": "2715",
+      "planned_attempts": "300",
+      "processed_attempts": "300",
+      "completed_attempts": "300",
+      "failed_attempts": "0",
+      "planned_silent_slots": "0",
+      "planned_air_us": "556800",
+      "completion": "dma_all_bursts_and_restore"
+    }
+  },
+  "ble_fragment_reassembly": {
+    "pending_peak": 0,
+    "closed_peak": 0,
+    "closed_count": 0,
+    "pending_count": 0,
+    "closed_exhausted": false
+  },
+  "decode_invalid_counts": {
+    "ble": {},
+    "zigbee": {}
+  },
+  "receiver_configs": {
+    "ble": {
+      "channels": [
+        3
+      ],
+      "whitening_channels": [
+        3
+      ],
+      "sample_rate": 4000000,
+      "center_hz": 2410000000.0,
+      "iq_file": null,
+      "format": "ci8",
+      "serial": "000000000000000017c467dc2926a0c3",
+      "lna": 16,
+      "vga": 10,
+      "amp": false,
+      "duration": 180.0,
+      "block_samples": 65536,
+      "queue_blocks": 64,
+      "stall_timeout": 10,
+      "sync_threshold": 0.84,
+      "dc_block_hz": 1000,
+      "timing_retry": true,
+      "channel_cutoff_hz": 850000,
+      "pair_tolerance_us": 20,
+      "diagnostic_pairs": true,
+      "diagnostic_pair_window_us": 2000,
+      "save_iq": true,
+      "output": null,
+      "experiment_dir": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261120_run2715",
+      "analysis_id": null,
+      "quiet": true,
+      "run_id": 2715,
+      "control_layout": "joint",
+      "n5_config": null,
+      "uc1_config": "python/control_match/configs/uc1_2715.json",
+      "control_target_id": [
+        1
+      ],
+      "control_sender_id": "configured_board",
+      "control_accept_broadcast": false,
+      "control_assumed_reference_bound_ms": null
+    },
+    "zigbee": {
+      "channel": 12,
+      "serial": "000000000000000017c467dc3348a6c3",
+      "sample_rate": 4000000,
+      "center_hz": 2410000000,
+      "iq_file": null,
+      "format": "ci8",
+      "lna": 16,
+      "vga": 10,
+      "amp": false,
+      "duration": 180.0,
+      "block_samples": 65536,
+      "queue_blocks": 64,
+      "stall_timeout": 10,
+      "dc_block_hz": 1000,
+      "cutoff_hz": 700000,
+      "cfo_hz": 0,
+      "demod": "phase",
+      "symbol_order": "project",
+      "soft_retry": true,
+      "preamble_max_distance": 80,
+      "run_id": 2715,
+      "control_layout": "joint",
+      "command_id": null,
+      "n5_config": null,
+      "uc1_config": "python/control_match/configs/uc1_2715.json",
+      "control_target_id": [
+        2
+      ],
+      "control_sender_id": "configured_board",
+      "control_accept_broadcast": false,
+      "control_assumed_reference_bound_ms": null,
+      "expected_packets": null,
+      "board_log": null,
+      "full_run_covered": false,
+      "save_iq": true,
+      "output": null,
+      "experiment_dir": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261120_run2715",
+      "analysis_id": null,
+      "quiet": false,
+      "payload_len": null
+    }
+  },
+  "receiver_quality": {
+    "ble": {
+      "status": "complete",
+      "error": null,
+      "counts": {
+        "clipped_components": 0,
+        "samples_processed": 720000000,
+        "packets": 300,
+        "auxiliary": 300,
+        "valid_control_records": 300,
+        "matching_control_records": 300,
+        "compact_pending": 0,
+        "compact_closed": 0,
+        "compact_pending_peak": 0,
+        "compact_closed_peak": 0
+      },
+      "capture_stats": {
+        "bytes_read": 1440000000,
+        "queue_high_water": 2
+      }
+    },
+    "zigbee": {
+      "status": "complete",
+      "error": null,
+      "counts": {
+        "clipped_components": 0,
+        "samples_processed": 720000000,
+        "fcs_valid_packets": 300,
+        "control_candidates": 300,
+        "valid_control_records": 300,
+        "matching_control_records": 300,
+        "unique": 300
+      },
+      "capture_stats": {
+        "bytes_read": 1440000000,
+        "queue_high_water": 3
+      }
+    }
+  },
+  "board": {
+    "final": "1",
+    "state": "complete",
+    "run_id": "2715",
+    "period_ms": "500",
+    "tasks": "6",
+    "planned_slots": "300",
+    "reached_slots": "300",
+    "elapsed_us": "150000005",
+    "generated": "300",
+    "primary_started": "300",
+    "primary_completed": "300",
+    "tx_started": "300",
+    "tx_completed": "300",
+    "deadline_miss": "0",
+    "dma_timeout": "0",
+    "secondary_dma_late_samples": "300",
+    "secondary_dma_late_max_us": "74371",
+    "secondary_dma_late_avg_us": "74056",
+    "time_reference": "planned_secondary_start",
+    "rf_mode": "standard_secondary_ch3",
+    "aux_channel": "3",
+    "aux_offset_us": "300000",
+    "auxptr_dma_window_miss": "0",
+    "auxptr_dma_delta_samples": "300",
+    "auxptr_dma_delta_min_us": "300011",
+    "auxptr_dma_delta_max_us": "300020",
+    "auxptr_dma_delta_avg_us": "300012",
+    "retune_failure": "0",
+    "retune_secondary_max_us": "825"
+  },
+  "uc1_board_config": {
+    "run_id": "2715",
+    "version": "1",
+    "mode": "1",
+    "profile": "1",
+    "tasks": "6",
+    "slots": "300",
+    "k": "3",
+    "budget_us": "5568",
+    "cost_per_attempt_us": "1856",
+    "unused_per_task_us": "0",
+    "ble_extra": "26",
+    "ieee_extra": "0",
+    "period_ms": "500",
+    "marker_offset_us": "608",
+    "marker_offset_valid": "1",
+    "reference_epoch_offset_us": "300000",
+    "fill": "lcg_uc1_command_seed",
+    "reference": "planned_not_rf",
+    "mode_name": "JC",
+    "profile_name": "time",
+    "rf_mode": "standard_secondary_ch3",
+    "ieee_marker_offset_us": 608,
+    "marker_offset_valid_bool": true
+  },
+  "uc1_board_stats": {
+    "run_id": "2715",
+    "planned_attempts": "300",
+    "processed_attempts": "300",
+    "completed_attempts": "300",
+    "failed_attempts": "0",
+    "planned_silent_slots": "0",
+    "planned_air_us": "556800",
+    "completion": "dma_all_bursts_and_restore"
+  },
+  "time_support": {
+    "marker_offset_us": 608,
+    "probes_count": 24,
+    "state_durations_ms": {
+      "ble": {
+        "acquiring": 10797.056,
+        "tracking": 143998.976,
+        "holdover": 7995.392,
+        "stale": 17208.576
+      },
+      "zigbee": {
+        "acquiring": 9666.56,
+        "tracking": 142917.63199999995,
+        "holdover": 8077.312,
+        "stale": 19338.496
+      }
+    },
+    "recovery": {
+      "ble": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      },
+      "zigbee": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "live_probe_summary": {
+      "ble": {
+        "coverage": {
+          "numerator": 24,
+          "denominator": 24,
+          "value": 1.0
+        },
+        "residual_ms": {
+          "n": 24,
+          "min": -0.35241964285075666,
+          "median": 0.08293898809701204,
+          "p95": 0.27695074404887854,
+          "p99": 0.29092375000193715,
+          "max": 0.29509523809701205,
+          "mean": 0.05583457341231406,
+          "median_abs": 0.22270535714179276,
+          "p95_abs": 0.3183209821376949,
+          "p99_abs": 0.34551964285075665,
+          "max_abs": 0.35241964285075666
+        },
+        "update_age_ms": {
+          "n": 24,
+          "min": 500.0,
+          "median": 500.0,
+          "p95": 500.0,
+          "p99": 500.0,
+          "max": 500.0,
+          "mean": 500.0,
+          "median_abs": 500.0,
+          "p95_abs": 500.0,
+          "p99_abs": 500.0,
+          "max_abs": 500.0
+        }
+      },
+      "zigbee": {
+        "coverage": {
+          "numerator": 24,
+          "denominator": 24,
+          "value": 1.0
+        },
+        "residual_ms": {
+          "n": 24,
+          "min": -0.2366875,
+          "median": 0.08492708332836628,
+          "p95": 0.29534895834326746,
+          "p99": 0.37021927084326745,
+          "max": 0.39217708334326745,
+          "mean": 0.0681402529772992,
+          "median_abs": 0.12931175595149397,
+          "p95_abs": 0.29534895834326746,
+          "p99_abs": 0.37021927084326745,
+          "max_abs": 0.39217708334326745
+        },
+        "update_age_ms": {
+          "n": 24,
+          "min": 1000.0,
+          "median": 1000.0,
+          "p95": 1000.0,
+          "p99": 1000.0,
+          "max": 1000.0,
+          "mean": 1000.0,
+          "median_abs": 1000.0,
+          "p95_abs": 1000.0,
+          "p99_abs": 1000.0,
+          "max_abs": 1000.0
+        }
+      }
+    },
+    "live_pair_diff_ms": {
+      "n": 24,
+      "min": -0.26025069497700315,
+      "median": -0.02392564294859767,
+      "p95": 0.1806792971365212,
+      "p99": 0.20082345325427012,
+      "max": 0.20672483609814662,
+      "mean": -0.012303197995000422,
+      "median_abs": 0.14899339611292817,
+      "p95_abs": 0.20516267733255517,
+      "p99_abs": 0.24793974743486613,
+      "max_abs": 0.26025069497700315
+    },
+    "replay_summary": [
+      {
+        "policy": "offset",
+        "metric": "ble_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -2054.0,
+        "median": -1233.25,
+        "p95": -351.225,
+        "p99": -269.035,
+        "max": -245.0,
+        "mean": -1190.4166666666667,
+        "median_abs": 1233.25,
+        "p95_abs": 1995.1999999999998,
+        "p99_abs": 2043.995,
+        "max_abs": 2054.0,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "offset",
+        "metric": "zigbee_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -1923.0,
+        "median": -1046.25,
+        "p95": -91.03750000000002,
+        "p99": -11.730000000000047,
+        "max": 11.5,
+        "mean": -1003.8125,
+        "median_abs": 1046.25,
+        "p95_abs": 1893.4999999999998,
+        "p99_abs": 1920.01,
+        "max_abs": 1923.0,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "offset",
+        "metric": "relative_error_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -271.4999999952852,
+        "median": -187.0000000053551,
+        "p95": -109.58750002610033,
+        "p99": -102.3400000075344,
+        "max": -100.50000000046566,
+        "mean": -186.60416666837895,
+        "median_abs": 187.0000000053551,
+        "p95_abs": 262.87499999671127,
+        "p99_abs": 269.7749999953521,
+        "max_abs": 271.4999999952852,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n2",
+        "metric": "ble_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -266.51724137738347,
+        "median": -13.060344822704792,
+        "p95": 152.66551724672314,
+        "p99": 197.45000000521537,
+        "max": 210.25862069427967,
+        "mean": -65.1063218380247,
+        "median_abs": 58.56896551698446,
+        "p95_abs": 263.7698275847826,
+        "p99_abs": 265.92637930847707,
+        "max_abs": 266.51724137738347,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n2",
+        "metric": "zigbee_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": 69.8965517245233,
+        "median": 937.3318965509534,
+        "p95": 1865.0487069010735,
+        "p99": 1904.1560344795882,
+        "max": 1915.5172413736582,
+        "mean": 988.6443965513414,
+        "median_abs": 937.3318965509534,
+        "p95_abs": 1865.0487069010735,
+        "p99_abs": 1904.1560344795882,
+        "max_abs": 1915.5172413736582,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n2",
+        "metric": "relative_error_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -1773.6964640207589,
+        "median": -1054.1786451722146,
+        "p95": -404.639132047305,
+        "p99": -347.0573768952454,
+        "max": -332.66209423163673,
+        "mean": -1053.783399650759,
+        "median_abs": 1054.1786451722146,
+        "p95_abs": 1702.1828412718603,
+        "p99_abs": 1759.4162221049191,
+        "max_abs": 1773.6964640207589,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n4",
+        "metric": "ble_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -153.65693042892963,
+        "median": 155.3665693057701,
+        "p95": 456.6662772156298,
+        "p99": 493.35562930777667,
+        "max": 504.1404673308134,
+        "mean": 145.1845016804291,
+        "median_abs": 156.10939989378676,
+        "p95_abs": 456.6662772156298,
+        "p99_abs": 493.35562930777667,
+        "max_abs": 504.1404673308134,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n4",
+        "metric": "zigbee_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": 16.70339883118868,
+        "median": 673.7321428619325,
+        "p95": 1386.6614710599183,
+        "p99": 1401.5122557112575,
+        "max": 1405.3782527893782,
+        "mean": 706.9783258096626,
+        "median_abs": 673.7321428619325,
+        "p95_abs": 1386.6614710599183,
+        "p99_abs": 1401.5122557112575,
+        "max_abs": 1405.3782527893782,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n4",
+        "metric": "relative_error_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -952.0493090967648,
+        "median": -562.2061942049186,
+        "p95": -209.37327345636737,
+        "p99": -178.1656292736443,
+        "max": -170.36381049547344,
+        "mean": -561.8107046730074,
+        "median_abs": 562.2061942049186,
+        "p95_abs": 913.5028911259723,
+        "p99_abs": 944.3625154445181,
+        "max_abs": 952.0493090967648,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n8",
+        "metric": "ble_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -73.10219368711114,
+        "median": 530.4907704591751,
+        "p95": 1186.740101663023,
+        "p99": 1194.7014392863214,
+        "max": 1196.2688603699207,
+        "mean": 556.9166666679084,
+        "median_abs": 530.4907704591751,
+        "p95_abs": 1186.740101663023,
+        "p99_abs": 1194.7014392863214,
+        "max_abs": 1196.2688603699207,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n8",
+        "metric": "zigbee_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": 38.25481540989131,
+        "median": 597.6591091416776,
+        "p95": 1221.4888643622398,
+        "p99": 1225.2034068928658,
+        "max": 1225.3840288817883,
+        "mean": 627.3642656479884,
+        "median_abs": 597.6591091416776,
+        "p95_abs": 1221.4888643622398,
+        "p99_abs": 1225.2034068928658,
+        "max_abs": 1225.3840288817883,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n8",
+        "metric": "relative_error_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -111.35986483714078,
+        "median": -70.84567795391195,
+        "p95": -33.020474747172564,
+        "p99": -29.291803688392974,
+        "max": -28.331511421129107,
+        "mean": -70.44986703385803,
+        "median_abs": 70.84567795391195,
+        "p95_abs": 107.133462762431,
+        "p99_abs": 110.51457760579069,
+        "max_abs": 111.35986483714078,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n16",
+        "metric": "ble_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -210.9461375772953,
+        "median": 66.61643579602242,
+        "p95": 187.46316038072106,
+        "p99": 236.07901620373127,
+        "max": 249.84548015892506,
+        "mean": 14.043629182657847,
+        "median_abs": 133.46871331427246,
+        "p95_abs": 210.01488023996353,
+        "p99_abs": 240.8986313651502,
+        "max_abs": 249.84548015892506,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n16",
+        "metric": "zigbee_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -64.45005869865417,
+        "median": 255.9985501272604,
+        "p95": 631.6138001926244,
+        "p99": 664.7043701650202,
+        "max": 674.5613876581192,
+        "mean": 279.26156668559025,
+        "median_abs": 255.9985501272604,
+        "p95_abs": 631.6138001926244,
+        "p99_abs": 664.7043701650202,
+        "max_abs": 674.5613876581192,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n16",
+        "metric": "relative_error_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -457.9719536122866,
+        "median": -265.6194426235743,
+        "p95": -90.52768849687712,
+        "p99": -75.11937336064875,
+        "max": -71.26734859048156,
+        "mean": -265.22380835619214,
+        "median_abs": 265.6194426235743,
+        "p95_abs": 439.17443528771395,
+        "p99_abs": 454.234944183263,
+        "max_abs": 457.9719536122866,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n8_span10s",
+        "metric": "ble_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -1324.7558983713388,
+        "median": -714.1928312219679,
+        "p95": -135.18507259795464,
+        "p99": -62.97837568148974,
+        "max": -46.11887477338314,
+        "mean": -695.1562310991964,
+        "median_abs": 714.1928312219679,
+        "p95_abs": 1202.5235027216374,
+        "p99_abs": 1298.5118965551258,
+        "max_abs": 1324.7558983713388,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n8_span10s",
+        "metric": "zigbee_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -55.753176043741405,
+        "median": 416.78607077896595,
+        "p95": 986.3366606123745,
+        "p99": 998.6372186985612,
+        "max": 1001.6592559069395,
+        "mean": 462.32089382848545,
+        "median_abs": 416.78607077896595,
+        "p95_abs": 986.3366606123745,
+        "p99_abs": 998.6372186985612,
+        "max_abs": 1001.6592559069395,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n8_span10s",
+        "metric": "relative_error_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -2145.016415073769,
+        "median": -1157.8880230372306,
+        "p95": -267.4995346456855,
+        "p99": -188.50882455059042,
+        "max": -168.76135498750955,
+        "mean": -1157.492979622475,
+        "median_abs": 1157.8880230372306,
+        "p95_abs": 2046.741946156544,
+        "p99_abs": 2125.3839977635653,
+        "max_abs": 2145.016415073769,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n8_span20s",
+        "metric": "ble_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -129.67918497882783,
+        "median": 291.24350778758526,
+        "p95": 815.1673591665923,
+        "p99": 833.1700639246404,
+        "max": 838.06052736938,
+        "mean": 338.8925622564275,
+        "median_abs": 291.24350778758526,
+        "p95_abs": 815.1673591665923,
+        "p99_abs": 833.1700639246404,
+        "max_abs": 838.06052736938,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n8_span20s",
+        "metric": "zigbee_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -554.1926688104868,
+        "median": -152.86296444386244,
+        "p95": 101.02907011676561,
+        "p99": 143.97842588800935,
+        "max": 152.96064722165465,
+        "mean": -176.4816470267639,
+        "median_abs": 162.0688174199313,
+        "p95_abs": 501.25342589989293,
+        "p99_abs": 543.4157261414825,
+        "max_abs": 554.1926688104868,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "freeze_n8_span20s",
+        "metric": "relative_error_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -37.24769738619216,
+        "median": 514.9882203622838,
+        "p95": 1013.3641359439933,
+        "p99": 1058.0302682099864,
+        "max": 1069.224939798005,
+        "mean": 515.3844078443702,
+        "median_abs": 514.9882203622838,
+        "p95_abs": 1013.3641359439933,
+        "p99_abs": 1058.0302682099864,
+        "max_abs": 1069.224939798005,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_1s",
+        "metric": "ble_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -352.4196428571595,
+        "median": 82.9389880951494,
+        "p95": 276.9507440478512,
+        "p99": 290.9237500001868,
+        "max": 295.09523809538223,
+        "mean": 56.06479284596571,
+        "median_abs": 221.22619047600892,
+        "p95_abs": 318.32098214289283,
+        "p99_abs": 345.51964285715945,
+        "max_abs": 352.4196428571595,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_1s",
+        "metric": "zigbee_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -236.68750000034925,
+        "median": 84.92708333331393,
+        "p95": 295.3489583335991,
+        "p99": 370.2192708331835,
+        "max": 392.1770833330229,
+        "mean": 69.5616065202242,
+        "median_abs": 122.78645833348855,
+        "p95_abs": 295.3489583335991,
+        "p99_abs": 370.2192708331835,
+        "max_abs": 392.1770833330229,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_1s",
+        "metric": "relative_error_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -260.250695006107,
+        "median": -23.92564294859767,
+        "p95": 180.67929712415207,
+        "p99": 200.8234532509232,
+        "max": 206.72483609814662,
+        "mean": -13.494375969457906,
+        "median_abs": 148.99339611292817,
+        "p95_abs": 205.16267733037236,
+        "p99_abs": 247.93974745727607,
+        "max_abs": 260.250695006107,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_5s",
+        "metric": "ble_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -106.06011905055493,
+        "median": 61.87886904878542,
+        "p95": 333.1830038119572,
+        "p99": 357.47465733344666,
+        "max": 362.4338235286996,
+        "mean": 87.17734686541371,
+        "median_abs": 105.43571428814903,
+        "p95_abs": 333.1830038119572,
+        "p99_abs": 357.47465733344666,
+        "max_abs": 362.4338235286996,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_5s",
+        "metric": "zigbee_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -234.53392857173458,
+        "median": 108.0134558302816,
+        "p95": 412.6033333346479,
+        "p99": 472.19432738120196,
+        "max": 488.61071428563446,
+        "mean": 110.79280581284547,
+        "median_abs": 139.5058885172475,
+        "p95_abs": 412.6033333346479,
+        "p99_abs": 472.19432738120196,
+        "max_abs": 488.61071428563446,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_5s",
+        "metric": "relative_error_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -519.0593207953498,
+        "median": -14.381731554749422,
+        "p95": 245.9089380117801,
+        "p99": 270.4834469583875,
+        "max": 274.3626676383428,
+        "mean": -23.616436044600658,
+        "median_abs": 106.62176700134296,
+        "p95_abs": 294.01087207079394,
+        "p99_abs": 468.0956635333131,
+        "max_abs": 519.0593207953498,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_10s",
+        "metric": "ble_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -95.48459137883037,
+        "median": 166.7885418026708,
+        "p95": 395.1027191741858,
+        "p99": 428.7427560296282,
+        "max": 438.74544868804514,
+        "mean": 150.49911346507724,
+        "median_abs": 166.7885418026708,
+        "p95_abs": 395.1027191741858,
+        "p99_abs": 428.7427560296282,
+        "max_abs": 438.74544868804514,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_10s",
+        "metric": "zigbee_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -180.9833333361894,
+        "median": 77.94651888031512,
+        "p95": 423.0522699889727,
+        "p99": 426.2720535714738,
+        "max": 426.6232142858207,
+        "mean": 97.72615002219875,
+        "median_abs": 141.73436399083585,
+        "p95_abs": 423.0522699889727,
+        "p99_abs": 426.2720535714738,
+        "max_abs": 426.6232142858207,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_10s",
+        "metric": "relative_error_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -339.60063342237845,
+        "median": 89.75667527556652,
+        "p95": 210.82472181115008,
+        "p99": 249.08550057567479,
+        "max": 260.38415540824644,
+        "mean": 52.773957175001364,
+        "median_abs": 112.0635385013884,
+        "p95_abs": 295.6175788291147,
+        "p99_abs": 330.9145933459513,
+        "max_abs": 339.60063342237845,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_1s_mask5s",
+        "metric": "ble_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -352.4196428571595,
+        "median": 82.9389880951494,
+        "p95": 276.9507440478512,
+        "p99": 290.9237500001868,
+        "max": 295.09523809538223,
+        "mean": 54.028985767164464,
+        "median_abs": 221.22619047600892,
+        "p95_abs": 318.32098214289283,
+        "p99_abs": 345.51964285715945,
+        "max_abs": 352.4196428571595,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_1s_mask5s",
+        "metric": "zigbee_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -236.68750000034925,
+        "median": 84.92708333331393,
+        "p95": 295.3489583335991,
+        "p99": 370.2192708331835,
+        "max": 392.1770833330229,
+        "mean": 72.87813677817273,
+        "median_abs": 122.78645833348855,
+        "p95_abs": 295.3489583335991,
+        "p99_abs": 370.2192708331835,
+        "max_abs": 392.1770833330229,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_1s_mask5s",
+        "metric": "relative_error_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -263.8990895648021,
+        "median": -23.92564294859767,
+        "p95": 180.67929712415207,
+        "p99": 200.8234532509232,
+        "max": 206.72483609814662,
+        "mean": -18.846869766396896,
+        "median_abs": 154.60696798254503,
+        "p95_abs": 252.2218161699128,
+        "p99_abs": 263.05995881630224,
+        "max_abs": 263.8990895648021,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_1s_mask15s",
+        "metric": "ble_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -352.4196428571595,
+        "median": 0.9122023808886297,
+        "p95": 276.9507440478512,
+        "p99": 290.9237500001868,
+        "max": 295.09523809538223,
+        "mean": 28.9320486618138,
+        "median_abs": 230.7425595233217,
+        "p95_abs": 318.32098214289283,
+        "p99_abs": 345.51964285715945,
+        "max_abs": 352.4196428571595,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_1s_mask15s",
+        "metric": "zigbee_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -236.68750000034925,
+        "median": 93.46874999994179,
+        "p95": 295.7583333336632,
+        "p99": 370.2192708331835,
+        "max": 392.1770833330229,
+        "mean": 82.65206112416247,
+        "median_abs": 143.93750000011642,
+        "p95_abs": 295.7583333336632,
+        "p99_abs": 370.2192708331835,
+        "max_abs": 392.1770833330229,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_1s_mask15s",
+        "metric": "relative_error_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -473.98966863693204,
+        "median": -23.92564294859767,
+        "p95": 180.67929712415207,
+        "p99": 200.8234532509232,
+        "max": 206.72483609814662,
+        "mean": -53.71854433845632,
+        "median_abs": 163.90079873235663,
+        "p95_abs": 352.9762996098723,
+        "p99_abs": 449.77208052136115,
+        "max_abs": 473.98966863693204,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_1s_mask30s",
+        "metric": "ble_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -572.2410714253783,
+        "median": -29.41964285739232,
+        "p95": 276.9507440478512,
+        "p99": 290.9237500001868,
+        "max": 295.09523809538223,
+        "mean": -24.85015631478503,
+        "median_abs": 227.23363095149398,
+        "p95_abs": 347.91964285715943,
+        "p99_abs": 521.6821428546879,
+        "max_abs": 572.2410714253783,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_1s_mask30s",
+        "metric": "zigbee_residual_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -236.68750000034925,
+        "median": 159.5462398372474,
+        "p95": 379.1281249999999,
+        "p99": 390.54072916642764,
+        "max": 392.1770833330229,
+        "mean": 119.21389733999483,
+        "median_abs": 194.64583333343035,
+        "p95_abs": 379.1281249999999,
+        "p99_abs": 390.54072916642764,
+        "max_abs": 392.1770833330229,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      },
+      {
+        "policy": "update_1s_mask30s",
+        "metric": "relative_error_us",
+        "planned_probes": 24,
+        "missing_or_unscored": 0,
+        "n": 24,
+        "min": -789.6247574535664,
+        "median": -126.1028088410967,
+        "p95": 176.86047982933812,
+        "p99": 200.22951247228775,
+        "max": 206.72483609814662,
+        "mean": -144.06490853010231,
+        "median_abs": 163.90079873235663,
+        "p95_abs": 668.5764776979338,
+        "p99_abs": 765.4077414204949,
+        "max_abs": 789.6247574535664,
+        "thresholds": [
+          {
+            "threshold_us": 10000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 50000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          },
+          {
+            "threshold_us": 100000,
+            "numerator": 24,
+            "planned_denominator": 24,
+            "conditional_denominator": 24
+          }
+        ]
+      }
+    ],
+    "live_event_counts": {
+      "ble": {
+        "registration": 1,
+        "sample_progress": 10987,
+        "decoded": 300,
+        "candidate_accumulating": 7,
+        "not_training_candidate": 126,
+        "clock_updated": 143,
+        "observation_transition": 3,
+        "probe_score": 24,
+        "probe_held_out": 24,
+        "rejected": 18,
+        "capture_end": 1
+      },
+      "zigbee": {
+        "registration": 1,
+        "sample_progress": 10987,
+        "decoded": 300,
+        "not_training_candidate": 150,
+        "candidate_accumulating": 7,
+        "clock_updated": 119,
+        "observation_transition": 49,
+        "probe_score": 24,
+        "probe_held_out": 24,
+        "rejected": 18,
+        "capture_end": 1
+      }
+    },
+    "live_rejection_reasons": {
+      "ble": {
+        "time_quality_insufficient": 18
+      },
+      "zigbee": {
+        "time_quality_insufficient": 18
+      }
+    },
+    "immediate_replay_processed": {
+      "ble": 6,
+      "zigbee": 6
+    }
+  },
+  "planned_task_semantics": [
+    {
+      "command_id": 1,
+      "first_slot": 70,
+      "valid_until_ms": 37000,
+      "execute_at_ms": 38000,
+      "ble_target": 1,
+      "ble_opcode": 1,
+      "ble_arg": 1,
+      "zigbee_target": 2,
+      "zigbee_opcode": 1,
+      "zigbee_arg": 2
+    },
+    {
+      "command_id": 2,
+      "first_slot": 90,
+      "valid_until_ms": 47000,
+      "execute_at_ms": 48000,
+      "ble_target": 1,
+      "ble_opcode": 1,
+      "ble_arg": 2,
+      "zigbee_target": 2,
+      "zigbee_opcode": 1,
+      "zigbee_arg": 3
+    },
+    {
+      "command_id": 3,
+      "first_slot": 150,
+      "valid_until_ms": 77000,
+      "execute_at_ms": 78000,
+      "ble_target": 1,
+      "ble_opcode": 1,
+      "ble_arg": 3,
+      "zigbee_target": 2,
+      "zigbee_opcode": 1,
+      "zigbee_arg": 4
+    },
+    {
+      "command_id": 4,
+      "first_slot": 190,
+      "valid_until_ms": 97000,
+      "execute_at_ms": 98000,
+      "ble_target": 1,
+      "ble_opcode": 1,
+      "ble_arg": 4,
+      "zigbee_target": 2,
+      "zigbee_opcode": 1,
+      "zigbee_arg": 5
+    },
+    {
+      "command_id": 5,
+      "first_slot": 240,
+      "valid_until_ms": 122000,
+      "execute_at_ms": 123000,
+      "ble_target": 1,
+      "ble_opcode": 1,
+      "ble_arg": 5,
+      "zigbee_target": 2,
+      "zigbee_opcode": 1,
+      "zigbee_arg": 6
+    },
+    {
+      "command_id": 6,
+      "first_slot": 270,
+      "valid_until_ms": 137000,
+      "execute_at_ms": 138000,
+      "ble_target": 1,
+      "ble_opcode": 1,
+      "ble_arg": 6,
+      "zigbee_target": 2,
+      "zigbee_opcode": 1,
+      "zigbee_arg": 7
+    }
+  ],
+  "tasks": [
+    {
+      "command_id": 1,
+      "first_slot": 70,
+      "planned_attempts": 3,
+      "board_tx_completed": 3,
+      "ble_valid_attempts": 3,
+      "zigbee_valid_attempts": 3,
+      "same_attempt_joint_valid": 3,
+      "ble_first_valid_slot": 70,
+      "zigbee_first_valid_slot": 70,
+      "joint_task_decoded": 1,
+      "ble_live_status": "rejected",
+      "zigbee_live_status": "rejected",
+      "ble_software_processed": 0,
+      "zigbee_software_processed": 0,
+      "ble_command": {
+        "target_id": 1,
+        "opcode": 1,
+        "arg": 1,
+        "execute_at_ms": 38000,
+        "valid_until_ms": 37000
+      },
+      "zigbee_command": {
+        "target_id": 2,
+        "opcode": 1,
+        "arg": 2,
+        "execute_at_ms": 38000,
+        "valid_until_ms": 37000
+      },
+      "board_ble_tx_completed": 3,
+      "board_ieee_tx_completed": 3,
+      "ble_followed_attempts": null,
+      "joint_task_with_ble_follow": null,
+      "ble_first_attempt_valid": 1,
+      "zigbee_first_attempt_valid": 1,
+      "joint_first_attempt_valid": 1,
+      "first_attempt_quadrant": "both",
+      "within_planned_attempts_quadrant": "both",
+      "ble_first_valid_attempt_index": 1,
+      "zigbee_first_valid_attempt_index": 1,
+      "different_slot_joint": 0,
+      "ble_deadline_class": "unknown",
+      "ble_deadline_reason": "uncalibrated_reference_bound",
+      "zigbee_deadline_class": "unknown",
+      "zigbee_deadline_reason": "uncalibrated_reference_bound",
+      "joint_deadline_class": "unknown"
+    },
+    {
+      "command_id": 2,
+      "first_slot": 90,
+      "planned_attempts": 3,
+      "board_tx_completed": 3,
+      "ble_valid_attempts": 3,
+      "zigbee_valid_attempts": 3,
+      "same_attempt_joint_valid": 3,
+      "ble_first_valid_slot": 90,
+      "zigbee_first_valid_slot": 90,
+      "joint_task_decoded": 1,
+      "ble_live_status": "rejected",
+      "zigbee_live_status": "rejected",
+      "ble_software_processed": 0,
+      "zigbee_software_processed": 0,
+      "ble_command": {
+        "target_id": 1,
+        "opcode": 1,
+        "arg": 2,
+        "execute_at_ms": 48000,
+        "valid_until_ms": 47000
+      },
+      "zigbee_command": {
+        "target_id": 2,
+        "opcode": 1,
+        "arg": 3,
+        "execute_at_ms": 48000,
+        "valid_until_ms": 47000
+      },
+      "board_ble_tx_completed": 3,
+      "board_ieee_tx_completed": 3,
+      "ble_followed_attempts": null,
+      "joint_task_with_ble_follow": null,
+      "ble_first_attempt_valid": 1,
+      "zigbee_first_attempt_valid": 1,
+      "joint_first_attempt_valid": 1,
+      "first_attempt_quadrant": "both",
+      "within_planned_attempts_quadrant": "both",
+      "ble_first_valid_attempt_index": 1,
+      "zigbee_first_valid_attempt_index": 1,
+      "different_slot_joint": 0,
+      "ble_deadline_class": "unknown",
+      "ble_deadline_reason": "uncalibrated_reference_bound",
+      "zigbee_deadline_class": "unknown",
+      "zigbee_deadline_reason": "uncalibrated_reference_bound",
+      "joint_deadline_class": "unknown"
+    },
+    {
+      "command_id": 3,
+      "first_slot": 150,
+      "planned_attempts": 3,
+      "board_tx_completed": 3,
+      "ble_valid_attempts": 3,
+      "zigbee_valid_attempts": 3,
+      "same_attempt_joint_valid": 3,
+      "ble_first_valid_slot": 150,
+      "zigbee_first_valid_slot": 150,
+      "joint_task_decoded": 1,
+      "ble_live_status": "rejected",
+      "zigbee_live_status": "rejected",
+      "ble_software_processed": 0,
+      "zigbee_software_processed": 0,
+      "ble_command": {
+        "target_id": 1,
+        "opcode": 1,
+        "arg": 3,
+        "execute_at_ms": 78000,
+        "valid_until_ms": 77000
+      },
+      "zigbee_command": {
+        "target_id": 2,
+        "opcode": 1,
+        "arg": 4,
+        "execute_at_ms": 78000,
+        "valid_until_ms": 77000
+      },
+      "board_ble_tx_completed": 3,
+      "board_ieee_tx_completed": 3,
+      "ble_followed_attempts": null,
+      "joint_task_with_ble_follow": null,
+      "ble_first_attempt_valid": 1,
+      "zigbee_first_attempt_valid": 1,
+      "joint_first_attempt_valid": 1,
+      "first_attempt_quadrant": "both",
+      "within_planned_attempts_quadrant": "both",
+      "ble_first_valid_attempt_index": 1,
+      "zigbee_first_valid_attempt_index": 1,
+      "different_slot_joint": 0,
+      "ble_deadline_class": "unknown",
+      "ble_deadline_reason": "uncalibrated_reference_bound",
+      "zigbee_deadline_class": "unknown",
+      "zigbee_deadline_reason": "uncalibrated_reference_bound",
+      "joint_deadline_class": "unknown"
+    },
+    {
+      "command_id": 4,
+      "first_slot": 190,
+      "planned_attempts": 3,
+      "board_tx_completed": 3,
+      "ble_valid_attempts": 3,
+      "zigbee_valid_attempts": 3,
+      "same_attempt_joint_valid": 3,
+      "ble_first_valid_slot": 190,
+      "zigbee_first_valid_slot": 190,
+      "joint_task_decoded": 1,
+      "ble_live_status": "rejected",
+      "zigbee_live_status": "rejected",
+      "ble_software_processed": 0,
+      "zigbee_software_processed": 0,
+      "ble_command": {
+        "target_id": 1,
+        "opcode": 1,
+        "arg": 4,
+        "execute_at_ms": 98000,
+        "valid_until_ms": 97000
+      },
+      "zigbee_command": {
+        "target_id": 2,
+        "opcode": 1,
+        "arg": 5,
+        "execute_at_ms": 98000,
+        "valid_until_ms": 97000
+      },
+      "board_ble_tx_completed": 3,
+      "board_ieee_tx_completed": 3,
+      "ble_followed_attempts": null,
+      "joint_task_with_ble_follow": null,
+      "ble_first_attempt_valid": 1,
+      "zigbee_first_attempt_valid": 1,
+      "joint_first_attempt_valid": 1,
+      "first_attempt_quadrant": "both",
+      "within_planned_attempts_quadrant": "both",
+      "ble_first_valid_attempt_index": 1,
+      "zigbee_first_valid_attempt_index": 1,
+      "different_slot_joint": 0,
+      "ble_deadline_class": "unknown",
+      "ble_deadline_reason": "uncalibrated_reference_bound",
+      "zigbee_deadline_class": "unknown",
+      "zigbee_deadline_reason": "uncalibrated_reference_bound",
+      "joint_deadline_class": "unknown"
+    },
+    {
+      "command_id": 5,
+      "first_slot": 240,
+      "planned_attempts": 3,
+      "board_tx_completed": 3,
+      "ble_valid_attempts": 3,
+      "zigbee_valid_attempts": 3,
+      "same_attempt_joint_valid": 3,
+      "ble_first_valid_slot": 240,
+      "zigbee_first_valid_slot": 240,
+      "joint_task_decoded": 1,
+      "ble_live_status": "rejected",
+      "zigbee_live_status": "rejected",
+      "ble_software_processed": 0,
+      "zigbee_software_processed": 0,
+      "ble_command": {
+        "target_id": 1,
+        "opcode": 1,
+        "arg": 5,
+        "execute_at_ms": 123000,
+        "valid_until_ms": 122000
+      },
+      "zigbee_command": {
+        "target_id": 2,
+        "opcode": 1,
+        "arg": 6,
+        "execute_at_ms": 123000,
+        "valid_until_ms": 122000
+      },
+      "board_ble_tx_completed": 3,
+      "board_ieee_tx_completed": 3,
+      "ble_followed_attempts": null,
+      "joint_task_with_ble_follow": null,
+      "ble_first_attempt_valid": 1,
+      "zigbee_first_attempt_valid": 1,
+      "joint_first_attempt_valid": 1,
+      "first_attempt_quadrant": "both",
+      "within_planned_attempts_quadrant": "both",
+      "ble_first_valid_attempt_index": 1,
+      "zigbee_first_valid_attempt_index": 1,
+      "different_slot_joint": 0,
+      "ble_deadline_class": "unknown",
+      "ble_deadline_reason": "uncalibrated_reference_bound",
+      "zigbee_deadline_class": "unknown",
+      "zigbee_deadline_reason": "uncalibrated_reference_bound",
+      "joint_deadline_class": "unknown"
+    },
+    {
+      "command_id": 6,
+      "first_slot": 270,
+      "planned_attempts": 3,
+      "board_tx_completed": 3,
+      "ble_valid_attempts": 3,
+      "zigbee_valid_attempts": 3,
+      "same_attempt_joint_valid": 3,
+      "ble_first_valid_slot": 270,
+      "zigbee_first_valid_slot": 270,
+      "joint_task_decoded": 1,
+      "ble_live_status": "rejected",
+      "zigbee_live_status": "rejected",
+      "ble_software_processed": 0,
+      "zigbee_software_processed": 0,
+      "ble_command": {
+        "target_id": 1,
+        "opcode": 1,
+        "arg": 6,
+        "execute_at_ms": 138000,
+        "valid_until_ms": 137000
+      },
+      "zigbee_command": {
+        "target_id": 2,
+        "opcode": 1,
+        "arg": 7,
+        "execute_at_ms": 138000,
+        "valid_until_ms": 137000
+      },
+      "board_ble_tx_completed": 3,
+      "board_ieee_tx_completed": 3,
+      "ble_followed_attempts": null,
+      "joint_task_with_ble_follow": null,
+      "ble_first_attempt_valid": 1,
+      "zigbee_first_attempt_valid": 1,
+      "joint_first_attempt_valid": 1,
+      "first_attempt_quadrant": "both",
+      "within_planned_attempts_quadrant": "both",
+      "ble_first_valid_attempt_index": 1,
+      "zigbee_first_valid_attempt_index": 1,
+      "different_slot_joint": 0,
+      "ble_deadline_class": "unknown",
+      "ble_deadline_reason": "uncalibrated_reference_bound",
+      "zigbee_deadline_class": "unknown",
+      "zigbee_deadline_reason": "uncalibrated_reference_bound",
+      "joint_deadline_class": "unknown"
+    }
+  ],
+  "sources": {
+    "config": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/control_match/configs/uc1_2715.json",
+      "sha256": "97da4926d2cddd05710313d5079c568d51dce0cbaf8e382292b7063700d48232"
+    },
+    "board": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261120_run2715/board.board.log",
+      "sha256": "4232107ccdda2fb3504b4df3c3165d6422e37880dba56e0df313f8a479f3b9b7"
+    },
+    "ble": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261120_run2715/captures/ble/110034_607271_y9r1xvkg/rx.packets.jsonl",
+      "sha256": "1a4961d231e865a0777a1ab3a7ae058dcd3b882cac7ff5a862cbed9da7d8341f"
+    },
+    "ble_receiver": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261120_run2715/captures/ble/110034_607271_y9r1xvkg/rx.summary.json",
+      "sha256": "c1190c62e9d2e51114dd750908a4c5161695b9a86e0dc18f3f4867aae4b0b77f"
+    },
+    "ble_control_summary": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261120_run2715/captures/ble/110034_607271_y9r1xvkg/rx.control.summary.json",
+      "sha256": "e0e14990e21983ec95ce0e3a75f538b9bf673f6affb710eff4ee93df6925cb8f"
+    },
+    "ble_events": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261120_run2715/captures/ble/110034_607271_y9r1xvkg/rx.control.events.jsonl",
+      "sha256": "c56643e55d5d45e25237bceb7fef92b230d1ac85a709357168bdca8af97fe777"
+    },
+    "zigbee": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261120_run2715/captures/zigbee/110036_246267_gi33fxh5/rx.packets.jsonl",
+      "sha256": "ef24e74780c98fc6353a0120fba3322be3c607d2afa344aeef996f7582daa2cf"
+    },
+    "zigbee_receiver": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261120_run2715/captures/zigbee/110036_246267_gi33fxh5/rx.summary.json",
+      "sha256": "d06d96a2b046f918c9798d28c31a0cbb9b9fed804361f6dfef43bc6d4d8f3bb3"
+    },
+    "zigbee_control_summary": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261120_run2715/captures/zigbee/110036_246267_gi33fxh5/rx.control.summary.json",
+      "sha256": "97970473a07153536bd4dc8b51ea8aaa361d11f125e88f46bb0284f0d5c322d6"
+    },
+    "zigbee_events": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261120_run2715/captures/zigbee/110036_246267_gi33fxh5/rx.control.events.jsonl",
+      "sha256": "bb4264197995f42b345b279503e2b6905cbb9e4353aa21cd9c176314cf230fbd"
+    }
+  },
+  "analysis_sources": {
+    "__init__.py": "8c82d267bd2f8783f2588a27cc94adf9f8e20675baaff56fd1adf390782a6df0",
+    "analyze.py": "4ea1444728d775b15f9e32b35acb97fe22a8649d37b52823252d792407d2fc75",
+    "burst_cost.py": "140e2e74074120d74693a0aa6b08c6cab83d26a0d72504e0b81889639e685268",
+    "compact.py": "8c990ec515c03ad39a3e85dc2a5b3d66c1b243617f622f2b907281d800595a37",
+    "compare_n2.py": "b92af8585d8c4da4f95b78d9d362904896ef7df15f4eaff798f9396e6bf4547f",
+    "control_engine.py": "beade3401edc41c20f37423ed2114176f5e548e5eda88d5fced7506ef641f7b0",
+    "flow_input.py": "72d612a8e47a63a7ad958451ca0209f6a07a3d73a7a4c1afeb79631cde288a52",
+    "holdover_analyze.py": "bd5ff8a5ac36aa216868c9eb541aa9dc9f8b7bc66d7b1a2b415ac40751b0c3dd",
+    "immediate_engine.py": "eecb7b9f85696ad4561cb107410ad865ecb013a3505266dec97b696d2e8ebf89",
+    "live_control.py": "74b371d532c2ea00ef02916b31f4d5f16a99893bb25c054798672e9dd94d557b",
+    "n3_analyze.py": "480a6d5a307401590d1650749f98f5aae84be8a76bceb4f1decb9b01ccb25838",
+    "n3_follow_analyze.py": "0daaefaad2e099ae8ab566b3a44b56eb3d66c1ce79fa362daa5370e0d645490d",
+    "n3_holdover.py": "a99937251657f19487ac2126f31ec482ba1ea15ff98c158da884d5975a874bed",
+    "n3_timing.py": "461e9f8b03f4b395afeb489b444807efbdb82cdc9d7f898e97a7dbd754013d3a",
+    "n5_analyze.py": "75518c61775e3af61f372d8b8c41b7f6b89f66ae4b2f01cc2283921fe94c1b2d",
+    "n5_config.py": "c844b1d72140425d227a7f0dfd0f9c7abd215f00693f30525a28ad0a561d2c7b",
+    "n5_observation.py": "de28e24b07ee2e605deedb39608fac819bcaf3eb6edebfd9a26e144c1f672309",
+    "n5_task_ablate.py": "46fca22960253a043ee6ad29a3089f067f961a72482f5fbc8ddcf76170d0a519",
+    "packet_adapter.py": "074a8770dac09b435f4c500a9dce89dd05e2c42599a28c33eb5818a2f5cf3383",
+    "plan_analyze.py": "16620a7ffb880fd9193ca40973cf27d00662a54015ca0575bff066e0dc6d2dcf",
+    "protocol.py": "d28b33f4a05cd90fd47e897432dc6d8d28598f87bbfa10dd1a51fa062450bcfb",
+    "replay_engine.py": "3c4eb7580cb020710767a2352d035a533cad1d421aca5687d4ce3ef6c0c9e175",
+    "sync_replay.py": "77d16eb7737eaa5c2a30984c64bea898e59c595587d89c5e3850305b48e71acd",
+    "uc1_analyze.py": "dbe02bce42536139104722f7f74265376121ddcdd572e1ff167f8d82d01ad7b5",
+    "uc1_config.py": "6ae7d849fe8028f26c9b3f4e69b7e7313f9bc06f69ceaba7dc7cce13b872bf52"
+  },
+  "limitations": [
+    "Waveform budgets and DMA completions are transmit proxies, not measured RF airtime or energy.",
+    "Independent BLE/IEEE HackRF IQ origins are uncalibrated; decoded tasks without a calibrated reference bound are marked deadline=unknown.",
+    "Software processing events are not physical actuator execution.",
+    "LC BLE ch39 (2480 MHz) differs in RF frequency from JC/SC BLE ch3 (2410 MHz); reliability differences cannot be attributed solely to packet format."
+  ]
+}

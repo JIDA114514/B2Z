@@ -1,0 +1,280 @@
+{
+  "schema": "b2z_uc1_h6_fault_injection_replay_v1",
+  "evidence_type": "offline_fault_injection_replay_on_recorded_packets",
+  "disclaimer": "Synthetic fault injections applied in memory to copies of real recorded packets; raw captures are untouched. Not live RF fault evidence.",
+  "run_id": 2715,
+  "mode": "JC",
+  "profile": "time",
+  "point": "B",
+  "suites": [
+    "time_profile_engine"
+  ],
+  "sources": {
+    "config": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/control_match/configs/uc1_2715.json",
+      "sha256": "97da4926d2cddd05710313d5079c568d51dce0cbaf8e382292b7063700d48232"
+    },
+    "ble_packets": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261120_run2715/captures/ble/110034_607271_y9r1xvkg/rx.packets.jsonl",
+      "sha256": "1a4961d231e865a0777a1ab3a7ae058dcd3b882cac7ff5a862cbed9da7d8341f",
+      "rows": 300
+    },
+    "zigbee_packets": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261120_run2715/captures/zigbee/110036_246267_gi33fxh5/rx.packets.jsonl",
+      "sha256": "ef24e74780c98fc6353a0120fba3322be3c607d2afa344aeef996f7582daa2cf",
+      "rows": 300
+    }
+  },
+  "overall": {
+    "passed": 4,
+    "total": 4,
+    "all_passed": true
+  },
+  "cases": [
+    {
+      "case_id": "time_baseline_unknown_bound_safety_gate",
+      "synthetic_injection": false,
+      "description": "Replay unmodified recorded time-profile BLE/IEEE streams with unknown reference bound; verify tracking & probes succeed while timed processing stays 0",
+      "passed": true,
+      "metrics": {
+        "ble": {
+          "clock_state": "stale",
+          "clock_version": 143,
+          "event_counts": {
+            "decoded": 300,
+            "candidate_accumulating": 7,
+            "not_training_candidate": 126,
+            "clock_updated": 143,
+            "observation_transition": 2,
+            "probe_score": 24,
+            "probe_held_out": 24,
+            "rejected": 18
+          },
+          "reject_reasons": {
+            "time_quality_insufficient": 18
+          },
+          "invalid_reasons": {},
+          "processed_commands": [],
+          "task_statuses": {}
+        },
+        "zigbee": {
+          "clock_state": "stale",
+          "clock_version": 119,
+          "event_counts": {
+            "decoded": 300,
+            "not_training_candidate": 150,
+            "candidate_accumulating": 7,
+            "clock_updated": 119,
+            "observation_transition": 48,
+            "probe_score": 24,
+            "probe_held_out": 24,
+            "rejected": 18
+          },
+          "reject_reasons": {
+            "time_quality_insufficient": 18
+          },
+          "invalid_reasons": {},
+          "processed_commands": [],
+          "task_statuses": {}
+        }
+      }
+    },
+    {
+      "case_id": "time_wrong_layout_rejection",
+      "synthetic_injection": true,
+      "description": "Replay recorded BLE stream (b=26) under mismatched configured layout (b=0); verify clock_skipped on all packets and timing_layout_unavailable rejection on all command attempts",
+      "passed": true,
+      "metrics": {
+        "clock_state": "acquiring",
+        "clock_version": 0,
+        "event_counts": {
+          "decoded": 300,
+          "clock_skipped": 300,
+          "rejected": 18
+        },
+        "reject_reasons": {
+          "timing_layout_unavailable": 18
+        },
+        "invalid_reasons": {},
+        "processed_commands": [],
+        "task_statuses": {}
+      }
+    },
+    {
+      "case_id": "time_bad_app_crc_retry_recovery",
+      "synthetic_injection": true,
+      "description": "Corrupt 1 bit in command 1 attempt 0 (slot 70) on BLE & IEEE; verify app_crc16 rejection and clean retry recovery on attempt 1 (slot 71) under synthetic ref_bound_ms=1.0",
+      "passed": true,
+      "metrics": {
+        "ble": {
+          "clock_state": "stale",
+          "clock_version": 142,
+          "event_counts": {
+            "decoded": 299,
+            "candidate_accumulating": 7,
+            "not_training_candidate": 126,
+            "clock_updated": 142,
+            "observation_transition": 4,
+            "probe_score": 24,
+            "probe_held_out": 24,
+            "invalid_record": 1,
+            "accepted": 6,
+            "scheduled": 6,
+            "rescheduled": 12,
+            "duplicate": 11,
+            "schedule_frozen": 6,
+            "software_processed": 6
+          },
+          "reject_reasons": {},
+          "invalid_reasons": {
+            "app_crc16": 1
+          },
+          "processed_commands": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "task_statuses": {
+            "1": "processed",
+            "2": "processed",
+            "3": "processed",
+            "4": "processed",
+            "5": "processed",
+            "6": "processed"
+          }
+        },
+        "zigbee": {
+          "clock_state": "stale",
+          "clock_version": 119,
+          "event_counts": {
+            "decoded": 299,
+            "not_training_candidate": 149,
+            "candidate_accumulating": 7,
+            "clock_updated": 119,
+            "observation_transition": 48,
+            "probe_score": 24,
+            "probe_held_out": 24,
+            "invalid_record": 1,
+            "accepted": 6,
+            "scheduled": 6,
+            "duplicate": 11,
+            "rescheduled": 17,
+            "schedule_frozen": 6,
+            "software_processed": 6
+          },
+          "reject_reasons": {},
+          "invalid_reasons": {
+            "app_crc16": 1
+          },
+          "processed_commands": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "task_statuses": {
+            "1": "processed",
+            "2": "processed",
+            "3": "processed",
+            "4": "processed",
+            "5": "processed",
+            "6": "processed"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "time_conflicting_task_cancels_pending",
+      "synthetic_injection": true,
+      "description": "Mutate arg (with valid recomputed CRC) on command 1 attempt 1 (slot 71); verify task 1 is cancelled and attempt 2 cannot resurrect it (synthetic ref_bound_ms=1.0)",
+      "passed": true,
+      "metrics": {
+        "ble": {
+          "clock_state": "stale",
+          "clock_version": 142,
+          "event_counts": {
+            "decoded": 300,
+            "candidate_accumulating": 7,
+            "not_training_candidate": 125,
+            "clock_updated": 142,
+            "observation_transition": 4,
+            "probe_score": 24,
+            "probe_held_out": 24,
+            "accepted": 6,
+            "scheduled": 6,
+            "cancelled": 1,
+            "rejected": 2,
+            "duplicate": 10,
+            "rescheduled": 10,
+            "schedule_frozen": 5,
+            "software_processed": 5
+          },
+          "reject_reasons": {
+            "conflicting_task": 2
+          },
+          "invalid_reasons": {},
+          "processed_commands": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "task_statuses": {
+            "1": "cancelled",
+            "2": "processed",
+            "3": "processed",
+            "4": "processed",
+            "5": "processed",
+            "6": "processed"
+          }
+        },
+        "zigbee": {
+          "clock_state": "stale",
+          "clock_version": 118,
+          "event_counts": {
+            "decoded": 300,
+            "not_training_candidate": 149,
+            "candidate_accumulating": 7,
+            "clock_updated": 118,
+            "observation_transition": 48,
+            "probe_score": 24,
+            "probe_held_out": 24,
+            "accepted": 6,
+            "scheduled": 6,
+            "cancelled": 1,
+            "rejected": 2,
+            "rescheduled": 15,
+            "duplicate": 10,
+            "schedule_frozen": 5,
+            "software_processed": 5
+          },
+          "reject_reasons": {
+            "conflicting_task": 2
+          },
+          "invalid_reasons": {},
+          "processed_commands": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "task_statuses": {
+            "1": "cancelled",
+            "2": "processed",
+            "3": "processed",
+            "4": "processed",
+            "5": "processed",
+            "6": "processed"
+          }
+        }
+      }
+    }
+  ]
+}

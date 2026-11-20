@@ -1,0 +1,2 @@
+side,first_slot,last_slot,slots,nominal_missing_duration_ms,left_observed,right_observed,left_censored,right_censored,dma_completed_slots,board_uncompleted_slots,cause,timeline_anomalies_present
+ble,111,160,50,25000,True,True,False,False,50,0,undetermined; DMA completion is not RF completion,False

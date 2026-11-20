@@ -1,0 +1,2 @@
+side,first_slot,last_slot,slots,nominal_missing_duration_ms,left_observed,right_observed,left_censored,right_censored,dma_completed_slots,board_uncompleted_slots,cause,timeline_anomalies_present
+zigbee,114,161,48,24000,True,True,False,False,48,0,undetermined; DMA completion is not RF completion,False

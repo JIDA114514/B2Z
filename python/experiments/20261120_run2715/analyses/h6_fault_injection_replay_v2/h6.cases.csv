@@ -1,0 +1,5 @@
+case_id,synthetic_injection,passed,description
+time_baseline_unknown_bound_safety_gate,False,True,Replay unmodified recorded time-profile BLE/IEEE streams with unknown reference bound; verify tracking & probes succeed while timed processing stays 0
+time_wrong_layout_rejection,True,True,Replay recorded BLE stream (b=26) under mismatched configured layout (b=0); verify clock_skipped on all packets and timing_layout_unavailable rejection on all command attempts
+time_bad_app_crc_retry_recovery,True,True,Corrupt 1 bit in command 1 attempt 0 (slot 70) on BLE & IEEE; verify app_crc16 rejection and clean retry recovery on attempt 1 (slot 71) under synthetic ref_bound_ms=1.0
+time_conflicting_task_cancels_pending,True,True,Mutate arg (with valid recomputed CRC) on command 1 attempt 1 (slot 71); verify task 1 is cancelled and attempt 2 cannot resurrect it (synthetic ref_bound_ms=1.0)

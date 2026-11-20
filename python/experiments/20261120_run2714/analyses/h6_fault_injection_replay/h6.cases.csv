@@ -1,0 +1,7 @@
+case_id,synthetic_injection,passed,description
+c3_baseline_recorded,False,True,Unmodified recorded C3 BLE fragment stream replayed through BLEControlExtractor
+c3_bad_app_crc,True,True,Flip 1 bit in final C3 fragment payload of recorded slot 10 (corrupts reassembled UC1 app_crc16)
+c3_slot_conflict_isolation,True,True,Insert conflicting duplicate fragment 0 in slot 10; verify slot 10 closes as conflict while retry slot 11 completes
+c3_pending_overflow_no_eviction,True,True,Interleave slot 11 frag 0 while slot 10 pending with pending_limit=1; verify slot 10 completes without eviction and slot 11 tombstoned
+c3_closed_capacity_exhausted,True,True,Replay unmodified recorded C3 stream with closed_limit=2; verify hard stop at 2 identities and invariant len(closed)+len(pending)<=2
+c3_time_regression,True,True,Inject -1.0 s sample_time_s regression on fragment 1 of recorded slot 10; verify fragment_time_order rejection

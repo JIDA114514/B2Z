@@ -1,0 +1,297 @@
+{
+  "schema": "b2z_uc1_h6_fault_injection_replay_v1",
+  "evidence_type": "offline_fault_injection_replay_on_recorded_packets",
+  "disclaimer": "Synthetic fault injections applied in memory to copies of real recorded packets; raw captures are untouched. Not live RF fault evidence.",
+  "run_id": 2714,
+  "mode": "LC",
+  "profile": "core",
+  "point": "B",
+  "suites": [
+    "c3_fragment_reassembly"
+  ],
+  "sources": {
+    "config": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/control_match/configs/uc1_2714.json",
+      "sha256": "a2066b5a42d8b3c216eb72eb0102786b98ae74ec6733f09f4554d839d24ed81f"
+    },
+    "ble_packets": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261120_run2714/captures/ble/105653_984026_vsp6292z/rx.packets.jsonl",
+      "sha256": "9cdc4bc894567239a435d6c9c5c203b217dba0a5a353996f165a97efb3bb208a",
+      "rows": 100
+    },
+    "zigbee_packets": {
+      "path": "/home/jida/Desktop/antsdr/B2Z/python/experiments/20261120_run2714/captures/zigbee/105655_299531__g6f2jxy/rx.packets.jsonl",
+      "sha256": "2619ebda2421ce80803275f97f641f2db32b0fefc9e40dda48abf132bb40ee2c",
+      "rows": 20
+    }
+  },
+  "overall": {
+    "passed": 6,
+    "total": 6,
+    "all_passed": true
+  },
+  "cases": [
+    {
+      "case_id": "c3_baseline_recorded",
+      "synthetic_injection": false,
+      "description": "Unmodified recorded C3 BLE fragment stream replayed through BLEControlExtractor",
+      "passed": true,
+      "metrics": {
+        "valid_records": 20,
+        "unique_slots": 20,
+        "unique_commands": 10,
+        "valid_slots": [
+          10,
+          11,
+          16,
+          17,
+          22,
+          23,
+          28,
+          29,
+          34,
+          35,
+          40,
+          41,
+          46,
+          47,
+          52,
+          53,
+          58,
+          59,
+          64,
+          65
+        ],
+        "invalid_reasons": {},
+        "extractor_counts": {
+          "fragments": 100,
+          "c3_fragments": 100,
+          "pending_peak": 1,
+          "closed_peak": 20,
+          "complete": 20
+        },
+        "closed_count": 20,
+        "pending_count": 0,
+        "closed_exhausted": false,
+        "capacity_invariant_ok": true
+      }
+    },
+    {
+      "case_id": "c3_bad_app_crc",
+      "synthetic_injection": true,
+      "description": "Flip 1 bit in final C3 fragment payload of recorded slot 10 (corrupts reassembled UC1 app_crc16)",
+      "passed": true,
+      "metrics": {
+        "valid_records": 19,
+        "unique_slots": 19,
+        "unique_commands": 10,
+        "valid_slots": [
+          11,
+          16,
+          17,
+          22,
+          23,
+          28,
+          29,
+          34,
+          35,
+          40,
+          41,
+          46,
+          47,
+          52,
+          53,
+          58,
+          59,
+          64,
+          65
+        ],
+        "invalid_reasons": {
+          "c3_fragment_record:app_crc16": 1
+        },
+        "extractor_counts": {
+          "fragments": 100,
+          "c3_fragments": 100,
+          "pending_peak": 1,
+          "closed_peak": 20,
+          "invalid_reassembled": 1,
+          "complete": 19
+        },
+        "closed_count": 20,
+        "pending_count": 0,
+        "closed_exhausted": false,
+        "capacity_invariant_ok": true
+      }
+    },
+    {
+      "case_id": "c3_slot_conflict_isolation",
+      "synthetic_injection": true,
+      "description": "Insert conflicting duplicate fragment 0 in slot 10; verify slot 10 closes as conflict while retry slot 11 completes",
+      "passed": true,
+      "metrics": {
+        "valid_records": 19,
+        "unique_slots": 19,
+        "unique_commands": 10,
+        "valid_slots": [
+          11,
+          16,
+          17,
+          22,
+          23,
+          28,
+          29,
+          34,
+          35,
+          40,
+          41,
+          46,
+          47,
+          52,
+          53,
+          58,
+          59,
+          64,
+          65
+        ],
+        "invalid_reasons": {
+          "c3_fragment_conflict": 1
+        },
+        "extractor_counts": {
+          "fragments": 101,
+          "c3_fragments": 101,
+          "pending_peak": 1,
+          "closed_peak": 20,
+          "conflict": 1,
+          "closed_duplicate": 4,
+          "complete": 19
+        },
+        "closed_count": 20,
+        "pending_count": 0,
+        "closed_exhausted": false,
+        "capacity_invariant_ok": true
+      }
+    },
+    {
+      "case_id": "c3_pending_overflow_no_eviction",
+      "synthetic_injection": true,
+      "description": "Interleave slot 11 frag 0 while slot 10 pending with pending_limit=1; verify slot 10 completes without eviction and slot 11 tombstoned",
+      "passed": true,
+      "metrics": {
+        "valid_records": 19,
+        "unique_slots": 19,
+        "unique_commands": 10,
+        "valid_slots": [
+          10,
+          16,
+          17,
+          22,
+          23,
+          28,
+          29,
+          34,
+          35,
+          40,
+          41,
+          46,
+          47,
+          52,
+          53,
+          58,
+          59,
+          64,
+          65
+        ],
+        "invalid_reasons": {},
+        "extractor_counts": {
+          "fragments": 100,
+          "c3_fragments": 100,
+          "pending_peak": 1,
+          "closed_peak": 20,
+          "pending_overflow": 1,
+          "complete": 19,
+          "closed_duplicate": 4
+        },
+        "closed_count": 20,
+        "pending_count": 0,
+        "closed_exhausted": false,
+        "capacity_invariant_ok": true
+      }
+    },
+    {
+      "case_id": "c3_closed_capacity_exhausted",
+      "synthetic_injection": true,
+      "description": "Replay unmodified recorded C3 stream with closed_limit=2; verify hard stop at 2 identities and invariant len(closed)+len(pending)<=2",
+      "passed": true,
+      "metrics": {
+        "valid_records": 2,
+        "unique_slots": 2,
+        "unique_commands": 1,
+        "valid_slots": [
+          10,
+          11
+        ],
+        "invalid_reasons": {},
+        "extractor_counts": {
+          "fragments": 100,
+          "c3_fragments": 100,
+          "pending_peak": 1,
+          "closed_peak": 2,
+          "complete": 2,
+          "closed_capacity_exhausted": 90
+        },
+        "closed_count": 2,
+        "pending_count": 0,
+        "closed_exhausted": true,
+        "capacity_invariant_ok": true
+      }
+    },
+    {
+      "case_id": "c3_time_regression",
+      "synthetic_injection": true,
+      "description": "Inject -1.0 s sample_time_s regression on fragment 1 of recorded slot 10; verify fragment_time_order rejection",
+      "passed": true,
+      "metrics": {
+        "valid_records": 19,
+        "unique_slots": 19,
+        "unique_commands": 10,
+        "valid_slots": [
+          11,
+          16,
+          17,
+          22,
+          23,
+          28,
+          29,
+          34,
+          35,
+          40,
+          41,
+          46,
+          47,
+          52,
+          53,
+          58,
+          59,
+          64,
+          65
+        ],
+        "invalid_reasons": {
+          "fragment_time_order": 1
+        },
+        "extractor_counts": {
+          "fragments": 99,
+          "c3_fragments": 99,
+          "pending_peak": 2,
+          "closed_peak": 20,
+          "time_regression": 1,
+          "complete": 19,
+          "timeout": 1
+        },
+        "closed_count": 20,
+        "pending_count": 0,
+        "closed_exhausted": false,
+        "capacity_invariant_ok": true
+      }
+    }
+  ]
+}

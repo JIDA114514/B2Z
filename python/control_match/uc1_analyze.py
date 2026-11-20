@@ -47,11 +47,30 @@ def _quadrant(ble_ok: bool, zig_ok: bool) -> str:
     return "neither"
 
 
-def check_board_matches_manifest(cfg: dict, plan: dict) -> None:
+def check_board_matches_manifest(cfg: dict, plan: dict, *, reconcile_board_budget: bool = False) -> dict | None:
     uc1 = plan.get("uc1")
     if not uc1:
         raise ValueError("board log does not contain UC1_CONFIG")
     layout = cfg["layout"]
+    reconciliation = None
+    if reconcile_board_budget:
+        if cfg["policy"] != "k" or cfg["profile"] != "core":
+            raise ValueError("board budget reconciliation requires a core explicit-K capture manifest")
+        actual_budget = int(uc1["budget_us"])
+        actual_unused = int(uc1["unused_per_task_us"])
+        cost, k = cfg["cost_per_attempt_us"], cfg["k"]
+        if (actual_budget <= cfg["budget_us"] or actual_budget // cost != k or
+                actual_unused != actual_budget - k * cost):
+            raise ValueError("board budget reconciliation cannot prove the recorded K/unused budget")
+        reconciliation = {
+            "kind": "board_budget_vs_capture_explicit_k",
+            "original_manifest_sha256": cfg["sha256"],
+            "capture_policy": cfg["policy"],
+            "capture_budget_us": cfg["budget_us"],
+            "board_budget_us": actual_budget,
+            "board_unused_per_task_us": actual_unused,
+            "policy_command_proven": False,
+        }
     checks = (
         ("run_id", int(uc1["run_id"]), cfg["run_id"]),
         ("mode", int(uc1["mode"]), cfg["mode_code"]),
@@ -69,7 +88,7 @@ def check_board_matches_manifest(cfg: dict, plan: dict) -> None:
         ("marker_offset_us", uc1["ieee_marker_offset_us"], layout["marker_offset_us"]),
     )
     for name, actual, expected in checks:
-        if actual != expected:
+        if actual != expected and not (reconciliation and name in ("budget_us", "unused_per_task_us")):
             raise ValueError(f"board UC1_CONFIG {name}={actual} differs from manifest {expected}")
     actual_tasks = {int(t["command_id"]): t for t in plan["tasks"]}
     if set(actual_tasks) != {t["command_id"] for t in cfg["tasks"]}:
@@ -80,6 +99,7 @@ def check_board_matches_manifest(cfg: dict, plan: dict) -> None:
             board_key = "repeats" if key == "attempts" else key
             if int(actual[board_key]) != value:
                 raise ValueError(f"board task {expected['command_id']} {key} differs from manifest")
+    return reconciliation
 
 
 def _state_durations_ms(events: list[dict], total_samples: int, sample_rate: int) -> dict[str, float]:
@@ -138,6 +158,7 @@ def run_analysis(
     paths: dict[str, Path | None] | None = None,
     board: Path | None = None,
     allow_incomplete_board: bool = False,
+    reconcile_board_budget: bool = False,
 ) -> dict:
     if output.exists():
         raise ValueError(f"refusing to overwrite existing analysis directory: {output}")
@@ -153,7 +174,8 @@ def run_analysis(
     if not board_path.is_file():
         raise ValueError(f"missing board log: {board_path}")
     plan = read_plan(board_path, run_id, allow_incomplete=allow_incomplete_board)
-    check_board_matches_manifest(cfg, plan)
+    reconciliation = check_board_matches_manifest(cfg, plan,
+                                                  reconcile_board_budget=reconcile_board_budget)
 
     expected_commands = {t["command_id"] for t in cfg["tasks"]}
     if cfg["profile"] == "time":
@@ -321,13 +343,16 @@ def run_analysis(
     }
     cmd_submitted_us = sum(r["air_us"] for r in burst_rows if r["started"] and r["slot"] in command_slots)
     upd_submitted_us = sum(r["air_us"] for r in burst_rows if r["started"] and r["slot"] in time_update_slots)
-    unused_total_us = cfg["tasks_count"] * cfg["unused_per_task_us"]
+    budget_us = reconciliation["board_budget_us"] if reconciliation else cfg["budget_us"]
+    unused_per_task_us = (reconciliation["board_unused_per_task_us"] if reconciliation
+                          else cfg["unused_per_task_us"])
+    unused_total_us = cfg["tasks_count"] * unused_per_task_us
 
     wf_cost = dict(integrity["waveform_cost"])
     wf_cost.update(
-        budget_per_task_us=cfg["budget_us"],
-        budget_total_us=cfg["tasks_count"] * cfg["budget_us"],
-        unused_budget_per_task_us=cfg["unused_per_task_us"],
+        budget_per_task_us=budget_us,
+        budget_total_us=cfg["tasks_count"] * budget_us,
+        unused_budget_per_task_us=unused_per_task_us,
         unused_budget_total_us=unused_total_us,
         command_submitted_waveform_us=cmd_submitted_us,
         time_update_submitted_waveform_us=upd_submitted_us,
@@ -347,10 +372,29 @@ def run_analysis(
         missing_rows, recoveries, probe_rows, live_pairs = [], [], [], []
         state_durations = {}
         replay_events = []
+        stale_ms = (cfg.get("observation_policy") or {}).get("stale_ms", 10000)
         for side in SIDES:
             rate = rates[side]
             total = (receivers[side].get("counts") or {}).get("samples_processed", 0)
-            recoveries.extend(recovery_rows(live_events[side], rate, side))
+            side_rec = recovery_rows(live_events[side], rate, side)
+            max_slot = max(streams[side], default=None)
+            last_valid_sample = max(
+                (e["available_sample"] for e in streams[side].values() if e.get("available_sample") is not None),
+                default=None,
+            )
+            near_plan_end = (
+                max_slot is not None
+                and (cfg["planned_slots"] - 1 - max_slot) * cfg["period_ms"] < stale_ms
+            )
+            for r in side_rec:
+                is_tail = (
+                    r.get("censor_reason") == "capture_end_without_recovery"
+                    and last_valid_sample is not None
+                    and r["stale_sample"] > last_valid_sample
+                    and near_plan_end
+                )
+                r["scope"] = "post_run_tail" if is_tail else "in_schedule"
+            recoveries.extend(side_rec)
             state_durations[side] = _state_durations_ms(live_events[side], total, rate)
             missing_rows.extend(
                 dict(r, timeline_anomalies_present=bool(anomalies[side]))
@@ -416,6 +460,17 @@ def run_analysis(
                 )
                 for s in SIDES
             },
+            "recovery_in_schedule": {
+                s: ratio(
+                    sum(r["recovered_sample"] is not None for r in recoveries if r["side"] == s and r.get("scope") == "in_schedule"),
+                    sum(r["side"] == s and r.get("scope") == "in_schedule" for r in recoveries),
+                )
+                for s in SIDES
+            },
+            "post_run_tail_stale_events": {
+                s: sum(r["side"] == s and r.get("scope") == "post_run_tail" for r in recoveries)
+                for s in SIDES
+            },
             "live_probe_summary": {
                 s: {
                     "coverage": ratio(
@@ -467,8 +522,10 @@ def run_analysis(
         "point": cfg.get("point"),
         "profile": cfg["profile"],
         "mode": cfg["mode"],
-        "policy": cfg["policy"],
-        "policy_value": cfg["policy_value"],
+        "policy": "board_budget_reconciled" if reconciliation else cfg["policy"],
+        "policy_value": budget_us if reconciliation else cfg["policy_value"],
+        "capture_policy": cfg["policy"],
+        "reconciliation": reconciliation,
         "k": cfg["k"],
         "period_ms": cfg["period_ms"],
         "layout": layout,
@@ -519,7 +576,9 @@ def run_analysis(
         "tasks": enriched_tasks,
         "sources": {k: {"path": str(p.resolve()), "sha256": sha256(p)} for k, p in sources.items()},
         "analysis_sources": {p.name: sha256(p) for p in sorted(Path(__file__).parent.glob("*.py"))},
-        "limitations": [
+        "limitations": ([
+            "Board budget reconstructed from serial log; capture manifest remains explicit-K and the original policy command is unproven. Do not treat this as a strictly matched confirmatory budget run."
+        ] if reconciliation else []) + [
             "Waveform budgets and DMA completions are transmit proxies, not measured RF airtime or energy.",
             "Independent BLE/IEEE HackRF IQ origins are uncalibrated; decoded tasks without a calibrated reference bound are marked deadline=unknown.",
             "Software processing events are not physical actuator execution.",
@@ -561,6 +620,11 @@ def run_analysis(
         f"- 单位联合解析任务成本（提交 / 计划 / 完成代理）：`{f'{unit_sub:.1f}' if unit_sub is not None else 'N/A'}` / `{f'{unit_plan:.1f}' if unit_plan is not None else 'N/A'}` / `{f'{unit_comp:.1f}' if unit_comp is not None else 'N/A'}` µs（分母 `{joint_planned_n}`）",
         f"- BLE 分片重组统计（C3）：`{json.dumps(result['ble_fragment_reassembly'], ensure_ascii=False)}`",
     ]
+    if reconciliation:
+        lines += ["", "## 配置校正审计", "",
+                  f"- 接收端原 manifest SHA256：`{cfg['sha256']}`；原策略显式 K，原预算 `{cfg['budget_us']} µs`。",
+                  f"- 板端记录预算 `{budget_us} µs`，每任务未用 `{unused_per_task_us} µs`；解析与成本使用原始逐包及板端日志，不改写捕获元数据。",
+                  "- 原始板端命令未独立保存，预算策略本身不能追溯为已证明。此报告标记 board_budget_reconciled，不作严格同预算确认性比较。"]
     if time_support is not None:
         lines += [
             "",
@@ -571,9 +635,11 @@ def run_analysis(
         for s in SIDES:
             cov = time_support["live_probe_summary"][s]["coverage"]
             rec = time_support["recovery"][s]
+            rec_in = time_support["recovery_in_schedule"][s]
+            tail_n = time_support["post_run_tail_stale_events"][s]
             res = time_support["live_probe_summary"][s]["residual_ms"]
             lines.append(
-                f"- `{s}`：探测覆盖 {_fmt_ratio(cov)}；恢复 {_fmt_ratio(rec)}；"
+                f"- `{s}`：探测覆盖 {_fmt_ratio(cov)}；计划内恢复 {_fmt_ratio(rec_in)}（全录制含停发尾段 {_fmt_ratio(rec)}，停发尾段 stale={tail_n}）；"
                 f"残差绝对值中位/P95/P99/最大 = {res['median_abs']}/{res['p95_abs']}/{res['p99_abs']}/{res['max_abs']} ms（n={res['n']}）"
             )
     lines += [
@@ -602,6 +668,8 @@ def compare_uc1(summaries: dict[str, dict], conditions: dict | None = None) -> d
             continue
         diffs = []
         missing = []
+        if jc.get("reconciliation") or other.get("reconciliation"):
+            missing.append("reconciliation.policy_command")
         for key in ("profile", "policy", "period_ms", "rf_condition", "point"):
             if jc.get(key) != other.get(key):
                 diffs.append(key)
@@ -700,6 +768,8 @@ def main(argv=None) -> int:
     p.add_argument("--ble-packets", type=Path)
     p.add_argument("--zigbee-packets", type=Path)
     p.add_argument("--allow-incomplete-board", action="store_true")
+    p.add_argument("--reconcile-board-budget", action="store_true",
+                   help="Explicitly audit core explicit-K capture manifest against larger board budget; original files remain unchanged")
     p.add_argument("--compare-jc", type=Path, help="uc1.summary.json for JC")
     p.add_argument("--compare-sc", type=Path, help="uc1.summary.json for SC")
     p.add_argument("--compare-lc", type=Path, help="uc1.summary.json for LC")
@@ -762,6 +832,7 @@ def main(argv=None) -> int:
         paths={"ble": a.ble_packets, "zigbee": a.zigbee_packets},
         board=a.board_log,
         allow_incomplete_board=a.allow_incomplete_board,
+        reconcile_board_budget=a.reconcile_board_budget,
     )
     print(
         json.dumps(

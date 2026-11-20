@@ -1066,6 +1066,132 @@ class UC1FirmwareWaveformAndCLITests(unittest.TestCase):
             self.assertTrue(comp_data["comparisons"]["JC_vs_LC"]["channel_confound"])
             self.assertTrue((comp_out / "uc1.comparison.md").is_file())
 
+    def test_uc1_time_recovery_in_schedule_vs_post_run_tail_and_h6_replay(self):
+        from python.control_match.uc1_h6_replay import run_h6_replay
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            t_cfg = generate_uc1_config(2722, mode="JC", profile="time", ble_extra=26, ieee_extra=0,
+                                        tasks=6, policy="k", value=3, provenance=False)
+            t_cfg_path = root / "time_cfg.json"
+            t_cfg_path.write_text(json.dumps(t_cfg))
+            task_by_slot = {}
+            for t in t_cfg["tasks"]:
+                for s in range(t["first_slot"], t["first_slot"] + t["attempts"]):
+                    task_by_slot[s] = t
+            offset_samples = 4000000 * 608 / 1_000_000
+
+            def _build_time_exp(exp_name: str, ble_drop_fn):
+                t_exp = root / exp_name
+                t_exp.mkdir()
+                (t_exp / "board.board.log").write_text(make_synthetic_uc1_board_log(t_cfg))
+                for side in ("ble", "zigbee"):
+                    d = t_exp / "captures" / side / "run"
+                    d.mkdir(parents=True)
+                    pkt_lines = []
+                    for slot in range(300):
+                        if side == "ble" and ble_drop_fn(slot):
+                            continue
+                        t = task_by_slot.get(slot)
+                        if t is None:
+                            extra = bytes(26 if side == "ble" else 0)
+                            rec_bytes = build_uc1_wire(
+                                run_id=2722, slot=slot, period_ms=500, command_id=0, target_id=0,
+                                opcode=0, arg=0, valid_offset_ms=0, execute_offset_ms=0, extra=extra, ver_type=0x10,
+                            )
+                        else:
+                            n = 26 if side == "ble" else 0
+                            extra = uc1_extension(2722, t["command_id"], side, n)
+                            ref = slot * 500
+                            rec_bytes = build_uc1_wire(
+                                run_id=2722, slot=slot, period_ms=500, command_id=t["command_id"],
+                                target_id=t[side + "_target"], opcode=t[side + "_opcode"], arg=t[side + "_arg"],
+                                valid_offset_ms=t["valid_until_ms"] - ref,
+                                execute_offset_ms=t["execute_at_ms"] - ref, extra=extra, ver_type=0x11,
+                            )
+                        s_start = slot * 2_000_000 + (0.0 if side == "ble" else offset_samples)
+                        avail = int(s_start) + 4096
+                        if side == "ble":
+                            ad = b"\xff\xff" + rec_bytes + bytes(136)
+                            pkt = dict(
+                                kind="auxiliary", crc_ok=True, pdu_length=15 + len(ad),
+                                sample_start=s_start, available_sample=avail, sample_time_s=s_start / 4000000,
+                                extended=dict(adi=dict(did=slot & 0xFFF),
+                                              ad_structures=[dict(type=255, company_id=0xFFFF, data_hex=ad.hex())]),
+                            )
+                        else:
+                            pkt = dict(
+                                fcs_ok=True, payload_hex=rec_bytes.hex(),
+                                sample_start=s_start, available_sample=avail, sample_time_s=s_start / 4000000,
+                            )
+                        pkt_lines.append(json.dumps(pkt))
+                    (d / "rx.packets.jsonl").write_text("\n".join(pkt_lines) + "\n")
+                    # Emit live-style control events through SideControlEngine up to capture end (180 s)
+                    eng = SideControlEngine(EngineConfig(
+                        side=side, run_id=2722, sample_rate=4000000,
+                        target_ids=frozenset({1 if side == "ble" else 2}), uc1_config=t_cfg,
+                    ))
+                    ev_lines = [json.dumps({"event": "registration", "registration": t_cfg})]
+                    cur_adv = 0
+                    for line in pkt_lines:
+                        p = json.loads(line)
+                        avail = int(p["available_sample"])
+                        while cur_adv + 4_000_000 < avail:
+                            cur_adv += 4_000_000
+                            for ev in eng.advance(cur_adv):
+                                ev_lines.append(json.dumps(ev))
+                        cur_adv = avail
+                        raw_b = (
+                            bytes.fromhex(p["extended"]["ad_structures"][0]["data_hex"])[2:2 + 52]
+                            if side == "ble" else bytes.fromhex(p["payload_hex"])
+                        )
+                        for ev in eng.observe(raw_b, float(p["sample_start"]), avail):
+                            ev_lines.append(json.dumps(ev))
+                    # Advance through capture end in 1 s chunks so post-run tail stale triggers cleanly
+                    total_samples = 180 * 4000000
+                    while cur_adv < total_samples:
+                        cur_adv = min(total_samples, cur_adv + 4_000_000)
+                        for ev in eng.advance(cur_adv):
+                            ev_lines.append(json.dumps(ev))
+                    (d / "rx.control.events.jsonl").write_text("\n".join(ev_lines) + "\n")
+                    # Capture continues 30 s past slot 299 (149.5 s -> 180 s), triggering post-run tail stale
+                    (d / "rx.summary.json").write_text(json.dumps(dict(
+                        status="complete", uc1_config_sha256=t_cfg["sha256"],
+                        counts=dict(samples_processed=total_samples),
+                        config=dict(sample_rate=4000000, iq_file="synthetic.cf32"),
+                    )))
+                return t_exp
+
+            # Case A: mid-schedule recovered BLE outage (slots 120..145) + post-run tail stale on both sides
+            exp_rec = _build_time_exp("exp_recovered", lambda s: 120 <= s <= 145)
+            res_rec = run_analysis(exp_rec, t_cfg_path, exp_rec / "analyses" / "tail_audit")
+            ts_rec = res_rec["time_support"]
+            self.assertEqual(ts_rec["recovery_in_schedule"]["ble"], {"numerator": 1, "denominator": 1, "value": 1.0})
+            self.assertEqual(ts_rec["recovery_in_schedule"]["zigbee"], {"numerator": 0, "denominator": 0, "value": None})
+            self.assertEqual(ts_rec["post_run_tail_stale_events"], {"ble": 1, "zigbee": 1})
+            # Backward-compatible all-recording recovery includes tail stale
+            self.assertEqual(ts_rec["recovery"]["ble"]["denominator"], 2)
+            self.assertEqual(ts_rec["recovery"]["zigbee"]["denominator"], 1)
+
+            # Case B: genuine unrecovered mid-schedule BLE outage (drops from slot 180 onward, 60 s > 10 s remaining)
+            exp_perm = _build_time_exp("exp_perm_drop", lambda s: s >= 180)
+            res_perm = run_analysis(exp_perm, t_cfg_path, exp_perm / "analyses" / "tail_audit")
+            ts_perm = res_perm["time_support"]
+            # Must stay classified as in_schedule (0/1), NOT post_run_tail!
+            self.assertEqual(ts_perm["recovery_in_schedule"]["ble"], {"numerator": 0, "denominator": 1, "value": 0.0})
+            self.assertEqual(ts_perm["post_run_tail_stale_events"]["ble"], 0)
+            self.assertEqual(ts_perm["post_run_tail_stale_events"]["zigbee"], 1)
+
+            # Case C: H6 replay on full time-profile stream (no drops) passes all 4 cases & refuses overwrite
+            exp_full = _build_time_exp("exp_full_time", lambda s: False)
+            h6_out = exp_full / "analyses" / "h6_test"
+            h6_res = run_h6_replay(exp_full, t_cfg_path, h6_out)
+            self.assertTrue(h6_res["overall"]["all_passed"])
+            self.assertEqual(h6_res["overall"]["passed"], 4)
+            self.assertEqual(h6_res["evidence_type"], "offline_fault_injection_replay_on_recorded_packets")
+            with self.assertRaises(FileExistsError):
+                run_h6_replay(exp_full, t_cfg_path, h6_out)
+
 
 if __name__ == "__main__":
     unittest.main()

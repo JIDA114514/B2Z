@@ -1,0 +1,1 @@
+{"run_id": 2733, "mode": "LC", "first_attempt": {"numerator": 51, "denominator": 100, "value": 0.51}, "within_planned": {"numerator": 51, "denominator": 100, "value": 0.51}, "deadline_unknown": {"numerator": 51, "denominator": 100, "value": 0.51}, "output": "python/experiments/20261123_run2733/analyses/uc1_lc_core"}

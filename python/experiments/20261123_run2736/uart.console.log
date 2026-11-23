@@ -1,0 +1,7 @@
+[uc1_board_send] run_id=2736 sending command to /dev/ttyUSB1: b2z_uc1_start? 2736 500 100 0 0 3 1 6000 0
+[uc1_board_send] logging directly to python/experiments/20261123_run2736/board.board.log (expected RF duration ~305s + UART dump)
+[uc1_board_send] board armed & running: CONTROL_PLAN_START state=armed run_id=2736 period_ms=500 tasks=100 slots=610 duration_s=305 rf_mode=legacy_separate_ch39 aux_channel=3 aux_offset_us=0 primary_mhz=2480 secondary_mhz=2410
+[uc1_board_send] RF schedule complete (CONTROL_PLAN_STATS final=1); streaming UART burst/slot dump...
+[uc1_board_send] received terminal marker: COMPACT_TIME_END run_id=2736 trace=burst_brackets_only
+[uc1_board_send] verified python/experiments/20261123_run2736/board.board.log (532870 B, 2647 lines): attempts=400/400 (failed=0), ble_tx=400, ieee_tx=400, bursts=800/800
+{"run_id": 2736, "command": "b2z_uc1_start? 2736 500 100 0 0 3 1 6000 0", "output_path": "python/experiments/20261123_run2736/board.board.log", "bytes_written": 532870, "lines_seen": 2647, "started_armed": true, "rf_final_seen": true, "cost_stats_seen": true, "terminal_end_seen": true, "verified": {"planned_slots": "610", "reached_slots": "610", "planned_attempts": "400", "completed_attempts": "400", "failed_attempts": "0", "ble_tx_completed": 400, "ieee_tx_completed": 400, "burst_completed": 800, "burst_attempted": 800}}

@@ -1,0 +1,6 @@
+# UC1 board command (sha256=142582dc18c5be52...)
+# run_id=2735 mode=SC profile=core point=A b=0 z=0
+# tasks=100 slots=610 K=3 planned_attempts=300 planned_time_updates=0 silent=310
+# cost_per_attempt_us=1648 bursts_per_attempt=3 planned_waveform_us=494400 unused_per_task_us=1056
+# board_duration_s=305 recommended_rx_duration_s=330
+b2z_uc1_start? 2735 500 100 0 0 2 1 6000 0

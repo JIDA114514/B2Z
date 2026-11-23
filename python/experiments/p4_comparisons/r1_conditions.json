@@ -1,0 +1,20 @@
+{
+  "JC": {
+    "topology": "R1_candidate2_0p10m",
+    "tx_power": "0 dBm nominal",
+    "attenuation": "10000 mdB",
+    "firmware_build": "20261119-uc1-r1"
+  },
+  "SC": {
+    "topology": "R1_candidate2_0p10m",
+    "tx_power": "0 dBm nominal",
+    "attenuation": "10000 mdB",
+    "firmware_build": "20261119-uc1-r1"
+  },
+  "LC": {
+    "topology": "R1_candidate2_0p10m",
+    "tx_power": "0 dBm nominal",
+    "attenuation": "10000 mdB",
+    "firmware_build": "20261119-uc1-r1"
+  }
+}

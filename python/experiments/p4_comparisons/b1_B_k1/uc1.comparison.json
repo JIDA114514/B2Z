@@ -1,0 +1,127 @@
+{
+  "schema": "b2z_uc1_comparison_v1",
+  "point": "B",
+  "policy": "k",
+  "groups": {
+    "JC": {
+      "run_id": 2737,
+      "k": 1,
+      "first_attempt_joint": {
+        "numerator": 72,
+        "denominator": 100,
+        "value": 0.72
+      },
+      "within_planned_joint": {
+        "numerator": 72,
+        "denominator": 100,
+        "value": 0.72
+      },
+      "deadline_on_time": {
+        "numerator": 0,
+        "denominator": 100,
+        "value": 0.0
+      },
+      "deadline_unknown": {
+        "numerator": 72,
+        "denominator": 100,
+        "value": 0.72
+      },
+      "planned_waveform_us": 185600,
+      "submitted_waveform_us": 185600,
+      "unused_budget_total_us": 0,
+      "per_joint_decoded_task_us": 2577.777777777778,
+      "ble_channel": 3
+    },
+    "SC": {
+      "run_id": 2738,
+      "k": 1,
+      "first_attempt_joint": {
+        "numerator": 75,
+        "denominator": 100,
+        "value": 0.75
+      },
+      "within_planned_joint": {
+        "numerator": 75,
+        "denominator": 100,
+        "value": 0.75
+      },
+      "deadline_on_time": {
+        "numerator": 0,
+        "denominator": 100,
+        "value": 0.0
+      },
+      "deadline_unknown": {
+        "numerator": 75,
+        "denominator": 100,
+        "value": 0.75
+      },
+      "planned_waveform_us": 185600,
+      "submitted_waveform_us": 185600,
+      "unused_budget_total_us": 0,
+      "per_joint_decoded_task_us": 2474.6666666666665,
+      "ble_channel": 3
+    },
+    "LC": {
+      "run_id": 2739,
+      "k": 1,
+      "first_attempt_joint": {
+        "numerator": 43,
+        "denominator": 100,
+        "value": 0.43
+      },
+      "within_planned_joint": {
+        "numerator": 43,
+        "denominator": 100,
+        "value": 0.43
+      },
+      "deadline_on_time": {
+        "numerator": 0,
+        "denominator": 100,
+        "value": 0.0
+      },
+      "deadline_unknown": {
+        "numerator": 43,
+        "denominator": 100,
+        "value": 0.43
+      },
+      "planned_waveform_us": 290400,
+      "submitted_waveform_us": 290400,
+      "unused_budget_total_us": 0,
+      "per_joint_decoded_task_us": 6753.488372093023,
+      "ble_channel": 39
+    }
+  },
+  "comparisons": {
+    "JC_vs_SC": {
+      "recorded_conditions_match": true,
+      "conditions_status": "match",
+      "missing_evidence": [],
+      "differences": [],
+      "channel_confound": false,
+      "reliability_protocol_effect_identifiable": true,
+      "jc_minus_other_within_planned_rate": -0.030000000000000027,
+      "jc_minus_other_first_attempt_rate": -0.030000000000000027,
+      "jc_minus_other_submitted_waveform_us": 0,
+      "jc_minus_other_unit_cost_us": 103.11111111111131,
+      "jc_relative_unit_cost_change_pct": 4.166666666666675
+    },
+    "JC_vs_LC": {
+      "recorded_conditions_match": true,
+      "conditions_status": "match",
+      "missing_evidence": [],
+      "differences": [],
+      "channel_confound": true,
+      "reliability_protocol_effect_identifiable": false,
+      "jc_minus_other_within_planned_rate": 0.29,
+      "jc_minus_other_first_attempt_rate": 0.29,
+      "jc_minus_other_submitted_waveform_us": -104800,
+      "jc_minus_other_unit_cost_us": -4175.7105943152455,
+      "jc_relative_unit_cost_change_pct": -61.83042546678911
+    }
+  },
+  "limitations": [
+    "JC/SC BLE runs on ch3 (2410 MHz) while LC BLE runs on ch39 (2480 MHz); JC vs LC reliability differences include RF channel effects.",
+    "Submitted waveform length is a design/DMA proxy, not measured RF occupancy or energy.",
+    "Single rounds do not establish statistical significance; use >=3 alternating blocks for confirmatory claims."
+  ]
+}

@@ -57,7 +57,7 @@ prepare_uc1() {
     P3) stage=pilot; tasks=30
         if [[ $block == 1 && $mode == JC ]]; then iq=--save-iq; fi;;
     P4) stage=confirmatory; tasks=100
-        if [[ $block == 1 ]]; then iq=--save-iq; fi;;
+        if [[ $block == 1 && $point == B && ($cond == JQ || $cond == LQ) ]]; then iq=--save-iq; fi;;
     *) echo "阶段仅支持 P3/P4"; return 2;;
   esac
   local prefix="python/control_match/configs/uc1_${id}"
@@ -187,7 +187,7 @@ PY
 每一轮严格按以下 5 步执行，**每轮均重新启动双侧接收端与板端命令**，不连续复用终端进程：
 
 1. **步骤 1（终端 A）：空间检查 + 生成当前轮配置**
-   - 若为 P4 Block 1（需留双侧 IQ，约 5.28 GB/轮），先执行 `df -h .` 确认可用空间 **> 7 GiB**。
+   - 若为 P4 Block 1 的 B 点 `JQ`/`LQ`（`2740`、`2742`，每轮需留双侧 IQ 约 5.28 GB），先执行 `df -h .` 确认可用空间 **> 7 GiB**。
    - 执行 `prepare_uc1 <RUN_ID> <P3|P4> <BLOCK> <A|B> <J1|S1|L1|JQ|SQ|LQ>`。
    - 核对打印出来的 `.board.txt` 与 `.host.sh`：确认 `run_id`、`mode`、`tasks`、`K`、`unused_per_task_us`（A 点 `1056/1056/176`、B 点 `432/432/192`）与 `--save-iq / --no-save-iq` 正确。
 2. **步骤 2（终端 B & C）：同时启动 BLE 与 IEEE 接收端**
@@ -321,55 +321,21 @@ compare_p4_trio() {
 
 每轮 100 任务、500 ms 周期、610 槽（RF 305 s + 接收 330 s + 板端串口转储约 2–3 分钟）。三个区组尽量安排在**不同时间段**，每个区组 12 轮。
 
-### 3.1 Block 1（2731–2742，全留双侧 IQ，每 2 轮强制转存清理）
+### 3.1 Block 1（2731–2742，仅 2740 `JQ` 与 2742 `LQ` 留双侧 IQ）
 
-> [!CAUTION]
-> **Block 1 硬性磁盘门禁**：单轮双侧 `.ci8` 约 **5.28 GB**，工作盘仅余 ~14 GiB。
-> **每轮开跑前必须确认 `df -h .` 可用空间 > 7 GiB**；每完成 **2 轮** 立即用下方 `offload_iq` 函数转存到外接/归档盘、校验 SHA-256 并记录归档位置后再删除本地 `.ci8`（不删 `.packets.jsonl` 与 `.summary.json`）。
-
-在终端 A 先定义 IQ 安全转存函数（把 `/mnt/archive_iq` 替换为你的实际归档盘路径）：
-
-```bash
-export IQ_ARCHIVE_DIR="/mnt/archive_iq/uc1_p4_block1"   # <-- 改为实际有 >70 GB 空间的归档目录
-
-offload_iq() {
-  local id=$1
-  local exp_dir
-  exp_dir=$(echo python/experiments/*_run${id})
-  mkdir -p "${IQ_ARCHIVE_DIR}/$(basename "$exp_dir")"
-  while IFS= read -r -d '' f; do
-    local rel=${f#${exp_dir}/}
-    local dst="${IQ_ARCHIVE_DIR}/$(basename "$exp_dir")/${rel}"
-    mkdir -p "$(dirname "$dst")"
-    cp -v "$f" "$dst"
-    local h_src h_dst
-    h_src=$(sha256sum "$f" | awk '{print $1}')
-    h_dst=$(sha256sum "$dst" | awk '{print $1}')
-    if [[ "$h_src" != "$h_dst" ]]; then
-      echo "SHA256 校验失败: $f vs $dst，中止删除！" >&2
-      return 1
-    fi
-    echo "$(date -Iseconds) run=${id} src=${f} dst=${dst} sha256=${h_src}" >> python/experiments/p4_comparisons/iq_offload_ledger.txt
-    rm -v "$f"
-  done < <(find "$exp_dir/captures" -name "rx.ci8" -type f -print0)
-  df -h .
-}
-```
+2740 与 2742 开跑前均用 `df -h .` 核对可用空间超过 7 GiB（两轮双侧 IQ 合计约 10.56 GB / 9.84 GiB，保存在本地实验目录；若当前磁盘 12 GiB 略紧，开跑 `2742` 前可先转存/清理淘汰候选 1 的 `2719` 原始 IQ 约 1.8 GiB）。全部 36 轮均归档双侧逐包记录、配置、串口日志与分析。
 
 **Block 1 — 负载 A（`2731–2736`，顺序 `J1 → S1 → L1 → JQ → SQ → LQ`）**：
 
 ```bash
 df -h . && prepare_uc1 2731 P4 1 A J1   # SOP 2~5 + check_run_qc 2731
 df -h . && prepare_uc1 2732 P4 1 A S1   # SOP 2~5 + check_run_qc 2732
-offload_iq 2731 && offload_iq 2732      # [磁盘检查点 1/6]
 
 df -h . && prepare_uc1 2733 P4 1 A L1   # SOP 2~5 + check_run_qc 2733
 df -h . && prepare_uc1 2734 P4 1 A JQ   # SOP 2~5 + check_run_qc 2734
-offload_iq 2733 && offload_iq 2734      # [磁盘检查点 2/6]
 
 df -h . && prepare_uc1 2735 P4 1 A SQ   # SOP 2~5 + check_run_qc 2735
 df -h . && prepare_uc1 2736 P4 1 A LQ   # SOP 2~5 + check_run_qc 2736
-offload_iq 2735 && offload_iq 2736      # [磁盘检查点 3/6]
 
 # Block 1 负载 A 三模式对比（2 份）
 compare_p4_trio b1_A_k1    2731 2732 2733
@@ -381,15 +347,12 @@ compare_p4_trio b1_A_q6000 2734 2735 2736
 ```bash
 df -h . && prepare_uc1 2737 P4 1 B J1   # SOP 2~5 + check_run_qc 2737
 df -h . && prepare_uc1 2738 P4 1 B S1   # SOP 2~5 + check_run_qc 2738
-offload_iq 2737 && offload_iq 2738      # [磁盘检查点 4/6]
 
 df -h . && prepare_uc1 2739 P4 1 B L1   # SOP 2~5 + check_run_qc 2739
 df -h . && prepare_uc1 2740 P4 1 B JQ   # SOP 2~5 + check_run_qc 2740
-offload_iq 2739 && offload_iq 2740      # [磁盘检查点 5/6]
 
 df -h . && prepare_uc1 2741 P4 1 B SQ   # SOP 2~5 + check_run_qc 2741
 df -h . && prepare_uc1 2742 P4 1 B LQ   # SOP 2~5 + check_run_qc 2742
-offload_iq 2741 && offload_iq 2742      # [磁盘检查点 6/6]
 
 # Block 1 负载 B 三模式对比（2 份）
 compare_p4_trio b1_B_k1    2737 2738 2739

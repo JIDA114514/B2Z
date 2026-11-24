@@ -1,12 +1,19 @@
 {
   "schema": "b2z_uc1_p5_frozen_results_v1",
-  "git_head": "82d56a5",
+  "p4_data_archive_commit": "82d56a5",
+  "git_head": "3e44e89",
+  "generator_sha256": "16c7fe81dc77c6eee3f7ac57cdbf30d466f18b07decfdd177e103ad9afe74550",
   "p4_run_range": [
     2731,
     2766
   ],
   "p4_total_runs": 36,
   "p4_total_planned_tasks": 3600,
+  "p4_deadline_totals": {
+    "joint_unknown": 2730,
+    "joint_not_decoded": 870,
+    "planned_tasks": 3600
+  },
   "p4_quality_audit": {
     "all_complete": true,
     "total_overflows": 0,

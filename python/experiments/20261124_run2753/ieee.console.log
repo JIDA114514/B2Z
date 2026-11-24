@@ -1,0 +1,168 @@
+B2Z control RX ch12 freq=2410MHz Fs=4Msps run=2753 cmd=None output=python/experiments/20261124_run2753/captures/zigbee/rx
+status samples=19922944 fcs_ok=0 control_unique=0 duplicate=0 invalid=0 queue=0
+status samples=39911424 fcs_ok=0 control_unique=0 duplicate=0 invalid=0 queue=1
+#1 FCS=OK unique run=2753 cmd=1 slot=10 ref=5000ms target=2 opcode=1 arg=2 sample=49840876.000 t=12.460219000s
+status samples=59965440 fcs_ok=1 control_unique=1 duplicate=0 invalid=0 queue=1
+#2 FCS=OK unique run=2753 cmd=2 slot=16 ref=8000ms target=2 opcode=1 arg=3 sample=61840808.000 t=15.460202000s
+#3 FCS=OK unique run=2753 cmd=3 slot=22 ref=11000ms target=2 opcode=1 arg=4 sample=73840652.000 t=18.460163000s
+status samples=80019456 fcs_ok=3 control_unique=3 duplicate=0 invalid=0 queue=1
+#4 FCS=OK unique run=2753 cmd=4 slot=28 ref=14000ms target=2 opcode=1 arg=5 sample=85840521.000 t=21.460130250s
+#5 FCS=OK unique run=2753 cmd=5 slot=34 ref=17000ms target=2 opcode=1 arg=6 sample=97840352.000 t=24.460088000s
+status samples=100073472 fcs_ok=5 control_unique=5 duplicate=0 invalid=0 queue=1
+#6 FCS=OK unique run=2753 cmd=6 slot=40 ref=20000ms target=2 opcode=1 arg=7 sample=109840175.000 t=27.460043750s
+status samples=120127488 fcs_ok=6 control_unique=6 duplicate=0 invalid=0 queue=1
+#7 FCS=OK unique run=2753 cmd=7 slot=46 ref=23000ms target=2 opcode=1 arg=8 sample=121839990.000 t=30.459997500s
+#8 FCS=OK unique run=2753 cmd=8 slot=52 ref=26000ms target=2 opcode=1 arg=9 sample=133839829.000 t=33.459957250s
+status samples=140181504 fcs_ok=8 control_unique=8 duplicate=0 invalid=0 queue=1
+#9 FCS=OK unique run=2753 cmd=9 slot=58 ref=29000ms target=2 opcode=1 arg=10 sample=145839640.000 t=36.459910000s
+#10 FCS=OK unique run=2753 cmd=10 slot=64 ref=32000ms target=2 opcode=1 arg=11 sample=157839455.000 t=39.459863750s
+status samples=160235520 fcs_ok=10 control_unique=10 duplicate=0 invalid=0 queue=1
+#11 FCS=OK unique run=2753 cmd=11 slot=70 ref=35000ms target=2 opcode=1 arg=12 sample=169839261.000 t=42.459815250s
+status samples=180289536 fcs_ok=11 control_unique=11 duplicate=0 invalid=0 queue=1
+#12 FCS=OK unique run=2753 cmd=12 slot=76 ref=38000ms target=2 opcode=1 arg=13 sample=181839076.000 t=45.459769000s
+#13 FCS=OK unique run=2753 cmd=13 slot=82 ref=41000ms target=2 opcode=1 arg=14 sample=193838878.000 t=48.459719500s
+status samples=200343552 fcs_ok=13 control_unique=13 duplicate=0 invalid=0 queue=1
+#14 FCS=OK unique run=2753 cmd=14 slot=88 ref=44000ms target=2 opcode=1 arg=15 sample=205838676.000 t=51.459669000s
+#15 FCS=OK unique run=2753 cmd=15 slot=94 ref=47000ms target=2 opcode=1 arg=16 sample=217838511.000 t=54.459627750s
+status samples=220397568 fcs_ok=15 control_unique=15 duplicate=0 invalid=0 queue=1
+#16 FCS=OK unique run=2753 cmd=16 slot=100 ref=50000ms target=2 opcode=1 arg=17 sample=229838318.000 t=57.459579500s
+status samples=240451584 fcs_ok=16 control_unique=16 duplicate=0 invalid=0 queue=1
+#17 FCS=OK unique run=2753 cmd=17 slot=106 ref=53000ms target=2 opcode=1 arg=18 sample=241838120.000 t=60.459530000s
+#18 FCS=OK unique run=2753 cmd=18 slot=112 ref=56000ms target=2 opcode=1 arg=19 sample=253837964.000 t=63.459491000s
+status samples=260505600 fcs_ok=18 control_unique=18 duplicate=0 invalid=0 queue=1
+#19 FCS=OK unique run=2753 cmd=19 slot=118 ref=59000ms target=2 opcode=1 arg=20 sample=265837761.000 t=66.459440250s
+#20 FCS=OK unique run=2753 cmd=20 slot=124 ref=62000ms target=2 opcode=1 arg=21 sample=277837572.000 t=69.459393000s
+status samples=280559616 fcs_ok=20 control_unique=20 duplicate=0 invalid=0 queue=1
+#21 FCS=OK unique run=2753 cmd=21 slot=130 ref=65000ms target=2 opcode=1 arg=22 sample=289837382.000 t=72.459345500s
+status samples=300613632 fcs_ok=21 control_unique=21 duplicate=0 invalid=0 queue=1
+#22 FCS=OK unique run=2753 cmd=22 slot=136 ref=68000ms target=2 opcode=1 arg=23 sample=301837197.000 t=75.459299250s
+#23 FCS=OK unique run=2753 cmd=23 slot=142 ref=71000ms target=2 opcode=1 arg=24 sample=313837016.000 t=78.459254000s
+status samples=320667648 fcs_ok=23 control_unique=23 duplicate=0 invalid=0 queue=1
+#24 FCS=OK unique run=2753 cmd=24 slot=148 ref=74000ms target=2 opcode=1 arg=25 sample=325836822.000 t=81.459205500s
+#25 FCS=OK unique run=2753 cmd=25 slot=154 ref=77000ms target=2 opcode=1 arg=26 sample=337836641.000 t=84.459160250s
+status samples=340721664 fcs_ok=25 control_unique=25 duplicate=0 invalid=0 queue=1
+#26 FCS=OK unique run=2753 cmd=26 slot=160 ref=80000ms target=2 opcode=1 arg=27 sample=349836452.000 t=87.459113000s
+status samples=360775680 fcs_ok=26 control_unique=26 duplicate=0 invalid=0 queue=1
+#27 FCS=OK unique run=2753 cmd=28 slot=172 ref=86000ms target=2 opcode=1 arg=29 sample=373836073.000 t=93.459018250s
+status samples=380829696 fcs_ok=27 control_unique=27 duplicate=0 invalid=0 queue=1
+#28 FCS=OK unique run=2753 cmd=29 slot=178 ref=89000ms target=2 opcode=1 arg=30 sample=385835883.000 t=96.458970750s
+#29 FCS=OK unique run=2753 cmd=30 slot=184 ref=92000ms target=2 opcode=1 arg=31 sample=397835698.000 t=99.458924500s
+status samples=400883712 fcs_ok=29 control_unique=29 duplicate=0 invalid=0 queue=1
+#30 FCS=OK unique run=2753 cmd=31 slot=190 ref=95000ms target=2 opcode=1 arg=32 sample=409835516.000 t=102.458879000s
+status samples=420937728 fcs_ok=30 control_unique=30 duplicate=0 invalid=0 queue=1
+#31 FCS=OK unique run=2753 cmd=32 slot=196 ref=98000ms target=2 opcode=1 arg=33 sample=421835314.000 t=105.458828500s
+#32 FCS=OK unique run=2753 cmd=33 slot=202 ref=101000ms target=2 opcode=1 arg=34 sample=433835133.000 t=108.458783250s
+status samples=440991744 fcs_ok=32 control_unique=32 duplicate=0 invalid=0 queue=1
+#33 FCS=OK unique run=2753 cmd=35 slot=214 ref=107000ms target=2 opcode=1 arg=36 sample=457834746.000 t=114.458686500s
+status samples=461045760 fcs_ok=33 control_unique=33 duplicate=0 invalid=0 queue=1
+#34 FCS=OK unique run=2753 cmd=36 slot=220 ref=110000ms target=2 opcode=1 arg=37 sample=469834560.000 t=117.458640000s
+status samples=481099776 fcs_ok=34 control_unique=34 duplicate=0 invalid=0 queue=1
+#35 FCS=OK unique run=2753 cmd=37 slot=226 ref=113000ms target=2 opcode=1 arg=38 sample=481834387.000 t=120.458596750s
+#36 FCS=OK unique run=2753 cmd=38 slot=232 ref=116000ms target=2 opcode=1 arg=39 sample=493834215.000 t=123.458553750s
+status samples=501153792 fcs_ok=36 control_unique=36 duplicate=0 invalid=0 queue=1
+#37 FCS=OK unique run=2753 cmd=39 slot=238 ref=119000ms target=2 opcode=1 arg=40 sample=505834004.000 t=126.458501000s
+status samples=521207808 fcs_ok=37 control_unique=37 duplicate=0 invalid=0 queue=1
+#38 FCS=OK unique run=2753 cmd=41 slot=250 ref=125000ms target=2 opcode=1 arg=42 sample=529833625.000 t=132.458406250s
+status samples=541261824 fcs_ok=38 control_unique=38 duplicate=0 invalid=0 queue=1
+#39 FCS=OK unique run=2753 cmd=42 slot=256 ref=128000ms target=2 opcode=1 arg=43 sample=541833452.000 t=135.458363000s
+#40 FCS=OK unique run=2753 cmd=43 slot=262 ref=131000ms target=2 opcode=1 arg=44 sample=553833246.000 t=138.458311500s
+status samples=561315840 fcs_ok=40 control_unique=40 duplicate=0 invalid=0 queue=1
+#41 FCS=OK unique run=2753 cmd=44 slot=268 ref=134000ms target=2 opcode=1 arg=45 sample=565833052.000 t=141.458263000s
+#42 FCS=OK unique run=2753 cmd=45 slot=274 ref=137000ms target=2 opcode=1 arg=46 sample=577832871.000 t=144.458217750s
+status samples=581369856 fcs_ok=42 control_unique=42 duplicate=0 invalid=0 queue=1
+#43 FCS=OK unique run=2753 cmd=46 slot=280 ref=140000ms target=2 opcode=1 arg=47 sample=589832681.000 t=147.458170250s
+status samples=601423872 fcs_ok=43 control_unique=43 duplicate=0 invalid=0 queue=1
+#44 FCS=OK unique run=2753 cmd=47 slot=286 ref=143000ms target=2 opcode=1 arg=48 sample=601832487.000 t=150.458121750s
+#45 FCS=OK unique run=2753 cmd=48 slot=292 ref=146000ms target=2 opcode=1 arg=49 sample=613832285.000 t=153.458071250s
+status samples=621477888 fcs_ok=45 control_unique=45 duplicate=0 invalid=0 queue=1
+#46 FCS=OK unique run=2753 cmd=49 slot=298 ref=149000ms target=2 opcode=1 arg=50 sample=625832121.000 t=156.458030250s
+#47 FCS=OK unique run=2753 cmd=50 slot=304 ref=152000ms target=2 opcode=1 arg=51 sample=637831927.000 t=159.457981750s
+status samples=641531904 fcs_ok=47 control_unique=47 duplicate=0 invalid=0 queue=1
+#48 FCS=OK unique run=2753 cmd=51 slot=310 ref=155000ms target=2 opcode=1 arg=52 sample=649831725.000 t=162.457931250s
+status samples=661585920 fcs_ok=48 control_unique=48 duplicate=0 invalid=0 queue=1
+#49 FCS=OK unique run=2753 cmd=52 slot=316 ref=158000ms target=2 opcode=1 arg=53 sample=661831539.000 t=165.457884750s
+#50 FCS=OK unique run=2753 cmd=53 slot=322 ref=161000ms target=2 opcode=1 arg=54 sample=673831354.000 t=168.457838500s
+status samples=681639936 fcs_ok=50 control_unique=50 duplicate=0 invalid=0 queue=1
+#51 FCS=OK unique run=2753 cmd=54 slot=328 ref=164000ms target=2 opcode=1 arg=55 sample=685831160.000 t=171.457790000s
+status samples=701693952 fcs_ok=51 control_unique=51 duplicate=0 invalid=0 queue=1
+#52 FCS=OK unique run=2753 cmd=56 slot=340 ref=170000ms target=2 opcode=1 arg=57 sample=709830801.000 t=177.457700250s
+status samples=721747968 fcs_ok=52 control_unique=52 duplicate=0 invalid=0 queue=1
+#53 FCS=OK unique run=2753 cmd=58 slot=352 ref=176000ms target=2 opcode=1 arg=59 sample=733830401.000 t=183.457600250s
+status samples=741801984 fcs_ok=53 control_unique=53 duplicate=0 invalid=0 queue=1
+#54 FCS=OK unique run=2753 cmd=59 slot=358 ref=179000ms target=2 opcode=1 arg=60 sample=745830212.000 t=186.457553000s
+status samples=761856000 fcs_ok=54 control_unique=54 duplicate=0 invalid=0 queue=1
+#55 FCS=OK unique run=2753 cmd=61 slot=370 ref=185000ms target=2 opcode=1 arg=62 sample=769829840.000 t=192.457460000s
+#56 FCS=OK unique run=2753 cmd=62 slot=376 ref=188000ms target=2 opcode=1 arg=63 sample=781829676.000 t=195.457419000s
+status samples=781910016 fcs_ok=56 control_unique=56 duplicate=0 invalid=0 queue=1
+#57 FCS=OK unique run=2753 cmd=63 slot=382 ref=191000ms target=2 opcode=1 arg=64 sample=793829469.000 t=198.457367250s
+status samples=801964032 fcs_ok=57 control_unique=57 duplicate=0 invalid=0 queue=1
+#58 FCS=OK unique run=2753 cmd=64 slot=388 ref=194000ms target=2 opcode=1 arg=65 sample=805829280.000 t=201.457320000s
+#59 FCS=OK unique run=2753 cmd=65 slot=394 ref=197000ms target=2 opcode=1 arg=66 sample=817829098.000 t=204.457274500s
+status samples=822018048 fcs_ok=59 control_unique=59 duplicate=0 invalid=0 queue=1
+#60 FCS=OK unique run=2753 cmd=66 slot=400 ref=200000ms target=2 opcode=1 arg=67 sample=829828913.000 t=207.457228250s
+#61 FCS=OK unique run=2753 cmd=67 slot=406 ref=203000ms target=2 opcode=1 arg=68 sample=841828715.000 t=210.457178750s
+status samples=842072064 fcs_ok=61 control_unique=61 duplicate=0 invalid=0 queue=1
+status samples=862126080 fcs_ok=61 control_unique=61 duplicate=0 invalid=0 queue=1
+#62 FCS=OK unique run=2753 cmd=69 slot=418 ref=209000ms target=2 opcode=1 arg=70 sample=865828335.000 t=216.457083750s
+status samples=882180096 fcs_ok=62 control_unique=62 duplicate=0 invalid=0 queue=1
+#63 FCS=OK unique run=2753 cmd=71 slot=430 ref=215000ms target=2 opcode=1 arg=72 sample=889827948.000 t=222.456987000s
+#64 FCS=OK unique run=2753 cmd=72 slot=436 ref=218000ms target=2 opcode=1 arg=73 sample=901827762.000 t=225.456940500s
+status samples=902234112 fcs_ok=64 control_unique=64 duplicate=0 invalid=0 queue=1
+#65 FCS=OK unique run=2753 cmd=73 slot=442 ref=221000ms target=2 opcode=1 arg=74 sample=913827585.000 t=228.456896250s
+status samples=922288128 fcs_ok=65 control_unique=65 duplicate=0 invalid=0 queue=1
+#66 FCS=OK unique run=2753 cmd=74 slot=448 ref=224000ms target=2 opcode=1 arg=75 sample=925827379.000 t=231.456844750s
+status samples=942342144 fcs_ok=66 control_unique=66 duplicate=0 invalid=0 queue=1
+#67 FCS=OK unique run=2753 cmd=77 slot=466 ref=233000ms target=2 opcode=1 arg=78 sample=961826818.000 t=240.456704500s
+status samples=962396160 fcs_ok=67 control_unique=67 duplicate=0 invalid=0 queue=1
+#68 FCS=OK unique run=2753 cmd=78 slot=472 ref=236000ms target=2 opcode=1 arg=79 sample=973826628.000 t=243.456657000s
+status samples=982450176 fcs_ok=68 control_unique=68 duplicate=0 invalid=0 queue=1
+#69 FCS=OK unique run=2753 cmd=79 slot=478 ref=239000ms target=2 opcode=1 arg=80 sample=985826451.000 t=246.456612750s
+#70 FCS=OK unique run=2753 cmd=80 slot=484 ref=242000ms target=2 opcode=1 arg=81 sample=997826253.000 t=249.456563250s
+status samples=1002504192 fcs_ok=70 control_unique=70 duplicate=0 invalid=0 queue=1
+#71 FCS=OK unique run=2753 cmd=81 slot=490 ref=245000ms target=2 opcode=1 arg=82 sample=1009826064.000 t=252.456516000s
+#72 FCS=OK unique run=2753 cmd=82 slot=496 ref=248000ms target=2 opcode=1 arg=83 sample=1021825891.000 t=255.456472750s
+status samples=1022558208 fcs_ok=72 control_unique=72 duplicate=0 invalid=0 queue=1
+#73 FCS=OK unique run=2753 cmd=83 slot=502 ref=251000ms target=2 opcode=1 arg=84 sample=1033825689.000 t=258.456422250s
+status samples=1042612224 fcs_ok=73 control_unique=73 duplicate=0 invalid=0 queue=1
+#74 FCS=OK unique run=2753 cmd=84 slot=508 ref=254000ms target=2 opcode=1 arg=85 sample=1045825490.000 t=261.456372500s
+#75 FCS=OK unique run=2753 cmd=85 slot=514 ref=257000ms target=2 opcode=1 arg=86 sample=1057825309.000 t=264.456327250s
+status samples=1062666240 fcs_ok=75 control_unique=75 duplicate=0 invalid=0 queue=1
+#76 FCS=OK unique run=2753 cmd=87 slot=526 ref=263000ms target=2 opcode=1 arg=88 sample=1081824934.000 t=270.456233500s
+status samples=1082720256 fcs_ok=76 control_unique=76 duplicate=0 invalid=0 queue=1
+#77 FCS=OK unique run=2753 cmd=88 slot=532 ref=266000ms target=2 opcode=1 arg=89 sample=1093824740.000 t=273.456185000s
+status samples=1102774272 fcs_ok=77 control_unique=77 duplicate=0 invalid=0 queue=1
+#78 FCS=OK unique run=2753 cmd=89 slot=538 ref=269000ms target=2 opcode=1 arg=90 sample=1105824563.000 t=276.456140750s
+#79 FCS=OK unique run=2753 cmd=90 slot=544 ref=272000ms target=2 opcode=1 arg=91 sample=1117824377.000 t=279.456094250s
+status samples=1122828288 fcs_ok=79 control_unique=79 duplicate=0 invalid=0 queue=1
+#80 FCS=OK unique run=2753 cmd=91 slot=550 ref=275000ms target=2 opcode=1 arg=92 sample=1129824179.000 t=282.456044750s
+#81 FCS=OK unique run=2753 cmd=92 slot=556 ref=278000ms target=2 opcode=1 arg=93 sample=1141823998.000 t=285.455999500s
+status samples=1142882304 fcs_ok=81 control_unique=81 duplicate=0 invalid=0 queue=1
+#82 FCS=OK unique run=2753 cmd=93 slot=562 ref=281000ms target=2 opcode=1 arg=94 sample=1153823804.000 t=288.455951000s
+status samples=1162936320 fcs_ok=82 control_unique=82 duplicate=0 invalid=0 queue=1
+#83 FCS=OK unique run=2753 cmd=94 slot=568 ref=284000ms target=2 opcode=1 arg=95 sample=1165823610.000 t=291.455902500s
+#84 FCS=OK unique run=2753 cmd=95 slot=574 ref=287000ms target=2 opcode=1 arg=96 sample=1177823429.000 t=294.455857250s
+status samples=1182990336 fcs_ok=84 control_unique=84 duplicate=0 invalid=0 queue=1
+#85 FCS=OK unique run=2753 cmd=96 slot=580 ref=290000ms target=2 opcode=1 arg=97 sample=1189823243.000 t=297.455810750s
+#86 FCS=OK unique run=2753 cmd=97 slot=586 ref=293000ms target=2 opcode=1 arg=98 sample=1201823045.000 t=300.455761250s
+status samples=1203044352 fcs_ok=86 control_unique=86 duplicate=0 invalid=0 queue=1
+#87 FCS=OK unique run=2753 cmd=98 slot=592 ref=296000ms target=2 opcode=1 arg=99 sample=1213822868.000 t=303.455717000s
+status samples=1223098368 fcs_ok=87 control_unique=87 duplicate=0 invalid=0 queue=1
+#88 FCS=OK unique run=2753 cmd=99 slot=598 ref=299000ms target=2 opcode=1 arg=100 sample=1225822695.000 t=306.455673750s
+status samples=1243152384 fcs_ok=88 control_unique=88 duplicate=0 invalid=0 queue=1
+status samples=1263206400 fcs_ok=88 control_unique=88 duplicate=0 invalid=0 queue=1
+status samples=1283260416 fcs_ok=88 control_unique=88 duplicate=0 invalid=0 queue=1
+status samples=1303314432 fcs_ok=88 control_unique=88 duplicate=0 invalid=0 queue=1
+接收链：IEEE 802.15.4 / B2Z 控制
+实验 Run ID：2753（解码后控制记录过滤条件）
+模式：实时采集
+运行状态：正常结束（仅表示程序状态）
+有效包：88（PHY FCS有效）
+IQ观察时长：330.000000 s（全部已处理采样，含实验前后余量）
+Command ID：N/A
+控制记录候选：88；记录有效：88
+有效唯一时隙：88；重复：0；乱序：0
+最长连续缺失：2（consecutive planned active attempts; includes board and receive losses）
+有效解码 / DMA 完成：N/A（分子 88；分母 N/A；matching final CONTROL_STATS and full-run coverage required）
+采集队列：溢出 0；高水位 2
+时间基准：相对 IQ 标称采样时间；独立采集未经校准不能直接相减。
+详细报告：python/experiments/20261124_run2753/captures/zigbee/rx.report.md

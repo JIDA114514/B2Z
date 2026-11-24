@@ -333,12 +333,24 @@ def main() -> int:
     _write_csv(args.output_dir / "p5_p2_h2_h3.csv", p2_h2_h3)
     _write_csv(args.output_dir / "p5_p2_h5.csv", p2_h5)
 
+    total_tasks = sum(r["tasks_planned"] for r in p4_runs)
+    total_dl_unknown = sum(r["deadline_unknown"] for r in p4_runs)
+    total_dl_not_decoded = sum(r["deadline_not_decoded"] for r in p4_runs)
+    assert total_dl_unknown + total_dl_not_decoded == total_tasks
+
     frozen_json = {
         "schema": "b2z_uc1_p5_frozen_results_v1",
+        "p4_data_archive_commit": "82d56a5",
         "git_head": _git_head(),
+        "generator_sha256": _sha256(Path(__file__)),
         "p4_run_range": [2731, 2766],
         "p4_total_runs": len(p4_runs),
-        "p4_total_planned_tasks": sum(r["tasks_planned"] for r in p4_runs),
+        "p4_total_planned_tasks": total_tasks,
+        "p4_deadline_totals": {
+            "joint_unknown": total_dl_unknown,
+            "joint_not_decoded": total_dl_not_decoded,
+            "planned_tasks": total_tasks,
+        },
         "p4_quality_audit": {
             "all_complete": all(r["ble_status"] == "complete" and r["zigbee_status"] == "complete" for r in p4_runs),
             "total_overflows": sum(r["ble_overflow"] + r["zigbee_overflow"] for r in p4_runs),
@@ -360,21 +372,26 @@ def main() -> int:
         json.dumps(frozen_json, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
 
+    # Dynamic lookup helpers for §6 narrative (no hardcoded counts)
+    c_map = {(c["point"], c["strategy"], c["mode"]): c for c in cell_summary}
+    p_map = {(p["point"], p["strategy"], p["contrast"]): p for p in paired_rows}
+    r_map = {r["run_id"]: r for r in p4_runs}
+
     # Render Markdown frozen report
     rel_out = Path("../../python/experiments") / args.output_dir.name
     md = [
         "# UC1 P5 论文冻结结果总表（P2 2701–2718 + P3 2719–2730 + P4 2731–2766）",
         "",
-        f"- **冻结基线提交**：`{frozen_json['git_head']}`（固件 `20261119-uc1-r1`；无线条件 `R1_candidate2_0p10m`，0.10 m 统一胶棒天线，标称 `0 dBm` / `tx_attenuation=10000 mdB`，接收 `4 Msps` / `LNA 16` / `VGA 16` / `AMP 关`）",
+        f"- **P4 数据归档提交**：`{frozen_json['p4_data_archive_commit']}`（运行时仓库 HEAD `{frozen_json['git_head']}`，汇总脚本 SHA-256 `{frozen_json['generator_sha256']}`）；P4 冻结条件为固件 `20261119-uc1-r1`、无线布局 `R1_candidate2_0p10m`（0.10 m 统一胶棒天线，标称 `0 dBm` / `tx_attenuation=10000 mdB`，双侧接收 `4 Msps` / `LNA 16` / `VGA 16` / `AMP 关`）。P2 与 P3 分别按各自阶段条件追溯：[P2 复核（R0 馈线）](uc1_p2_2701_2718_review_20261120.md) · [P3 条件冻结（0.20/0.10 m 先导）](uc1_p3_r1_freeze_20261123.md)",
         f"- **数据来源与溯源文件**：[{args.output_dir.name}/p5_frozen_summary.json]({rel_out}/p5_frozen_summary.json) · [p5_p4_runs.csv]({rel_out}/p5_p4_runs.csv) · [p5_p4_cells.csv]({rel_out}/p5_p4_cells.csv) · [p5_p4_paired_blocks.csv]({rel_out}/p5_p4_paired_blocks.csv) · [p5_p2_h2_h3.csv]({rel_out}/p5_p2_h2_h3.csv) · [p5_p2_h5.csv]({rel_out}/p5_p2_h5.csv)",
-        f"- **P4 质量门禁核验（36 轮 / 3,600 计划任务）**：`all_complete={frozen_json['p4_quality_audit']['all_complete']}`，`total_overflows={frozen_json['p4_quality_audit']['total_overflows']}`，`max_clip_ratio={frozen_json['p4_quality_audit']['max_clip_ratio']:.2e}`，`total_anomalies={frozen_json['p4_quality_audit']['total_anomalies']}`，`total_board_failed={frozen_json['p4_quality_audit']['total_board_failed']}`，`12/12 comparisons match={frozen_json['p4_quality_audit']['all_comparisons_match']}`",
+        f"- **P4 质量门禁核验（36 轮 / {total_tasks:,} 计划任务）**：`all_complete={frozen_json['p4_quality_audit']['all_complete']}`，`total_overflows={frozen_json['p4_quality_audit']['total_overflows']}`，`max_clip_ratio={frozen_json['p4_quality_audit']['max_clip_ratio']:.2e}`，`total_anomalies={frozen_json['p4_quality_audit']['total_anomalies']}`，`total_board_failed={frozen_json['p4_quality_audit']['total_board_failed']}`，`12/12 comparisons match={frozen_json['p4_quality_audit']['all_comparisons_match']}`",
         "",
         "> [!IMPORTANT]",
         "> **统计与物理口径边界**：",
-        "> 1. 全部 36 轮 `deadline_class` 保持 `unknown`（独立 HackRF 时间轴无外部校准参考界），所有可靠性指标严格限定为**计划尝试内联合命令解析率**（`within_planned_attempts`）与首次尝试率（`first_attempt`）。",
-        "> 2. 波形成本均为设计/提交波形代理时长（`µs`），非功率计/空口实测 RF 时长或能耗；DMA 完成是发送代理指标。",
+        f"> 1. 在 P4 全部 {total_tasks:,} 个计划任务中，**{total_dl_unknown:,}/{total_tasks:,}** 个联合解析成功任务的截止期分类为 `unknown`（独立 HackRF 时间轴无外部校准参考界），其余 **{total_dl_not_decoded:,}/{total_tasks:,}** 个未联合解析任务为 `not_decoded`（合计 {total_dl_unknown + total_dl_not_decoded:,}）。可靠性主指标使用**计划尝试内联合命令解析率**（`within_planned_attempts`），另报首次尝试率（`first_attempt`）。",
+        "> 2. 波形成本均为设计/提交波形代理时长（`µs`），非功率计/空口实测 RF 时长或能耗；单位成功任务成本按全部提交波形除以联合成功任务数计算（零成功记 `N/A`）；DMA 完成是发送代理指标。",
         "> 3. `JC` 与 `SC` 同用 BLE ch3（2410 MHz）与 IEEE ch12（2410 MHz），12/12 满足 `reliability_protocol_effect_identifiable=True`；`LC` 使用 BLE ch39（2480 MHz），因此 `JC vs LC` 的可靠性差属于**封装+信道组合**配置级结论，不能单独归因于格式。",
-        "> 4. 每条件为 `n=3` 个独立区组（`df=2`，$t_{0.975,2}=4.303$），区间宽度受限于自由度 2，按预登记停止条件不因区间跨零追加区组。",
+        "> 4. 每条件为 `n=3` 个独立区组（`df=2`，$t_{0.975,2}=4.303$），区间宽度受限于自由度 2（小样本 t 近似可使端点超出 ±100 pp），按预登记停止条件不因区间跨零追加区组。",
         "",
         "## 1. P4 核心主表：12 个条件单元（每单元 3 区组 × 100 任务 = 300 计划任务）",
         "",
@@ -463,13 +480,49 @@ def main() -> int:
             f"{r['zigbee_res_med_p95_max_ms']} | {r['pair_diff_med_p95_ms']} (n={r['pair_diff_n']}) |"
         )
 
+    ak1_jc, ak1_sc, ak1_lc = c_map[("A", "k1", "JC")], c_map[("A", "k1", "SC")], c_map[("A", "k1", "LC")]
+    aq_jc, aq_sc, aq_lc = c_map[("A", "q6000", "JC")], c_map[("A", "q6000", "SC")], c_map[("A", "q6000", "LC")]
+    bk1_jc, bk1_sc, bk1_lc = c_map[("B", "k1", "JC")], c_map[("B", "k1", "SC")], c_map[("B", "k1", "LC")]
+    bq_jc, bq_sc, bq_lc = c_map[("B", "q6000", "JC")], c_map[("B", "q6000", "SC")], c_map[("B", "q6000", "LC")]
+    pb_k1_lc = p_map[("B", "k1", "JC_minus_LC")]
+    pb_q_lc = p_map[("B", "q6000", "JC_minus_LC")]
+    pa_k1_sc = p_map[("A", "k1", "JC_minus_SC")]
+    pa_q_sc = p_map[("A", "q6000", "JC_minus_SC")]
+    pb_k1_sc = p_map[("B", "k1", "JC_minus_SC")]
+    pb_q_sc = p_map[("B", "q6000", "JC_minus_SC")]
+    aq_jc_vs_lc_pct = (1.0 - aq_jc["pooled_unit_cost_us"] / aq_lc["pooled_unit_cost_us"]) * 100.0
+    bk1_jc_vs_lc_pct = (1.0 - bk1_jc["pooled_unit_cost_us"] / bk1_lc["pooled_unit_cost_us"]) * 100.0
+    bq_jc_vs_lc_pct = (1.0 - bq_jc["pooled_unit_cost_us"] / bq_lc["pooled_unit_cost_us"]) * 100.0
+    r2743, r2761, r2764 = r_map[2743], r_map[2761], r_map[2764]
+
     md += [
         "",
         "## 6. 核心实证结论边界（供 P5 写作直接引用）",
         "",
-        "1. **短负载 A（`b=0, z=0`，legacy 无需分片）**：`K=1` 下三模式联合解析相近（JC `68.3%`、SC `70.7%`、LC `68.0%`），LC 单尝试与单位成功波形代理成本最省（`1456 µs` / `2141.2 µs`）；`Q=6000 µs` 下三模式均接近饱和（`98.0%` / `99.7%` / `98.3%`），配对差均值均在 ±2 pp 以内且 95% t 区间跨零。**短负载下共包不具成本或解析优势**。",
-        "2. **长负载 B（`b=26, z=0`，LC 触发 C3 五片重组）**：全部三个独立区组中，JC 与 SC 均显著高于 LC——`K=1` 时 JC 均值 `79.3%` vs LC `28.7%`（逐区组 `+29 / +50 / +73 pp`，均值 `+50.67 pp`，单位成功成本低 **76.9%**）；`Q=6000 µs` 时 JC（`K=3`）均值 `97.0%`、SC（`K=3`）均值 `99.0%` vs LC（`K=2`）均值 `31.0%`（逐区组 `+23 / +100 / +75 pp`，均值 `+66.00 pp`，JC 总提交波形低于 LC 且单位成功成本低 **69.4%**）。B2 `2743`（`0/100`）与 B3 `2761/2764`（`7/100`, `17/100`）共同体现了 ch39 非平稳波动叠加五片 $p^5$ 悬崖的配置级脆弱性（须始终披露 ch3 vs ch39 信道差异）。",
-        "3. **同频公平对照 `JC vs SC`（12/12 具备协议归因资格）**：四个条件的 `JC − SC` 配对差均跨零（A-K1 `-2.33 pp`、A-Q `-1.67 pp`、B-K1 `+7.33 pp`、B-Q `-2.00 pp`），表明在同频同预算下共包并不提高联合解析率。四分类揭示了背后的相关性权衡：JC 将双侧封装于同一更长突发，双侧丢包正相关（例如 `K=1` 合并 `ble_only` 仅 A:`4`、B:`12`，而 SC 为 A:`42`、B:`41`）；JC 的系统收益体现在将单次尝试由 **3 突发压缩为 2 突发**（消除独立 IEEE 突发与切频间隙），并天然提供固定包内位置耦合（`400+8b µs`）以支撑 P2 H5 的连续时间参考与单侧失更恢复。",
+        (
+            f"1. **短负载 A（`b=0, z=0`，legacy 无需分片）**：LC 单次提交波形最低（`1,456 µs`，JC/SC 为 `1,648 µs`）；"
+            f"`K=1` 下三模式计划内联合解析均值接近（JC `{ak1_jc['mean_plan_pct']:.1f}%`、SC `{ak1_sc['mean_plan_pct']:.1f}%`、LC `{ak1_lc['mean_plan_pct']:.1f}%`），"
+            f"LC 合并单位成功成本最低（`{ak1_lc['pooled_unit_cost_us']:.1f} µs/任务`，SC `{ak1_sc['pooled_unit_cost_us']:.1f}`，JC `{ak1_jc['pooled_unit_cost_us']:.1f}`）。"
+            f"在同预算上限 `Q=6000 µs` 下，三模式联合解析率均接近饱和（JC `{aq_jc['mean_plan_pct']:.1f}%`、SC `{aq_sc['mean_plan_pct']:.1f}%`、LC `{aq_lc['mean_plan_pct']:.1f}%`），"
+            f"单位成功成本排序随策略改变：JC 合并单位成功成本为 `{aq_jc['pooled_unit_cost_us']:.1f} µs/任务`，低于 LC 的 `{aq_lc['pooled_unit_cost_us']:.1f} µs/任务`（低约 `{aq_jc_vs_lc_pct:.1f}%`，SC 为 `{aq_sc['pooled_unit_cost_us']:.1f} µs/任务`）。"
+        ),
+        (
+            f"2. **长负载 B（`b=26, z=0`，LC 触发 C3 五片重组）**：三个独立区组中，JC 与 SC 相对 LC 均观察到较高的联合解析率——"
+            f"`K=1` 时 JC 均值 `{bk1_jc['mean_plan_pct']:.1f}%` vs LC `{bk1_lc['mean_plan_pct']:.1f}%`（逐区组 `{pb_k1_lc['b1_pp']:+d} / {pb_k1_lc['b2_pp']:+d} / {pb_k1_lc['b3_pp']:+d} pp`，均值 `{pb_k1_lc['mean_pp']:+.2f} pp`，95% t 区间 `[{pb_k1_lc['ci95_low_pp']:+.2f}, {pb_k1_lc['ci95_high_pp']:+.2f}] pp`，合并单位成功成本低 `{bk1_jc_vs_lc_pct:.1f}%`）；"
+            f"`Q=6000 µs` 时 JC（`K=3`）均值 `{bq_jc['mean_plan_pct']:.1f}%`、SC（`K=3`）均值 `{bq_sc['mean_plan_pct']:.1f}%` vs LC（`K=2`）均值 `{bq_lc['mean_plan_pct']:.1f}%`（逐区组 `{pb_q_lc['b1_pp']:+d} / {pb_q_lc['b2_pp']:+d} / {pb_q_lc['b3_pp']:+d} pp`，均值 `{pb_q_lc['mean_pp']:+.2f} pp`，95% t 区间 `[{pb_q_lc['ci95_low_pp']:+.2f}, {pb_q_lc['ci95_high_pp']:+.2f}] pp`，JC 总提交波形低于 LC 且合并单位成功成本低 `{bq_jc_vs_lc_pct:.1f}%`）。"
+            f"两个配对区间均跨零且端点超出 ±100 pp（源于 `df=2` 小样本 t 近似与区组间大幅波动），不能宣称统计显著；且因 JC/SC 使用 ch3、LC 使用 ch39，结论严格限定在所测封装与信道组合。"
+            f"具体分片观测显示：B2 `2743` 中 IEEE 恢复 `{r2743['plan_both'] + r2743['plan_zigbee_only']}/100` 个任务，BLE 收到 `{r2743['c3_fragments']}` 个 C3 分片但完整重组为 `{r2743['c3_complete']}`（联合 `{r2743['plan_both']}/100`）；B3 `2761` 收到 `{r2761['c3_fragments']}` 片/重组 `{r2761['c3_complete']}` 条（联合 `{r2761['plan_both']}/100`），`2764` 收到 `{r2764['c3_fragments']}` 片/重组 `{r2764['c3_complete']}` 条（联合 `{r2764['plan_both']}/100`）。B 点 LC 完整重组要求同一发送尝试的五片全部到齐。现有记录无法确定各片缺失的具体原因。用 $p^5$ 表示重组成功概率，还需假设五片接收相互独立且成功概率均为 $p$。"
+        ),
+        (
+            f"3. **同频公平对照 `JC vs SC`（12/12 满足配置匹配与协议归因检查）**：四个条件的 `JC − SC` 均值分别为 "
+            f"A-K1 `{pa_k1_sc['mean_pp']:+.2f} pp`（`[{pa_k1_sc['ci95_low_pp']:+.2f}, {pa_k1_sc['ci95_high_pp']:+.2f}]`）、"
+            f"A-Q `{pa_q_sc['mean_pp']:+.2f} pp`（`[{pa_q_sc['ci95_low_pp']:+.2f}, {pa_q_sc['ci95_high_pp']:+.2f}]`）、"
+            f"B-K1 `{pb_k1_sc['mean_pp']:+.2f} pp`（`[{pb_k1_sc['ci95_low_pp']:+.2f}, {pb_k1_sc['ci95_high_pp']:+.2f}]`）、"
+            f"B-Q `{pb_q_sc['mean_pp']:+.2f} pp`（`[{pb_q_sc['ci95_low_pp']:+.2f}, {pb_q_sc['ci95_high_pp']:+.2f}]`），区间均跨零。"
+            f"在已测条件下，**未观察到 JC 相对 SC 的稳定联合解析优势**（配置匹配与区间跨零均不能证明两者等效）。"
+            f"四分类呈现不同的单侧缺失与共同缺失分布：例如 `K=1` 合并 300 计划任务中，A 点 JC 为 `ble_only={ak1_jc['sum_ble_only']}/300`、`neither={ak1_jc['sum_neither']}/300`，SC 为 `ble_only={ak1_sc['sum_ble_only']}/300`、`neither={ak1_sc['sum_neither']}/300`；B 点 JC 为 `ble_only={bk1_jc['sum_ble_only']}/300`、`neither={bk1_jc['sum_neither']}/300`，SC 为 `ble_only={bk1_sc['sum_ble_only']}/300`、`neither={bk1_sc['sum_neither']}/300`（未对双侧相关性作形式假设检验）。"
+            f"JC 相对 SC 可直接确认的结构收益是：A/B 点单次尝试波形预算与 SC 相等，但将每次尝试由 **3 个突发减至 2 个突发**，并提供经同 IQ 核验的固定包内位置（`400+8b µs`），以支撑 P2 H5 的固定次信道时间参考与单侧失更恢复实例。"
+        ),
         "",
     ]
     args.report_md.parent.mkdir(parents=True, exist_ok=True)

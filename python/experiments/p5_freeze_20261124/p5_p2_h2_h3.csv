@@ -1,0 +1,11 @@
+run_id,tag,point,b,z,mode,ble_record_bytes,ieee_record_bytes,mapped_bytes,secondary_payload_bytes,ble_fragments_per_attempt,cost_per_attempt_us,submitted_waveform_us,joint_decoded,c3_fragments,c3_complete,summary_path
+2704,H2/H1,A,0,0,JC,26,26,136,179,1,1648,16480,10/10,0,0,python/experiments/20261120_run2704/analyses/uc1_p2_review/uc1.summary.json
+2702,H2,A,0,0,SC,26,26,136,43,1,1648,16480,10/10,0,0,python/experiments/20261119_run2702/analyses/uc1_sc_core/uc1.summary.json
+2703,H2,A,0,0,LC,26,26,136,0,1,1456,14560,10/10,0,0,python/experiments/20261120_run2703/analyses/uc1_p2_review/uc1.summary.json
+2710,H3,B1,1,0,LC,27,26,136,0,1,1464,14640,10/10,0,0,python/experiments/20261120_run2710/analyses/uc1_p2_review/uc1.summary.json
+2718,H2/H1,B,26,0,JC,52,26,136,205,1,1856,18560,10/10,0,0,python/experiments/20261120_run2718/analyses/uc1_p2_review/uc1.summary.json
+2705,H2,B,26,0,SC,52,26,136,69,1,1856,18560,10/10,0,0,python/experiments/20261120_run2705/analyses/uc1_p2_review/uc1.summary.json
+2706,H2,B,26,0,LC,52,26,136,0,5,2904,29040,10/10,50,10,python/experiments/20261120_run2706/analyses/uc1_p2_review/uc1.summary.json
+2707,H2/H1,C,2,6,JC,28,32,160,205,1,1856,18560,10/10,0,0,python/experiments/20261120_run2707/analyses/uc1_p2_review/uc1.summary.json
+2708,H2,C,2,6,SC,28,32,160,45,1,1856,18560,10/10,0,0,python/experiments/20261120_run2708/analyses/uc1_p2_review/uc1.summary.json
+2709,H2,C,2,6,LC,28,32,160,0,3,2344,23440,10/10,30,10,python/experiments/20261120_run2709/analyses/uc1_p2_review/uc1.summary.json

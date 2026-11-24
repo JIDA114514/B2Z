@@ -1,0 +1,9 @@
+point,strategy,contrast,channel_confound,protocol_identifiable,b1_pp,b2_pp,b3_pp,mean_pp,sd_pp,se_pp,min_pp,max_pp,ci95_low_pp,ci95_high_pp,df
+A,k1,JC_minus_SC,False,True,-3,-3,-1,-2.3333,1.1547,0.6667,-3,-1,-5.2018,0.5351,2
+A,k1,JC_minus_LC,True,False,12,-12,1,0.3333,12.0139,6.9362,-12,12,-29.5108,30.1775,2
+A,q6000,JC_minus_SC,False,True,-4,0,-1,-1.6667,2.0817,1.2019,-4,0,-6.8378,3.5045,2
+A,q6000,JC_minus_LC,True,False,-4,0,3,-0.3333,3.5119,2.0276,-4,3,-9.0573,8.3907,2
+B,k1,JC_minus_SC,False,True,-3,8,17,7.3333,10.0167,5.7831,-3,17,-17.5494,32.2161,2
+B,k1,JC_minus_LC,True,False,29,50,73,50.6667,22.0076,12.7061,29,73,-4.0032,105.3365,2
+B,q6000,JC_minus_SC,False,True,0,1,-7,-2.0,4.3589,2.5166,-7,1,-12.8281,8.8281,2
+B,q6000,JC_minus_LC,True,False,23,100,75,66.0,39.281,22.6789,23,100,-31.5795,163.5795,2

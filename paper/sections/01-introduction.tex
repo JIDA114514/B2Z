@@ -1,18 +1,39 @@
 \section{Introduction}\label{sec:intro}
-% ==== 写作要点 ====
-% 1) 背景：BLE 5.0 扩展广播把大负载拆到 secondary；802.15.4/ZigBee 同时工作在 2.4 GHz
-% 2) 问题：双协议设备要控制两类接收端时，通常需要发两次
-% 3) 本文：同一个 secondary PDU 里同时放 BLE 控制、BlueBee 编码负载和同步字段
-% 4) 贡献：3 条，每条后面要能指到具体的节/图/表
-% 5) 不要写 "this paper is organized as follows"（IEEE 期刊通常省略）
+% ============================================================
+%  Section I Budget: ~0.65 page (~500--550 words, 4 paragraphs)
+%  Style rule: Four-move funnel; no bullet list in final prose if venue
+%  prefers compact letters, or tight 3-item contribution list; never write
+%  "first dual-protocol broadcast" or "this paper is organized as follows".
+% ============================================================
 
-Bluetooth Low Energy (\ble) extended advertising lets a primary advertisement
-reference a secondary payload that is transmitted later, on a channel and at a
-time of the sender's choosing~\cite{bluetooth_core51}. The \stdfour{} standard
-defines an independent low-rate PHY and MAC that shares the same 2.4\,GHz band
-but uses an unrelated frame format~\cite{ieee802154_2020}. Consequently, a node
-that must control receivers of both kinds normally transmits twice.
+\outlinepara{I-P1: Operational Context \& Single-Transmitter Bottleneck}{110--130 words}{%
+  \begin{itemize}
+    \item Co-located \SI{2.4}{GHz} IoT deployments routinely combine \ble{}~\cite{bluetooth_core51} and \stdfour{}~\cite{ieee802154_2020} endpoints under a single controller without dedicated multi-radio gateways~\cite{brunner2021leveraging}.
+    \item When one command task must address both protocol sides simultaneously, a single-transmitter radio ordinarily issues sequential per-protocol bursts, or splits payloads exceeding legacy \SI{31}{B} advertising limits across multiple fragments.
+    \item Connectionless \ble{}~5 extended advertising offloads up to \SI{255}{B} of payload onto a secondary \texttt{AUX\_ADV\_IND} PDU~\cite{bluetooth_core51}, raising a concrete architectural question: when does co-packaging both protocol records and shared timing metadata inside one secondary PDU pay off against separate bursts or legacy fragmentation?
+  \end{itemize}
+}
 
-% TODO: 用 2--3 句把"为什么难"讲清楚（不同前导/调制/校验、单包容量、单向广播无确认），
-%       再引出本文做法与贡献列表。
+\outlinepara{I-P2: Prior-Art Gap \& Design Tension}{130--150 words}{%
+  \begin{itemize}
+    \item Prior PHY-emulation cross-technology communication (CTC) demonstrates that carefully chosen \ble{} bits can emulate valid \stdfour{} frames on a single waveform (BlueBee~\cite{jiang2017bluebee,jiang2019boosting}), while packet-level CTC supports gateway-free heterogeneous broadcast control~\cite{brunner2021leveraging} and bidirectional clock synchronization~\cite{hofmann2021xsync}.
+    \item Existing studies, however, do not isolate the single-transmitter cost and joint command resolution trade-offs of placing \emph{independent, versioned \ble{} and \stdfour{} control records plus shared slot-timing metadata} inside one connectionless \texttt{AUX\_ADV\_IND} PDU under matched task semantics and equal waveform budgets.
+    \item Co-packaging introduces non-trivial constraints: fixed secondary byte expansion ($4\times$ BlueBee symbol mapping), deterministic in-packet field offsets needed by the emulated receiver, retry-safe absolute validity/execution windows without ACK feedback, and fair comparison against slot-isolated legacy fragmentation.
+  \end{itemize}
+}
 
+\outlinepara{I-P3: Research Question \& Dual-Comparison Mainline}{110--130 words}{%
+  \begin{itemize}
+    \item Structure the study around two complementary comparisons under a single SDR transmitter and two independent software receivers: (1) co-channel \modejc{} vs.\ \modesc{} (\SI{2410}{MHz}) to isolate how many bursts co-packaging itself saves at identical waveform budget; and (2) \modejc{} vs.\ legacy advertising/fragmentation \modelc{} (\fragproto{}: \SI{15}{B} fragment header with up to \SI{12}{B} record data per fragment on ch39) to identify when unit successful-task cost rankings shift across tested payloads, channels, and retry strategies.
+    \item Summarize the unified compact protocol (\proto{}) and \fragproto{} baseline evaluated across \num{18} bridge runs (\texttt{R0} feeder, shared-IQ offset, fixed-secondary timing/loss instances, and offline fault-injection replay) and \num{36} pre-registered counterbalanced confirmatory runs (\num{3600} planned tasks in partial-loss \texttt{R1}).
+  \end{itemize}
+}
+
+\outlinepara{I-P4: Three Evidence-Bounded Contributions}{150--170 words}{%
+  \begin{itemize}
+    \item \textbf{Co-packaged \proto{}/\fragproto{} layout and byte/offset verification (Sec.~\ref{sec:design}, Fig.~\ref{fig:layout}, Table~\ref{tab:budget}):} Explicit version isolation (\texttt{0xC1 0x10/0x11}), working-domain byte budgets ($b+4z\le 26$, verified at \ble{}/\stdfour{} complete record pairs of $26/26$, $52/26$, and $28/32$\,B corresponding to $0/0$, $26/0$, and $2/6$\,B extensions and \SI{179}{B}/\SI{205}{B} secondary payloads, plus the \SI{27}{B} direct legacy ceiling), slot-isolated \fragproto{} reassembly invariants, and shared-IQ verification of $\num{400}+8b\,\si{\micro\second}$.
+    \item \textbf{Single-transmitter cost--joint resolution trade-offs within planned attempts (Sec.~\ref{sec:eval_p4}, Table~\ref{tab:p4_main}, Fig.~\ref{fig:p4_tradeoff}):} Co-channel \modejc{} reduces per-attempt bursts from $3$ to $2$ at identical single-attempt waveform budget relative to \modesc{} with no stable joint-resolution advantage observed across three blocks; relative to ch39 \modelc{}, unfragmented Point~A ($26/26$\,B) exhibits a strategy-dependent unit-cost inversion between $K{=}1$ and $Q{=}\SI{6000}{\micro\second}$, whereas at Point~B ($52/26$\,B, one secondary PDU in \modejc{} vs.\ five \fragproto{} fragments in \modelc{}) higher joint resolution is observed for \modejc{} across all three blocks.
+    \item \textbf{Fixed-secondary timing reference availability \& unilateral loss recovery (Sec.~\ref{sec:eval_time}, Table~\ref{tab:p2_time}):} Supporting evidence on held-out local IQ sample-domain prediction residuals (\SIrange{0.129}{0.242}{ms} median), conservative rejection under uncalibrated external bounds, and audited in-schedule recovery instances after manual unilateral \ble{} or \stdfour{} feeder disconnection.
+  \end{itemize}
+  \claimboundary{Never claim ``first dual-protocol broadcast'', statistical equivalence on \modejc{} vs.\ \modesc{}, statistical significance on $\text{df}{=}2$ zero-crossing CIs, cross-device $\mu$s synchronization, or COTS chip validation.}
+}

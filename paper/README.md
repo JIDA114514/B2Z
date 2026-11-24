@@ -1,47 +1,42 @@
-# 论文工程
+# B2Z UC1 5-Page English Short Paper Project
 
-当前模板：IEEEtran journal 模式（目标会议/期刊未定）。投会议时改 main.tex 第 8 行。
+当前状态：**Stage-1 框架与逐段大纲已对齐 P5 冻结结果**（数据归档提交 `82d56a5`，汇总源 `python/experiments/p5_freeze_20261124/`）。
+目标形态：**约 5 页英文短论文（Short Paper / Letter）**，当前采用 `IEEEtran` 双栏 `journal` 模式作为通用基准模板；确定具体目标期刊/会议后仅需调整 `main.tex` 顶部 `\documentclass` 与作者栏。
 
-## 编译
+## 编译与清理
 
-    cd paper
-    latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+```bash
+cd paper
+latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+# 输出：paper/build/main.pdf；清理中间文件：latexmk -C
+```
 
-产物在 build/main.pdf，清理用 latexmk -C。在 VS Code 里按 Ctrl+Alt+B。
+## 5 页短论文结构与篇幅预算（总计约 5.0 页 / ~3,350 词 + 2 图 + 3 表）
 
-## 结构
+| 文件 | 章节 | 目标页数 | 目标词数 | 图表配置 |
+| --- | --- | :---: | :---: | --- |
+| `main.tex` | Title + Abstract + Keywords | `0.35 p` | `150–180 w` | — |
+| `sections/01-introduction.tex` | **I. Introduction**（4 段漏斗结构 + 3 条有界贡献） | `0.65 p` | `~530 w` | — |
+| `sections/02-related-work.tex` | **II. Related Work and Scope Boundaries**（3 段，若投 4 页 Letter 可并入 Sec. I） | `0.45 p` | `~400 w` | — |
+| `sections/03-protocol-design.tex` | **III. Co-Packaged Protocol and Baseline Encapsulations**（UC1/C3 布局、预算公式、`400+8b µs` 偏移与状态机） | `1.10 p` | `~720 w` | **Fig. 1** + **Table I** (`tables/tab-budget.tex`) |
+| `sections/04-prototype-methodology.tex` | **IV. Dual-Chain SDR Prototype and Evaluation Methodology**（Zynq+双 HackRF 独立接收链、P2/P3/P4 矩阵与审计口径） | `0.65 p` | `~540 w` | — |
+| `sections/05-evaluation.tex` | **V. Empirical Results**（P2 容量/同 IQ/H6 回放 → P4 36 轮/3,600 任务权衡 → P2 H5 时间与单侧恢复） | `1.35 p` | `~940 w` | **Table II** (`tables/tab-p4-main.tex`) + **Fig. 2** + **Table III** (`tables/tab-p2-time.tex`) |
+| `sections/06-discussion-conclusion.tex` | **VI. Discussion, Limitations, and Conclusion**（适用域总结、有效性威胁与局限、结论） | `0.45 p` | `~400 w` | — |
+| `refs.bib` | **References**（9 条已核验核心文献，区分全文核对与书目/摘要核对） | `0.30 p` | — | — |
 
-    paper/
-      main.tex              导言区 + input，不写正文
-      sections/
-        01-introduction.tex      引言（已有框架段 + 2 处引用）
-        02-related-work.tex      相关工作
-        03-system-model.tex      系统模型与问题定义
-        04-packet-design.tex     单包双协议设计（核心贡献）
-        05-receiver-design.tex   双链接收与配对
-        06-implementation.tex    实现
-        07-evaluation.tex        实验与结果
-        08-discussion.tex        讨论与局限
-        09-conclusion.tex        结论
-      figures/              矢量图（PDF 优先）
-      tables/               脚本生成的 .tex 表片段
-      refs.bib              参考文献库
-      latexmkrc             编译配置
+## 统一宏与写作硬性红线（与 `AGENTS.md` 一致）
 
-每个 section 文件里都有 写作要点 注释块，写完就删掉。
+- **术语宏（定义于 `main.tex`）**：`\proto` (`UC1`)、`\fragproto` (`C3`)、`\modejc` (`JC`)、`\modesc` (`SC`)、`\modelc` (`LC`)、`\ble` (`BLE`)、`\stdfour` (`IEEE 802.15.4`)。**严禁**将本系统命名为 `BlueBee`（`BlueBee` 专指 Jiang et al. SenSys 2017 前作）。
+- **严禁越界表述**：
+  1. 不写 `"first"`（首次双协议广播 / 首次共包 / 首次无网关控制 / 首次单包同步）；
+  2. 不写 `"statistically significant"`（`df=2` 三区组 95% $t$-CI 跨零且在小样本高方差下超出 $\pm 100\,\text{pp}$）或 `"equivalent"`（`JC vs SC` 写未观察到稳定联合解析优势）；
+  3. `JC vs LC` 可靠性对比始终声明 **ch3 (2410 MHz) vs. ch39 (2480 MHz)** 封装+信道配置级边界；
+  4. 截止期统一按 `2,730/3,600 unknown + 870/3,600 not_decoded` 披露，主指标固定为 `within planned attempts`；
+  5. 波形成本明确为**提交设计波形代理时长（`µs`）**而非功率计实测 RF 空口时长或能耗；
+  6. 时间支撑仅报告本侧 IQ 采样域留出预测残差与单侧失更恢复实例，不与 X-Sync 等跨设备同步精度直接排名。
 
-## 约定
+## 下一阶段推进顺序（Stage 2 正文撰写）
 
-- 术语宏：\ble、\stdfour、\sysname 在 main.tex 导言区，改术语只改一处。
-- 图：figures/fig-<内容>.pdf，单栏 3.5 in、双栏 7.16 in，图内字号不少于 7 pt。
-- 表：booktabs，不画竖线；表注写清样本量与重复轮数。
-- 引用：正文 \cite{key}，条目放 refs.bib；不凭记忆写文献。
-- 数字：正文每个数字都要能追到 python/*/results/ 下的文件。
-
-## 待办
-
-- [ ] 定标题与作者信息（main.tex 顶部两处 TODO）
-- [ ] 写摘要（150-250 词，四句结构）
-- [ ] 第二节文献：先查新，再动笔
-- [ ] 第四节字节预算表：按实际字段重算，不沿用 46 B 上限
-- [ ] 第七节指标口径：分子/分母、N/A 规则先写死再跑数据
+- [ ] 确认候选标题、章节划分与图表规划（如确定目标期刊，先拉取该刊最新模板、摘要字数上限与 AI 披露规范）
+- [ ] 生成 2 张矢量图脚本与 PDF（`figures/fig-uc1-layout-bursts.pdf`、`figures/fig-p4-tradeoff.pdf`）
+- [ ] 按 `03 → 04 → 05 → 01/02 → 06 → Abstract` 顺序将 `\outlinepara` 块逐段替换为紧凑英文学术散文并移除大纲辅助宏

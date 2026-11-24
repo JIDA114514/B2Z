@@ -1,0 +1,29 @@
+% ============================================================
+%  Table I: UC1 / C3 Byte Layout & Per-Attempt Waveform Proxy Budget
+%  Provenance:
+%    - python/experiments/p5_freeze_20261124/p5_p2_h2_h3.csv
+%    - python/control_match/uc1_config.py (uc1_burst_table, uc1_cost)
+%    - P2 runs 2702--2710, 2718 (R0 feeder, 10 planned tasks/run; H1 same-IQ n=10)
+% ============================================================
+\begin{table}[t]
+\centering
+\caption{Byte Layout, Per-Attempt Submitted Waveform Proxy Budget, and \texttt{R0} Verification Across Representative \proto{} Workloads}
+\label{tab:budget}
+\setlength{\tabcolsep}{2.2pt}
+\scriptsize
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+\textbf{Point} & \textbf{Rec.} & \textbf{Map} & \textbf{\modejc{} Sec.} & \multicolumn{3}{c}{\textbf{Bursts / Proxy (\si{\micro\second})}} & \textbf{H1 Med.} \\
+\cmidrule(lr){5-7}
+$(b,z)$ & B/Z & (B) & (B) & \modejc{} & \modesc{} & \modelc{} ($F$) & (\si{\micro\second}) \\
+\midrule
+A $(0,0)$   & 26/26 & 136 & 179 & 2/\num{1648} & 3/\num{1648} & 2/\num{1456} (1) & 400.25 \\
+B1 $(1,0)$  & 27/26 & 136 & 180$^{\dagger}$ & 2/\num{1656}$^{\dagger}$ & 3/\num{1656}$^{\dagger}$ & 2/\num{1464} (1) & --- \\
+C $(2,6)$   & 28/32 & 160 & 205 & 2/\num{1856} & 3/\num{1856} & 4/\num{2344} (3) & 416.25 \\
+B $(26,0)$  & 52/26 & 136 & 205 & 2/\num{1856} & 3/\num{1856} & 6/\num{2904} (5) & 608.00 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+\raggedright\scriptsize
+All 10 tested \texttt{R0} branches (runs 2702--2710, 2718) achieved $10/10$ joint resolution. $F$: \ble{} legacy frames/attempt ($F{=}1$ direct AD for $b\le 1$; $F{=}\lceil(26{+}b)/12\rceil$ \fragproto{} fragments for $b\ge 2$, plus $1$ standalone \stdfour{} burst). $^{\dagger}$Design formula values; at B1 only the \SI{27}{B} direct \modelc{} ceiling (run 2710) was captured on air. H1 offsets ($n{=}10$ each, runs 2704, 2707, 2718) validate $\num{400}+8b\,\si{\micro\second}$ on shared-IQ captures and do not measure cross-device clock error.
+\end{table}

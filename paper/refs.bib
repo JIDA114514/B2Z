@@ -1,10 +1,14 @@
 % ============================================================
-%  参考文献库
-%  - 只放核对过元数据的条目（DOI/卷期/页码）
-%  - 键名：第一作者姓 + 年份 + 关键词，全小写
-%  - 推荐用 Zotero + Better BibTeX 自动导出，避免手抄
+%  Verified Bibliography for B2Z UC1 5-Page Short Paper
+%  Provenance: doc/paper/prior_work_fulltext_comparison_20261124.md
+%  Rule:
+%    - Every entry below has verified bibliographic metadata.
+%    - Entries marked [BIB+ABSTRACT ONLY] do not have full text archived
+%      locally; cite only high-level scope from public abstracts and
+%      NEVER claim unverified mechanism gaps from unread sections.
 % ============================================================
 
+% [FULL-TEXT VERIFIED: doc/BLE_Core_v5.1.pdf]
 @manual{bluetooth_core51,
   author       = {{Bluetooth Special Interest Group}},
   title        = {Bluetooth Core Specification, Version 5.1},
@@ -12,10 +16,88 @@
   year         = {2019}
 }
 
+% [STANDARD SPECIFICATION]
 @manual{ieee802154_2020,
   author       = {{IEEE}},
-  title        = {IEEE Standard for Low-Rate Wireless Networks},
+  title        = {{IEEE} Standard for Low-Rate Wireless Networks},
   organization = {IEEE},
   number       = {802.15.4-2020},
   year         = {2020}
+}
+
+% [FULL-TEXT VERIFIED: python/ctc_sim/bluebee/BlueBee.pdf]
+@inproceedings{jiang2017bluebee,
+  author    = {Jiang, Wenchao and Yin, Zhimeng and Liu, Ruofeng and Li, Zhijun and Kim, Song Min and He, Tian},
+  title     = {{BlueBee}: a 10,000x Faster Cross-Technology Communication via {PHY} Emulation},
+  booktitle = {Proc. 15th ACM Conf. Embedded Network Sensor Systems (SenSys)},
+  year      = {2017},
+  pages     = {1--13},
+  doi       = {10.1145/3131672.3131678}
+}
+
+% [BIB+ABSTRACT ONLY: journal extension of BlueBee; do not claim unread gaps]
+@article{jiang2019boosting,
+  author  = {Jiang, Wenchao and Yin, Zhimeng and Liu, Ruofeng and Li, Zhijun and Kim, Song Min and He, Tian},
+  title   = {Boosting the Bitrate of Cross-Technology Communication on Commodity {IoT} Devices},
+  journal = {IEEE/ACM Trans. Netw.},
+  year    = {2019},
+  volume  = {27},
+  number  = {3},
+  pages   = {1069--1083},
+  month   = jun,
+  doi     = {10.1109/TNET.2019.2913980}
+}
+
+% [FULL-TEXT VERIFIED: author PDF & novelty_ab_claims_review_20261118.md]
+@inproceedings{brunner2021leveraging,
+  author    = {Brunner, Hannah and Hofmann, Rainer and Schu{\ss}, Markus and Link, Jakob and Hollick, Matthias and Boano, Carlo Alberto and R{\"o}mer, Kay},
+  title     = {Leveraging Cross-Technology Broadcast Communication to Build Gateway-Free Smart Homes},
+  booktitle = {Proc. 17th Int. Conf. Distributed Computing in Sensor Systems (DCOSS)},
+  year      = {2021},
+  pages     = {1--9},
+  doi       = {10.1109/DCOSS52077.2021.00014}
+}
+
+% [FULL-TEXT VERIFIED: author PDF & novelty_ab_claims_review_20261118.md]
+@inproceedings{hofmann2021xsync,
+  author    = {Hofmann, Rainer and Grubmair, David and Boano, Carlo Alberto and R{\"o}mer, Kay},
+  title     = {{X-Sync}: Cross-Technology Clock Synchronization Among Off-the-Shelf Wireless {IoT} Devices},
+  booktitle = {Proc. IEEE 46th Conf. Local Computer Networks (LCN)},
+  year      = {2021},
+  pages     = {115--122},
+  doi       = {10.1109/LCN52139.2021.9524940}
+}
+
+% [BIB+ABSTRACT ONLY: background CTC clock sync for WiFi-ZigBee]
+@inproceedings{yu2018crocs,
+  author    = {Yu, Zihao and Jiang, Chengkun and He, Yuan and Zheng, Xiaolong and Guo, Xiuzhen},
+  title     = {Crocs: Cross-Technology Clock Synchronization for {WiFi} and {ZigBee}},
+  booktitle = {Proc. Int. Conf. Embedded Wireless Systems and Networks (EWSN)},
+  year      = {2018},
+  pages     = {135--144}
+}
+
+% [BIB+ABSTRACT ONLY: background CTC time sync in IoT networks]
+@article{gao2023timebee,
+  author  = {Gao, Demin and Liu, Yunhuai and Hu, Bin and Wang, Lei and Chen, Weiwei and Chen, Yongrui and He, Tian},
+  title   = {Time Synchronization Based on Cross-Technology Communication for {IoT} Networks},
+  journal = {IEEE Internet Things J.},
+  year    = {2023},
+  volume  = {10},
+  number  = {22},
+  pages   = {19753--19764},
+  month   = nov,
+  doi     = {10.1109/JIOT.2023.3282202}
+}
+
+% [BIB+ABSTRACT ONLY: 802.11ax OFDMA parallel CTC; verify IEEE DOI string before final submission]
+@article{xia2025wicast,
+  author  = {Xia, Dan and Zheng, Xiaolong and Liu, Liang and Huang, Shanguo and Ma, Huadong},
+  title   = {{WiCast}: Parallel Cross-Technology Transmission for Connecting Heterogeneous {IoT} Devices},
+  journal = {IEEE Trans. Mobile Comput.},
+  year    = {2025},
+  volume  = {24},
+  number  = {10},
+  pages   = {9506--9523},
+  month   = oct
 }

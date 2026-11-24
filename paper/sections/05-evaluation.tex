@@ -1,0 +1,72 @@
+\section{Empirical Results}\label{sec:eval}
+% ============================================================
+%  Section V Budget: ~1.35 pages (~900--980 words + Table II + Fig. 2 + Table III)
+%  Organized strictly along the 3-tier hierarchy in AGENTS.md:
+%    V-A: Co-packaged correctness, capacity, deterministic offset, & H6 replay
+%    V-B: Single-TX cost--joint resolution trade-offs (P4 36 runs / 3,600 tasks)
+%    V-C: Fixed-secondary timing reference & unilateral loss recovery (P2 H5)
+%  Data source: python/experiments/p5_freeze_20261124/
+% ============================================================
+
+\subsection{Layout Capacity, In-Packet Offset, and State-Machine Verification}\label{sec:eval_p2}
+
+\outlinepara{V-A1: Byte Capacity, \texttt{R0} Baseline Integrity, \& Shared-IQ Offset (\proto{}/\fragproto{})}{180--200 words}{%
+  \begin{itemize}
+    \item Reference Table~\ref{tab:budget}: across all 10 \texttt{R0} feeder branches (runs 2702--2710, 2718), both independent chains recover $10/10$ planned tasks with exact payload match across symmetric short records (Point~A: $26/26$\,B, \SI{179}{B} \modejc{} secondary), asymmetric extended records (Point~C: $28/32$\,B, \SI{160}{B} BlueBee region, \SI{205}{B} \modejc{} secondary, $F{=}3$ \fragproto{} fragments), maximum-\ble{} working-domain records (Point~B: $52/26$\,B, \SI{205}{B} \modejc{} secondary, $F{=}5$ \fragproto{} fragments), and the \SI{27}{B} direct \modelc{} ceiling (Point~B1, run 2710).
+    \item Feeding the recorded \ble{} raw IQ of Point~A ($26/26$\,B, run 2704), Point~B ($52/26$\,B, run 2718), and Point~C ($28/32$\,B, run 2707) into \texttt{zigbee\_rx.py} recovers $10/10$ \stdfour{} commands per run with measured sample-index offsets of \SIrange{400.00}{400.25}{\micro\second} (median \SI{400.25}{\micro\second}), \SIrange{608.00}{608.25}{\micro\second} (median \SI{608.00}{\micro\second}), and \SIrange{416.00}{416.25}{\micro\second} (median \SI{416.25}{\micro\second}), respectively, matching $\num{400}+8b\,\si{\micro\second}$ within one \SI{0.25}{\micro\second} sample at \SI{4}{Msps}.
+    \item Summarize deterministic offline fault-injection replay on recorded streams (\texttt{uc1\_h6\_replay.py}): $7/7$ checks pass on run 2714 (\fragproto{} bad-CRC rejection, cross-slot isolation, \texttt{pending}/\texttt{closed} exhaustion invariants, time reversal) and $4/4$ checks pass on run 2715 (uncalibrated-bound rejection, wrong-$b$ layout rejection, retry recovery, conflict cancellation), explicitly noting these are synthetic injections on recorded packets rather than over-the-air anomalies. Mention P2 H4 runs 2711--2714 bridge equal-budget execution (with disclosed manifest-reconciliation provenance).
+  \end{itemize}
+}
+
+\input{tables/tab-p4-main}
+
+\begin{figure*}[t]
+  \centering
+  \figplaceholder{1.85in}{figures/fig-p4-tradeoff.pdf}{%
+    Two-panel double-column figure (\SI{7.16}{in} wide, colorblind-safe palette, complementing Table~\ref{tab:p4_main} without duplicating columns):\\
+    \textbf{(a)} Stacked four-way task outcome distributions (\texttt{both}, \texttt{ble\_only}, \texttt{zigbee\_only}, \texttt{neither}, annotated with exact $n/300$ counts) plus individual B1/B2/B3 joint-resolution markers across Points A $(0,0)$ and B $(26,0)$ under $K{=}1$ and $Q{=}\SI{6000}{\micro\second}$, highlighting Block~2 run 2743 (\modelc{} $0/100$ joint, \texttt{zigbee\_only}$=98/100$, $210$ valid \fragproto{} fragments / $0$ reassembled records).\\
+    \textbf{(b)} Pooled and per-block submitted waveform proxy cost per jointly resolved task (\si{\micro\second}/task), illustrating the strategy-dependent unit-cost crossover at Point~A ($K{=}1$ vs.\ $Q{=}\SI{6000}{\micro\second}$) and the five-fragment cost inflation at Point~B.%
+  }{python/experiments/p5\_freeze\_20261124/\{p5\_p4\_runs.csv, p5\_p4\_cells.csv\}}
+  \caption{Four-way outcome decomposition and unit waveform proxy cost across 36 confirmatory runs (\num{3600} planned tasks, \texttt{R1}): (a) pooled four-way task outcomes ($/300$) with block-level joint-resolution markers and the run 2743 zero-reassembly instance; (b) submitted waveform proxy cost per jointly resolved task.}
+  \label{fig:p4_tradeoff}
+\end{figure*}
+
+\subsection{Cost--Joint Resolution Trade-Offs in Partial-Loss \texttt{R1}}\label{sec:eval_p4}
+
+\outlinepara{V-B1: Quality Audit \& Unfragmented Short Workload A $(b{=}0, z{=}0)$}{190--210 words}{%
+  \begin{itemize}
+    \item State P4 data-quality audit upfront (Table~\ref{tab:p4_main}): all 36 runs (\num{3600} planned tasks) completed with $100\%$ board burst submission, $0$ USB/queue overflows, $0$ clipped samples, and $12/12$ verified condition matches.
+    \item At Point~A (no \modelc{} fragmentation), \modelc{} has the lowest single-attempt waveform proxy (\SI{1456}{\micro\second} vs.\ \SI{1648}{\micro\second} for \modejc{}/\modesc{}). Under $K{=}1$, all three modes exhibit similar pooled joint resolution (\modejc{} $68.3\%$, $205/300$; \modesc{} $70.7\%$, $212/300$; \modelc{} $68.0\%$, $204/300$), giving \modelc{} the lowest pooled unit cost (\SI{2141.2}{\micro\second}/task vs.\ \modesc{} \SI{2332.1} and \modejc{} \SI{2411.7}).
+    \item Under equal budget $Q{=}\SI{6000}{\micro\second}$ ($K{=}3$ for \modejc{}/\modesc{}, $K{=}4$ for \modelc{}), open-loop retries drive all three modes near saturation (\modejc{} $98.0\%$, $294/300$; \modesc{} $99.7\%$, $299/300$; \modelc{} $98.3\%$, $295/300$). Because open-loop \modelc{} always expends $K{=}4$ attempts (\SI{1747200}{\micro\second} total, \SI{52800}{\micro\second} unused) while $K{=}3$ already saturates \modejc{}/\modesc{} (\SI{1483200}{\micro\second} total, \SI{316800}{\micro\second} unused), the unit-cost ranking inverts: \modejc{} (\SI{5044.9}{\micro\second}/task) and \modesc{} (\SI{4960.5}{\micro\second}/task) require $\sim 14.8\%$--$16.2\%$ less waveform proxy per resolved task than \modelc{} (\SI{5922.7}{\micro\second}/task; Fig.~\ref{fig:p4_tradeoff}b).
+  \end{itemize}
+}
+
+\outlinepara{V-B2: Fragmented Workload B $(b{=}26, z{=}0)$: Structure vs.\ Wireless Observation}{220--245 words}{%
+  \begin{itemize}
+    \item State the structural distinction first: for the \SI{52}{B} \ble{} record at Point~B, \modejc{} and \modesc{} carry the complete record inside a single secondary PDU (\SI{1856}{\micro\second}/attempt, $K{=}3$ at $Q{=}\SI{6000}{\micro\second}$), whereas \modelc{} splits it across five \fragproto{} fragments ($6$ bursts, \SI{2904}{\micro\second}/attempt, capping $Q{=}\SI{6000}{\micro\second}$ at $K{=}2$).
+    \item Report the wireless observation under the tested ch3 \modejc{} vs.\ ch39 \modelc{} configuration: higher joint resolution is observed for \modejc{} in all three blocks---at $K{=}1$, $79.3\%$ ($238/300$) vs.\ $28.7\%$ ($86/300$) with block differences $+29/+50/+73$\,pp (mean $+50.67$\,pp, $95\%$ $t$-CI $[-4.00, +105.34]$\,pp) and $76.9\%$ lower pooled unit cost (\SI{2339.5} vs.\ \SI{10130.2}{\micro\second}/task); at $Q{=}\SI{6000}{\micro\second}$, $97.0\%$ ($291/300$) vs.\ $31.0\%$ ($93/300$) with block differences $+23/+100/+75$\,pp (mean $+66.00$\,pp, $95\%$ $t$-CI $[-31.58, +163.58]$\,pp) and $69.4\%$ lower pooled unit cost (\SI{5740.2} vs.\ \SI{18735.5}{\micro\second}/task).
+    \item Enforce two strict interpretive guardrails: (1) both $\text{df}{=}2$ $t$-intervals cross zero (and exceed $\pm 100$\,pp under small-sample $t$ approximation with high block variance), precluding claims of statistical significance; (2) because \modejc{}/\modesc{} use ch3 and \modelc{} uses ch39, the difference reflects the tested encapsulation+channel configuration rather than format alone.
+    \item Explain the completion condition using concrete fragment counts (Fig.~\ref{fig:p4_tradeoff}a): \modelc{} requires all five \fragproto{} fragments of a given attempt to arrive intact. In Block~2 run 2743 (\modelc{}, $Q{=}\SI{6000}{\micro\second}$, $K{=}2$), \stdfour{} decoded $98/100$ tasks and \ble{} received $210$ valid \fragproto{} fragments across $200$ attempts yet reassembled $0$ complete records (\texttt{zigbee\_only}$=98/100$, run unit cost \texttt{N/A}); Block~3 runs 2761 and 2764 received $306$ and $615$ fragments but completed only $9$ and $19$ records ($7/100$ and $17/100$ joint tasks). Note explicitly that existing logs cannot identify the physical cause of individual missing fragments, and writing completion probability as $p^5$ additionally assumes independent, identically distributed fragment reception.
+  \end{itemize}
+}
+
+\outlinepara{V-B3: Co-Channel Fair Comparison (\modejc{} vs.\ \modesc{}) \& Four-Way Loss Structure}{170--190 words}{%
+  \begin{itemize}
+    \item On identical channels (\ble{} ch3, \stdfour{} ch12; $12/12$ protocol-identifiable), paired $\modejc{} - \modesc{}$ mean differences are $-2.33$\,pp ($[-5.20, +0.54]$) at A-$K{=}1$, $-1.67$\,pp ($[-6.84, +3.50]$) at A-$Q{=}6000$, $+7.33$\,pp ($[-17.55, +32.22]$) at B-$K{=}1$, and $-2.00$\,pp ($[-12.83, +8.83]$) at B-$Q{=}6000$. Under the tested conditions, \emph{no stable joint-resolution advantage of \modejc{} over \modesc{} is observed} (noting that neither matched conditions nor zero-crossing $\text{df}{=}2$ intervals prove statistical equivalence).
+    \item Contrast their four-way loss distributions at $K{=}1$: \modejc{} concentrates fewer unilateral \texttt{ble\_only} outcomes and more simultaneous \texttt{neither} losses than \modesc{}---at Point~A, \modejc{} records $\texttt{ble\_only}{=}9/300$ and $\texttt{neither}{=}33/300$ vs.\ \modesc{} $42/300$ and $12/300$; at Point~B, \modejc{} records $12/300$ and $21/300$ vs.\ \modesc{} $41/300$ and $8/300$ (reported descriptively without formal independence testing), consistent with sharing vs.\ separating the secondary RF burst.
+    \item State the directly verified structural gain of \modejc{} over \modesc{}: identical single-attempt waveform proxy budget with per-attempt TX bursts reduced from $3$ to $2$, plus the shared-IQ-verified deterministic in-packet offset ($\num{400}+8b\,\si{\micro\second}$) enabling co-packaged timing tracking.
+  \end{itemize}
+}
+
+\input{tables/tab-p2-time}
+
+\subsection{Fixed-Secondary Timing Reference and Loss Recovery}\label{sec:eval_time}
+
+\outlinepara{V-C1: Held-Out Local Prediction Residuals \& Unilateral Feeder-Disconnect Recovery}{155--175 words}{%
+  \begin{itemize}
+    \item Reference Table~\ref{tab:p2_time} (runs 2715--2717 under the \texttt{R0} direct-feeder topology, Point~B \modejc{}, $300$ slots with $282$ equal-length \texttt{0x10} time updates, audited with \texttt{uc1\_time\_tail\_audit} to separate post-transmission capture-tail \texttt{stale} events from in-schedule behavior).
+    \item In undisturbed operation (run 2715), both receivers resolve $6/6$ tasks and cover $24/24$ held-out timing probes with local IQ sample-domain absolute prediction residuals of \SI{0.223}{ms} median (\SI{0.318}{ms} P95) on \ble{} and \SI{0.129}{ms} median (\SI{0.295}{ms} P95) on \stdfour{}.
+    \item In runs 2716 and 2717, an operator manually disconnected the \ble{} feeder (run 2716) or \stdfour{} feeder (run 2717) over an approximate packet-index range recorded in field notes. The unaffected side maintains $24/24$ probe coverage (\texttt{N/A (0/0)} loss events), while the disrupted side transitions through \texttt{holdover} $\to$ \texttt{stale} $\to$ \texttt{reacquiring} $\to$ \texttt{tracking} ($1/1$ in-schedule recovery; $19/24$ probe coverage; $5/6$ joint tasks). Measured on the disrupted receiver's local IQ sample index, the interval from entering \texttt{stale} to restoring \texttt{tracking} is \SI{23.0}{s} (\SI{23003.1}{ms}, \ble{} in run 2716) and \SI{24.0}{s} (\SI{24002.6}{ms}, \stdfour{} in run 2717); within this span, the sub-interval from first entering \texttt{reacquiring} to restoring \texttt{tracking} ($8$ training packets in each run) is \SI{7.0}{s} (\SI{6996.0}{ms}) and \SI{9.0}{s} (\SI{8994.8}{ms}), respectively. Across all three runs, timed execution remains conservatively $0/6$ because external RF reference bounds are uncalibrated.
+  \end{itemize}
+  \claimboundary{Report as functional state-machine and local sample-domain prediction instances; never rank against X-Sync~\cite{hofmann2021xsync} cross-device clock sync accuracy.}
+}

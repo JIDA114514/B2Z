@@ -1,7 +1,28 @@
-\section{Related Work}\label{sec:related}
-% ==== 写作要点 ====
-% - 按三条线分组：跨协议共存/转换、BLE 扩展广播机制、无线时间同步
-% - 每组结尾一句「已有工作没解决什么」，不要逐篇罗列
-% - 本节只引已读过的文献，不凭记忆写条目
+\section{Related Work and Scope Boundaries}\label{sec:related}
+% ============================================================
+%  Section II Budget: ~0.45 page (~380--420 words, 3 compact paragraphs)
+%  Note: If targeting a 4-page IEEE Letter, fold these 3 paragraphs into
+%  Section I-P2 without losing citations or verification-tier boundaries.
+% ============================================================
 
-% TODO: 正文
+\outlinepara{II-P1: Cross-Technology Emulation \& Heterogeneous Broadcast Control}{140--155 words}{%
+  \begin{itemize}
+    \item \textbf{PHY-level emulation:} BlueBee~\cite{jiang2017bluebee} (extended in~\cite{jiang2019boosting}) maps \stdfour{} chips onto \SI{1}{Mbps} \ble{} GFSK payload bits ($4\times$ payload expansion), demonstrating dual-standard frame compliance and light-bulb control on commodity radios. Whereas BlueBee focuses on PHY bit-mapping and data/legacy-channel frame delivery, we examine co-locating independent \ble{} and \stdfour{} application records plus shared slot-timing metadata inside a single \ble{}~5 \texttt{AUX\_ADV\_IND} PDU under explicit retry and waveform-budget constraints.
+    \item \textbf{Packet/OFDMA multi-protocol broadcast:} Brunner et al.~\cite{brunner2021leveraging} build gateway-free smart-home broadcast control over packet-level X-Burst scheduling alongside native stacks, and WiCast~\cite{xia2025wicast} synthesizes composite IEEE~802.11ax OFDMA resource units to address heterogeneous receivers in parallel. Our scope differs in transmitter constraint: a single \SI{2}{MHz} \ble{}~5 advertising radio without Wi-Fi OFDMA or packet-length energy modulation.
+  \end{itemize}
+  \claimboundary{Cite \cite{jiang2019boosting,xia2025wicast} strictly from verified bibliographic/abstract scope; do not assert unread internal section omissions.}
+}
+
+\outlinepara{II-P2: Cross-Technology Timing vs.\ Co-Packaged Relative Reference}{130--145 words}{%
+  \begin{itemize}
+    \item Dedicated CTC synchronization protocols achieve sub-millisecond or microsecond clock alignment across heterogeneous devices---for example, X-Sync~\cite{hofmann2021xsync} uses bidirectional energy bursts and RSS binary search between COTS \ble{} and \stdfour{} nodes, while Crocs~\cite{yu2018crocs} and TimeBee~\cite{gao2023timebee} address Wi-Fi-to-ZigBee time distribution.
+    \item Clarify our distinct objective: we do \emph{not} propose a new cross-device clock synchronization algorithm or rank synchronization accuracy against X-Sync~\cite{hofmann2021xsync}. Instead, \proto{} embeds unidirectional slot-reference metadata within the co-packaged control stream and evaluates local IQ sample-domain held-out prediction and unilateral loss/reacquisition state transitions on a fixed secondary channel.
+  \end{itemize}
+}
+
+\outlinepara{II-P3: BLE~5 Extended Advertising \& Explicit Non-Goals}{100--120 words}{%
+  \begin{itemize}
+    \item \ble{}~5.1 extended advertising~\cite{bluetooth_core51} decouples primary pointers (\texttt{ADV\_EXT\_IND} on ch37--39) from secondary payloads (\texttt{AUX\_ADV\_IND}, up to \SI{255}{B}), removing the \SI{31}{B} legacy ceiling that forces multi-frame fragmentation (\fragproto{}).
+    \item State explicit scope boundaries upfront: our confirmatory study fixes the secondary channel (\SI{2410}{MHz}, \ble{} ch3 / \stdfour{} ch12) to isolate encapsulation cost and joint decoding without conflating \texttt{AuxPtr} channel-hopping transients, uses submitted waveform duration (\si{\micro\second}) as a deterministic airtime proxy rather than power-meter RF energy, and evaluates independent SDR receivers without claiming commercial stack compatibility or physical actuator synchronization.
+  \end{itemize}
+}

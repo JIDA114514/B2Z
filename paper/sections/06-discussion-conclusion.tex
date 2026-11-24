@@ -1,0 +1,33 @@
+\section{Discussion, Limitations, and Conclusion}\label{sec:conclusion}
+% ============================================================
+%  Section VI Budget: ~0.45 page (~380--420 words, 3 paragraphs)
+%  Consolidates former Sections 08 (Discussion) & 09 (Conclusion)
+%  for a tight 5-page short paper while keeping every AGENTS.md
+%  validity boundary explicit and prominent.
+% ============================================================
+
+\outlinepara{VI-P1: Operational Regime Synthesis (Scoped to Measured Workloads)}{135--150 words}{%
+  \begin{itemize}
+    \item Separate structural protocol thresholds from wireless observations at the measured points:
+      \begin{enumerate}
+        \item \textbf{Protocol boundary:} In our implementation, \ble{} extra lengths $b\le 1$ allow a single legacy advertisement to carry the \ble{} record directly, whereas $b\ge 2$ requires multi-frame \fragproto{} fragmentation (including the standalone \stdfour{} burst, single-attempt \modelc{} waveform proxies at Point~A $(b,z){=}(0,0)$ and Point~B1 $(1,0)$ are \SI{1456}{\micro\second} and \SI{1464}{\micro\second}).
+        \item \textbf{Wireless cost--resolution observations (\modejc{} vs.\ \modelc{}):} At measured Point~A $(0,0)$, \modelc{} has the lowest single-attempt proxy (\SI{1456}{\micro\second}) and lowest $K{=}1$ pooled unit cost (\SI{2141.2}{\micro\second}/task), but the unit-cost ranking inverts under $Q{=}\SI{6000}{\micro\second}$ (\modejc{} \SI{5044.9} vs.\ \modelc{} \SI{5922.7}{\micro\second}/task; wireless unit cost was not measured at Point~B1). At measured Point~B $(26,0)$, which requires five \fragproto{} fragments in \modelc{}, lower joint resolution is observed for \modelc{} across all three blocks under the tested ch39 configuration.
+        \item \textbf{Co-channel burst savings (\modejc{} vs.\ \modesc{}):} Across Points~A and~B on ch3/ch12, \modejc{} reduces per-attempt bursts from $3$ to $2$ at identical single-attempt waveform budget and embeds the deterministic $\num{400}+8b\,\si{\micro\second}$ timing offset, while the three blocks show no stable joint-resolution advantage over \modesc{}.
+      \end{enumerate}
+  \end{itemize}
+}
+
+\outlinepara{VI-P2: Threats to Validity \& Explicit Scope Limitations}{150--165 words}{%
+  \begin{itemize}
+    \item \textbf{Channel \& statistical scope:} In \modejc{} vs.\ \modelc{}, ch3 (\SI{2410}{MHz}) vs.\ ch39 (\SI{2480}{MHz}) conflates encapsulation with carrier frequency, and $n{=}3$ blocks ($\text{df}{=}2$) yield wide $t$-intervals that cross zero even at $+50.67$/$+66.00$\,pp mean differences; larger block counts or single-frequency synthetic testbeds would be required for narrow interval estimation.
+    \item \textbf{Waveform proxy \& uncalibrated clocks:} Cost metrics reflect submitted baseband waveform duration and polled DMA completion rather than RF power-meter energy or inter-burst switching overhead, and independent HackRF clocks leave before-deadline RF delivery unverified (\num{2730}/\num{3600} \texttt{unknown}).
+    \item \textbf{Platform \& protocol boundaries:} Results are obtained on a fixed-secondary SDR testbed (Zynq/AD9363 + dual HackRFs) with pre-configured $b$ on the \stdfour{} side; commercial \ble{}/ZigBee transceiver stacks, online timing across live \texttt{AuxPtr} channel hopping, and physical actuator synchronization remain outside the verified scope.
+  \end{itemize}
+}
+
+\outlinepara{VI-P3: Conclusion \& Specific Future Work}{95--110 words}{%
+  \begin{itemize}
+    \item Restate the core empirical takeaway in two crisp sentences: co-packaging versioned \ble{} and BlueBee-emulated \stdfour{} records inside one \ble{}~5 \texttt{AUX\_ADV\_IND} PDU (\proto{}) delivers verified $26/26$, $52/26$, and $28/32$\,B (\ble{}/\stdfour{}) complete record pairs (\SI{179}{B} and \SI{205}{B} secondary payloads) with shared-IQ $\num{400}+8b\,\si{\micro\second}$ offsets; across 36 confirmatory runs, co-channel \modejc{} cuts per-attempt bursts from $3$ to $2$ at equal single-attempt waveform budget relative to \modesc{} without showing a stable joint-resolution advantage, while relative to ch39 \modelc{} its unit-cost ranking flips with retry strategy at unfragmented Point~A and avoids five-fragment reassembly exposure at Point~B.
+    \item Specify one concrete, testable next step: integrating hardware-triggered shared clock instrumentation and commercial \ble{}~5 / \stdfour{} receivers to audit strict RF deadline delivery and evaluate online timing continuity across dynamic \texttt{AuxPtr} channel following.
+  \end{itemize}
+}

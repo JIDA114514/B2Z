@@ -1,0 +1,40 @@
+% ============================================================
+%  Supplementary Table S1: Complete P4 First-Attempt, Four-Way Outcome,
+%  Cross-Slot Complementarity, and Budget Accounting Matrix
+%  Usage: Include in Supplementary Material / Appendix if the chosen
+%         target venue supports it (main text remains self-contained).
+%  Provenance: python/experiments/p5_freeze_20261124/p5_p4_cells.csv
+% ============================================================
+\begin{table*}[t]
+\centering
+\caption{Supplementary Breakdown of First-Attempt Resolution, Four-Way Outcomes, Cross-Slot Complementarity, and Submitted/Unused Waveform Budgets Across P4 Conditions ($300$ Planned Tasks/Cell)}
+\label{tab:p4_supp}
+\setlength{\tabcolsep}{4.0pt}
+\scriptsize
+\begin{tabular}{@{}llcccccccc@{}}
+\toprule
+\textbf{Condition} & \textbf{Mode} & $K$ & \textbf{1st-Attempt Blocks} & \textbf{1st-Att. 4-Way} & \textbf{Planned 4-Way} & \textbf{Cross-Slot} & \textbf{Submitted} & \textbf{Unused} & \textbf{Unused / Task} \\
+ & & & B1 / B2 / B3 ($/100$) & \texttt{both/B/Z/none} & \texttt{both/B/Z/none} & Joint ($/300$) & (\si{\micro\second}) & (\si{\micro\second}) & (\si{\micro\second}/task) \\
+\midrule
+\multirow{3}{*}{A $(0,0)$, $K{=}1$}
+  & \modejc{} & 1 & 63 / 78 / 64 & 205 / 9 / 53 / 33  & 205 / 9 / 53 / 33  & 0 & \num{494400}  & 0 & 0 \\
+  & \modesc{} & 1 & 66 / 81 / 65 & 212 / 42 / 34 / 12 & 212 / 42 / 34 / 12 & 0 & \num{494400}  & 0 & 0 \\
+  & \modelc{} & 1 & 51 / 90 / 63 & 204 / 26 / 64 / 6  & 204 / 26 / 64 / 6  & 0 & \num{436800}  & 0 & 0 \\
+\midrule
+\multirow{3}{*}{A $(0,0)$, $Q{=}6000$}
+  & \modejc{} & 3 & 63 / 85 / 76 & 224 / 4 / 41 / 31  & 294 / 0 / 4 / 2 & 0 & \num{1483200} & \num{316800} & \num{1056} \\
+  & \modesc{} & 3 & 76 / 76 / 75 & 227 / 32 / 30 / 11 & 299 / 0 / 1 / 0 & 3 & \num{1483200} & \num{316800} & \num{1056} \\
+  & \modelc{} & 4 & 69 / 74 / 58 & 201 / 36 / 55 / 8  & 295 / 1 / 4 / 0 & 3 & \num{1747200} & \num{52800}  & \num{176}  \\
+\midrule
+\multirow{3}{*}{B $(26,0)$, $K{=}1$}
+  & \modejc{} & 1 & 72 / 86 / 80 & 238 / 12 / 29 / 21 & 238 / 12 / 29 / 21 & 0 & \num{556800}  & 0 & 0 \\
+  & \modesc{} & 1 & 75 / 78 / 63 & 216 / 41 / 35 / 8  & 216 / 41 / 35 / 8  & 0 & \num{556800}  & 0 & 0 \\
+  & \modelc{} & 1 & 43 / 36 / 7  & 86 / 18 / 167 / 29 & 86 / 18 / 167 / 29 & 0 & \num{871200}  & 0 & 0 \\
+\midrule
+\multirow{3}{*}{B $(26,0)$, $Q{=}6000$}
+  & \modejc{} & 3 & 72 / 79 / 44 & 195 / 25 / 46 / 34 & 291 / 1 / 8 / 0   & 2 & \num{1670400} & \num{129600} & \num{432} \\
+  & \modesc{} & 3 & 70 / 84 / 70 & 224 / 37 / 30 / 9  & 297 / 2 / 1 / 0   & 2 & \num{1670400} & \num{129600} & \num{432} \\
+  & \modelc{} & 2 & 47 / 0 / 9   & 56 / 7 / 202 / 35  & 93 / 3 / 200 / 4  & 7 & \num{1742400} & \num{57600}  & \num{192} \\
+\bottomrule
+\end{tabular}
+\end{table*}

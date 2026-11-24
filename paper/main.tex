@@ -1,58 +1,104 @@
 % ============================================================
-%  BlueBee 论文主文件
-%  编译：latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
-%  产物：build/main.pdf
-%  结构说明见 README.md
+%  B2Z UC1 5-Page Short Paper — Master File (Framework & Outline)
+%  Build:  cd paper && latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+%  Output: paper/build/main.pdf
+%  Target: ~5.0 pages (English, venue-agnostic IEEEtran journal short paper;
+%          switch to conference/letter class once target venue is selected)
 % ============================================================
 \documentclass[journal]{IEEEtran}
-% 投会议时改成： \documentclass[conference]{IEEEtran}
+% Alternative venue switches once journal/letter is chosen:
+%   IEEE Letters (4--5 pp):  \documentclass[journal,comsoc]{IEEEtran}
+%   IEEE Conference (5--6 pp): \documentclass[conference]{IEEEtran}
 
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{multirow}
 \usepackage{siunitx}
 \usepackage{xcolor}
 \usepackage{microtype}
 \usepackage{cite}
 \usepackage[hidelinks]{hyperref}
 
-% ---- 全局宏：术语、系统名、单位集中在这里改，不要散落正文 ----
-\newcommand{\sysname}{BlueBee}
+\sisetup{
+  detect-all,
+  group-separator = {,},
+  group-minimum-digits = 4
+}
+
+% ---- Unified terminology macros (avoid colliding with prior work "BlueBee") ----
+\newcommand{\proto}{UC1}
+\newcommand{\fragproto}{C3}
+\newcommand{\modejc}{JC}
+\newcommand{\modesc}{SC}
+\newcommand{\modelc}{LC}
 \newcommand{\ble}{BLE}
 \newcommand{\stdfour}{IEEE~802.15.4}
 
+% ---- Stage-1 Outline Macros (remove once converted to Stage-2 flowing prose) ----
+\definecolor{outlineborder}{HTML}{3B5998}
+\definecolor{outlinebg}{HTML}{F7F9FC}
+\definecolor{guardcolor}{HTML}{9B2C2C}
+
+\newcommand{\outlinepara}[3]{%
+  \par\medskip\noindent
+  \fcolorbox{outlineborder}{outlinebg}{%
+    \begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+      \footnotesize
+      \textbf{\textcolor{outlineborder}{[#1]}} \hfill \textit{Target: #2}\par\smallskip
+      #3
+    \end{minipage}%
+  }\par\smallskip
+}
+
+\newcommand{\claimboundary}[1]{%
+  \par\smallskip\noindent
+  {\scriptsize\textcolor{guardcolor}{\textbf{Boundary:} #1}}%
+}
+
+\newcommand{\figplaceholder}[4]{%
+  \fcolorbox{black!45}{black!3}{%
+    \begin{minipage}[c][#1][c]{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+      \centering\footnotesize
+      \textbf{Figure Placeholder: \texttt{#2}}\\[3pt]
+      #3\\[3pt]
+      {\scriptsize\textit{Data / Provenance:} #4}
+    \end{minipage}%
+  }%
+}
+
 \begin{document}
 
-\title{Single-Packet Dual-Protocol Control and Synchronization over BLE Extended Advertising}
+% Candidate Title A (default — emphasizes architecture + empirical trade-offs, zero overclaim):
+\title{Co-Packaging Dual-Protocol Control and Timing Metadata in BLE Extended Advertising: Capacity, Cost, and Joint Resolution Trade-Offs}
+% Candidate Title B (slightly shorter for IEEE Letters):
+% \title{Single-Packet BLE--IEEE 802.15.4 Control over Extended Advertising: Cost and Joint Resolution Trade-Offs}
 
-% TODO: 填写作者、单位、通讯作者
-\author{Author Name
-\thanks{Manuscript prepared \today. Funding and affiliation to be completed.}}
+% TODO: Fill in author names, affiliations, and funding upon venue selection
+\author{Author Name(s)%
+\thanks{Manuscript Stage-1 framework and outline aligned with frozen dataset \texttt{p5\_freeze\_20261124} (P4 data archive commit \texttt{82d56a5}). Target length: $\sim$5 pages.}}
 
 \maketitle
 
 \begin{abstract}
-% TODO: 150--250 词，按四句写：
-%   (1) 问题是什么
-%   (2) 本文怎么做（一句话）
-%   (3) 关键量化结果（必须与正文表格数字一致）
-%   (4) 意味着什么
-\emph{Abstract to be written.}
+% ==== Stage-1 Abstract Outline (Target: 150--180 words, unstructured seamless prose) ====
+% Sentence 1 (Problem & Constraint): Single-radio 2.4 GHz controllers managing heterogeneous BLE and IEEE 802.15.4 devices typically issue separate protocol bursts or split payloads across legacy advertisements, increasing burst count or multi-fragment reassembly exposure.
+% Sentence 2 (Approach): We study a unified compact co-packaging scheme (UC1) that places independent BLE and BlueBee-emulated IEEE 802.15.4 command records alongside shared relative timing metadata inside one connectionless BLE 5 secondary AUX_ADV_IND PDU (JC), comparing it on a single-transmitter/dual-independent-receiver SDR testbed against co-channel separate extended advertising (SC) and legacy advertising with slot-isolated fragmentation using a 15-byte fragment header and up to 12 record bytes per fragment (LC/C3).
+% Sentence 3 (Capacity & Offset Results): Across three verified (BLE/IEEE) complete record pairs---Point A (26/26 bytes), Point B (52/26 bytes), and Point C (28/32 bytes), corresponding to 179- and 205-byte secondary payloads---independent receivers recover full records with shared-IQ in-packet median offsets matching 400 + 8b microseconds (Point A: 400.25 microseconds; Point B: 608.00 microseconds; Point C: 416.25 microseconds).
+% Sentence 4 (Confirmatory Cost--Resolution Results): Over 36 counterbalanced runs (3,600 planned tasks) evaluated within planned attempts, co-channel JC reduces per-attempt bursts from 3 to 2 at identical single-attempt waveform budget relative to SC without showing a stable joint-resolution advantage across three blocks; relative to ch39 LC, Point A (26/26 bytes, unfragmented) favors LC at K=1 (2,141.2 vs. 2,411.7 microseconds/task) but inverts unit-cost ranking at Q=6,000 microseconds (JC 5,044.9 vs. LC 5,922.7 microseconds/task), whereas at Point B (52/26 bytes, single secondary PDU in JC vs. five C3 fragments in LC) higher joint resolution is observed for JC across all three blocks (+50.67 and +66.00 percentage points on average, df=2 CIs crossing zero).
+[Stage-1 Abstract Blueprint --- 150--180 words in final prose] We investigate co-packaging independent \ble{} and BlueBee-emulated \stdfour{} control records with shared timing metadata inside one connectionless \ble{}~5 \texttt{AUX\_ADV\_IND} PDU (\modejc{}), comparing it on a single-transmitter/dual-independent-receiver SDR testbed against co-channel separate extended advertising (\modesc{}) and legacy advertising with a \SI{15}{B} fragment header carrying up to \SI{12}{B} of record data per fragment (\modelc{}/\fragproto{}). Across verified $26/26$, $52/26$, and $28/32$\,B (\ble{}/\stdfour{}) complete record pairs (\SI{179}{B} and \SI{205}{B} secondary payloads), \proto{} confirms shared-IQ in-packet offsets matching $\num{400}+8b\,\si{\micro\second}$ and supports fixed-secondary unilateral timing loss recovery. Over \num{36} counterbalanced runs (\num{3600} planned tasks) evaluated \emph{within planned attempts}, co-channel \modejc{} cuts per-attempt bursts from $3$ to $2$ at identical single-attempt waveform budget relative to \modesc{} with no stable joint-resolution advantage observed across three blocks; relative to ch39 \modelc{}, unfragmented Point~A ($26/26$\,B) favors \modelc{} at $K{=}1$ (\SI{2141.2} vs.\ \SI{2411.7}{\micro\second}/task) but inverts unit-cost ranking under $Q{=}\SI{6000}{\micro\second}$ (\modejc{} \SI{5044.9} vs.\ \modelc{} \SI{5922.7}{\micro\second}/task), while at Point~B ($52/26$\,B, one secondary PDU vs.\ five \fragproto{} fragments) higher joint resolution is observed for \modejc{} in all three blocks.
 \end{abstract}
 
 \begin{IEEEkeywords}
-BLE, IEEE 802.15.4, extended advertising, cross-protocol, synchronization
+Bluetooth Low Energy (BLE), extended advertising, IEEE 802.15.4, cross-technology communication, packet fragmentation, software-defined radio (SDR).
 \end{IEEEkeywords}
 
 \input{sections/01-introduction}
 \input{sections/02-related-work}
-\input{sections/03-system-model}
-\input{sections/04-packet-design}
-\input{sections/05-receiver-design}
-\input{sections/06-implementation}
-\input{sections/07-evaluation}
-\input{sections/08-discussion}
-\input{sections/09-conclusion}
+\input{sections/03-protocol-design}
+\input{sections/04-prototype-methodology}
+\input{sections/05-evaluation}
+\input{sections/06-discussion-conclusion}
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}

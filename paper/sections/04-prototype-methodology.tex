@@ -1,0 +1,41 @@
+\section{Dual-Chain SDR Prototype and Evaluation Methodology}\label{sec:methodology}
+% ============================================================
+%  Section IV Budget: ~0.65 page (~520--560 words, 2 subsections / 4 paragraphs)
+%  Consolidates former Sections 05 (Receiver), 06 (Implementation),
+%  and Section 07 metric/setup definitions for maximum clarity and economy.
+% ============================================================
+
+\subsection{Single-TX / Dual-Independent-RX Testbed}\label{sec:testbed}
+
+\outlinepara{IV-A1: Transmitter Firmware \& Independent Dual-Receiver Chains}{140--155 words}{%
+  \begin{itemize}
+    \item \textbf{Transmitter:} Single Zynq-7020/AD9363 SDR transmitter running \proto{} firmware build \texttt{20261119-uc1-r1} (\texttt{app\_FreeRTOS} SDK-integrated build, nominal \SI{0}{dBm}, \texttt{tx\_attenuation=10000\,mdB}). Because DMA completion interrupts are unreliable on this hardware, the firmware actively polls DMA status with bounded timeouts and exports final burst statistics (\texttt{UC1\_STATS final=1}) over UART (\SI{115200}{baud}). Note explicitly that DMA completion is a submission proxy, not calibrated RF power-meter airtime.
+    \item \textbf{Independent receivers:} Two dedicated HackRF One SDRs (\SI{4}{Msps}, LNA~\SI{16}{dB}, VGA~\SI{16}{dB}, AMP off, fixed serial-to-antenna binding) feed independent host pipelines: \texttt{exadv\_rx} for \ble{} (ch3 at \SI{2410}{MHz} in \modejc{}/\modesc{}; ch39 at \SI{2480}{MHz} in \modelc{}) and standard \stdfour{} O-QPSK demodulation (\texttt{std\_zigbee/zigbee\_rx.py} on ch12, \SI{2410}{MHz}).
+  \end{itemize}
+}
+
+\outlinepara{IV-A2: Independent Validation \& Zero Cross-Side Reconstruction Rule}{110--125 words}{%
+  \begin{itemize}
+    \item Each chain independently validates outer PHY/MAC framing, \fragproto{} slot-level reassembly (where applicable), \proto{} version/header rules, and \texttt{app\_crc16} before emitting per-side records.
+    \item Deterministic payload patterns seeded by $(\texttt{run\_id}, \texttt{command\_id}, \texttt{side})$ serve strictly as post-decode integrity checks and are \emph{never} used to reconstruct missing bytes on the opposite side.
+    \item Cross-side task matching joins validated \ble{} and \stdfour{} outputs solely by $(\texttt{run\_id}, \texttt{command\_id})$ against the pre-registered plan denominator.
+  \end{itemize}
+}
+
+\subsection{Pre-Registered Experimental Matrix and Audit Metrics}\label{sec:metrics}
+
+\outlinepara{IV-B1: Phased Experimental Progression (P2 Bridge, P3 Pilot, P4 Confirmatory)}{130--145 words}{%
+  \begin{itemize}
+    \item \textbf{P2 bridge (\texttt{R0} direct-feeder topology, runs 2701--2718):} Verifies 10 layout/mode branches ($10$ tasks/run), shared-IQ in-packet offsets on Points A/B/C (runs 2704, 2718, 2707), fixed-secondary \texttt{time}-profile tracking and manual unilateral feeder disconnection on \ble{} (run 2716) and \stdfour{} (run 2717) ($300$ slots/run; field notes log the approximate packet-index window of intervention, while state-transition durations are measured on the disrupted receiver's local IQ sample index), and deterministic offline fault-injection replay on recorded packet streams (\texttt{uc1\_h6\_replay.py} on runs 2714 and 2715).
+    \item \textbf{P3 pilot (\texttt{R1} selection, runs 2719--2730):} Evaluates two whip-antenna distances under pre-registered selection rules requiring each block's pooled joint successes across the three modes to fall within $18\text{--}76$ out of $90$ tasks, \emph{at least one identical mode} to achieve $1\text{--}29$ successes out of $30$ tasks per block in both blocks, and no queue overflows, no capture truncation, and no significant clipping (per the pre-registered clip-ratio saturation rule); \SI{0.20}{m} failed Block~2 ($13/90$), selecting \SI{0.10}{m} (\texttt{R1\_candidate2\_0p10m}, $31/90$ and $24/90$).
+    \item \textbf{P4 confirmatory matrix (runs 2731--2766):} Crosses Workloads A $(0,0)$ and B $(26,0)$, policies $K{=}1$ and $Q{=}\SI{6000}{\micro\second}$, and modes $\{\modejc{},\modesc{},\modelc{}\}$ across $3$ counterbalanced blocks ($100$ tasks/run, \num{3600} planned tasks total; dual-side raw IQ archived on pre-designated runs 2740 and 2742).
+  \end{itemize}
+}
+
+\outlinepara{IV-B2: Cross-Attempt Joint Resolution, Deadline Audit, \& Statistical Conventions}{150--165 words}{%
+  \begin{itemize}
+    \item \textbf{Cross-attempt task resolution vs.\ single-attempt fragment reassembly:} The denominator is always the pre-registered planned logical task count. For a given $(\texttt{run\_id}, \texttt{command\_id})$, if both \ble{} and \stdfour{} chains independently validate the record at least once within its $K$ planned attempts, the task counts once as jointly resolved (\texttt{both}), even when the two sides succeed in different slots (e.g., $7$ of the $93/300$ jointly resolved tasks in Point~B $Q{=}\SI{6000}{\micro\second}$ \modelc{} come from cross-slot complementarity). By contrast, \modelc{}'s \ble{} receiver must still collect \emph{all} \fragproto{} fragments of a record within the \emph{same} single attempt/slot. Remaining tasks are classified into \texttt{ble\_only}, \texttt{zigbee\_only}, and \texttt{neither}; first-attempt rates are reported alongside planned-attempt rates.
+    \item \textbf{Deadline classification:} Because independent HackRF clocks lack an externally calibrated shared RF reference, P4 deadline status is reported separately: \num{2730}/\num{3600} jointly resolved tasks are \texttt{unknown} and \num{870}/\num{3600} unresolved tasks are \texttt{not\_decoded}.
+    \item \textbf{Cost \& paired intervals:} Unit task cost divides total submitted waveform proxy (\si{\micro\second}, including retries, pure updates, and incomplete fragments) by jointly resolved tasks (\texttt{N/A} when zero). Mode comparisons report all three block-paired differences, mean, range, and 95\% paired $t$-intervals ($\text{df}{=}2$, $t_{0.975,2}{=}4.303$), distinguishing co-channel protocol-identifiable pairs (\modejc{} vs.\ \modesc{}) from channel-confounded configuration pairs (\modejc{} ch3 vs.\ \modelc{} ch39).
+  \end{itemize}
+}

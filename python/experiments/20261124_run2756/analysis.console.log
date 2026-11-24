@@ -1,0 +1,1 @@
+{"run_id": 2756, "mode": "JC", "first_attempt": {"numerator": 76, "denominator": 100, "value": 0.76}, "within_planned": {"numerator": 99, "denominator": 100, "value": 0.99}, "deadline_unknown": {"numerator": 99, "denominator": 100, "value": 0.99}, "output": "python/experiments/20261124_run2756/analyses/uc1_jc_core"}

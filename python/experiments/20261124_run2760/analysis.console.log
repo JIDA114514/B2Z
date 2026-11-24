@@ -1,0 +1,1 @@
+{"run_id": 2760, "mode": "SC", "first_attempt": {"numerator": 65, "denominator": 100, "value": 0.65}, "within_planned": {"numerator": 65, "denominator": 100, "value": 0.65}, "deadline_unknown": {"numerator": 65, "denominator": 100, "value": 0.65}, "output": "python/experiments/20261124_run2760/analyses/uc1_sc_core"}

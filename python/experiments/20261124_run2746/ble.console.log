@@ -1,0 +1,80 @@
+LE 1M exadv RX channels=[39] center=2480.000MHz Fs=4Msps output=python/experiments/20261124_run2746/captures/ble/rx
+status samples=19922944 packets=47 pairs=0 diagnostic_pairs=0 queue=0
+status samples=39911424 packets=97 pairs=0 diagnostic_pairs=0 queue=1
+status samples=59965440 packets=149 pairs=0 diagnostic_pairs=0 queue=1
+status samples=80019456 packets=205 pairs=0 diagnostic_pairs=0 queue=1
+status samples=100073472 packets=263 pairs=0 diagnostic_pairs=0 queue=1
+status samples=120127488 packets=322 pairs=0 diagnostic_pairs=0 queue=1
+status samples=140181504 packets=384 pairs=0 diagnostic_pairs=0 queue=1
+status samples=160235520 packets=445 pairs=0 diagnostic_pairs=0 queue=1
+status samples=180289536 packets=502 pairs=0 diagnostic_pairs=0 queue=1
+status samples=200343552 packets=563 pairs=0 diagnostic_pairs=0 queue=1
+status samples=220397568 packets=618 pairs=0 diagnostic_pairs=0 queue=1
+status samples=240451584 packets=672 pairs=0 diagnostic_pairs=0 queue=1
+status samples=260505600 packets=727 pairs=0 diagnostic_pairs=0 queue=1
+status samples=280559616 packets=783 pairs=0 diagnostic_pairs=0 queue=1
+status samples=300613632 packets=837 pairs=0 diagnostic_pairs=0 queue=1
+status samples=320667648 packets=894 pairs=0 diagnostic_pairs=0 queue=1
+status samples=340721664 packets=952 pairs=0 diagnostic_pairs=0 queue=1
+status samples=360775680 packets=1009 pairs=0 diagnostic_pairs=0 queue=1
+status samples=380829696 packets=1060 pairs=0 diagnostic_pairs=0 queue=1
+status samples=400883712 packets=1117 pairs=0 diagnostic_pairs=0 queue=1
+status samples=420937728 packets=1177 pairs=0 diagnostic_pairs=0 queue=1
+status samples=440991744 packets=1235 pairs=0 diagnostic_pairs=0 queue=1
+status samples=461045760 packets=1296 pairs=0 diagnostic_pairs=0 queue=1
+status samples=481099776 packets=1357 pairs=0 diagnostic_pairs=0 queue=1
+status samples=501153792 packets=1414 pairs=0 diagnostic_pairs=0 queue=1
+status samples=521207808 packets=1475 pairs=0 diagnostic_pairs=0 queue=1
+status samples=541261824 packets=1536 pairs=0 diagnostic_pairs=0 queue=1
+status samples=561315840 packets=1591 pairs=0 diagnostic_pairs=0 queue=1
+status samples=581369856 packets=1651 pairs=0 diagnostic_pairs=0 queue=1
+status samples=601423872 packets=1712 pairs=0 diagnostic_pairs=0 queue=1
+status samples=621477888 packets=1769 pairs=0 diagnostic_pairs=0 queue=1
+status samples=641531904 packets=1831 pairs=0 diagnostic_pairs=0 queue=1
+status samples=661585920 packets=1893 pairs=0 diagnostic_pairs=0 queue=1
+status samples=681639936 packets=1951 pairs=0 diagnostic_pairs=0 queue=1
+status samples=701693952 packets=2013 pairs=0 diagnostic_pairs=0 queue=1
+status samples=721747968 packets=2073 pairs=0 diagnostic_pairs=0 queue=1
+status samples=741801984 packets=2129 pairs=0 diagnostic_pairs=0 queue=1
+status samples=761856000 packets=2189 pairs=0 diagnostic_pairs=0 queue=1
+status samples=781910016 packets=2252 pairs=0 diagnostic_pairs=0 queue=1
+status samples=801964032 packets=2308 pairs=0 diagnostic_pairs=0 queue=1
+status samples=822018048 packets=2365 pairs=0 diagnostic_pairs=0 queue=1
+status samples=842072064 packets=2424 pairs=0 diagnostic_pairs=0 queue=1
+status samples=862126080 packets=2481 pairs=0 diagnostic_pairs=0 queue=1
+status samples=882180096 packets=2542 pairs=0 diagnostic_pairs=0 queue=1
+status samples=902234112 packets=2601 pairs=0 diagnostic_pairs=0 queue=1
+status samples=922288128 packets=2657 pairs=0 diagnostic_pairs=0 queue=1
+status samples=942342144 packets=2717 pairs=0 diagnostic_pairs=0 queue=1
+status samples=962396160 packets=2778 pairs=0 diagnostic_pairs=0 queue=1
+status samples=982450176 packets=2834 pairs=0 diagnostic_pairs=0 queue=1
+status samples=1002504192 packets=2892 pairs=0 diagnostic_pairs=0 queue=1
+status samples=1022558208 packets=2954 pairs=0 diagnostic_pairs=0 queue=1
+status samples=1042612224 packets=3011 pairs=0 diagnostic_pairs=0 queue=1
+status samples=1062666240 packets=3064 pairs=0 diagnostic_pairs=0 queue=1
+status samples=1082720256 packets=3125 pairs=0 diagnostic_pairs=0 queue=1
+status samples=1102774272 packets=3178 pairs=0 diagnostic_pairs=0 queue=1
+status samples=1122828288 packets=3235 pairs=0 diagnostic_pairs=0 queue=1
+status samples=1142882304 packets=3293 pairs=0 diagnostic_pairs=0 queue=1
+status samples=1162936320 packets=3347 pairs=0 diagnostic_pairs=0 queue=1
+status samples=1182990336 packets=3405 pairs=0 diagnostic_pairs=0 queue=1
+status samples=1203044352 packets=3463 pairs=0 diagnostic_pairs=0 queue=1
+status samples=1223098368 packets=3516 pairs=0 diagnostic_pairs=0 queue=1
+status samples=1243152384 packets=3573 pairs=0 diagnostic_pairs=0 queue=1
+status samples=1263206400 packets=3622 pairs=0 diagnostic_pairs=0 queue=1
+status samples=1283260416 packets=3671 pairs=0 diagnostic_pairs=0 queue=1
+status samples=1303314432 packets=3720 pairs=0 diagnostic_pairs=0 queue=1
+接收链：BLE exadv
+实验 Run ID：2746（控制记录独立校验并统计匹配 Run ID；总 PHY 包数仍包含其他包）
+模式：实时采集
+运行状态：正常结束（仅表示程序状态）
+有效包：3760（BLE CRC及广播结构有效）
+IQ观察时长：330.000000 s（全部已处理采样，含实验前后余量）
+严格 AuxPtr 匹配：0
+同频诊断配对：0（不代表规范跟随）
+无线 PRR：N/A（未合并发送计数及一致观察窗口）
+有效控制记录：44；匹配 Run ID：44；无效控制记录：0（未按槽去重）
+C1分片重组（本地IQ时间，非跨端同步）：compact_pending=0, compact_closed=100, compact_fragments=427, compact_c3_fragments=427, compact_pending_peak=1, compact_closed_peak=100, compact_timeout=56, compact_complete=44
+采集队列：溢出 0；高水位 2
+时间基准：相对 IQ 标称采样时间；独立采集未经校准不能直接相减。
+详细报告：python/experiments/20261124_run2746/captures/ble/rx.report.md

@@ -1,8 +1,8 @@
 # B2Z UC1 5-Page Short Paper Project（中英双版共享架构）
 
 当前状态：
-- **英文投稿主版**（`paper/`）：Stage-1 框架、已核验文献库、冻结三线表及 2 张矢量图已就绪，待中文版审校定稿后逐段展开为约 5 页英文正文；
-- **中文审阅伴生版**（`paper/zh/`）：已完成 6 节完整中文学术正文初稿与双栏编译（[build/zh/main_zh.pdf](build/zh/main_zh.pdf)），与英文主版严格 1:1 章节/段落/标签对应，用于审校论点、数值与逻辑边界；
+- **英文投稿主版**（`paper/`）：已完成 6 节英文完整学术正文初稿、已核验文献库、冻结三线表及 2 张矢量图，编译通过（[build/main.pdf](build/main.pdf)，正文约 5.3 页、0 警告、0 溢出）；
+- **中文审阅伴生版**（`paper/zh/`）：已完成 6 节完整中文学术正文与双栏编译（[build/zh/main_zh.pdf](build/zh/main_zh.pdf)），与英文主版严格 1:1 章节/论点/数值对应；
 - **冻结数据溯源**：`python/experiments/p5_freeze_20261124/`（P4 数据归档提交 `82d56a5`）。
 
 ## 双语项目组织原则（单点维护、互不污染）
@@ -53,6 +53,6 @@ cd paper/zh && latexmk -xelatex -interaction=nonstopmode -halt-on-error main_zh.
 ## 推进顺序
 
 - [x] Stage-1 英文框架、冻结三线表与 2 张矢量图
-- [x] 中文伴生版完整正文生成与 XeLaTeX 编译验证
-- [ ] 根据中文伴生版审阅修改意见定稿论点与表述
-- [ ] 将审定后的中文版 1:1 展开为英文投稿正文（`paper/sections/`）并精确控页至 ~5.0 页
+- [x] 中文伴生版完整正文生成、两轮审计修订与 XeLaTeX 编译验证
+- [x] 按中文版 1:1 展开英文投稿正文初稿（`paper/sections/`，0 警告、0 溢出）
+- [ ] 选定目标期刊/会议后按投稿模板调整 `\documentclass`、作者栏及严格页数（5.0 页或 6.0 页）

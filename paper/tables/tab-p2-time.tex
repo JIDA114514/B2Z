@@ -7,7 +7,7 @@
 % ============================================================
 \begin{table}[t]
 \centering
-\caption{Fixed-Secondary Timing Reference Residuals and Unilateral Loss-Recovery Instances (Runs 2715--2717, \texttt{time} Profile)}
+\caption{Fixed-Secondary Absolute Local IQ Prediction Errors and Unilateral Loss-Recovery Instances (Runs 2715--2717, \texttt{time} Profile)}
 \label{tab:p2_time}
 \setlength{\tabcolsep}{1.9pt}
 \scriptsize
@@ -24,5 +24,5 @@
 \end{tabular}
 \par\smallskip
 \raggedright\scriptsize
-Each run uses the \texttt{R0} direct-feeder topology across $300$ slots (\SI{500}{ms} period: $6$ tasks $\times$ $K{=}3$ plus $282$ equal-length time updates; manual feeder disconnection in runs 2716/2717; cross-side estimate differences have medians \SIrange{0.140}{0.153}{ms} and P95 \SIrange{0.202}{0.264}{ms} over $n{=}24,19,19$ co-covered probes). Post-run tail \texttt{stale} ($1/1$ per side after TX completion) is separated via \texttt{uc1\_time\_tail\_audit}; undisturbed sides have zero in-schedule loss events (\texttt{N/A (0/0)}). Timed execution remains $0/6$ because external RF reference bounds are uncalibrated. Held-out residuals measure local IQ sample-domain prediction, not cross-device synchronization accuracy.
+Each run uses the \texttt{R0} direct-feeder topology across $300$ slots (\SI{500}{ms} period: $6$ tasks $\times$ $K{=}3$ plus $282$ equal-length time updates; manual feeder disconnection in runs 2716/2717; cross-side estimate differences have medians \SIrange{0.140}{0.153}{ms} and P95 \SIrange{0.202}{0.264}{ms} over $n{=}24,19,19$ co-covered probes). Post-run tail \texttt{stale} ($1/1$ per side after TX completion) is separated via \texttt{uc1\_time\_tail\_audit}; undisturbed sides have zero in-schedule loss events (\texttt{N/A (0/0)}). In each run, $0/6$ planned tasks qualified for timed software processing because external RF reference bounds were uncalibrated. Reported $|e|$ values measure held-out absolute local IQ sample-domain prediction error, not cross-device synchronization accuracy.
 \end{table}

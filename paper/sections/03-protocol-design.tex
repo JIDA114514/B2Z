@@ -1,71 +1,41 @@
 \section{Co-Packaged Protocol and Baseline Encapsulations}\label{sec:design}
-% ============================================================
-%  Section III Budget: ~1.10 pages (~700--750 words + Fig. 1 + Table I)
-%  Consolidates former Sections 03 (System Model) & 04 (Packet Design)
-%  to avoid repeating symbol definitions in a 5-page short paper.
-%  Source of truth: doc/reference/unified_compact_protocol_proposal.md
-% ============================================================
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{figures/fig-uc1-layout-bursts.pdf}
-  \caption{Unified compact (\proto{}) co-packaged secondary PDU layout and single-attempt burst comparison across \modejc{}, \modesc{}, and \modelc{}: (a) \texttt{AUX\_ADV\_IND} byte budget and deterministic $\num{400}+8b\,\si{\micro\second}$ marker offset; (b) per-attempt burst structures at Point~B ($52/26$\,B, where \modelc{} requires five \fragproto{} fragments on ch39).}
+  \caption{Unified compact (\proto{}) co-packaged secondary PDU layout and single-attempt burst comparison across \modejc{}, \modesc{}, and \modelc{}: (a) \texttt{AUX\_ADV\_IND} byte budget, BlueBee $4\times$ mapping expansion, and deterministic $\num{400}+8b\,\si{\micro\second}$ marker offset; (b) per-attempt burst structures at Point~B ($52/26$\,B, where \modejc{} uses one \SI{1720}{\micro\second} secondary burst and \modelc{} requires five \fragproto{} fragments on ch39).}
   \label{fig:layout}
 \end{figure}
 
-\subsection{Single-Transmitter Modes and Byte Budget}\label{sec:design_modes}
+\subsection{Encapsulation Modes and Byte/Waveform Budgets}\label{sec:design_modes}
 
-\outlinepara{III-A1: Task Model \& Three Encapsulation Modes}{160--180 words}{%
-  \begin{itemize}
-    \item Define a logical dual-protocol control task $(\texttt{run\_id}, \texttt{command\_id})$ scheduled over periodic slots $\texttt{slot\_index}\in\mathbb{N}_0$ with fixed slot period $T_{\text{slot}}$ (\SI{500}{ms} in experiments) and $K$ planned attempts under either fixed-$K$ or per-task waveform budget cap $Q$ (\si{\micro\second}).
-    \item Contrast the three single-transmitter modes illustrated in Fig.~\ref{fig:layout}:
-      \begin{enumerate}
-        \item \textbf{Joint Co-packaged (\modejc{}):} $2$ bursts/attempt---one primary \texttt{ADV\_EXT\_IND} (\SI{136}{\micro\second}) plus one secondary \texttt{AUX\_ADV\_IND} on \ble{} ch3 (\SI{2410}{MHz}) carrying both the native \ble{} record and the BlueBee-mapped \stdfour{} record (overlapping \stdfour{} ch12, \SI{2410}{MHz}).
-        \item \textbf{Separate Co-channel (\modesc{}):} $3$ bursts/attempt---primary \texttt{ADV\_EXT\_IND}, a \ble{}-only \texttt{AUX\_ADV\_IND} on ch3, and a standalone BlueBee-mapped \stdfour{} burst on ch12.
-        \item \textbf{Legacy / Fragmented (\modelc{}):} $F{+}1$ bursts/attempt---legacy advertising on \ble{} ch39 (\SI{2480}{MHz}) using $F{=}1$ direct Manufacturer AD frame when $b\le 1$ (\SI{27}{B} ceiling) or $F{=}\lceil(26{+}b)/12\rceil$ \fragproto{} fragments when $b\ge 2$, followed by $1$ standalone \stdfour{} burst on ch12.
-      \end{enumerate}
-  \end{itemize}
-}
+The transmitter schedules attempts in \SI{500}{ms} slots ($T_{\text{slot}}{=}\SI{500}{ms}$) toward a \ble{} chain and an \stdfour{} chain; in P4, successive logical tasks start six slots apart (\SI{3}{s}). Each logical task $(\texttt{run\_id}, \texttt{command\_id})$ is sent open-loop without ACKs across $K$ planned attempts under a fixed-$K$ rule or a per-task waveform budget cap $Q$ (\si{\micro\second}), consuming a strictly increasing \texttt{slot\_index}. Fig.~\ref{fig:layout} contrasts three modes under identical task semantics: \modejc{} sends $2$ bursts/attempt---one primary \texttt{ADV\_EXT\_IND} (\SI{136}{\micro\second}) and one co-packaged \texttt{AUX\_ADV\_IND} on \ble{} ch3 / \stdfour{} ch12 (\SI{2410}{MHz}); \modesc{} sends $3$ bursts/attempt---primary, \ble{}-only secondary on ch3, and standalone BlueBee-mapped \stdfour{} burst on ch12; and \modelc{} sends $F{+}1$ bursts/attempt---$F$ legacy \ble{} frames on ch39 (\SI{2480}{MHz}) plus $1$ standalone \stdfour{} burst on ch12.
 
-\outlinepara{III-A2: \proto{} Record Structure, Working Domain, \& Waveform Proxy Equations}{180--200 words}{%
-  \begin{itemize}
-    \item Define the $(26{+}n)$-byte little-endian \proto{} record ($n{=}b$ on \ble{}, $n{=}z$ on \stdfour{}): \SI{24}{B} fixed header (\texttt{magic=0xC1}, explicit \texttt{version\_type=0x10} time-update or \texttt{0x11} command, \texttt{run\_id}, \texttt{slot\_index}, \texttt{period\_ms}, \texttt{command\_id}, \texttt{target\_id}, \texttt{opcode}, \texttt{arg}, \texttt{valid\_offset\_ms}, \texttt{execute\_offset\_ms}, \texttt{extra\_len}), $n$\,B side-specific \texttt{extra\_payload}, and \SI{2}{B} \texttt{CRC-16/CCITT-FALSE}.
-    \item State the \modejc{} secondary payload equation:
-      \[
-        L_{\text{sec}}(b,z) = 17 + (26 + b) + 4(26 + z + 8) = 179 + b + 4z~\text{bytes},
-      \]
-      distinguishing the \SI{255}{B} byte-arithmetic ceiling ($b+4z\le 76$) from our frozen Phase-1 working domain ($0\le b\le 26$, $0\le z\le 6$, $b+4z\le 26$; $b{=}26$ and $z{=}6$ are marginal limits, not jointly combined). Explicitly map the three tested \modejc{} points (\ble{}/\stdfour{} order): Point~A ($0/0$\,B extra $\to$ $26/26$\,B complete records, \SI{179}{B} secondary payload), Point~B ($26/0$\,B extra $\to$ $52/26$\,B records, \SI{205}{B} payload), and Point~C ($2/6$\,B extra $\to$ $28/32$\,B records, \SI{205}{B} payload), alongside Point~B1 ($1/0$\,B extra $\to$ $27/26$\,B records) testing the \SI{27}{B} direct \modelc{} ceiling.
-    \item Present exact single-attempt design waveform proxy budgets (\si{\micro\second} at LE~1M, Table~\ref{tab:budget}):
-      \begin{align*}
-        C_{\modejc}(b,z) &= C_{\modesc}(b,z) = 1648 + 8b + 32z,\\
-        C_{\modelc}(b,z) &=
-        \begin{cases}
-          8(182 + b + 4z), & b \le 1,\\
-          8(35F + 162 + b + 4z), & b \ge 2.
-        \end{cases}
-      \end{align*}
-      Highlight why $C_{\modejc}{=}C_{\modesc}$ identically while \modejc{} cuts bursts from $3$ to $2$, and how equal-budget allocation sets $K_m = \lfloor Q / C_m \rfloor$ with explicit reporting of unused budget $Q - K_m C_m$.
-  \end{itemize}
-}
+Each side independently frames and verifies a $(26{+}n)$-byte little-endian \proto{} record ($n{=}b$ on \ble{}, $n{=}z$ on \stdfour{}), comprising a \SI{24}{B} fixed header (\texttt{magic=0xC1}, explicit \texttt{version\_type} \texttt{0x10} time-update or \texttt{0x11} command, \texttt{run\_id}, \texttt{slot\_index}, \texttt{period\_ms}, \texttt{command\_id}, \texttt{target\_id}, \texttt{opcode}, \texttt{arg}, relative validity/execution offsets, and \texttt{extra\_len}), $n$\,B of side-specific \texttt{extra\_payload}, and a \SI{2}{B} \texttt{CRC-16/CCITT-FALSE}. In \modejc{}, extended-advertising and AD headers occupy \SI{17}{B} and the BlueBee region occupies $4(26{+}z{+}8){=}136{+}4z$\,B (including \SI{8}{B} \stdfour{} framing), yielding secondary PDU payload length
+\begin{equation}\label{eq:sec_payload}
+  L_{\text{sec}}(b,z) = 17 + (26 + b) + (136 + 4z) = 179 + b + 4z~\text{B}.
+\end{equation}
+The \SI{255}{B} PDU ceiling gives an arithmetic limit $b{+}4z\le 76$, whereas our frozen Phase-1 working domain enforces $0\le b\le 26$, $0\le z\le 6$, and $b{+}4z\le 26$ ($b{=}26$ and $z{=}6$ cannot be combined). We test three complete (\ble{}/\stdfour{}) record pairs---Point~A ($26/26$\,B, \SI{179}{B} payload), Point~B ($52/26$\,B, \SI{205}{B}), and Point~C ($28/32$\,B, \SI{205}{B})---plus Point~B1 ($27/26$\,B) for the \SI{27}{B} direct legacy ceiling.
+
+At LE~1M, single-attempt submitted waveform proxies (\si{\micro\second}, excluding silence and tuning guards; Table~\ref{tab:budget}) follow
+\begin{align}
+  C_{\modejc}(b,z) &= C_{\modesc}(b,z) = 1648 + 8b + 32z,\label{eq:cost_jc_sc}\\
+  C_{\modelc}(b,z) &=
+  \begin{cases}
+    8(182 + b + 4z), & b \le 1,\\
+    8(35F + 162 + b + 4z), & b \ge 2.
+  \end{cases}\label{eq:cost_lc}
+\end{align}
+For $b\le 1$, \modelc{} carries the \ble{} record in one Manufacturer AD frame ($F{=}1$); for $b\ge 2$, each fragment incurs \SI{20}{B} of legacy framing overhead and carries a \SI{15}{B} \fragproto{} header followed by up to \SI{12}{B} of record data, requiring $F{=}\lceil(26{+}b)/12\rceil$ fragments ($F{=}5$ at Point~B). Thus $C_{\modejc}{=}C_{\modesc}$ for all $(b,z)$ while \modejc{} cuts bursts from $3$ to $2$. Under cap $Q$, each mode gets $K_m{=}\lfloor Q/C_m\rfloor$ attempts, with unused budget $Q{-}K_m C_m$ reported explicitly.
 
 \input{tables/tab-budget}
 
-\subsection{Deterministic In-Packet Offset, Retry Semantics, and \fragproto{} Reassembly}\label{sec:design_semantics}
+\subsection{Deterministic Offset, Retry Semantics, and \fragproto{} Reassembly}\label{sec:design_semantics}
 
-\outlinepara{III-B1: Deterministic In-Packet Offset \& Pre-Configured Layout Dependency}{160--175 words}{%
-  \begin{itemize}
-    \item Define the slot reference $\texttt{ref\_tick\_ms} = \texttt{slot\_index}\times\texttt{period\_ms}$ anchored to the secondary \ble{} preamble. Because the BlueBee region starts at PDU payload byte $43{+}b$ (after \SI{5}{B} preamble/AA and \SI{2}{B} PDU header), the structural marker offset from the \ble{} preamble to the emulated \stdfour{} reference is:
-      \[
-        \Delta t_{\text{marker}}(b) = (5 + 2 + 43 + b)\times \SI{8}{\micro\second} = 400 + 8b~\si{\micro\second}.
-      \]
-    \item Disclose the design trade-off candidly: keeping fixed record overhead at \SI{26}{B} means the \stdfour{} receiver reads $b$ from the pre-shared run configuration rather than inferring $b$ from its own $(26{+}z)$-byte record; missing or mismatched layout metadata forces \texttt{timing\_eligible=false} instead of silently applying legacy offsets.
-  \end{itemize}
-}
+\proto{} anchors $\texttt{ref\_tick\_ms}=\texttt{slot\_index}\times\texttt{period\_ms}$ to the secondary \ble{} preamble in \modejc{}. Because the BlueBee region begins at payload byte $43{+}b$ after the \SI{5}{B} preamble/access address and \SI{2}{B} PDU header, the structural marker offset is
+\begin{equation}\label{eq:offset}
+  \Delta t_{\text{marker}}(b) = (5 + 2 + 43 + b)\times \SI{8}{\micro\second} = 400 + 8b~\si{\micro\second}.
+\end{equation}
+Keeping fixed record overhead at \SI{26}{B} requires the \stdfour{} receiver to read $b$ from the pre-shared run configuration; missing or mismatched layout metadata forces $\texttt{timing\_eligible}=\text{false}$ while still logging local commands.
 
-\outlinepara{III-B2: Retry-Invariant Deadlines \& Slot-Isolated \fragproto{} State Machine}{180--195 words}{%
-  \begin{itemize}
-    \item Across $K$ open-loop retries of the same task, payload content and absolute validity/execution targets $V = \texttt{ref\_tick\_ms} + \texttt{valid\_offset\_ms}$ and $E = \texttt{ref\_tick\_ms} + \texttt{execute\_offset\_ms}$ remain invariant ($\texttt{ref\_tick\_ms}\le V < E$), recomputing relative offsets per slot without deadline extension; parameter mismatches across attempts trigger irreversible conflict cancellation.
-    \item Equal-length pure time updates (\texttt{0x10}, zeroed command/offset fields) preserve $\Delta t_{\text{marker}}(b)$ without inflating the task denominator while counting toward waveform cost.
-    \item For \modelc{} ($b\ge 2$), \fragproto{} (\texttt{magic=0xC3}) prepends a \SI{15}{B} fragment header to $1\text{--}12$\,B of record payload per legacy advertisement ($F{=}\lceil(26{+}b)/12\rceil$, hence $5$ fragments for the \SI{52}{B} \ble{} record at Point~B), keys reassembly by $(\texttt{AdvA}, \texttt{run\_id}, \texttt{slot\_index}, \texttt{command\_id})$ to prevent cross-attempt fragment mixing, and enforces independent \texttt{pending} and tombstoned \texttt{closed} capacity invariants ($\lvert\texttt{closed}\rvert + \lvert\texttt{pending}\rvert \le \texttt{closed\_limit}$, no LRU eviction of closed identities).
-  \end{itemize}
-}
+Across the $K$ planned attempts, each side's application command content and the absolute validity and execution targets $V = \texttt{ref\_tick\_ms} + \texttt{valid\_offset\_ms}$ and $E = \texttt{ref\_tick\_ms} + \texttt{execute\_offset\_ms}$ ($\texttt{ref\_tick\_ms}\le V < E$) remain unchanged; each attempt carries its own \texttt{slot\_index}, recomputed relative offsets, and updated record CRC. Any parameter or $V/E$ conflict for an existing task irreversibly cancels pending execution and blocks time updates from that task. Equal-length pure time updates (\texttt{0x10}, zeroed command/offset fields) preserve $\Delta t_{\text{marker}}(b)$ and enter waveform cost without inflating the task denominator. For \modelc{} at $b\ge 2$, \fragproto{} (\texttt{magic=0xC3}) keys reassembly by the 4-tuple $(\texttt{AdvA},\allowbreak \texttt{run\_id},\allowbreak \texttt{slot\_index},\allowbreak \texttt{command\_id})$ to prevent cross-attempt mixing, enforcing separate \texttt{pending} and non-evicting tombstoned \texttt{closed} bounds ($\lvert\texttt{closed}\rvert + \lvert\texttt{pending}\rvert \le \texttt{closed\_limit}$) plus full record \texttt{app\_crc16} and header-consistency verification upon completion.

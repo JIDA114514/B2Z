@@ -1,9 +1,8 @@
 % ============================================================
-%  B2Z UC1 5-Page Short Paper — Master File (Framework & Outline)
+%  B2Z UC1 5-Page Short Paper — Master File (English Submission Draft)
 %  Build:  cd paper && latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 %  Output: paper/build/main.pdf
-%  Target: ~5.0 pages (English, venue-agnostic IEEEtran journal short paper;
-%          switch to conference/letter class once target venue is selected)
+%  Target: ~5 pages (IEEEtran journal short paper; switch class upon venue selection)
 % ============================================================
 \documentclass[journal]{IEEEtran}
 % Alternative venue switches once journal/letter is chosen:
@@ -23,10 +22,12 @@
 \sisetup{
   detect-all,
   group-separator = {,},
-  group-minimum-digits = 4
+  group-minimum-digits = 4,
+  range-phrase = {--},
+  range-units = single
 }
 
-% ---- Unified terminology macros (avoid colliding with prior work "BlueBee") ----
+% ---- Unified terminology macros (distinct from prior work "BlueBee") ----
 \newcommand{\proto}{UC1}
 \newcommand{\fragproto}{C3}
 \newcommand{\modejc}{JC}
@@ -35,53 +36,21 @@
 \newcommand{\ble}{BLE}
 \newcommand{\stdfour}{IEEE~802.15.4}
 
-% ---- Stage-1 Outline Macros (remove once converted to Stage-2 flowing prose) ----
-\definecolor{outlineborder}{HTML}{3B5998}
-\definecolor{outlinebg}{HTML}{F7F9FC}
-\definecolor{guardcolor}{HTML}{9B2C2C}
-
-\newcommand{\outlinepara}[3]{%
-  \par\medskip\noindent
-  \fcolorbox{outlineborder}{outlinebg}{%
-    \begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
-      \footnotesize
-      \textbf{\textcolor{outlineborder}{[#1]}} \hfill \textit{Target: #2}\par\smallskip
-      #3
-    \end{minipage}%
-  }\par\smallskip
-}
-
-\newcommand{\claimboundary}[1]{%
-  \par\smallskip\noindent
-  {\scriptsize\textcolor{guardcolor}{\textbf{Boundary:} #1}}%
-}
-
-\newcommand{\figplaceholder}[4]{%
-  \fcolorbox{black!45}{black!3}{%
-    \begin{minipage}[c][#1][c]{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
-      \centering\footnotesize
-      \textbf{Figure Placeholder: \texttt{#2}}\\[3pt]
-      #3\\[3pt]
-      {\scriptsize\textit{Data / Provenance:} #4}
-    \end{minipage}%
-  }%
-}
-
 \begin{document}
 
-% Candidate Title A (default — emphasizes architecture + empirical trade-offs, zero overclaim):
+% Candidate Title A (default):
 \title{Co-Packaging Dual-Protocol Control and Timing Metadata in BLE Extended Advertising: Capacity, Cost, and Joint Resolution Trade-Offs}
-% Candidate Title B (slightly shorter for IEEE Letters):
+% Candidate Title B (shorter option for IEEE Letters):
 % \title{Single-Packet BLE--IEEE 802.15.4 Control over Extended Advertising: Cost and Joint Resolution Trade-Offs}
 
 % TODO: Fill in author names, affiliations, and funding upon venue selection
 \author{Author Name(s)%
-\thanks{Manuscript Stage-1 framework and outline aligned with frozen dataset \texttt{p5\_freeze\_20261124} (P4 data archive commit \texttt{82d56a5}). Target length: $\sim$5 pages.}}
+\thanks{Manuscript draft aligned with frozen dataset \texttt{p5\_freeze\_20261124} (P4 data archive commit \texttt{82d56a5}).}}
 
 \maketitle
 
 \begin{abstract}
-A single transmitter can address BLE and IEEE 802.15.4 receivers on one waveform. When does sharing a transmission pay off if success requires both receivers to recover their respective commands? We place independently verifiable commands and a shared time reference in one BLE extended-advertising secondary PDU using BlueBee emulation. Two SDR receivers decoded three record layouts. Across 36 runs with 3,600 planned tasks, co-packaging reduced bursts per attempt from three to two at the same waveform duration as separate co-channel transmission. Neither scheme consistently achieved higher joint resolution within planned attempts. With short records, legacy advertising had the lowest waveform cost per jointly resolved task at one attempt. Under a common $6$\,ms budget, legacy sent four attempts and co-packaging sent three, reversing their cost ranking. With a 52-byte BLE record, co-packaging carried the record in one PDU while legacy required five fragments. Under that budget, the receivers jointly resolved $291/300$ tasks with co-packaging and $93/300$ with legacy in the tested channel configurations.
+A single transmitter can address BLE and IEEE 802.15.4 receivers on one waveform. When does sharing a transmission pay off if success requires both receivers to recover their respective commands? We place independently verifiable commands and a shared time reference in one BLE extended-advertising secondary PDU using BlueBee emulation. Two SDR receivers decoded three record layouts. Across 36 runs with 3,600 planned tasks, at the same submitted waveform duration per attempt, co-packaging reduced the burst count from three to two relative to separate co-channel transmission. Neither scheme consistently achieved higher joint resolution within planned attempts. With short records, legacy advertising had the lowest waveform cost per jointly resolved task at one attempt. Under a common $6$\,ms budget, legacy sent four attempts and co-packaging sent three, reversing their cost ranking. With a 52-byte BLE record, co-packaging carried the record in one PDU while legacy required five fragments. Under the $6$-ms cap, joint resolution was $291/300$ for co-packaging on BLE channel~3 and $93/300$ for legacy advertising on channel~39.
 \end{abstract}
 
 \begin{IEEEkeywords}

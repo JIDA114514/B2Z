@@ -44,3 +44,7 @@ build/
 # Pre-registered N3/UC1 analysis policies & manifests (not generated receiver output).
 !/python/control_match/configs/n3_*.json
 !/python/control_match/configs/uc1_*.json
+
+# paper template
+
+/ITCA_Templates

@@ -1,0 +1,8 @@
+# latexmk 配置（中文伴生版）：使用 XeLaTeX，输出统一进 ../build/zh/，共享 ../refs.bib
+use Cwd 'abs_path';
+$pdf_mode = 5;          # 5 = xelatex
+$xelatex  = 'xelatex -interaction=nonstopmode -halt-on-error %O %S';
+$out_dir  = '../build/zh';
+$aux_dir  = '../build/zh';
+$clean_ext = 'bbl run.xml nav snm vrb out xdv';
+ensure_path('BIBINPUTS', abs_path('..'));

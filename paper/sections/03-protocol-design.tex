@@ -8,11 +8,8 @@
 
 \begin{figure}[t]
   \centering
-  \figplaceholder{1.55in}{figures/fig-uc1-layout-bursts.pdf}{%
-    (a) \modejc{} secondary \texttt{AUX\_ADV\_IND} byte layout (\SI{17}{B} ext-hdr/AD + $(26{+}b)$\,B \ble{} \proto{} record + $(136{+}4z)$\,B BlueBee-mapped \stdfour{} \proto{} record; deterministic $\num{400}+8b\,\si{\micro\second}$ marker offset).\\
-    (b) Per-attempt burst structure: \modejc{} ($2$ bursts) vs.\ \modesc{} ($3$ bursts, co-channel ch3/ch12) vs.\ \modelc{} ($F{+}1$ bursts, ch39 direct or \fragproto{} fragments + ch12 \stdfour{}).%
-  }{doc/reference/unified\_compact\_protocol\_proposal.md \S2, \S4, \S5}
-  \caption{Unified compact (\proto{}) co-packaged secondary PDU structure and single-attempt burst comparison across \modejc{}, \modesc{}, and \modelc{}.}
+  \includegraphics[width=\columnwidth]{figures/fig-uc1-layout-bursts.pdf}
+  \caption{Unified compact (\proto{}) co-packaged secondary PDU layout and single-attempt burst comparison across \modejc{}, \modesc{}, and \modelc{}: (a) \texttt{AUX\_ADV\_IND} byte budget and deterministic $\num{400}+8b\,\si{\micro\second}$ marker offset; (b) per-attempt burst structures at Point~B ($52/26$\,B, where \modelc{} requires five \fragproto{} fragments on ch39).}
   \label{fig:layout}
 \end{figure}
 

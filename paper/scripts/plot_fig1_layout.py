@@ -19,9 +19,10 @@ from matplotlib.patches import FancyBboxPatch, Rectangle
 mpl.rcParams.update({
     "pdf.fonttype": 42,
     "ps.fonttype": 42,
-    "font.family": "sans-serif",
-    "font.sans-serif": ["DejaVu Sans", "Arial", "Helvetica"],
-    "font.size": 7.5,
+    "font.family": "serif",
+    "font.serif": ["Times New Roman", "Tinos", "Liberation Serif", "Nimbus Roman", "DejaVu Serif"],
+    "mathtext.fontset": "stix",
+    "font.size": 8.0,
     "axes.linewidth": 0.7,
 })
 
@@ -30,7 +31,7 @@ OUT_PDF = REPO_ROOT / "paper" / "figures" / "fig-uc1-layout-bursts.pdf"
 
 
 def draw_box(ax, x, y, w, h, fc, ec="#2B2B2B", lw=0.72, label="", sublabel="",
-             fontsize=6.2, text_color="#111111", radius=0.0):
+             fontsize=8.1, text_color="#111111", radius=0.0):
     if radius > 0:
         patch = FancyBboxPatch(
             (x, y), w, h,
@@ -44,13 +45,13 @@ def draw_box(ax, x, y, w, h, fc, ec="#2B2B2B", lw=0.72, label="", sublabel="",
         ax.text(x + w / 2, y + h * 0.65, label, ha="center", va="center",
                 fontsize=fontsize, fontweight="bold", color=text_color, zorder=4)
         ax.text(x + w / 2, y + h * 0.27, sublabel, ha="center", va="center",
-                fontsize=fontsize - 0.55, color=text_color, zorder=4)
+                fontsize=fontsize, color=text_color, zorder=4)
     elif label:
         ax.text(x + w / 2, y + h / 2, label, ha="center", va="center",
                 fontsize=fontsize, fontweight="bold", color=text_color, zorder=4)
 
 
-def draw_bracket(ax, x0, x1, y, dy, text, va="bottom", color="#222222", fontsize=6.0, bold=False):
+def draw_bracket(ax, x0, x1, y, dy, text, va="bottom", color="#222222", fontsize=8.1, bold=False):
     """Draw a crisp horizontal dimension bracket."""
     ax.plot([x0, x0, x1, x1], [y - dy, y, y, y - dy], color=color, lw=0.72, zorder=5)
     ty = y + (0.04 if va == "bottom" else -0.05)
@@ -59,7 +60,7 @@ def draw_bracket(ax, x0, x1, y, dy, text, va="bottom", color="#222222", fontsize
 
 
 def main() -> None:
-    fig = plt.figure(figsize=(3.50, 3.32), dpi=300)
+    fig = plt.figure(figsize=(3.45, 3.55), dpi=300)
     gs = fig.add_gridspec(2, 1, height_ratios=[1.05, 1.32], hspace=0.22)
 
     # Colorblind-safe Okabe-Ito inspired tones
@@ -78,25 +79,25 @@ def main() -> None:
     ax1.set_ylim(-0.84, 1.38)
     ax1.axis("off")
 
-    ax1.text(0.05, 1.26, "(a) JC Secondary AUX_ADV_IND Layout (LE 1M, ch3)",
-             ha="left", va="center", fontsize=7.2, fontweight="bold", color="#111111")
+    ax1.text(0.05, 1.26, "(a) JC secondary layout (LE 1M, channel 3)",
+             ha="left", va="center", fontsize=8.6, fontweight="bold", color="#111111")
 
     segments = [
-        (0.05, 1.25, c_phy,  "Pre+AA",       "5 B"),
+        (0.05, 1.25, c_phy,  "Pre/AA",       "5 B"),
         (1.30, 0.80, c_phy,  "Hdr",          "2 B"),
         (2.10, 1.50, c_hdr,  "Ext.+AD",      "17 B"),
-        (3.60, 2.35, c_ble,  "BLE UC1 Rec.", "26 + b B"),
-        (5.95, 3.15, c_ieee, "BlueBee IEEE UC1", "136 + 4z B"),
+        (3.60, 2.35, c_ble,  "BLE UC1", "26 + b B"),
+        (5.95, 3.15, c_ieee, "Mapped IEEE", "136 + 4z B"),
         (9.10, 0.85, c_phy,  "CRC",          "3 B"),
     ]
     y0, bh = 0.08, 0.56
     for x, w, fc, lbl, sub in segments:
-        draw_box(ax1, x, y0, w, bh, fc, label=lbl, sublabel=sub, fontsize=6.0)
+        draw_box(ax1, x, y0, w, bh, fc, label=lbl, sublabel=sub, fontsize=8.1)
 
     draw_bracket(
         ax1, 2.10, 9.10, y0 + bh + 0.15, 0.07,
-        r"Secondary Payload $= 179 + b + 4z$ B ($\leq 255$ B; tested: 179, 205 B)",
-        va="bottom", fontsize=5.9
+        r"Payload: $179 + b + 4z$ B (tested: 179, 205 B)",
+        va="bottom", fontsize=8.1
     )
 
     arrow_y = -0.17
@@ -108,21 +109,21 @@ def main() -> None:
     ax1.plot([0.05, 0.05], [y0, arrow_y - 0.04], color="#9B2C2C", lw=0.6, ls=":", zorder=4)
     ax1.plot([5.95, 5.95], [y0, arrow_y - 0.04], color="#9B2C2C", lw=0.6, ls=":", zorder=4)
     ax1.text(
-        2.95, arrow_y - 0.14,
-        r"$\Delta t_{\mathrm{marker}}(b) = (5{+}2{+}43{+}b)\times 8 = 400 + 8b\;\mu\mathrm{s}$",
-        ha="center", va="top", fontsize=6.0, fontweight="bold", color="#9B2C2C"
+        2.95, arrow_y - 0.08,
+        r"Marker offset: (400 + 8b) µs",
+        ha="center", va="top", fontsize=8.1, fontweight="bold", color="#9B2C2C"
     )
     ax1.text(
-        0.05, arrow_y - 0.45,
-        "Shared-IQ H1 medians: A 400.25, B 608.00, C 416.25 µs (n=10 each)",
-        ha="left", va="top", fontsize=5.6, color="#444444"
+        0.05, arrow_y - 0.55,
+        "Median (µs): A 400.25, B 608.00, C 416.25 (n=10 each)",
+        ha="left", va="top", fontsize=8.1, color="#444444"
     )
 
     # Explicit BlueBee expansion formula under orange block
     ax1.text(
         7.95, arrow_y - 0.03,
-        "4×[(26+z) B rec. + 8 B]\n= (136+4z) B",
-        ha="center", va="top", fontsize=5.4, color="#7A3E00"
+        "4 × [(26 + z) + 8] B",
+        ha="center", va="top", fontsize=8.1, color="#7A3E00"
     )
 
     # ------------------------------------------------------------------
@@ -133,8 +134,8 @@ def main() -> None:
     ax2.set_ylim(-0.38, 3.68)
     ax2.axis("off")
 
-    ax2.text(0.05, 3.55, "(b) Single-Attempt Bursts at Point B (52/26 B; b=26, z=0)",
-             ha="left", va="center", fontsize=7.2, fontweight="bold", color="#111111")
+    ax2.text(0.05, 3.55, "(b) Bursts per attempt at point B (52/26 B)",
+             ha="left", va="center", fontsize=8.6, fontweight="bold", color="#111111")
 
     row_h = 0.56
     x_label = 0.05
@@ -143,60 +144,59 @@ def main() -> None:
     # Row 1: JC (2 bursts, 1,856 us) with spanning bracket over blue+orange secondary
     y_jc = 2.26
     ax2.text(x_label, y_jc + row_h / 2, "JC\n(2 bursts)", ha="left", va="center",
-             fontsize=6.4, fontweight="bold", color="#005B8F")
-    draw_box(ax2, x_start, y_jc, 1.05, row_h, c_prim, label="Prim.", sublabel="136 µs", fontsize=5.9, radius=0.05)
+             fontsize=8.1, fontweight="bold", color="#005B8F")
+    draw_box(ax2, x_start, y_jc, 1.05, row_h, c_prim, label="Pri.", sublabel="136 µs", fontsize=8.1, radius=0.05)
     ax2.annotate("", xy=(x_start + 1.38, y_jc + row_h / 2), xytext=(x_start + 1.07, y_jc + row_h / 2),
                  arrowprops=dict(arrowstyle="->", color="#555555", lw=0.72))
     sec_x = x_start + 1.40
     sec_w_ble = 1.95
     sec_w_ieee = 3.15
-    draw_box(ax2, sec_x, y_jc, sec_w_ble, row_h, c_ble, label="BLE 52 B", sublabel="ch3", fontsize=5.9)
-    draw_box(ax2, sec_x + sec_w_ble, y_jc, sec_w_ieee, row_h, c_ieee, label="BlueBee IEEE 26 B", sublabel="ch12", fontsize=5.9)
+    draw_box(ax2, sec_x, y_jc, sec_w_ble, row_h, c_ble, label="BLE 52 B", sublabel="ch3", fontsize=8.1)
+    draw_box(ax2, sec_x + sec_w_ble, y_jc, sec_w_ieee, row_h, c_ieee, label="IEEE 26 B", sublabel="ch12", fontsize=8.1)
     draw_bracket(
         ax2, sec_x, sec_x + sec_w_ble + sec_w_ieee, y_jc + row_h + 0.16, 0.09,
-        "Single secondary: 1,720 µs (2410 MHz)",
-        va="bottom", color="#005B8F", fontsize=5.8, bold=True
+        "One secondary: 1,720 µs at 2410 MHz",
+        va="bottom", color="#005B8F", fontsize=8.1, bold=True
     )
     ax2.text(9.95, y_jc + row_h / 2, "1,856 µs", ha="right", va="center",
-             fontsize=6.6, fontweight="bold", color="#005B8F")
+             fontsize=8.1, fontweight="bold", color="#005B8F")
 
     # Row 2: SC (3 bursts, 1,856 us)
     y_sc = 1.30
     ax2.text(x_label, y_sc + row_h / 2, "SC\n(3 bursts)", ha="left", va="center",
-             fontsize=6.4, fontweight="bold", color="#007A59")
-    draw_box(ax2, x_start, y_sc, 1.05, row_h, c_prim, label="Prim.", sublabel="136 µs", fontsize=5.9, radius=0.05)
+             fontsize=8.1, fontweight="bold", color="#007A59")
+    draw_box(ax2, x_start, y_sc, 1.05, row_h, c_prim, label="Pri.", sublabel="136 µs", fontsize=8.1, radius=0.05)
     ax2.annotate("", xy=(x_start + 1.38, y_sc + row_h / 2), xytext=(x_start + 1.07, y_sc + row_h / 2),
                  arrowprops=dict(arrowstyle="->", color="#555555", lw=0.72))
-    draw_box(ax2, x_start + 1.40, y_sc, 1.95, row_h, c_ble, label="BLE Sec.", sublabel="ch3 · 632 µs", fontsize=5.9, radius=0.05)
+    draw_box(ax2, x_start + 1.40, y_sc, 1.95, row_h, c_ble, label="BLE Sec.", sublabel="632 µs", fontsize=8.1, radius=0.05)
     ax2.annotate("", xy=(x_start + 3.68, y_sc + row_h / 2), xytext=(x_start + 3.37, y_sc + row_h / 2),
                  arrowprops=dict(arrowstyle="->", color="#555555", lw=0.72))
-    draw_box(ax2, x_start + 3.70, y_sc, 2.80, row_h, c_ieee, label="IEEE Burst", sublabel="ch12 · 1,088 µs", fontsize=5.9, radius=0.05)
+    draw_box(ax2, x_start + 3.70, y_sc, 2.80, row_h, c_ieee, label="IEEE Burst", sublabel="1,088 µs", fontsize=8.1, radius=0.05)
     ax2.text(9.95, y_sc + row_h / 2, "1,856 µs", ha="right", va="center",
-             fontsize=6.6, fontweight="bold", color="#007A59")
+             fontsize=8.1, fontweight="bold", color="#007A59")
 
     # Row 3: LC (6 bursts, 2,904 us)
     y_lc = 0.34
     ax2.text(x_label, y_lc + row_h / 2, "LC (C3)\n(6 bursts)", ha="left", va="center",
-             fontsize=6.4, fontweight="bold", color="#A33B00")
+             fontsize=8.1, fontweight="bold", color="#A33B00")
     fx = x_start
     fw = 0.70
     gap = 0.06
     for i in range(5):
-        sub = "ch39" if i == 2 else ""
-        draw_box(ax2, fx, y_lc, fw, row_h, c_c3, label=f"f{i}", sublabel=sub,
-                 fontsize=5.8, text_color="#FFFFFF", radius=0.04)
+        draw_box(ax2, fx, y_lc, fw, row_h, c_c3, label=f"f{i}",
+                 fontsize=8.1, text_color="#FFFFFF", radius=0.04)
         fx += fw + gap
     ax2.annotate("", xy=(fx + 0.28, y_lc + row_h / 2), xytext=(fx - 0.03, y_lc + row_h / 2),
                  arrowprops=dict(arrowstyle="->", color="#555555", lw=0.72))
-    draw_box(ax2, fx + 0.30, y_lc, 2.40, row_h, c_ieee, label="IEEE Burst", sublabel="ch12 · 1,088 µs", fontsize=5.9, radius=0.05)
+    draw_box(ax2, fx + 0.30, y_lc, 2.40, row_h, c_ieee, label="IEEE Burst", sublabel="1,088 µs", fontsize=8.1, radius=0.05)
     ax2.text(9.95, y_lc + row_h / 2, "2,904 µs", ha="right", va="center",
-             fontsize=6.6, fontweight="bold", color="#A33B00")
+             fontsize=8.1, fontweight="bold", color="#A33B00")
 
     ax2.text(
         0.05, -0.06,
-        "C3 (b≥2): 15 B header + ≤12 B data/frag (5 frags = 1,816 µs on ch39).\n"
-        "At Point A (26/26 B), LC uses F=1 direct frame (2 bursts, 1,456 µs vs. 1,648 µs).",
-        ha="left", va="top", fontsize=5.6, color="#444444"
+        "LC: five fragments on ch39, 1,816 µs in total.\n"
+        "At point A, LC uses two bursts (1,456 µs).",
+        ha="left", va="top", fontsize=8.1, color="#444444"
     )
 
     OUT_PDF.parent.mkdir(parents=True, exist_ok=True)

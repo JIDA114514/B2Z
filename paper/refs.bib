@@ -1,41 +1,45 @@
 % ============================================================
-%  Verified Bibliography for B2Z UC1 5-Page Short Paper
+%  Verified Bibliography for B2Z UC1 ITCA Conference Paper
 %  Provenance: doc/paper/prior_work_fulltext_comparison_20261124.md
-%  Rule:
-%    - Every entry below has verified bibliographic metadata.
+%  ITCA Checklist Rule:
+%    - >= 5 recent references with publication year, >= 3 author countries
+%      (USA, Austria, Germany, China), and explicit DOI or source link on all.
 %    - Entries marked [BIB+ABSTRACT ONLY] do not have full text archived
-%      locally; cite only high-level scope from public abstracts and
-%      NEVER claim unverified mechanism gaps from unread sections.
+%      locally; cite only verified high-level scope from public abstracts.
 % ============================================================
 
-% [FULL-TEXT VERIFIED: doc/BLE_Core_v5.1.pdf]
+% [FULL-TEXT VERIFIED: doc/BLE_Core_v5.1.pdf] (USA)
 @manual{bluetooth_core51,
   author       = {{Bluetooth Special Interest Group}},
   title        = {Bluetooth Core Specification, Version 5.1},
   organization = {Bluetooth SIG},
-  year         = {2019}
+  year         = {2019},
+  note         = {\url{https://www.bluetooth.com/specifications/specs/core-specification-5-1/}}
 }
 
-% [STANDARD SPECIFICATION]
+% [STANDARD SPECIFICATION] (USA)
 @manual{ieee802154_2020,
   author       = {{IEEE}},
   title        = {{IEEE} Standard for Low-Rate Wireless Networks},
   organization = {IEEE},
   number       = {802.15.4-2020},
-  year         = {2020}
+  year         = {2020},
+  doi          = {10.1109/IEEESTD.2020.9144691},
+  note         = {\url{https://doi.org/10.1109/IEEESTD.2020.9144691}}
 }
 
-% [FULL-TEXT VERIFIED: python/ctc_sim/bluebee/BlueBee.pdf]
+% [FULL-TEXT VERIFIED: python/ctc_sim/bluebee/BlueBee.pdf] (USA)
 @inproceedings{jiang2017bluebee,
   author    = {Jiang, Wenchao and Yin, Zhimeng and Liu, Ruofeng and Li, Zhijun and Kim, Song Min and He, Tian},
-  title     = {{BlueBee}: a 10,000x Faster Cross-Technology Communication via {PHY} Emulation},
+  title     = {{BlueBee}: A 10,000x Faster Cross-Technology Communication via {PHY} Emulation},
   booktitle = {Proc. 15th ACM Conf. Embedded Network Sensor Systems (SenSys)},
   year      = {2017},
   pages     = {1--13},
-  doi       = {10.1145/3131672.3131678}
+  doi       = {10.1145/3131672.3131678},
+  note      = {\url{https://doi.org/10.1145/3131672.3131678}}
 }
 
-% [BIB+ABSTRACT ONLY: journal extension of BlueBee; do not claim unread gaps]
+% [BIB+ABSTRACT ONLY: journal extension of BlueBee; do not claim unread gaps] (USA)
 @article{jiang2019boosting,
   author  = {Jiang, Wenchao and Yin, Zhimeng and Liu, Ruofeng and Li, Zhijun and Kim, Song Min and He, Tian},
   title   = {Boosting the Bitrate of Cross-Technology Communication on Commodity {IoT} Devices},
@@ -45,39 +49,43 @@
   number  = {3},
   pages   = {1069--1083},
   month   = jun,
-  doi     = {10.1109/TNET.2019.2913980}
+  doi     = {10.1109/TNET.2019.2913980},
+  note    = {\url{https://doi.org/10.1109/TNET.2019.2913980}}
 }
 
-% [FULL-TEXT VERIFIED: author PDF & novelty_ab_claims_review_20261118.md]
+% [FULL-TEXT VERIFIED: author PDF & novelty_ab_claims_review_20261118.md] (Austria & Germany)
 @inproceedings{brunner2021leveraging,
   author    = {Brunner, Hannah and Hofmann, Rainer and Schu{\ss}, Markus and Link, Jakob and Hollick, Matthias and Boano, Carlo Alberto and R{\"o}mer, Kay},
   title     = {Leveraging Cross-Technology Broadcast Communication to Build Gateway-Free Smart Homes},
   booktitle = {Proc. 17th Int. Conf. Distributed Computing in Sensor Systems (DCOSS)},
   year      = {2021},
   pages     = {1--9},
-  doi       = {10.1109/DCOSS52077.2021.00014}
+  doi       = {10.1109/DCOSS52077.2021.00014},
+  note      = {\url{https://doi.org/10.1109/DCOSS52077.2021.00014}}
 }
 
-% [FULL-TEXT VERIFIED: author PDF & novelty_ab_claims_review_20261118.md]
+% [FULL-TEXT VERIFIED: author PDF & novelty_ab_claims_review_20261118.md] (Austria)
 @inproceedings{hofmann2021xsync,
   author    = {Hofmann, Rainer and Grubmair, David and Boano, Carlo Alberto and R{\"o}mer, Kay},
   title     = {{X-Sync}: Cross-Technology Clock Synchronization Among Off-the-Shelf Wireless {IoT} Devices},
   booktitle = {Proc. IEEE 46th Conf. Local Computer Networks (LCN)},
   year      = {2021},
   pages     = {115--122},
-  doi       = {10.1109/LCN52139.2021.9524940}
+  doi       = {10.1109/LCN52139.2021.9524940},
+  note      = {\url{https://doi.org/10.1109/LCN52139.2021.9524940}}
 }
 
-% [BIB+ABSTRACT ONLY: background CTC clock sync for WiFi-ZigBee]
+% [BIB+ABSTRACT ONLY: background CTC clock sync for WiFi-ZigBee] (China)
 @inproceedings{yu2018crocs,
   author    = {Yu, Zihao and Jiang, Chengkun and He, Yuan and Zheng, Xiaolong and Guo, Xiuzhen},
   title     = {Crocs: Cross-Technology Clock Synchronization for {WiFi} and {ZigBee}},
   booktitle = {Proc. Int. Conf. Embedded Wireless Systems and Networks (EWSN)},
   year      = {2018},
-  pages     = {135--144}
+  pages     = {135--144},
+  note      = {\url{https://www.ewsn.org/previous-years/ewsn-2018/publications.html}}
 }
 
-% [BIB+ABSTRACT ONLY: background CTC time sync in IoT networks]
+% [BIB+ABSTRACT ONLY: background CTC time sync in IoT networks] (China & USA)
 @article{gao2023timebee,
   author  = {Gao, Demin and Liu, Yunhuai and Hu, Bin and Wang, Lei and Chen, Weiwei and Chen, Yongrui and He, Tian},
   title   = {Time Synchronization Based on Cross-Technology Communication for {IoT} Networks},
@@ -87,10 +95,11 @@
   number  = {22},
   pages   = {19753--19764},
   month   = nov,
-  doi     = {10.1109/JIOT.2023.3282202}
+  doi     = {10.1109/JIOT.2023.3282202},
+  note    = {\url{https://doi.org/10.1109/JIOT.2023.3282202}}
 }
 
-% [BIB+ABSTRACT ONLY: 802.11ax OFDMA parallel CTC; verify IEEE DOI string before final submission]
+% [BIB+ABSTRACT ONLY: 802.11ax OFDMA parallel CTC] (China)
 @article{xia2025wicast,
   author  = {Xia, Dan and Zheng, Xiaolong and Liu, Liang and Huang, Shanguo and Ma, Huadong},
   title   = {{WiCast}: Parallel Cross-Technology Transmission for Connecting Heterogeneous {IoT} Devices},
@@ -99,5 +108,7 @@
   volume  = {24},
   number  = {10},
   pages   = {9506--9523},
-  month   = oct
+  month   = oct,
+  doi     = {10.1109/TMC.2025.3553205},
+  note    = {\url{https://doi.org/10.1109/TMC.2025.3553205}}
 }

@@ -23,9 +23,10 @@ from matplotlib.lines import Line2D
 mpl.rcParams.update({
     "pdf.fonttype": 42,
     "ps.fonttype": 42,
-    "font.family": "sans-serif",
-    "font.sans-serif": ["DejaVu Sans", "Arial", "Helvetica"],
-    "font.size": 7.5,
+    "font.family": "serif",
+    "font.serif": ["Times New Roman", "Tinos", "Liberation Serif", "Nimbus Roman", "DejaVu Serif"],
+    "mathtext.fontset": "stix",
+    "font.size": 8.0,
     "axes.linewidth": 0.75,
     "xtick.major.width": 0.7,
     "ytick.major.width": 0.7,
@@ -37,10 +38,10 @@ RUNS_CSV = REPO_ROOT / "python" / "experiments" / "p5_freeze_20261124" / "p5_p4_
 OUT_PDF = REPO_ROOT / "paper" / "figures" / "fig-p4-tradeoff.pdf"
 
 CONDS = [
-    ("A", "k1",    "A (26/26 B)\nK=1"),
-    ("A", "q6000", "A (26/26 B)\nQ=6 ms (K=3/3/4)"),
-    ("B", "k1",    "B (52/26 B)\nK=1"),
-    ("B", "q6000", "B (52/26 B)\nQ=6 ms (K=3/3/2)"),
+    ("A", "k1",    "A\nK=1"),
+    ("A", "q6000", "A\nQ=6 ms"),
+    ("B", "k1",    "B\nK=1"),
+    ("B", "q6000", "B\nQ=6 ms"),
 ]
 MODES = ["JC", "SC", "LC"]
 
@@ -64,7 +65,7 @@ def main() -> None:
     cells, runs = load_data()
 
     fig, (ax1, ax2) = plt.subplots(
-        1, 2, figsize=(7.16, 2.95), dpi=300,
+        1, 2, figsize=(7.1, 3.1), dpi=300,
         gridspec_kw={"width_ratios": [1.16, 1.00], "wspace": 0.24}
     )
 
@@ -97,8 +98,8 @@ def main() -> None:
             ax1.bar(x, p_ieee, width=bar_w * 0.90, bottom=p_both + p_ble, color=c_ieee, edgecolor="white", lw=0.4, zorder=2)
             ax1.bar(x, p_none, width=bar_w * 0.90, bottom=p_both + p_ble + p_ieee, color=c_none, edgecolor="white", lw=0.4, zorder=2)
 
-            mlbl = "LC*" if mode == "LC" else mode
-            ax1.text(x, -3.5, mlbl, ha="center", va="top", fontsize=6.0, color="#222222")
+            mlbl = r"LC$^{\mathrm{a}}$" if mode == "LC" else mode
+            ax1.text(x, -3.5, mlbl, ha="center", va="top", fontsize=8.1, color="#222222")
 
             for b_idx, col in [(1, "b1_plan"), (2, "b2_plan"), (3, "b3_plan")]:
                 val = float(row[col])
@@ -111,9 +112,9 @@ def main() -> None:
     # Annotate Run 2743 zero-reassembly cliff (B, q6000, LC, B2 = 0%)
     x_2743 = x_groups[3] + offsets[2]
     ax1.annotate(
-        "Run 2743 (B2): 0/100 joint\n(210 C3 frags, 0 complete;\n98 IEEE-only)",
+        "Run 2743: 0/100 joint\n210 fragments, 0 complete",
         xy=(x_2743, 1.5), xytext=(x_2743 - 1.15, 24.5),
-        ha="center", va="center", fontsize=5.8, color="#7F1D1D",
+        ha="center", va="center", fontsize=8.1, color="#7F1D1D",
         bbox=dict(boxstyle="round,pad=0.22", fc="#FEF2F2", ec="#B91C1C", lw=0.7, alpha=0.96),
         arrowprops=dict(arrowstyle="->", color="#B91C1C", lw=0.85, connectionstyle="arc3,rad=0.18"),
         zorder=6
@@ -123,10 +124,10 @@ def main() -> None:
     ax1.set_yticks([0, 20, 40, 60, 80, 100])
     ax1.set_xlim(-0.52, 3.52)
     ax1.set_xticks(x_groups)
-    ax1.set_xticklabels([c[2] for c in CONDS], fontsize=6.2)
+    ax1.set_xticklabels([c[2] for c in CONDS], fontsize=8.1)
     ax1.tick_params(axis="x", pad=11, length=0)
-    ax1.set_ylabel("Planned Tasks (%)", fontsize=7.5)
-    ax1.set_title("(a) Four-Way Outcomes & Block Joint Resolution", fontsize=7.8, fontweight="bold", pad=22)
+    ax1.set_ylabel("Planned Tasks (%)", fontsize=8.1)
+    ax1.set_title("(a) Task outcomes and block joint resolution", fontsize=8.1, fontweight="bold", pad=32)
     ax1.yaxis.grid(True, linestyle=":", alpha=0.5, zorder=0)
     ax1.spines["top"].set_visible(False)
     ax1.spines["right"].set_visible(False)
@@ -141,9 +142,9 @@ def main() -> None:
         Line2D([0], [0], marker="^", color="none", mfc="white", mec="#111111", ms=4.2, label="B3"),
     ]
     ax1.legend(
-        handles=leg_a, loc="upper center", bbox_to_anchor=(0.50, 1.13),
-        ncol=4, frameon=False, fontsize=5.8, handlelength=1.0,
-        columnspacing=0.75, handletextpad=0.35
+        handles=leg_a, loc="upper center", bbox_to_anchor=(0.50, 1.21),
+        ncol=4, frameon=False, fontsize=8.1, handlelength=1.0,
+        columnspacing=0.55, handletextpad=0.35
     )
 
     # ------------------------------------------------------------------
@@ -175,23 +176,23 @@ def main() -> None:
             # Clean non-overlapping pooled cost annotations on key LC* bars
             if (pt, st) == ("A", "k1") and mode == "LC":
                 ax2.text(x, 3300, "2.14k", ha="center", va="bottom",
-                         fontsize=5.6, fontweight="bold", color="#9A3412", zorder=6)
+                         fontsize=8.1, fontweight="bold", color="#9A3412", zorder=6)
             elif (pt, st) == ("A", "q6000") and mode == "LC":
                 ax2.text(x, 6900, "5.92k", ha="center", va="bottom",
-                         fontsize=5.6, fontweight="bold", color="#9A3412", zorder=6)
+                         fontsize=8.1, fontweight="bold", color="#9A3412", zorder=6)
             elif (pt, st) == ("B", "k1") and mode == "LC":
                 ax2.text(x, 11400, "10.1k", ha="center", va="bottom",
-                         fontsize=5.6, fontweight="bold", color="#9A3412", zorder=6)
+                         fontsize=8.1, fontweight="bold", color="#9A3412", zorder=6)
             elif (pt, st) == ("B", "q6000") and mode == "LC":
                 ax2.text(x, 21000, "18.7k", ha="center", va="bottom",
-                         fontsize=5.6, fontweight="bold", color="#9A3412", zorder=6)
+                         fontsize=8.1, fontweight="bold", color="#9A3412", zorder=6)
 
     # Annotate Point A strategy-dependent crossover and Run 2743 N/A
     ax2.annotate(
-        "Point A unit-cost rank flips:\nLC* lowest at K=1 (2.14k),\nJC −14.8% vs. LC* at Q=6 ms",
+        "Point A, Q=6 ms:\nJC costs 14.8% less than LC",
         xy=(x_groups[1] + offsets[0], 5450),
         xytext=(0.56, 26500),
-        ha="center", va="center", fontsize=5.6, color="#1E3A5F",
+        ha="center", va="center", fontsize=8.1, color="#1E3A5F",
         bbox=dict(boxstyle="round,pad=0.22", fc="#EFF6FF", ec="#2563EB", lw=0.65),
         arrowprops=dict(arrowstyle="->", color="#2563EB", lw=0.8, connectionstyle="arc3,rad=-0.12"),
         zorder=6
@@ -200,16 +201,16 @@ def main() -> None:
     ax2.text(
         x_groups[3] + offsets[2], 45500,
         "B2: N/A\n(0/100)",
-        ha="center", va="bottom", fontsize=5.6, fontweight="bold", color="#9B2C2C", zorder=6
+        ha="center", va="bottom", fontsize=8.1, fontweight="bold", color="#9B2C2C", zorder=6
     )
 
     ax2.set_yscale("log")
     ax2.set_ylim(1200, 82000)
     ax2.set_xlim(-0.52, 3.52)
     ax2.set_xticks(x_groups)
-    ax2.set_xticklabels([c[2] for c in CONDS], fontsize=6.2)
-    ax2.set_ylabel("Unit Waveform Proxy (µs / joint task)", fontsize=7.5)
-    ax2.set_title("(b) Unit Waveform Cost (Log Scale)", fontsize=7.8, fontweight="bold", pad=22)
+    ax2.set_xticklabels([c[2] for c in CONDS], fontsize=8.1)
+    ax2.set_ylabel("Waveform cost (µs per joint task)", fontsize=8.1)
+    ax2.set_title("(b) Unit waveform cost (log scale)", fontsize=8.1, fontweight="bold", pad=32)
     ax2.yaxis.grid(True, which="major", linestyle=":", alpha=0.55, zorder=0)
     ax2.spines["top"].set_visible(False)
     ax2.spines["right"].set_visible(False)
@@ -217,15 +218,15 @@ def main() -> None:
     leg_b = [
         Patch(fc=mode_colors["JC"], ec="#222222", lw=0.5, label="JC (ch3)"),
         Patch(fc=mode_colors["SC"], ec="#222222", lw=0.5, label="SC (ch3)"),
-        Patch(fc=mode_colors["LC"], ec="#222222", lw=0.5, label="LC* (ch39)"),
+        Patch(fc=mode_colors["LC"], ec="#222222", lw=0.5, label=r"LC$^{\mathrm{a}}$ (ch39)"),
     ]
     ax2.legend(
         handles=leg_b, loc="upper center", bbox_to_anchor=(0.50, 1.11),
-        ncol=3, frameon=False, fontsize=5.9, handlelength=1.05, columnspacing=0.85
+        ncol=3, frameon=False, fontsize=8.1, handlelength=1.05, columnspacing=0.85
     )
 
     OUT_PDF.parent.mkdir(parents=True, exist_ok=True)
-    fig.subplots_adjust(left=0.072, right=0.985, top=0.82, bottom=0.17)
+    fig.subplots_adjust(left=0.072, right=0.985, top=0.76, bottom=0.17)
     fig.savefig(OUT_PDF, format="pdf")
     plt.close(fig)
     print(f"Wrote {OUT_PDF}")

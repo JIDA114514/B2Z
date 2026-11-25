@@ -23,6 +23,7 @@ __pycache__/
 
 # LaTeX build artifacts
 paper/build/
+paper/zh/build/
 build/
 *.aux
 *.bbl

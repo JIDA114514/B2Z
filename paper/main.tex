@@ -1,23 +1,30 @@
 % ============================================================
-%  B2Z UC1 5-Page Short Paper — Master File (English Submission Draft)
+%  B2Z UC1 Conference Paper — ITCA / IEEEtran Conference Format
+%  Template Reference: ITCA_Templates/Conference-LaTeX-template_10-17-19/
 %  Build:  cd paper && latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 %  Output: paper/build/main.pdf
-%  Target: ~5 pages (IEEEtran journal short paper; switch class upon venue selection)
 % ============================================================
-\documentclass[journal]{IEEEtran}
-% Alternative venue switches once journal/letter is chosen:
-%   IEEE Letters (4--5 pp):  \documentclass[journal,comsoc]{IEEEtran}
-%   IEEE Conference (5--6 pp): \documentclass[conference]{IEEEtran}
+\documentclass[conference]{IEEEtran}
+% Uncomment the line below ONLY if a funding grant footnote (\thanks) is added:
+% \IEEEoverridecommandlockouts
 
-\usepackage{amsmath,amssymb}
+% The ITCA checklist specifies bracketed superscripts and Arabic table numbers.
+\usepackage[super,nomove]{cite}
+\let\ITCAcitefont\OverciteFont
+\renewcommand{\OverciteFont}[1]{\ITCAcitefont[#1]}
+\renewcommand{\figurename}{Figure}
+\renewcommand{\tablename}{Table}
+\renewcommand{\thetable}{\arabic{table}}
+\usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{siunitx}
+\usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{microtype}
-\usepackage{cite}
-\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+\urlstyle{same}
 
 \sisetup{
   detect-all,
@@ -38,27 +45,32 @@
 
 \begin{document}
 
-% Candidate Title A (default):
-\title{Co-Packaging Dual-Protocol Control and Timing Metadata in BLE Extended Advertising: Capacity, Cost, and Joint Resolution Trade-Offs}
-% Candidate Title B (shorter option for IEEE Letters):
-% \title{Single-Packet BLE--IEEE 802.15.4 Control over Extended Advertising: Cost and Joint Resolution Trade-Offs}
+% ITCA Checklist: No subtitle (no colon), no abbreviations/symbols/math in title.
+\title{Cost and Joint Resolution Trade-Offs of Co-Packaged Dual-Protocol Control in Bluetooth Low Energy Extended Advertising}
 
-% TODO: Fill in affiliation and funding upon venue selection
-\author{Zhixue Ji%
-\thanks{Manuscript draft aligned with frozen dataset \texttt{p5\_freeze\_20261124} (P4 data archive commit \texttt{82d56a5}).}}
+% ITCA Checklist: Given Name Surname, corresponding author marked with "*".
+\author{\IEEEauthorblockN{Zhixue Ji\textsuperscript{*}}
+\IEEEauthorblockA{\textit{School of Computer Science and Engineering} \\
+\textit{University of Electronic Science and Technology of China}\\
+Chengdu 611730, China \\
+202421080910@std.uestc.edu.cn}
+}
 
 \maketitle
 
+% ITCA / IEEEtran Rule: Do NOT use symbols, special characters, footnotes, or math in Abstract.
 \begin{abstract}
-A single transmitter can address BLE and IEEE 802.15.4 receivers on one waveform. When does sharing a transmission pay off if success requires both receivers to recover their respective commands? We place independently verifiable commands and a shared time reference in one BLE extended-advertising secondary PDU using BlueBee emulation. Two SDR receivers decoded three record layouts. Across 36 runs with 3,600 planned tasks, at the same submitted waveform duration per attempt, co-packaging reduced the burst count from three to two relative to separate co-channel transmission. Neither scheme consistently achieved higher joint resolution within planned attempts. With short records, legacy advertising had the lowest waveform cost per jointly resolved task at one attempt. Under a common $6$\,ms budget, legacy sent four attempts and co-packaging sent three, reversing their cost ranking. With a 52-byte BLE record, co-packaging carried the record in one PDU while legacy required five fragments. Under the $6$-ms cap, joint resolution was $291/300$ for co-packaging on BLE channel~3 and $93/300$ for legacy advertising on channel~39.
+A single transmitter can address Bluetooth Low Energy and IEEE 802.15.4 receivers on one waveform. When does sharing a transmission pay off if success requires both receivers to recover their respective commands? We place independently verifiable commands and a shared time reference in one Bluetooth Low Energy extended-advertising secondary protocol data unit using BlueBee emulation. Two software-defined radio receivers decoded three record layouts. Across 36 runs with 3,600 planned tasks, at the same submitted waveform duration per attempt, co-packaging reduced the burst count from three to two relative to separate co-channel transmission. Neither scheme consistently achieved higher joint resolution within planned attempts. With short records, legacy advertising had the lowest waveform cost per jointly resolved task at one attempt. Under a common 6 ms budget, legacy sent four attempts and co-packaging sent three, reversing their cost ranking. With a 52-byte Bluetooth Low Energy record, co-packaging carried the record in one protocol data unit while legacy required five fragments. Under the 6-ms cap, joint resolution was 291/300 for co-packaging on Bluetooth Low Energy channel 3 and 93/300 for legacy advertising on channel 39.
 \end{abstract}
 
+% ITCA Checklist: 3 to 10 keywords.
 \begin{IEEEkeywords}
-Bluetooth Low Energy (BLE), extended advertising, IEEE 802.15.4, cross-technology communication, packet fragmentation, software-defined radio (SDR).
+Bluetooth Low Energy, extended advertising, IEEE 802.15.4, cross-technology communication, packet fragmentation, software-defined radio
 \end{IEEEkeywords}
 
 \input{sections/01-introduction}
-\input{sections/02-related-work}
+% Merged into Section I (01-introduction.tex) for 4-page ITCA regular format:
+% \input{sections/02-related-work}
 \input{sections/03-protocol-design}
 \input{sections/04-prototype-methodology}
 \input{sections/05-evaluation}

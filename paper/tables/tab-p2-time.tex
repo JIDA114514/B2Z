@@ -1,28 +1,30 @@
 % ============================================================
 %  Table III: P2 H5 Fixed-Secondary Timing Reference & Loss-Recovery Instances
-%  Provenance:
-%    - python/experiments/p5_freeze_20261124/p5_p2_h5.csv
-%    - Runs 2715--2717 (Point B JC, time profile: 300 slots = 6 tasks x K=3 + 282 updates)
-%    - Analysis scope: uc1_time_tail_audit (separating post-run tail stale)
+%  ITCA / IEEEtran rule: period after caption.
 % ============================================================
 \begin{table}[t]
 \centering
-\caption{Fixed-Secondary Absolute Local IQ Prediction Errors and Unilateral Loss-Recovery Instances (Runs 2715--2717, \texttt{time} Profile)}
+\caption{Fixed-Secondary Absolute Local Prediction Errors and Unilateral Loss-Recovery Instances (Runs 2715--2717, \texttt{time} Profile).}
 \label{tab:p2_time}
-\setlength{\tabcolsep}{1.9pt}
-\scriptsize
-\begin{tabular}{@{}llccccccc@{}}
+\footnotesize
+\setlength{\tabcolsep}{1pt}
+\begin{tabular*}{\columnwidth}{@{}l@{\extracolsep{\fill}}lcccrr@{}}
 \toprule
-\textbf{Run} & \textbf{Scenario} & \textbf{Joint} & \multicolumn{2}{c}{\textbf{Probe Cov.}} & \multicolumn{2}{c}{\textbf{In-Sched. Recov.}} & \multicolumn{2}{c}{\textbf{Med./P95 $|e|$ (ms)}} \\
-\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
- & & Tasks & \ble{} & IEEE & \ble{} & IEEE & \ble{} & IEEE \\
+ & & & Probe & In-sched. & \multicolumn{2}{c}{$|e|$ (ms)} \\
+\cmidrule(l){6-7}
+Run & Side & Joint & coverage & recovery & Median & P95 \\
 \midrule
-2715 & Normal       & 6/6 & 24/24 & 24/24 & N/A (0/0) & N/A (0/0) & 0.223/0.318 & 0.129/0.295 \\
-2716 & \ble{} disc. & 5/6 & 19/24 & 24/24 & 1/1       & N/A (0/0) & 0.242/0.395 & 0.144/0.330 \\
-2717 & IEEE disc.   & 5/6 & 24/24 & 19/24 & N/A (0/0) & 1/1       & 0.222/0.317 & 0.134/0.336 \\
+2715 & BLE  & 6/6 & 24/24 & N/A (0/0) & 0.223 & 0.318 \\
+     & IEEE &     & 24/24 & N/A (0/0) & 0.129 & 0.295 \\
+\addlinespace
+2716 & BLE  & 5/6 & 19/24 & 1/1       & 0.242 & 0.395 \\
+     & IEEE &     & 24/24 & N/A (0/0) & 0.144 & 0.330 \\
+\addlinespace
+2717 & BLE  & 5/6 & 24/24 & N/A (0/0) & 0.222 & 0.317 \\
+     & IEEE &     & 19/24 & 1/1       & 0.134 & 0.336 \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \par\smallskip
 \raggedright\scriptsize
-Each run uses the \texttt{R0} direct-feeder topology across $300$ slots (\SI{500}{ms} period: $6$ tasks $\times$ $K{=}3$ plus $282$ equal-length time updates; manual feeder disconnection in runs 2716/2717; cross-side estimate differences have medians \SIrange{0.140}{0.153}{ms} and P95 \SIrange{0.202}{0.264}{ms} over $n{=}24,19,19$ co-covered probes). Post-run tail \texttt{stale} ($1/1$ per side after TX completion) is separated via \texttt{uc1\_time\_tail\_audit}; undisturbed sides have zero in-schedule loss events (\texttt{N/A (0/0)}). In each run, $0/6$ planned tasks qualified for timed software processing because external RF reference bounds were uncalibrated. Reported $|e|$ values measure held-out absolute local IQ sample-domain prediction error, not cross-device synchronization accuracy.
+Joint counts are per run. Run 2715 had no intervention; the BLE and IEEE feeders were disconnected in 2716 and 2717, respectively. Coverage counts held-out probes; recovery counts in-schedule events (N/A when none). Each side had one post-transmission stale event, excluded here. Across 24, 19 and 19 co-covered probes, median cross-side differences ranged from 0.140 to 0.153 ms and P95 from 0.202 to 0.264 ms. Each run had 0/6 tasks eligible for timed software processing under uncalibrated RF bounds. $|e|$ is the absolute local prediction error.
 \end{table}

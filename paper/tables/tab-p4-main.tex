@@ -1,18 +1,10 @@
 % ============================================================
-%  Table II: P4 Confirmatory Cost--Joint Resolution Master Table (5-Page Main Text)
-%  Division of labor (per outline_review_20261124.md #8):
-%    - Main Table II: K, pooled 1st-attempt baseline, per-block & pooled
-%      planned-attempt joint resolution, unit waveform proxy cost, and paired
-%      block differences / 95% t-CIs.
-%    - Fig. 2(a): 4-way outcome breakdown (both / ble_only / zigbee_only / neither)
-%      and run 2743 zero-reassembly callout.
-%    - Optional Supplement (tables/tab-p4-supp.tex): per-block 1st-attempt matrix,
-%      total submitted & unused budgets, and 4-way counts table.
-%  Provenance: python/experiments/p5_freeze_20261124/{p5_p4_cells.csv, p5_p4_paired_blocks.csv}
+%  Table II: P4 Confirmatory Cost--Joint Resolution Master Table
+%  ITCA / IEEEtran rule: letter table footnotes (a, b, ...); period after caption.
 % ============================================================
 \begin{table*}[t]
 \centering
-\caption{Confirmatory Joint Command Resolution (Within Planned Attempts) and Unit Waveform Proxy Cost Across 36 Counterbalanced Runs (\num{3600} Planned Tasks, \texttt{R1} Partial-Loss Condition)}
+\caption{Confirmatory Joint Command Resolution Within Planned Attempts and Unit Waveform Proxy Cost Across 36 Counterbalanced Runs (\num{3600} Planned Tasks, Partial-Loss Condition \texttt{R1}).}
 \label{tab:p4_main}
 \setlength{\tabcolsep}{3.1pt}
 \footnotesize
@@ -22,27 +14,27 @@
  & & & ($/300$) & B1/B2/B3 & ($/300$) & (\%) & (\si{\micro\second}/task) & B1/B2/B3 (Mean; 95\% $t$-CI) \\
 \midrule
 \multirow{3}{*}{A $(0,0)$, $K{=}1$}
-  & \modejc{}          & 1 & 205/300 & 63 / 78 / 64 & 205/300 & $68.3 \pm 8.4$  & \num{2411.7}  & --- \\
-  & \modesc{}          & 1 & 212/300 & 66 / 81 / 65 & 212/300 & $70.7 \pm 9.0$  & \num{2332.1}  & $-3/{-}3/{-}1$ ($-2.33$; $[-5.20, +0.54]$) \\
-  & \modelc{}$^{\ast}$ & 1 & 204/300 & 51 / 90 / 63 & 204/300 & $68.0 \pm 20.0$ & \num{2141.2}  & $+12/{-}12/{+}1$ ($+0.33$; $[-29.51, +30.18]$) \\
+  & \modejc{}              & 1 & 205/300 & 63 / 78 / 64 & 205/300 & $68.3 \pm 8.4$  & \num{2411.7}  & --- \\
+  & \modesc{}              & 1 & 212/300 & 66 / 81 / 65 & 212/300 & $70.7 \pm 9.0$  & \num{2332.1}  & $-3/{-}3/{-}1$ ($-2.33$; $[-5.20, +0.54]$) \\
+  & \modelc{}$^{\mathrm{a}}$ & 1 & 204/300 & 51 / 90 / 63 & 204/300 & $68.0 \pm 20.0$ & \num{2141.2}  & $+12/{-}12/{+}1$ ($+0.33$; $[-29.51, +30.18]$) \\
 \midrule
 \multirow{3}{*}{A $(0,0)$, $Q{=}6000$}
-  & \modejc{}          & 3 & 224/300 & 95 / 100 / 99  & 294/300 & $98.0 \pm 2.6$ & \num{5044.9}  & --- \\
-  & \modesc{}          & 3 & 227/300 & 99 / 100 / 100 & 299/300 & $99.7 \pm 0.6$ & \num{4960.5}  & $-4/{+}0/{-}1$ ($-1.67$; $[-6.84, +3.50]$) \\
-  & \modelc{}$^{\ast}$ & 4 & 201/300 & 99 / 100 / 96  & 295/300 & $98.3 \pm 2.1$ & \num{5922.7}  & $-4/{+}0/{+}3$ ($-0.33$; $[-9.06, +8.39]$) \\
+  & \modejc{}              & 3 & 224/300 & 95 / 100 / 99  & 294/300 & $98.0 \pm 2.6$ & \num{5044.9}  & --- \\
+  & \modesc{}              & 3 & 227/300 & 99 / 100 / 100 & 299/300 & $99.7 \pm 0.6$ & \num{4960.5}  & $-4/{+}0/{-}1$ ($-1.67$; $[-6.84, +3.50]$) \\
+  & \modelc{}$^{\mathrm{a}}$ & 4 & 201/300 & 99 / 100 / 96  & 295/300 & $98.3 \pm 2.1$ & \num{5922.7}  & $-4/{+}0/{+}3$ ($-0.33$; $[-9.06, +8.39]$) \\
 \midrule
 \multirow{3}{*}{B $(26,0)$, $K{=}1$}
-  & \modejc{}          & 1 & 238/300 & 72 / 86 / 80 & 238/300 & $79.3 \pm 7.0$  & \num{2339.5}  & --- \\
-  & \modesc{}          & 1 & 216/300 & 75 / 78 / 63 & 216/300 & $72.0 \pm 7.9$  & \num{2577.8}  & $-3/{+}8/{+}17$ ($+7.33$; $[-17.55, +32.22]$) \\
-  & \modelc{}$^{\ast}$ & 1 & 86/300  & 43 / 36 / 7  & 86/300  & $28.7 \pm 19.1$ & \num{10130.2} & $+29/{+}50/{+}73$ ($+50.67$; $[-4.00, +105.34]^{\ddagger}$) \\
+  & \modejc{}              & 1 & 238/300 & 72 / 86 / 80 & 238/300 & $79.3 \pm 7.0$  & \num{2339.5}  & --- \\
+  & \modesc{}              & 1 & 216/300 & 75 / 78 / 63 & 216/300 & $72.0 \pm 7.9$  & \num{2577.8}  & $-3/{+}8/{+}17$ ($+7.33$; $[-17.55, +32.22]$) \\
+  & \modelc{}$^{\mathrm{a}}$ & 1 & 86/300  & 43 / 36 / 7  & 86/300  & $28.7 \pm 19.1$ & \num{10130.2} & $+29/{+}50/{+}73$ ($+50.67$; $[-4.00, +105.34]^{\mathrm{b}}$) \\
 \midrule
 \multirow{3}{*}{B $(26,0)$, $Q{=}6000$}
-  & \modejc{}          & 3 & 195/300 & 99 / 100 / 92 & 291/300 & $97.0 \pm 4.4$  & \num{5740.2}  & --- \\
-  & \modesc{}          & 3 & 224/300 & 99 / 99 / 99  & 297/300 & $99.0 \pm 0.0$  & \num{5624.2}  & $+0/{+}1/{-}7$ ($-2.00$; $[-12.83, +8.83]$) \\
-  & \modelc{}$^{\ast}$ & 2 & 56/300  & 76 / 0 / 17   & 93/300  & $31.0 \pm 39.9$ & \num{18735.5} & $+23/{+}100/{+}75$ ($+66.00$; $[-31.58, +163.58]^{\ddagger}$) \\
+  & \modejc{}              & 3 & 195/300 & 99 / 100 / 92 & 291/300 & $97.0 \pm 4.4$  & \num{5740.2}  & --- \\
+  & \modesc{}              & 3 & 224/300 & 99 / 99 / 99  & 297/300 & $99.0 \pm 0.0$  & \num{5624.2}  & $+0/{+}1/{-}7$ ($-2.00$; $[-12.83, +8.83]$) \\
+  & \modelc{}$^{\mathrm{a}}$ & 2 & 56/300  & 76 / 0 / 17   & 93/300  & $31.0 \pm 39.9$ & \num{18735.5} & $+23/{+}100/{+}75$ ($+66.00$; $[-31.58, +163.58]^{\mathrm{b}}$) \\
 \bottomrule
 \end{tabular}
 \par\smallskip
 \raggedright\scriptsize
-Each cell aggregates $n{=}3$ counterbalanced blocks $\times$ $100$ planned tasks ($300$ tasks/cell; $0$ queue overflows, $0$ clipped samples, $0$ board TX failures; four-way outcome distributions are plotted in Fig.~\ref{fig:p4_tradeoff}a). Across all \num{3600} tasks, deadline status is \texttt{unknown} for \num{2730}/\num{3600} jointly resolved tasks (uncalibrated independent RX clocks) and \texttt{not\_decoded} for \num{870}/\num{3600}. Total submitted / unused waveform proxies per $300$-task cell (\si{\micro\second}): A-$K{=}1$ \num{494400}/$0$ (\modejc{},\modesc{}), \num{436800}/$0$ (\modelc{}); A-$Q$ \num{1483200}/\num{316800} (\modejc{},\modesc{}), \num{1747200}/\num{52800} (\modelc{}); B-$K{=}1$ \num{556800}/$0$ (\modejc{},\modesc{}), \num{871200}/$0$ (\modelc{}); B-$Q$ \num{1670400}/\num{129600} (\modejc{},\modesc{}), \num{1742400}/\num{57600} (\modelc{}; run 2743 in B2 had $0/100$ joint resolution, run-level unit cost \texttt{N/A}). $^{\ast}$\modejc{}/\modesc{} use \ble{} ch3 (\SI{2410}{MHz}, $12/12$ protocol-identifiable); \modelc{} uses \ble{} ch39 (\SI{2480}{MHz}, configuration-level). $^{\ddagger}$$\text{df}{=}2$ $t$-intervals ($t_{0.975,2}{=}4.303$) cross zero and exceed $\pm 100$\,pp under high block variance.
+Each cell pools $n{=}3$ counterbalanced $100$-task blocks ($300$ planned tasks/cell; Figure~\ref{fig:p4_tradeoff}a shows four-way outcomes). RF deadline status across \num{3600} tasks: \num{2730}/\num{3600} \texttt{unknown} (uncalibrated receiver clocks), \num{870}/\num{3600} \texttt{not\_decoded}. Cell submitted/unused waveform proxies (\si{\micro\second}): A-$K{=}1$ \num{494400}/$0$ (\modejc{},\modesc{}), \num{436800}/$0$ (\modelc{}); A-$Q$ \num{1483200}/\num{316800} (\modejc{},\modesc{}), \num{1747200}/\num{52800} (\modelc{}); B-$K{=}1$ \num{556800}/$0$ (\modejc{},\modesc{}), \num{871200}/$0$ (\modelc{}); B-$Q$ \num{1670400}/\num{129600} (\modejc{},\modesc{}), \num{1742400}/\num{57600} (\modelc{}; B2 run 2743 resolved $0/100$, run cost \texttt{N/A}). $^{\mathrm{a}}$\modejc{}/\modesc{}: \ble{} ch3 (\SI{2410}{MHz}); \modelc{}: ch39 (\SI{2480}{MHz}, configuration-level). $^{\mathrm{b}}$$\text{df}{=}2$ $t$-CIs ($t_{0.975,2}{=}4.303$) cross zero and exceed $\pm 100$\,pp.
 \end{table*}

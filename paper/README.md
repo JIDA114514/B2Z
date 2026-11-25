@@ -1,8 +1,8 @@
-# B2Z UC1 5-Page Short Paper Project（中英双版共享架构）
+# B2Z UC1 Conference Paper Project（ITCA 常规 4 页版 + 中文伴生版）
 
 当前状态：
-- **英文投稿主版**（`paper/`）：已完成 6 节英文完整学术正文初稿、已核验文献库、冻结三线表及 2 张矢量图，编译通过（[build/main.pdf](build/main.pdf)，正文约 5.3 页、0 警告、0 溢出）；
-- **中文审阅伴生版**（`paper/zh/`）：已完成 6 节完整中文学术正文与双栏编译（[build/zh/main_zh.pdf](build/zh/main_zh.pdf)），与英文主版严格 1:1 章节/论点/数值对应；
+- **英文投稿主版**（`paper/`）：按 ITCA 检查表与常规 4 页篇幅标准定稿（US Letter 双栏、`Figure`/`Table` 全称与阿拉伯数字编号、带方括号上标引文、7 篇带 DOI/链接核心文献），使用 pdfLaTeX/BibTeX 从干净目录生成 [4 页英文 PDF](build/main.pdf)（双栏均衡收尾、0 警告、0 Overfull、全部字体嵌入）。英文 4 页紧凑图使用独立文件名（`*-4p.pdf`），不影响中文稿图件。
+- **中文审阅伴生版**（`paper/zh/`）：保留完整 6 节详尽中文学术审阅稿（[build/zh/main_zh.pdf](build/zh/main_zh.pdf)）及原 `fig-uc1-layout-bursts.pdf` / `fig-p4-tradeoff.pdf`；
 - **冻结数据溯源**：`python/experiments/p5_freeze_20261124/`（P4 数据归档提交 `82d56a5`）。
 
 ## 双语项目组织原则（单点维护、互不污染）
@@ -34,16 +34,15 @@ cd paper && latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 cd paper/zh && latexmk -xelatex -interaction=nonstopmode -halt-on-error main_zh.tex
 ```
 
-## 5 页短论文结构与 1:1 章节映射
+## 英文 4 页常规会议结构与文件映射
 
-| 章节文件（`sections/` 与 `zh/sections/` 同名） | 英文标题 / 中文标题 | 目标篇幅 | 图表锚点 |
-| --- | --- | :---: | --- |
-| `01-introduction.tex` | I. Introduction / 引言 | `0.65 p` | 回链 Sec. III–V、Fig. 1–2、Table I–III |
-| `02-related-work.tex` | II. Related Work and Scope Boundaries / 相关工作与研究边界 | `0.45 p` | — |
-| `03-protocol-design.tex` | III. Co-Packaged Protocol and Baseline Encapsulations / 共包协议设计与对照封装 | `1.10 p` | **Fig. 1** + **Table I** (`tab-budget.tex`) |
-| `04-prototype-methodology.tex` | IV. Dual-Chain SDR Prototype and Evaluation Methodology / 双链 SDR 原型与实验评估方法 | `0.65 p` | — |
-| `05-evaluation.tex` | V. Empirical Results / 实测结果 | `1.35 p` | **Table II** (`tab-p4-main.tex`) + **Fig. 2** + **Table III** (`tab-p2-time.tex`) |
-| `06-discussion-conclusion.tex` | VI. Discussion, Limitations, and Conclusion / 讨论、局限与结论 | `0.45 p` | — |
+| 英文文件（`sections/`） | 英文节标题（5 节结构） | 图表锚点 | 说明 |
+| --- | --- | --- | --- |
+| `01-introduction.tex` | I. Introduction and Related Work | 回链 Sec. II–IV、Figures 1–2、Tables 1–2 | 合并引言与相关工作（原 `02-related-work.tex` 保留备查） |
+| `03-protocol-design.tex` | II. Co-Packaged Protocol and Baselines | **Figure 1** (`*-4p.pdf`) + **Table 1** (`tab-budget.tex`) | 包含成本公式 `(1)–(2)`、确定性偏置与 `C3` 隔离 |
+| `04-prototype-methodology.tex` | III. Prototype and Evaluation Methodology | — | 双链 SDR 台架、预注册矩阵与四项审计规则 |
+| `05-evaluation.tex` | IV. Empirical Results | **Table 2** (`tab-p4-main.tex`) + **Figure 2** (`*-4p.pdf`) | 含 `R0` 验证、`P4` 3,600 任务对照与时间/断馈行内报告（原 `tab-p2-time.tex` 保留备查） |
+| `06-discussion-conclusion.tex` | V. Discussion, Limitations, and Conclusion | — | 四项有效性边界、结论与后续工作 |
 
 ## 统一宏与写作硬性红线（中英双版共同遵守）
 
@@ -54,5 +53,6 @@ cd paper/zh && latexmk -xelatex -interaction=nonstopmode -halt-on-error main_zh.
 
 - [x] Stage-1 英文框架、冻结三线表与 2 张矢量图
 - [x] 中文伴生版完整正文生成、两轮审计修订与 XeLaTeX 编译验证
-- [x] 按中文版 1:1 展开英文投稿正文初稿（`paper/sections/`，0 警告、0 溢出）
-- [ ] 选定目标期刊/会议后按投稿模板调整 `\documentclass`、作者栏及严格页数（5.0 页或 6.0 页）
+- [x] 按中文版展开英文投稿正文初稿及内容审计修订（`paper/sections/`）
+- [x] 按 `ITCA_Templates/` 完成 IEEE Conference 排版适配并实排收敛至常规 **4.0 页**（`build/main.pdf`）
+- [ ] 投稿前终检作者信息与通讯邮箱（如有基金资助再启用 `\IEEEoverridecommandlockouts`）

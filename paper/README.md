@@ -1,8 +1,8 @@
 # B2Z UC1 Conference Paper Project（ITCA 常规 4 页版 + 中文伴生版）
 
 当前状态：
-- **英文投稿主版**（`paper/`）：按 ITCA 检查表与常规 4 页篇幅标准定稿（US Letter 双栏、`Figure`/`Table` 全称与阿拉伯数字编号、带方括号上标引文、7 篇带 DOI/链接核心文献），使用 pdfLaTeX/BibTeX 从干净目录生成 [4 页英文 PDF](build/main.pdf)（双栏均衡收尾、0 警告、0 Overfull、全部字体嵌入）。英文 4 页紧凑图使用独立文件名（`*-4p.pdf`），不影响中文稿图件。
-- **中文审阅伴生版**（`paper/zh/`）：保留完整 6 节详尽中文学术审阅稿（[build/zh/main_zh.pdf](build/zh/main_zh.pdf)）及原 `fig-uc1-layout-bursts.pdf` / `fig-p4-tradeoff.pdf`；
+- **英文投稿主版**（`paper/`）：按 ITCA 检查表与常规 4 页篇幅标准定稿（US Letter 双栏、`Figure`/`Table` 全称与阿拉伯数字编号、带方括号上标引文、7 篇带 DOI/链接核心文献），使用 pdfLaTeX/BibTeX 从干净目录生成 [4 页英文 PDF](build/main.pdf)（双栏均衡收尾、0 警告、0 Overfull、全部字体嵌入）。
+- **中文审阅伴生版**（`paper/zh/`）：已按当前 4 页英文投稿主版完成 1:1 同步（同款 `\documentclass[conference]{IEEEtran}`、5 节结构、中文润色摘要、两图两表及去内部阶段代号表述），编译生成 [4 页中文 PDF](build/zh/main_zh.pdf)；英文端原完整 6 节备查文件（`sections/02-related-work.tex`、`tables/tab-p2-time.tex` 与初始图件 `fig-uc1-layout-bursts.pdf` / `fig-p4-tradeoff.pdf`）保留备查，旧 6 页中文模板冗余文件及旧构建目录已移除；
 - **冻结数据溯源**：`python/experiments/p5_freeze_20261124/`（P4 数据归档提交 `82d56a5`）。
 
 ## 双语项目组织原则（单点维护、互不污染）
@@ -19,7 +19,7 @@ paper/
 ├── zh/                           # [中文审阅伴生版] 独立子目录，打包英文投稿时直接排除
 │   ├── main_zh.tex               # xelatex + IEEEtran + ctex（Noto Serif CJK SC）
 │   ├── latexmkrc                 # 中文版编译配置 -> ../build/zh/main_zh.pdf（共享 ../refs.bib）
-│   ├── sections/                 # 01–06 完整中文正文（与 ../sections/ 同名 1:1 对应）
+│   ├── sections/                 # 01、03–06 五节中文正文（与英文 4 页主版 1:1 对应）
 │   └── tables/                   # 中文表头/表注版三线表（数字与 ../tables/ 100% 同步）
 └── build/                        # [git-ignored] 编译产物（build/main.pdf 与 build/zh/main_zh.pdf）
 ```
@@ -55,4 +55,6 @@ cd paper/zh && latexmk -xelatex -interaction=nonstopmode -halt-on-error main_zh.
 - [x] 中文伴生版完整正文生成、两轮审计修订与 XeLaTeX 编译验证
 - [x] 按中文版展开英文投稿正文初稿及内容审计修订（`paper/sections/`）
 - [x] 按 `ITCA_Templates/` 完成 IEEE Conference 排版适配并实排收敛至常规 **4.0 页**（`build/main.pdf`）
+- [x] 将 4 页英文主版（摘要润色、引言过渡优化、去内部代号 `P4/H1`、WiCast DOI 刷新）1:1 同步至中文伴生版（`build/zh/main_zh.pdf`，4 页编译通过）
+- [x] 完成第 II–V 节中英双版论证聚焦、去工程路径名、集中时钟边界与清理旧 6 页中文模板（双版均稳定 4 页）
 - [ ] 投稿前终检作者信息与通讯邮箱（如有基金资助再启用 `\IEEEoverridecommandlockouts`）

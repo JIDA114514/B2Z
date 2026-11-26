@@ -1,23 +1,15 @@
-\section{共包协议设计与对照封装}\label{sec:design}
+\section{共包协议与对照基线}\label{sec:design}
+
+\emph{封装模式与字节/波形成本预算：}发送机在 \SI{500}{ms} 时隙（\texttt{slot\_index}，$\texttt{period\_ms}{=}500$）内向双侧调度无确认（ACK）开环尝试；在确认性实验调度中，相邻逻辑任务 $(\texttt{run\_id},\texttt{command\_id})$ 起始间隔 $6$ 个时隙（\SI{3}{s}）。每项任务按固定 $K$ 次计划尝试规则（$K{=}1$ 表示单次发送）或单任务提交波形预算上限 $Q$（\si{\micro\second}）运行。图~\ref{fig:layout} 对比了相同任务语义下的三种模式：\modejc{} 每次尝试发射 $2$ 个突发——主信道 \texttt{ADV\_EXT\_IND}（\SI{136}{\micro\second}）与位于 \ble{} ch3 / \stdfour{} ch12（\SI{2410}{MHz}）的共包 \texttt{AUX\_ADV\_IND}；\modesc{} 每次尝试发射 $3$ 个突发——主信道突发、仅含 \ble{} 的 ch3 次信道突发与独立的 ch12 \stdfour{} 突发；\modelc{} 每次尝试发射 $F{+}1$ 个突发——在 ch39（\SI{2480}{MHz}）发送 $F$ 个传统 \ble{} 帧，再加 $1$ 个 ch12 \stdfour{} 突发。
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\columnwidth]{fig-uc1-layout-bursts.pdf}
-  \caption{统一紧凑格式（\proto{}）共包次信道数据单元布局与单次尝试突发对比：(a) \texttt{AUX\_ADV\_IND} 字节预算与确定性偏移 $\num{400}+8b\,\si{\micro\second}$；(b) B 点（$52/26$\,B）下 \modejc{}、\modesc{} 与需五片 \fragproto{} 分片的 \modelc{} 突发结构。}
+  \includegraphics[width=\columnwidth]{fig-uc1-layout-bursts-4p.pdf}
+  \caption{统一紧凑格式（\proto{}）次信道 PDU 布局与单次尝试突发结构：（a）\texttt{AUX\_ADV\_IND} 字节预算、$4\times$ BlueBee 映射及 $(400{+}8b)\,\si{\micro\second}$ 标记偏移；（b）B 点（$52/26$\,B），其中 \modejc{} 使用单个 \SI{1720}{\micro\second} 次信道突发，而 \modelc{} 需五个 ch39 \fragproto{} 分片。}
   \label{fig:layout}
 \end{figure}
 
-\subsection{单发送机封装模式与字节/波形预算}\label{sec:design_modes}
-
-发送机按 \SI{500}{ms} 时隙（$T_{\text{slot}}{=}\SI{500}{ms}$）向 \ble{} 接收链与 \stdfour{} 接收链调度发送尝试；在 P4 中，相邻逻辑任务的起始槽相隔 $6$ 个时隙（\SI{3}{s}）。每项逻辑任务由 $(\texttt{run\_id}, \texttt{command\_id})$ 唯一标识，在单向无确认信道下按固定计划尝试次数 $K$ 或共同单任务波形预算上限 $Q$（\si{\micro\second}）执行开环发送，每次物理尝试占据一个递增槽号 $\texttt{slot\_index}$。如图~\ref{fig:layout} 所示，本文在同一任务语义下实现三种封装模式：共包扩展广播（\modejc{}）每次尝试发射 $2$ 个突发，包括 $1$ 个主信道 \texttt{ADV\_EXT\_IND}（\SI{136}{\micro\second}）与 $1$ 个位于 \ble{} ch3（\SI{2410}{MHz}，与 \stdfour{} ch12 中心频点重合）的次信道 \texttt{AUX\_ADV\_IND}，在单帧中顺次容纳 \ble{} 记录与 BlueBee 映射后的 \stdfour{} 记录；同频分别扩展广播（\modesc{}）每次尝试发射 $3$ 个突发，即主信道指针、仅含 \ble{} 记录的 ch3 次信道帧以及独立的 ch12 BlueBee 映射 \stdfour{} 突发；传统广播/分片基线（\modelc{}）每次尝试发射 $F+1$ 个突发，在传统广播信道 ch39（\SI{2480}{MHz}）发送 $F$ 帧 \ble{} 广播后再于 ch12 发送 $1$ 个独立 \stdfour{} 突发。
-
-在应用记录层，\ble{} 与 \stdfour{} 各自独立封装并校验一条长度为 $(26+n)$\,B 的小端 \proto{} 记录（\ble{} 侧 $n{=}b$，\stdfour{} 侧 $n{=}z$）。每条记录由 \SI{24}{B} 固定头（含 \texttt{magic=0xC1}、显式版本类型字节 \texttt{0x10} 纯时间更新或 \texttt{0x11} 控制命令、\texttt{run\_id}、\texttt{slot\_index}、\texttt{period\_ms}、\texttt{command\_id}、\texttt{target\_id}、\texttt{opcode}、\texttt{arg}、\texttt{valid\_offset\_ms}、\texttt{execute\_offset\_ms} 与 \texttt{extra\_len}）、$n$\,B 本侧扩展净荷以及 \SI{2}{B} \texttt{CRC-16/CCITT-FALSE} 校验构成。在 \modejc{} 冻结布局中，扩展广播头、Flags AD 与 Manufacturer AD 头共占 \SI{17}{B}，BlueBee 映射区占 $4(26+z+8)=136+4z$\,B（内含 \SI{8}{B} \stdfour{} PHY/MAC 封装），故次信道 PDU 载荷长度为
-\begin{equation}\label{eq:sec_payload}
-  L_{\text{sec}}(b,z) = 17 + (26 + b) + (136 + 4z) = 179 + b + 4z~\text{B}.
-\end{equation}
-受 \SI{255}{B} 次信道载荷协议上限约束，式~\eqref{eq:sec_payload} 的字节算术边界为 $b+4z\le 76$；本文阶段一冻结工作域限定为 $0\le b\le 26$、$0\le z\le 6$ 且满足共同约束 $b+4z\le 26$（两项边际最大值 $b{=}26$ 与 $z{=}6$ 不可组合）。实验选取三组代表配置（按 \ble{}/\stdfour{} 顺序）：短负载 A 点（扩展 $0/0$\,B，完整记录 $26/26$\,B，次信道载荷 \SI{179}{B}）、长 \ble{} 负载 B 点（扩展 $26/0$\,B，完整记录 $52/26$\,B，载荷 \SI{205}{B}）及双侧非对称负载 C 点（扩展 $2/6$\,B，完整记录 $28/32$\,B，载荷 \SI{205}{B}）；另设 B1 点（扩展 $1/0$\,B，完整记录 $27/26$\,B）核验传统广播 \SI{27}{B} 直接承载边界。
-
-在 LE~1M 速率下，三种模式单次完整逻辑尝试的设计有效波形代理预算（\si{\micro\second}，不含包间静默与调谐保护间隔）如表~\ref{tab:budget} 所示，由下式精确给出：
+每侧独立校验一条 $(26{+}n)$ 字节小端 \proto{} 记录（\ble{} 侧 $n{=}b$，\stdfour{} 侧 $n{=}z$）：\SI{24}{B} 固定头（\texttt{0x10} 时间更新或 \texttt{0x11} 控制命令、任务/槽号标识、相对有效期/执行偏移及 \texttt{extra\_len}）、$n$\,B 本侧扩展净荷以及 \SI{2}{B} 循环冗余校验（\texttt{CRC-16/CCITT-FALSE}）。计入 \SI{17}{B} 扩展/广播数据（AD）头与占 $4(26{+}z{+}8){=}136{+}4z$\,B 的 BlueBee 映射区（含 \SI{8}{B} \stdfour{} 封装），\modejc{} 次信道载荷为 $L_{\text{sec}}(b,z){=}179{+}b{+}4z$\,B（受限于 \SI{255}{B} 协议上限即 $b{+}4z\le 76$；冻结工作域为 $0\le b\le 26$、$0\le z\le 6$、$b{+}4z\le 26$）。在 \SI{1}{Mbps} LE~1M 物理层下，单次尝试提交波形代理（\si{\micro\second}，不含包间静默与调谐；表~\ref{tab:budget}）满足
 \begin{align}
   C_{\modejc}(b,z) &= C_{\modesc}(b,z) = 1648 + 8b + 32z,\label{eq:cost_jc_sc}\\
   C_{\modelc}(b,z) &=
@@ -26,18 +18,8 @@
     8(35F + 162 + b + 4z), & b \ge 2.
   \end{cases}\label{eq:cost_lc}
 \end{align}
-其中 \modelc{} 在 $b\le 1$ 时以单个 Manufacturer AD 直接承载完整 \ble{} 记录（$F{=}1$）；当 $b\ge 2$ 时进入 \fragproto{} 分片，每片含 \SI{20}{B} 传统广播空口封装与 \SI{15}{B} 分片头，最多承载 \SI{12}{B} 记录字节，分片数 $F=\lceil(26+b)/12\rceil$（B 点 $52$\,B 对应 $F{=}5$）。由式~\eqref{eq:cost_jc_sc} 可见，\modejc{} 与 \modesc{} 在任意 $(b,z)$ 下单次提交波形代理预算完全相等，而 \modejc{} 将每次尝试的突发数由 $3$ 次降至 $2$ 次。在同预算上限 $Q$ 策略下，各模式分配计划尝试次数 $K_m=\lfloor Q/C_m\rfloor$，并将剩余未用预算 $Q-K_m C_m$ 显式记录而不以无意义填充补齐。
+当 $b\le 1$ 时，\modelc{} 将 \ble{} 记录装入单个 Manufacturer AD 帧（$F{=}1$）；当 $b\ge 2$ 时，每片产生 \SI{20}{B} 传统封装开销并携带 \SI{15}{B} \fragproto{} 头及至多 \SI{12}{B} 记录数据，共需 $F{=}\lceil(26{+}b)/12\rceil$ 片（B 点取 $F{=}5$）。在预算上限 $Q$ 下，模式 $m$ 发送 $K_m{=}\lfloor Q/C_m\rfloor$ 次，剩余未用预算 $Q{-}K_m C_m$ 显式列报。
 
 \input{tables/tab-budget}
 
-\subsection{确定性包内偏移、重发语义与 \fragproto{} 状态机}\label{sec:design_semantics}
-
-\proto{} 将时隙计划参考定义为 $\texttt{ref\_tick\_ms}=\texttt{slot\_index}\times\texttt{period\_ms}$，在共包模式下绑定于次信道 \ble{} 前导码起点。由于次信道帧在前导码与接入地址（\SI{5}{B}）、PDU 头（\SI{2}{B}）、扩展/AD 头（\SI{17}{B}）及 \ble{} 记录（$26+b$\,B）之后即进入 BlueBee 映射区（始于载荷偏移 $43+b$ 字节），\ble{} 前导码至 \stdfour{} 参考标记的理论结构偏移为
-\begin{equation}\label{eq:offset}
-  \Delta t_{\text{marker}}(b) = (5 + 2 + 43 + b) \times \SI{8}{\micro\second} = 400 + 8b~\si{\micro\second}.
-\end{equation}
-为将每侧固定记录开销维持在 \SI{26}{B}，\stdfour{} 侧依赖轮次前预共享配置中的 $b$ 值实施该包内位置补偿，而不能从自身 $(26+z)$\,B 记录推导对侧长度；若缺失匹配布局配置或配置校验失败，接收机仍可记录本侧有效命令，但强制置 $\texttt{timing\_eligible}=\text{false}$，禁止静默套用旧版固定偏移。
-
-在计划的 $K$ 次开环尝试中，各侧应用命令内容及绝对有效截止时刻 $V=\texttt{ref\_tick\_ms}+\texttt{valid\_offset\_ms}$、目标软件处理时刻 $E=\texttt{ref\_tick\_ms}+\texttt{execute\_offset\_ms}$（满足 $\texttt{ref\_tick\_ms}\le V<E$）均保持不变；每次尝试写入各自的 $\texttt{slot\_index}$、重新计算的相对时间偏移并更新记录 CRC，防止重发不断推迟截止期。若同一任务在不同尝试中出现目标、操作码、净荷或恢复后 $V/E$ 冲突，尚未处理的挂起任务立即取消且后续即使恢复原参数也不得重新接受或更新时间模型。纯时间更新槽（\texttt{0x10}）将命令字段与偏移全部置零，但保持与本轮配置一致的扩展填充长度以维持式~\eqref{eq:offset} 位置不变；其发射计入总波形成本，但不增加逻辑任务分母。
-
-针对 \modelc{} 在 $b\ge 2$ 时的跨尝试分片混拼风险，\fragproto{}（\texttt{magic=0xC3}）采用 \SI{15}{B} 分片头（含版本、\texttt{run\_id}、\texttt{slot\_index}、\texttt{command\_id}、分片索引、总片数与总记录长度）加 \SIrange{1}{12}{B} 记录字节，按 $(\texttt{AdvA}, \texttt{run\_id}, \texttt{slot\_index}, \texttt{command\_id})$ 实施槽隔离重组，禁止跨尝试拼接。重组器为并发收集队列 \texttt{pending} 与已关闭墓碑表 \texttt{closed} 分配独立容量上限，并强制维持容量预留不变量 $\lvert\texttt{closed}\rvert+\lvert\texttt{pending}\rvert\le\texttt{closed\_limit}$：已关闭身份保留至轮次显式结束而不做 LRU 淘汰，新尝试进入 \texttt{pending} 前必须预留未来 \texttt{closed} 槽位，避免释放后旧分片复活已关闭尝试；重组完成后仍须复核记录级 \texttt{app\_crc16}、版本、长度及标识字段与分片头完全一致，方可提交任务去重层。
+\emph{确定性偏移、重发语义与分片重组：}在 \modejc{} 中，每包的时隙时间戳（$\texttt{slot\_index}\times\SI{500}{ms}$）锚定于次信道 \ble{} 前导码起点。由于 BlueBee 映射区之前依次排布了 \SI{7}{B} 物理层/PDU 开销、\SI{17}{B} 扩展/AD 头以及 $(26{+}b)$\,B 的 \ble{} 记录（共 $50{+}b$ 字节），\stdfour{} 起点在 \SI{1}{Mbps} 下相对前导码固定延后 $\Delta t_{\text{marker}}(b){=}400{+}8b\,\si{\micro\second}$。为避免增大 \stdfour{} 记录头，\stdfour{} 链直接从轮前共享配置读取 $b$；若配置缺失或失配，则禁用时间补偿，但仍继续记录合法的本侧命令。在任务的 $K$ 次开环尝试中，命令净荷及绝对有效与执行时刻（$V < E$）保持不变，每次重发仅递增 \texttt{slot\_index}、按新槽位缩短相对时间偏移并刷新 CRC；一旦出现参数或目标时刻冲突，即永久取消挂起执行。等长 \texttt{0x10} 纯时间更新保持 $\Delta t_{\text{marker}}(b)$ 不变，计入提交成本但不增加计划任务数。对于启用分片的 \modelc{}（$b\ge 2$），\fragproto{} 按 $(\texttt{AdvA},\allowbreak\texttt{run\_id},\allowbreak\texttt{slot\_index},\allowbreak\texttt{command\_id})$ 索引分片并对已关闭尝试保留墓碑记录而不做淘汰，从而防止不同尝试的分片相互混拼。

@@ -1,23 +1,26 @@
 % ============================================================
-%  B2Z UC1 5页短论文 — 中文审阅与打磨伴生版主文件
+%  B2Z UC1 4页会议论文 — 中文同步版主文件
 %  编译：cd paper/zh && latexmk -xelatex -interaction=nonstopmode -halt-on-error main_zh.tex
 %  产物：paper/build/zh/main_zh.pdf
 %  共享资源：../figures/（矢量图）、../refs.bib（唯一文献库）
 % ============================================================
-\documentclass[journal]{IEEEtran}
+\documentclass[conference]{IEEEtran}
 
-\usepackage{amsmath,amssymb}
+\usepackage[super,nomove]{cite}
+\let\ITCAcitefont\OverciteFont
+\renewcommand{\OverciteFont}[1]{\ITCAcitefont[#1]}
+\usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{siunitx}
+\usepackage{textcomp}
 \usepackage{xcolor}
-\usepackage{cite}
 \usepackage{url}
 \urlstyle{same}
 \usepackage[hidelinks]{hyperref}
 
-% 中文排版支持（保留 IEEEtran 双栏版面与数字/公式风格，使篇幅与英文投稿版 1:1 可比）
+% 中文排版支持（保留 IEEEtran 双栏版面与数字/公式风格，与英文 4 页主版 1:1 对齐）
 \usepackage[UTF8,scheme=plain,heading=false]{ctex}
 \setCJKmainfont{Noto Serif CJK SC}[BoldFont=Noto Serif CJK SC Bold,ItalicFont=AR PL UKai CN]
 \setCJKsansfont{Noto Sans CJK SC}
@@ -27,6 +30,7 @@
 
 \renewcommand{\figurename}{图}
 \renewcommand{\tablename}{表}
+\renewcommand{\thetable}{\arabic{table}}
 \renewcommand{\refname}{参考文献}
 \renewcommand{\abstractname}{摘要}
 \renewcommand{\IEEEkeywordsname}{关键词}
@@ -52,23 +56,28 @@
 
 \begin{document}
 
-\title{BLE 扩展广播中的双协议控制与时间元数据共包：\\容量、成本与联合解析权衡}
+\title{低功耗蓝牙扩展广播中双协议共包控制的成本与联合解析权衡}
 
-\author{吉志学%
-\thanks{本稿为英文 5 页投稿版（\texttt{paper/main.tex}）的 1:1 中文审阅与打磨伴生版；全部实验数值严格绑定冻结数据集 \texttt{p5\_freeze\_20261124}（P4 数据归档提交 \texttt{82d56a5}）。}}
+\author{\IEEEauthorblockN{吉志学\textsuperscript{*}}
+\IEEEauthorblockA{\textit{计算机科学与工程学院} \\
+\textit{电子科技大学}\\
+中国成都 611730 \\
+202421080910@std.uestc.edu.cn}
+}
 
 \maketitle
 
 \begin{abstract}
-当一项控制任务要求共处 \SI{2.4}{GHz} 频段的低功耗蓝牙（\ble{}）与 \stdfour{} 两侧接收端均恢复各自命令时，在单发送机约束下，借助 BlueBee 物理层仿真将双侧独立记录与共享时间元数据共同封装于单个无连接 \ble{}~5 次信道 \texttt{AUX\_ADV\_IND} 数据单元（\modejc{}）能节省多少发送成本，又会带来怎样的联合解析权衡？本文提出统一紧凑双协议格式 \proto{} 及带 \SI{15}{B} 分片头的槽隔离传统分片基线（\modelc{}/\fragproto{}），在单 SDR 发送机与两套独立接收链平台上，将 \modejc{} 与同频分别扩展广播（\modesc{}）及 ch39 \modelc{} 展开对照（含 \num{18} 轮 \texttt{R0} 馈线桥接实验，以及包含 \num{3600} 项计划任务的 \num{36} 轮 \texttt{R1} 确认性实验）。在同频 \modejc{} 对 \modesc{} 对照中，\modejc{} 在相等单次提交波形代理预算下将每次尝试由 $3$ 个突发减至 $2$ 个，三个区组未显示稳定的计划尝试内联合解析优势。在无需分片的短负载 A 点，单次发送（$K{=}1$）时 \modelc{} 合并单位联合成功成本最低（\SI{2141.2} vs.\ \modejc{} \SI{2411.7}{\micro\second}/任务）；在相同的 \SI{6}{ms} 波形预算上限下，按冻结开环策略 \modelc{} 发送四次、\modejc{} 发送三次，两者计划尝试内联合解析率分别为 $98.3\%$ 与 $98.0\%$，\modejc{} 的单位成功成本低 $14.8\%$（\SI{5044.9} vs.\ \SI{5922.7}{\micro\second}/任务）。在 \ble{} 侧需五片 \fragproto{} 重组的长负载 B 点，\modejc{} 以单个次信道数据单元承载完整记录，在所测 ch3 \modejc{} 对 ch39 \modelc{} 配置下三个区组均观察到 \modejc{} 较高的联合解析率（$Q{=}\SI{6}{ms}$ 下为 $291/300$ vs.\ $93/300$，均值差 $+66.00$\,pp，$\text{df}{=}2$ 的 $95\%$ $t$ 区间跨零）。此外，在三组实测布局下，\ble{} 与 \stdfour{} 独立接收链分别完整恢复本侧记录；对单路实录 IQ 的双解码核验了确定性包内偏移（$\num{400}+8b\,\si{\micro\second}$）；另在固定次信道两轮双接收机单侧馈线断开实验中，展示了时间参考的状态机恢复实例。
+从单一发送机同时控制共处同一频段的低功耗蓝牙（Bluetooth Low Energy）与 IEEE 802.15.4 接收机通常需要顺序发送多组突发及多帧传统分片，但其封装代价与双侧接收权衡尚缺乏定量刻画。本文提出一种共包双协议控制封装与解析式波形成本模型，基于 BlueBee 物理层仿真在单个低功耗蓝牙扩展广播次信道协议数据单元（protocol data unit）中嵌入可独立校验的命令及共享时隙时间元数据，并构造槽隔离传统分片基线作为对照。在双链软件定义无线电（software-defined radio）原型上的有线测试验证了三组记录布局（26/26、52/26 与 28/32 字节）的完整恢复、确定性包内时间偏移以及单侧断馈恢复能力。在 36 轮确认性无线实验（3,600 项计划任务）中，本文确立了三项结论：（1）在相等的单次尝试提交波形时长下，共包相对同频分别发送将每次尝试突发数由 3 个减至 2 个，而计划尝试内联合解析率未呈一致增益；（2）对于短记录，传统广播在单次尝试时单位波形成本最低，但在 6 ms 预算上限下传统广播发送 4 次而共包发送 3 次，成本排序发生翻转，共包单位成本降低 14.8\%；（3）对于 52 字节低功耗蓝牙记录，共包方案免除五分片重组，在 6 ms 上限下于信道 3 取得 291/300 联合解析，高于传统广播在信道 39 上的 93/300。
 \end{abstract}
 
 \begin{IEEEkeywords}
-低功耗蓝牙（BLE），扩展广播，IEEE 802.15.4，跨技术通信，分片重组，软件定义无线电（SDR）。
+低功耗蓝牙，扩展广播，IEEE 802.15.4，跨技术通信，分片重组，软件定义无线电
 \end{IEEEkeywords}
 
 \input{sections/01-introduction}
-\input{sections/02-related-work}
+% 按英文 4 页会议主版结构，相关工作已并入第一节（02-related-work.tex 保留备查）：
+% \input{sections/02-related-work}
 \input{sections/03-protocol-design}
 \input{sections/04-prototype-methodology}
 \input{sections/05-evaluation}

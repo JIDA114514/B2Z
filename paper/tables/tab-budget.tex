@@ -10,7 +10,7 @@
 \scriptsize
 \begin{tabular}{@{}lccccccc@{}}
 \toprule
-\textbf{Point} & \textbf{Rec.} & \textbf{Map} & \textbf{\modejc{} Sec.} & \multicolumn{3}{c}{\textbf{Bursts / Proxy (\si{\micro\second})}} & \textbf{H1 Med.} \\
+\textbf{Point} & \textbf{Rec.} & \textbf{Map} & \textbf{\modejc{} Sec.} & \multicolumn{3}{c}{\textbf{Bursts / Proxy (\si{\micro\second})}} & \textbf{Offset} \\
 \cmidrule(lr){5-7}
 $(b,z)$ & B/Z & (B) & (B) & \modejc{} & \modesc{} & \modelc{} ($F$) & (\si{\micro\second}) \\
 \midrule
@@ -22,5 +22,5 @@ B $(26,0)$  & 52/26 & 136 & 205 & 2/\num{1856} & 3/\num{1856} & 6/\num{2904} (5)
 \end{tabular}
 \par\smallskip
 \raggedright\scriptsize
-All 10 tested \texttt{R0} branches (runs 2702--2710, 2718) achieved $10/10$ joint resolution. $F$: legacy \ble{} frames/attempt ($F{=}1$ for $b\le 1$; $F{=}\lceil(26{+}b)/12\rceil$ \fragproto{} fragments for $b\ge 2$, plus $1$ \stdfour{} burst). $^{\mathrm{a}}$Formula values; at B1 only the \SI{27}{B} direct \modelc{} ceiling (run 2710) was captured. Shared-IQ H1 medians ($n{=}10$ each) validate $400{+}8b\,\si{\micro\second}$, not cross-device clock error.
+All 10 tested \texttt{R0} branches (runs 2702--2710, 2718) achieved $10/10$ joint resolution. $F$: legacy \ble{} frames/attempt ($F{=}1$ for $b\le 1$; $F{=}\lceil(26{+}b)/12\rceil$ \fragproto{} fragments for $b\ge 2$, plus $1$ \stdfour{} burst). $^{\mathrm{a}}$Formula values; at B1 only the \SI{27}{B} direct \modelc{} ceiling (run 2710) was captured. Shared-IQ offset medians ($n{=}10$ each) validate $400{+}8b\,\si{\micro\second}$, not cross-device clock error.
 \end{table}

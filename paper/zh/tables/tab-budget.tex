@@ -1,26 +1,26 @@
 % ============================================================
-%  表 I（中文伴生版）：与 ../tables/tab-budget.tex 数值 100% 同步
+%  表 1（中文同步版）：与 ../tables/tab-budget.tex 数值 100% 同步
 %  数据源：python/experiments/p5_freeze_20261124/p5_p2_h2_h3.csv
 % ============================================================
 \begin{table}[t]
 \centering
-\caption{代表性 \proto{} 负载点的字节布局、单尝试波形代理预算与 \texttt{R0} 实测核验}
+\caption{代表性负载点的字节布局、单尝试提交波形代理预算与有线馈线核验。}
 \label{tab:budget}
 \setlength{\tabcolsep}{2.0pt}
 \scriptsize
 \begin{tabular}{@{}lccccccc@{}}
 \toprule
-\textbf{测点} & \textbf{记录} & \textbf{映射} & \textbf{\modejc{}载荷} & \multicolumn{3}{c}{\textbf{突发数 / 代理 (\si{\micro\second})}} & \textbf{H1偏移} \\
+\textbf{测点} & \textbf{记录} & \textbf{映射} & \textbf{\modejc{}载荷} & \multicolumn{3}{c}{\textbf{突发数 / 代理 (\si{\micro\second})}} & \textbf{偏移} \\
 \cmidrule(lr){5-7}
-$(b,z)$ & B/Z & (B) & (B) & \modejc{} & \modesc{} & \modelc{} ($F$) & 中位(\si{\micro\second}) \\
+$(b,z)$ & B/Z & (B) & (B) & \modejc{} & \modesc{} & \modelc{} ($F$) & (\si{\micro\second}) \\
 \midrule
 A $(0,0)$   & 26/26 & 136 & 179 & 2/\num{1648} & 3/\num{1648} & 2/\num{1456} (1) & 400.25 \\
-B1 $(1,0)$  & 27/26 & 136 & 180$^{\dagger}$ & 2/\num{1656}$^{\dagger}$ & 3/\num{1656}$^{\dagger}$ & 2/\num{1464} (1) & --- \\
+B1 $(1,0)$  & 27/26 & 136 & 180$^{\mathrm{a}}$ & 2/\num{1656}$^{\mathrm{a}}$ & 3/\num{1656}$^{\mathrm{a}}$ & 2/\num{1464} (1) & --- \\
 C $(2,6)$   & 28/32 & 160 & 205 & 2/\num{1856} & 3/\num{1856} & 4/\num{2344} (3) & 416.25 \\
 B $(26,0)$  & 52/26 & 136 & 205 & 2/\num{1856} & 3/\num{1856} & 6/\num{2904} (5) & 608.00 \\
 \bottomrule
 \end{tabular}
 \par\smallskip
 \raggedright\scriptsize
-全部 10 个已测 \texttt{R0} 分支（轮次 2702--2710、2718）均获 $10/10$ 联合解析。$F$ 为 \modelc{} 每次尝试的 \ble{} 传统广播帧数（$b\le 1$ 时 $F{=}1$ 直接承载；$b\ge 2$ 时 $F{=}\lceil(26{+}b)/12\rceil$ 片 \fragproto{} 分片，另加 $1$ 次独立 \stdfour{} 突发）。$^{\dagger}$为设计公式值；B1 点仅实测 \SI{27}{B} 直接 \modelc{} 边界（轮次 2710）。H1 同 IQ 偏移（每点 $n{=}10$，轮次 2704、2707、2718）核验 $\num{400}+8b\,\si{\micro\second}$，不代表跨设备时钟同步误差。
+全部 10 个已测 \texttt{R0} 分支（轮次 2702--2710、2718）均获 $10/10$ 联合解析。$F$ 为传统 \ble{} 帧数/尝试（$b\le 1$ 取 $F{=}1$；$b\ge 2$ 取 $F{=}\lceil(26{+}b)/12\rceil$ 片 \fragproto{} 分片，另加 $1$ 次 \stdfour{} 突发）。$^{\mathrm{a}}$公式值；B1 点仅采集 \SI{27}{B} 直接 \modelc{} 上限（轮次 2710）。同 IQ 偏移中位数（每点 $n{=}10$）核验 $400{+}8b\,\si{\micro\second}$，不代表跨设备时钟误差。
 \end{table}
